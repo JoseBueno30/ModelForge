@@ -112,17 +112,6 @@ modelElement
   | associationClassDefinition          #AssociationClass
   | 'constraints' constraintDefinition* #Constraints
   ;
-
-/* ------------------------------------
-  constraintDefinition ::= 
-        invariant
-      | prePost
-*/
-
-constraintDefinition
-  : invariant
-  | prePost
-  ;
     
 /* ------------------------------------
   enumTypeDefinition ::= 
@@ -185,25 +174,21 @@ associationClassDefinition
     
 /* ------------------------------------
   attributeDefinition ::= 
-    id ":" type [ ";" ]
+    id ":" type [initDefinition | derivedDefinition] [ ";" ]
+
+    initDefinition ::= "init" (":" | "=") expression
+    derivedDefinition ::= ("derive" | "derived") (":" | "=") expression
 */
-attributeDefinition returns [ASTAttribute n]
-:
-	as = annotationSet
-    name=IDENT COLON t=type 
-    
-    (
-        ((keyDerive|keyDerived) (COLON|EQUAL) deriveExpression = expression)
-      |
-        (keyInit   (COLON|EQUAL)   initExpression = expression)
-    )?
-    SEMI?
-    { 
-       $n = new ASTAttribute($name, $t.n); 
-       $n.setAnnotations($as.annotations);
-       $n.setDeriveExpression($deriveExpression.n);
-       $n.setInitExpression($initExpression.n);
-    }
+attributeDefinition
+    : IDENT COLON type (initDefinition | derivedDefinition)? SEMI?
+    ;
+
+initDefinition
+    : 'init' (COLON|EQUAL) expression
+    ;
+
+derivedDefinition
+    : ('derive'|'derived') (COLON|EQUAL) expression
     ;
 
 /* ------------------------------------
@@ -211,21 +196,10 @@ attributeDefinition returns [ASTAttribute n]
     id paramList ":" type [ "=" expression ] 
     { prePostClause } [ ";" ]
 */
-operationDefinition returns [ASTOperation n]
-:
-	as = annotationSet
-    name = IDENT
-    pl = paramList
-    /* For a readable error message the required type
-       is checked during compilation.
-     */
-    ( COLON t = type )? 
-    { $n = new ASTOperation($name, $pl.paramList, $t.n); $n.setAnnotations($as.annotations); }
-    (
-        ( EQUAL e = expression   { $n.setExpression($e.n); } )
-      | ( s = blockStat  { $n.setStatement($s.n);  } )
-    )?
-    ( ppc=prePostClause { $n.addPrePostClause($ppc.n); } )*
+operationDefinition
+    : IDENT paramList (COLON type)? 
+    ( ( EQUAL expression ) | blockStat )?
+    prePostClause*
     ( SEMI )?
     ;
 
@@ -236,17 +210,10 @@ operationDefinition returns [ASTOperation n]
     associationEnd associationEnd { associationEnd }
     "end"
 */
-associationDefinition returns [ASTAssociation n]
-@init{ Token t = null; }
-:
-	as = annotationSet
-    { t = input.LT(1); }
-    ( keyAssociation | keyAggregation | keyComposition )
-    name=IDENT { $n = new ASTAssociation(t, $name); $n.setAnnotations($as.annotations); }
-    'between'
-    ae=associationEnd { $n.addEnd($ae.n); }
-    ( ae=associationEnd { $n.addEnd($ae.n); } )+
-    'end'
+associationDefinition
+    : 'association' IDENT 'between' associationEnd associationEnd+ 'end'    #Association
+    | 'aggregation' IDENT 'between' associationEnd associationEnd+ 'end'    #Aggregation
+    | 'composition' IDENT 'between' associationEnd associationEnd+ 'end'    #Composition
     ;
 
 
@@ -255,19 +222,17 @@ associationDefinition returns [ASTAssociation n]
     id "[" multiplicity "]" [ "role" id ] ( "ordered" | "subsets" id | "union" | "redefines" )* [ ";" ]
 */
 associationEnd returns [ASTAssociationEnd n]
-:
-	as = annotationSet
-    name=IDENT LBRACK m=multiplicity RBRACK { $n = new ASTAssociationEnd($name, $m.n); $n.setAnnotations($as.annotations); } 
-    ( keyRole rn=IDENT { $n.setRolename($rn); } )?
+    : IDENT LBRACK multiplicity RBRACK
+    ( 'role' IDENT)?
     (
-        'ordered' { $n.setOrdered(); }
-      | 'subsets' sr=IDENT { $n.addSubsetsRolename($sr); }
-      | keyUnion { $n.setUnion(true); }
-      | 'redefines' rd=IDENT { $n.addRedefinesRolename($rd); }
-      | (keyDerived|keyDerive) ( LPAREN parameter = elemVarsDeclaration RPAREN)? EQUAL exp=expression { $n.setDerived($exp.n, $parameter.n); }
-      | keyQualifier qualifiers = paramList {$n.setQualifiers($qualifiers.paramList); }
+          'ordered'
+        | 'subsets' IDENT                                                               //SHOULD DELETE?
+        | 'union'                                                                       //SHOULD DELETE?
+        | 'redefines' IDENT                                                             //SHOULD DELETE?
+        | ('derived'|'derive') ( LPAREN elemVarsDeclaration RPAREN)? EQUAL expression   //SHOULD DELETE?
+        | 'qualifier' paramList                                                         //SHOULD DELETE?
     )*
-    ( SEMI )?
+    (SEMI)?
     ;
 
 
@@ -281,39 +246,28 @@ associationEnd returns [ASTAssociationEnd n]
   multiplicitySpec ::=
     "*" | INT
 */
-multiplicity returns [ASTMultiplicity n]
-:
-    { 
-	Token t = input.LT(1); // remember start position of expression
-	$n = new ASTMultiplicity(t);
-    }
-    mr=multiplicityRange { $n.addRange($mr.n); }
-    ( COMMA mr=multiplicityRange  { $n.addRange($mr.n); } )*
+multiplicity
+    : multiplicityRange (COMMA multiplicityRange)*
     ;
 
-multiplicityRange returns [ASTMultiplicityRange n]
-:
-    ms1=multiplicitySpec { $n = new ASTMultiplicityRange($ms1.m); }
-    ( DOTDOT ms2=multiplicitySpec { $n.setHigh($ms2.m); } )?
+multiplicityRange
+    : multiplicitySpec (DOTDOT multiplicitySpec)?
     ;
 
-multiplicitySpec returns [int m]
-@init{ $m = -1; }
-:
-      i=INT { $m = Integer.parseInt($i.text); }
-    | STAR  { $m = -1; }
+multiplicitySpec
+    : INT 
+    | STAR  
     ;
-
 
 /* ------------------------------------
   constraintDefinition ::= 
-    invariant | prePost
+        invariant | prePost
 */
-//  constraintDefinition returns [ASTConstraintDefinition n]
-//  { n = null; }
-//  :
-//      n=invariant // | prePost
-//      ;
+
+constraintDefinition
+  : invariant
+  | prePost
+  ;
 
 /* ------------------------------------
   invariant ::= 
@@ -322,14 +276,11 @@ multiplicitySpec returns [int m]
   invariantContext := 
     "context" [ id ":" ] simpleType
 */
-invariant returns [ASTConstraintDefinition n]
-:
-    { $n = new ASTConstraintDefinition(); }
-    'context'
-    ( v=IDENT { $n.addVarName($v); } 
-       (',' v=IDENT  { $n.addVarName($v); } )* COLON )? 
-    t=simpleType { $n.setType($t.n); }
-    ( inv=invariantClause { $n.addInvariantClause($inv.n); } )* //+
+invariant
+    : 'context'
+    (IDENT (',' IDENT)* COLON )? // (',' IDENT)* ?? varios contextos?
+    simpleType
+    (invariantClause)*
     ;
 
 /* ------------------------------------
@@ -337,12 +288,8 @@ invariant returns [ASTConstraintDefinition n]
     "inv" [ id ] ":" expression
 */
 invariantClause returns [ASTInvariantClause n]
-:
-	as = annotationSet
-      'inv' ( name=IDENT )? COLON e=expression 
-      { $n = new ASTInvariantClause($name, $e.n); $n.setAnnotations($as.annotations); }
-    | 'existential' 'inv' ( name=IDENT )? COLON e=expression 
-      { $n = new ASTExistentialInvariantClause($name, $e.n); $n.setAnnotations($as.annotations); }
+    : 'inv' (IDENT)? COLON expression 
+    | 'existential' 'inv' (IDENT)? COLON expression 
     ;
 
 
@@ -353,137 +300,56 @@ invariantClause returns [ASTInvariantClause n]
   prePostContext := 
     "context" id "::" id paramList [ ":" type ]
 */
-prePost returns [ASTPrePost n]
-:
-    'context' classname=IDENT COLON_COLON opname=IDENT pl=paramList ( COLON rt=type )?
-    { $n = new ASTPrePost($classname, $opname, $pl.paramList, $rt.n); }
-    ( ppc=prePostClause { n.addPrePostClause(ppc); } )+
+prePost
+    : 'context' IDENT COLON_COLON IDENT paramList ( COLON type )?
+    ( prePostClause )+
     ;
 
 /* ------------------------------------
   prePostClause :=
     ("pre" | "post") [ id ] ":" expression
 */
-prePostClause returns [ASTPrePostClause n]
-@init { Token t = null; }
-:
-	as = annotationSet
-    { t = input.LT(1); }
-    ( 'pre' | 'post' )  ( name=IDENT )? COLON e=expression
-    { $n = new ASTPrePostClause(t, $name, $e.n); $n.setAnnotations($as.annotations); }
+prePostClause
+    : 'pre' ( IDENT )? COLON expression     #PreCondition
+    | 'post'( IDENT )? COLON expression     #PostCondition
+	;
+
+stateMachine
+    : 'psm' IDENT
+        'states' stateDefinition+
+        'transitions' transitionDefinition+
+        'end'
+    ;
+
+stateDefinition
+    : IDENT
+    ( COLON IDENT )? //( COLON IDENT )? define el tipo del estado (state: initial, state: final) en el codigo se comprueba si es un identificador valido (final, el resto definidios en MPseudoStateKind), no se porq no en la gramatica pero bueno, por esto seguramente no haya que preocuparse
+    ( LBRACK expression RBRACK )?
 ;
 
-annotationSet returns [Set<ASTAnnotation> annotations]
-@init{ $annotations = new HashSet<ASTAnnotation>(); }
-:
-	(an=annotation { $annotations.add($an.n); } )*
-;
- 
-annotation returns [ASTAnnotation n]:
-	AT name=IDENT {$n = new ASTAnnotation($name);} 
-	LPAREN 
-		values = annotationValues { $n.setValues($values.values); }
-	RPAREN
-;
+/* ------------------------------------
+  transitionDefinition :=
+    source "->" target ["{"[PreCondition] operation [PostCondition]"}"]
 
-annotationValues returns [Map<Token, Token> values]
-@init{ $values = new HashMap<Token, Token>(); }
-:
-	(firstVal = annotationValue { $values.put($firstVal.name, $firstVal.value); })?
-	(COMMA val=annotationValue { $values.put($val.name, $val.value); })*
-;
+  source := id
+  target := id
+  PreCondition := "[" expression "]"
+  PostCondition := "[" expression "]"
+  operation := id "(" paramList ")"
 
-annotationValue returns [Token name, Token value]:
-	aName=IDENT { $name = $aName; }
-	EQUAL 
-	aValue=NON_OCL_STRING { $value = $aValue; }
-;
+*/
 
-stateMachine returns [ASTStateMachine n]
-:
-    (  
-       'psm' { $n = new ASTProtocolStateMachine(); } 
-     /* | 'bsm' { $n = new ASTStateMachine(); } */
-    ) 
-     
-    smName = IDENT { $n.setName($smName); }
-    
-    'states'
-         (s = stateDefinition { $n.addStateDefinition($s.n); })+
-    'transitions'
-         (t = transitionDefinition { $n.addTransitionDefinition($t.n); })+
-    'end'
-;
-
-stateDefinition returns [ASTStateDefinition n]:
-  sn=IDENT {$n = new ASTStateDefinition($sn); }
-  ( COLON stateType=IDENT {$n.setType($stateType); } )?
-  ( LBRACK stateInv = expression RBRACK {$n.setStateInvariant($stateInv.n); } )?
-;
-
-transitionDefinition returns [ASTTransitionDefinition n]:
-  source=IDENT ARROW target=IDENT { $n = new ASTTransitionDefinition($source, $target); } 
+transitionDefinition
+    : IDENT ARROW IDENT 
     (LBRACE 
-      (LBRACK pre=expression { $n.setPreCondition($pre.n); } RBRACK)?
+      (LBRACK expression RBRACK)?
       (
-          e=event { n.setEvent($e.t); }
-        | o=IDENT { n.setOperation($o); } LPAREN (args=paramList { $n.setOperationArgs($args.paramList); } )? RPAREN
+        IDENT LPAREN (paramList )? RPAREN
       )
-      (LBRACK post=expression { $n.setPostCondition($post.n); } RBRACK)?
+      (LBRACK expression RBRACK)?
     RBRACE)?
-;
+    ;
 
-event returns [Token t]:
-    tcr = 'create' {$t = $tcr;}
-; 
-
-signalDefinition[boolean isAbstract] returns [ASTSignal n]:
-    keySignal name=IDENT { $n = new ASTSignal($name, $isAbstract); }
-    
-    ( LESS idListRes=idList { $n.addGenerals($idListRes.idList); } )?
-    ( 'attributes' 
-      ( a=attributeDefinition { $n.addAttribute($a.n); } )* 
-    )?
-    ( 'constraints'
-      (
-        inv=invariantClause { $n.addInvariantClause($inv.n); }
-      )*
-    )?
-    'end'
-    ;  
-
-keyUnion:
-  {input.LT(1).getText().equals("union")}? IDENT ;
-  
-keyAssociation:
-  {input.LT(1).getText().equals("association")}? IDENT ;
-  
-keyRole:
-  {input.LT(1).getText().equals("role")}? IDENT ;
-
-keyComposition:
-  {input.LT(1).getText().equals("composition")}? IDENT ;
-
-keyAggregation:
-  {input.LT(1).getText().equals("aggregation")}? IDENT ;
-  
-keyClass:
-  {input.LT(1).getText().equals("class")}? IDENT ;
-
-keySignal:
-  {input.LT(1).getText().equals("signal")}? IDENT ;
-  
-keyDerived:
-  {input.LT(1).getText().equals("derived")}? IDENT ;
-  
-keyDerive:
-  {input.LT(1).getText().equals("derive")}? IDENT ;
-
-keyInit:
-  {input.LT(1).getText().equals("init")}? IDENT ;
-    
-keyQualifier:
-  {input.LT(1).getText().equals("qualifier")}? IDENT ;
 /*
 --------- Start of file OCLBase.gpart -------------------- 
 */
