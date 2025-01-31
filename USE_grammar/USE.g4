@@ -44,7 +44,7 @@ modelElement
   enumTypeDefinition ::= 
     "enum" id "{" idList "}" [ ";" ]
 */
-enumTypeDefinition returns [ASTEnumTypeDefinition n]
+enumTypeDefinition
   : 'enum' ID LBRACE idList RBRACE ( SEMI )?
   ;
 
@@ -125,7 +125,7 @@ derivedDefinition
 */
 operationDefinition
     : ID paramList (COLON type)? 
-    ( ( EQUAL expression ) | 'begin' STRING 'end')? //USE can have SOIL operations but we dont care about them
+    ( ( EQUAL expression ) | SOIL_OPERATION)? //USE can have SOIL operations but we dont care about them
     prePostClause*
     ( SEMI )?
     ;
@@ -782,7 +782,7 @@ REAL:
     INT ('.' INT ([eE] [+-]? INT)? | [eE] [+-]? INT)
     ;
 
-
+SOIL_OPERATION: 'begin' .*? 'end';
 
 // String literals
 STRING:	
