@@ -214,7 +214,7 @@ invariant
   invariantClause ::= 
     "inv" [ id ] ":" expression
 */
-invariantClause returns [ASTInvariantClause n]
+invariantClause
     : 'inv' (ID)? COLON expression 
     | 'existential' 'inv' (ID)? COLON expression 
     ;
