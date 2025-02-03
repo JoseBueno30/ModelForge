@@ -399,7 +399,7 @@ relationalExpression
 */
 additiveExpression
     : factorExpression                          #FactorExpr
-    | additiveExpression '+' factorExpression   #AddittionExpr
+    | additiveExpression '+' factorExpression   #AdditionExpr
     | additiveExpression '-' factorExpression   #SubtractionExpr
     ;
 
