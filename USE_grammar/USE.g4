@@ -148,7 +148,7 @@ associationDefinition
   associationEnd ::= 
     id "[" multiplicity "]" [ "role" id ] ( "ordered" | "subsets" id | "union" | "redefines" )* [ ";" ]
 */
-associationEnd returns [ASTAssociationEnd n]
+associationEnd
     : ID LBRACK multiplicity RBRACK
     ( 'role' ID)?
     (
