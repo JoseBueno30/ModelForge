@@ -430,7 +430,7 @@ unaryExpression
 */
 postfixExpression
   : primaryExpression                               #PrimaryExpr
-  | primaryExpression (DOT | ARROW propertyCall)+   #PropertyCall
+  | primaryExpression ((DOT | ARROW) propertyCall)+   #PropertyCallExpr
   ;
 
 
@@ -446,7 +446,7 @@ postfixExpression
 primaryExpression
   : literal                                                   #LiteralExpr
   | objectReference                                           #ObjectReferenceExpr
-  | propertyCall                                              #PropertyCallExpr
+  | propertyCall                                              #EmptyPropertyCallExpr
   | LPAREN expression RPAREN                                  #ParenthesizedExpr
   | ID DOT 'allInstances' (AT 'pre')? (LPAREN RPAREN)?     #AllInstancesExpr
   | ID DOT 'byUseId' LPAREN expression RPAREN (AT 'pre')?  #ByUseIdExpr
