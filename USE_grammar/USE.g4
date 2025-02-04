@@ -138,7 +138,7 @@ operationDefinition
     "end"
 */
 associationDefinition
-    : 'association' ID 'between' associationEnd associationEnd+ 'end'    #Association
+    : 'association' ID 'between' associationEnd associationEnd+ 'end'    #SimpleAssociation
     | 'aggregation' ID 'between' associationEnd associationEnd+ 'end'    #Aggregation
     | 'composition' ID 'between' associationEnd associationEnd+ 'end'    #Composition
     ;
@@ -336,8 +336,7 @@ letExpression
   ;
 
 logicalExpression
-    : 'not' logicalExpression                         #NotExpr
-    | logicalExpression 'and' logicalExpression       #AndExpr
+    : logicalExpression 'and' logicalExpression       #AndExpr
     | logicalExpression '&' logicalExpression         #AndExpr
     | logicalExpression 'or' logicalExpression        #OrExpr
     | logicalExpression 'xor' logicalExpression       #XorExpr
@@ -419,9 +418,9 @@ factorExpression
     | postfixExpression
 */
 unaryExpression
-  : 'not' unaryExpression   #NotUnaryExpr
-  | MINUS unaryExpression   #MinusUnaryExpr
-  | PLUS unaryExpression    #PlusUnaryExpr
+  : 'not' unaryExpression   #NotExpr
+  | MINUS unaryExpression   #MinusExpr
+  | PLUS unaryExpression    #PlusExpr
   | postfixExpression       #PostfixExpr
   ;
 
@@ -430,9 +429,9 @@ unaryExpression
       primaryExpression { ( "." | "->" ) propertyCall }
 */
 postfixExpression
-  : primaryExpression   #PrimaryExpr
-  | DOT propertyCall    #DotPropertyCall
-  | ARROW propertyCall  #ArrowPropertyCall
+  : primaryExpression                         #PrimaryExpr
+  | primaryExpression (DOT propertyCall)+     #DotPropertyCall
+  | primaryExpression (ARROW propertyCall)+   #ArrowPropertyCall
   ;
 
 
@@ -772,12 +771,10 @@ SLASH         : '/';
 STAR          : '*';
 ABSTRACT      : 'abstract';
   
-fragment
 INT:
     [0-9]+
     ;
 
-fragment
 REAL:
     INT ('.' INT ([eE] [+-]? INT)? | [eE] [+-]? INT)
     ;
