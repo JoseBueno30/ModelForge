@@ -1,0 +1,17 @@
+# ninja log v6
+22	100	7604532737968945	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/CMakeFiles/cmake.verify_globs	2f8815ddd5fe2d89
+96	610	7604532592777116	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/ModelForge_autogen/timestamp	8fe3f26b1785ca65
+96	610	7604532592777116	ModelForge_autogen/timestamp	8fe3f26b1785ca65
+96	610	7604532592777116	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/ModelForge_autogen/mocs_compilation.cpp	8fe3f26b1785ca65
+96	610	7604532592777116	ModelForge_autogen/mocs_compilation.cpp	8fe3f26b1785ca65
+611	2006	7604532593335193	CMakeFiles/ModelForge.dir/ModelForge_autogen/mocs_compilation.cpp.obj	e2cb0c4098fcf58a
+616	2102	7604532593385191	CMakeFiles/ModelForge.dir/mainwindow.cpp.obj	14b30cd10f835de9
+613	2083	7604532593355164	CMakeFiles/ModelForge.dir/main.cpp.obj	b12001a5450fe58b
+2102	2244	7604532608244333	ModelForge.exe	79a0b304d98829dd
+74	728	7604532743707129	build.ninja	4043b34530e7ed09
+120	147	7604532579143851	CMakeFiles/clean.additional	baedbe210acaa455
+147	154	7604532579418926	clean	577b940aee94fbd7
+100	718	7604532743707129	build.ninja	4043b34530e7ed09
+19	90	7604532744655169	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/CMakeFiles/cmake.verify_globs	2f8815ddd5fe2d89
+91	109	7604532745377895	CMakeFiles/clean.additional	baedbe210acaa455
+109	117	7604532745557877	clean	577b940aee94fbd7
