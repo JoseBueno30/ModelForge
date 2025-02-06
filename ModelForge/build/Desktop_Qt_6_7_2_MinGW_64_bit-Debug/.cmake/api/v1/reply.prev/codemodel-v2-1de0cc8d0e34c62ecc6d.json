@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-8c1ef2de02dad7989e0e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "ModelForge",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ModelForge::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ModelForge-Debug-0fb35609075531f2aa2f.json",
+					"name" : "ModelForge",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ModelForge_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ModelForge_autogen-Debug-e7609bc1f5871968939c.json",
+					"name" : "ModelForge_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ModelForge_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ModelForge_autogen_timestamp_deps-Debug-7666e429e11462c0b10b.json",
+					"name" : "ModelForge_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug",
+		"source" : "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
