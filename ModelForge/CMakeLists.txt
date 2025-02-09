@@ -11,6 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
 # find_package(antlr4-runtime REQUIRED)
 
 # set(ANTLR4_RUNTIME "C:/antlr/runtime")
@@ -353,7 +356,8 @@ set(ANTLR_GENERATED_SOURCES
 
 
 
-
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADERS "include/*.h")
 set(TS_FILES ModelForge_en_150.ts)
 
 set(PROJECT_SOURCES
@@ -364,12 +368,17 @@ set(PROJECT_SOURCES
         ${TS_FILES}
         ${ANTLR_GENERATED_SOURCES}
         ${ANTLR4_CPP_RUNTIME}
+        ${SOURCES}
+        ${HEADERS}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ModelForge
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        include/OCLExpression.h
+        include/MetaAssociation.h
+        include/MetaType.h
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ModelForge APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -392,6 +401,8 @@ else()
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
+
+
 
 
 target_link_libraries(ModelForge PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
