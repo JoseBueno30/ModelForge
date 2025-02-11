@@ -363,7 +363,7 @@ set(TS_FILES ModelForge_en_150.ts)
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
-        mainwindow.h
+        #mainwindow.h
         mainwindow.ui
         ${TS_FILES}
         ${ANTLR_GENERATED_SOURCES}
@@ -376,9 +376,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ModelForge
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        include/OCLExpression.h
-        include/MetaAssociation.h
-        include/MetaType.h
+        include/ui/ModelGraphicsView.h
+        src/ui/ModelGraphicsView.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ModelForge APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
