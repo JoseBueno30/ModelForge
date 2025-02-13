@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include <QWheelEvent>
 #include <QMouseEvent>
+#include <QPainter>
 
 class ModelGraphicsView : public QGraphicsView{
     Q_OBJECT
@@ -16,6 +17,7 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void drawBackground(QPainter *painter, const QRectF &rect) override;
 };
 
 #endif // MODELGRAPHICSVIEW_H

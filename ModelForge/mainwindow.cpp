@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <ui/ClassItemView.h>
 #include <ui/ModelGraphicsView.h>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -9,15 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-
-   // ModelGraphicsView *modelGraphicsView = new ModelGraphicsView(this);
-    //graphicsView->setScene()
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
-    //ui->modelGraphicsView = modelGraphicsView;
     modelGraphicsView->setScene(new QGraphicsScene(this));
 
     QGraphicsScene *scene = modelGraphicsView->scene();
-    scene->addRect(-50, -50, 100, 100, QPen(Qt::black), QBrush(Qt::blue));
+
+    ClassItemView *classItem = new ClassItemView(nullptr);
+    scene->addItem(classItem);
 }
 
 MainWindow::~MainWindow()

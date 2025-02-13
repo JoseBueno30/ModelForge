@@ -67,11 +67,11 @@
         <item>
          <widget class="ModelGraphicsView" name="modelGraphicsView">
           <property name="backgroundBrush">
-           <brush brushstyle="CrossPattern">
+           <brush brushstyle="NoBrush">
             <color alpha="50">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
+             <red>41</red>
+             <green>44</green>
+             <blue>52</blue>
             </color>
            </brush>
           </property>
