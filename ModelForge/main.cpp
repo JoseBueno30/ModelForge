@@ -1,6 +1,6 @@
 #include "antlr4/generated/USELexer.h"
 #include "antlr4/generated/USEParser.h"
-#include "mainwindow.h"
+#include <mainwindow.h>
 
 #include <QApplication>
 #include <QLocale>
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    test_grammar();
+    //test_grammar();
 
     MainWindow w;
     w.show();
