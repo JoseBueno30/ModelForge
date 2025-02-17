@@ -8,8 +8,8 @@ class OCLExpr{};
 // Binary Expressions -> formed by 2 OCLExpressions
 class BinaryExpr : OCLExpr{
 private:
-    USE::OCLExpr* expr1;
-    USE::OCLExpr* expr2;
+    MetaModel::OCLExpr* expr1;
+    MetaModel::OCLExpr* expr2;
 };
 
 // Logical Expressions
@@ -43,11 +43,11 @@ class SubstractionExpr : AdditiveExpr{};
 // Unary Expressions
 class UnaryExpr : OCLExpr{
 private:
-    USE::OCLExpr* expr;
+    MetaModel::OCLExpr* expr;
 };
 
-class MinusExpr : UnaryExpr{};
-class PlusExpr : UnaryExpr{};
+class MinMetaModelxpr : UnaryExpr{};
+class PlMetaModelxpr : UnaryExpr{};
 class NotExpr : UnaryExpr{};
 
 // OCL evaluation oriented expressions
@@ -58,23 +58,23 @@ class LetExpr : OCLExpr{
 private:
     std::string name;
     //type : MetaType
-    USE::OCLExpr* expr1;
-    USE::OCLExpr* expr2;
+    MetaModel::OCLExpr* expr1;
+    MetaModel::OCLExpr* expr2;
 };
 
 // If-then-else structure
 class ConditionalExpr : OCLExpr{
 private:
-    USE::OCLExpr exprIf;
-    USE::OCLExpr exprThen;
-    USE::OCLExpr exprElse;
+    MetaModel::OCLExpr exprIf;
+    MetaModel::OCLExpr exprThen;
+    MetaModel::OCLExpr exprElse;
 };
 
 // Lambda expressions
 class LambdaExpr : OCLExpr{
     std::string name;
     //type : MetaType
-    USE::OCLExpr expr1;
+    MetaModel::OCLExpr expr1;
 };
 
 }
