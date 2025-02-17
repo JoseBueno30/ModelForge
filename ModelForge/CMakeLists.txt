@@ -376,13 +376,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ModelForge
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        include/OCLExpression.h
-        include/MetaAssociation.h
-        include/MetaType.h
-        include/MetaEnum.h
+        include/metamodel/OCLExpression.h
+        include/metamodel/MetaAssociation.h
+        include/metamodel/MetaType.h
+        include/metamodel/MetaEnum.h
         include/ui/ModelGraphicsView.h
         src/ui/ModelGraphicsView.cpp
         include/ui/ClassItemView.h
+        include/metamodel/MetaAttribute.h
+        include/metamodel/MetaStateMachine.h
+        include/metamodel/MetaConstraint.h
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ModelForge APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

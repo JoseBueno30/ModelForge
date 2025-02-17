@@ -1330,33 +1330,81 @@
 			null
 		],
 		[
-			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaAssociation.h",
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/mainwindow.h",
 			"MU",
-			"6YEA5652QU/moc_MetaAssociation.cpp",
+			"6YEA5652QU/moc_mainwindow.cpp",
 			null
 		],
 		[
-			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaEnum.h",
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaAssociation.h",
 			"MU",
-			"6YEA5652QU/moc_MetaEnum.cpp",
+			"UIOTKHEWZY/moc_MetaAssociation.cpp",
 			null
 		],
 		[
-			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaType.h",
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaAttribute.h",
 			"MU",
-			"6YEA5652QU/moc_MetaType.cpp",
+			"UIOTKHEWZY/moc_MetaAttribute.cpp",
 			null
 		],
 		[
-			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/OCLExpression.h",
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaConstraint.h",
 			"MU",
-			"6YEA5652QU/moc_OCLExpression.cpp",
+			"UIOTKHEWZY/moc_MetaConstraint.cpp",
 			null
 		],
 		[
-			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/mainwindow.h",
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaEnum.h",
 			"MU",
-			"EWIEGA46WW/moc_mainwindow.cpp",
+			"UIOTKHEWZY/moc_MetaEnum.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaStateMachine.h",
+			"MU",
+			"UIOTKHEWZY/moc_MetaStateMachine.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaType.h",
+			"MU",
+			"UIOTKHEWZY/moc_MetaType.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/OCLExpression.h",
+			"MU",
+			"UIOTKHEWZY/moc_OCLExpression.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/ui/ClassItemModel.h",
+			"MU",
+			"JCP2AIONHY/moc_ClassItemModel.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/ui/ClassItemView.h",
+			"MU",
+			"JCP2AIONHY/moc_ClassItemView.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/ui/ModelGraphicsView.h",
+			"MU",
+			"JCP2AIONHY/moc_ModelGraphicsView.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/ui/RelationItemModel.h",
+			"MU",
+			"JCP2AIONHY/moc_RelationItemModel.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/ui/RelationItemView.h",
+			"MU",
+			"JCP2AIONHY/moc_RelationItemView.cpp",
 			null
 		]
 	],
@@ -1433,7 +1481,7 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 6,
+	"PARALLEL" : 4,
 	"PARSE_CACHE_FILE" : "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/CMakeFiles/ModelForge_autogen.dir/ParseCache.txt",
 	"QT_MOC_EXECUTABLE" : "C:/Qt/6.7.2/mingw_64/./bin/moc.exe",
 	"QT_UIC_EXECUTABLE" : "C:/Qt/6.7.2/mingw_64/./bin/uic.exe",
@@ -2163,7 +2211,27 @@
 			null
 		],
 		[
-			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/src/prueba.cpp",
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/src/ui/ClassItemModel.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/src/ui/ClassItemView.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/src/ui/ModelGraphicsView.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/src/ui/RelationItemModel.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/src/ui/RelationItemView.cpp",
 			"MU",
 			null
 		]

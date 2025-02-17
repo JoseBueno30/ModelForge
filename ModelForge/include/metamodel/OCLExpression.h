@@ -2,7 +2,7 @@
 #define OCLEXPRESSION_H
 #include <string>
 
-namespace USE{
+namespace MetaModel{
 class OCLExpr{};
 
 // Binary Expressions -> formed by 2 OCLExpressions
