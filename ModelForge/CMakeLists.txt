@@ -379,6 +379,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/OCLExpression.h
         include/MetaAssociation.h
         include/MetaType.h
+        include/MetaEnum.h
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ModelForge APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

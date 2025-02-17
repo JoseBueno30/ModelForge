@@ -850,8 +850,13 @@ ModelForge_autogen/timestamp: \
 	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeRCCompiler.cmake \
 	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/CMakeFiles/3.29.3/CMakeSystem.cmake \
 	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/ModelForge_autogen/moc_predefs.h \
+	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaAssociation.h \
+	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaEnum.h \
+	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaType.h \
+	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/OCLExpression.h \
 	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/main.cpp \
 	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/mainwindow.cpp \
 	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/mainwindow.h \
+	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/src/prueba.cpp \
 	C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/mainwindow.ui \
 	C:/Qt/Tools/CMake_64/bin/cmake.exe

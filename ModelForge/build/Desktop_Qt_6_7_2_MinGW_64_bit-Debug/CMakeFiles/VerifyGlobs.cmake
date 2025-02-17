@@ -191,6 +191,8 @@ set(OLD_GLOB
   "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Release/ModelForge_autogen/mocs_compilation.cpp"
   "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/main.cpp"
   "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/mainwindow.cpp"
+  "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/src/prueba.cpp"
+  "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/tests/tests.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")
@@ -390,6 +392,10 @@ set(OLD_GLOB
   "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/ModelForge_autogen/moc_predefs.h"
   "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Release/ModelForge_autogen/include/ui_mainwindow.h"
   "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Release/ModelForge_autogen/moc_predefs.h"
+  "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaAssociation.h"
+  "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaEnum.h"
+  "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/MetaType.h"
+  "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/OCLExpression.h"
   "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/mainwindow.h"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")

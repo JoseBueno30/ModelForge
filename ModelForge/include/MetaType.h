@@ -1,10 +1,12 @@
 #ifndef METATYPE_H
 #define METATYPE_H
 
-#include <QList>
 #include <string>
+#include <memory>
+#include <vector>
 
-namespace USE{
+namespace MetaModel{
+
 class MetaType{};
 
 // Simple Types
@@ -15,14 +17,7 @@ class Integer : SimpleType{};
 class String : SimpleType{};
 class Boolean : SimpleType{};
 
-class MetaEnumElement{
-private:
-    std::string name;
-};
-class MetaEnum : SimpleType{
-private:
-    std::string name;
-};
+
 
 // Collection Type
 class CollectionType : MetaType{
@@ -30,19 +25,50 @@ private:
     bool isOrdered;
     bool isUnique;
     int multiplicity;
-    USE::MetaType* type;
+    std::shared_ptr<MetaType> type;
+
+public:
+    CollectionType(bool ordered, bool unique, int multiplicity, std::shared_ptr<MetaType> type);
+
+    bool getIsOrdered() const;
+    void setIsOrdered(bool isOrdered);
+
+    bool getIsUnique() const;
+    void setIsUnique(bool isUnique);
+
+    int getMultiplicity() const;
+    void setMultiplicity(int multiplicity);
+
+    std::shared_ptr<MetaType> getType() const;
+    void setType(const std::shared_ptr<MetaType> &type);
 };
 
 // Tuple Type
 class TuplePart{
 private:
-    MetaType* type;
     std::string name;
+    std::shared_ptr<MetaType> type;
+
+public:
+    TuplePart(std::string name, std::shared_ptr<MetaType> type);
+
+    std::string getName() const;
+    void setName(std::string name);
+
+    std::shared_ptr<MetaType> getType() const;
+    void setType(const std::shared_ptr<MetaType> &type);
 };
 
 class TupleType : MetaType{
 private:
-    QList<TuplePart> elements;
+    std::vector<std::unique_ptr<TuplePart>> elements;
+
+public:
+    TupleType(std::unique_ptr<TuplePart> element);
+
+    std::vector<std::unique_ptr<TuplePart> > getElements() const;
+    void addElement(const std::unique_ptr<TuplePart> &newElement);
 };
+
 }
 #endif // METATYPE_H
