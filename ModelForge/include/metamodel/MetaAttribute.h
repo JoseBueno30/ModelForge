@@ -18,19 +18,19 @@ private:
     std::unique_ptr<OCLExpr> deriveExpr;
 
 public:
-    MetaAttribute(std::string name);
+    MetaAttribute(const std::string& name, const std::shared_ptr<MetaType>& type);
 
     std::string getName() const;
-    void setName(std::string name);
+    void setName(const std::string& name);
 
     std::shared_ptr<MetaType> getType() const;
-    void setType(const std::shared_ptr<MetaType> type);
+    void setType(const std::shared_ptr<MetaType>& type);
 
     std::unique_ptr<OCLExpr> getInitExpr() const;
-    void setInitExpr(const std::unique_ptr<OCLExpr> initExpr);
+    void setInitExpr(std::unique_ptr<OCLExpr> initExpr);
 
     std::unique_ptr<OCLExpr> getDeriveExpr() const;
-    void setDeriveExpr(const std::unique_ptr<OCLExpr> deriveExpr);
+    void setDeriveExpr(std::unique_ptr<OCLExpr> deriveExpr);
 };
 
 }

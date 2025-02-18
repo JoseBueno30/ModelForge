@@ -20,13 +20,13 @@ public:
     MetaConstraint(std::unique_ptr<OCLExpr> expression, const std::string& name="", bool isExistential=false);
 
     std::string getName() const;
-    void setName(std::string name);
+    void setName(const std::string& name);
 
     bool getIsExistential() const;
     void setIsExistential(const bool isExistential);
 
     std::unique_ptr<OCLExpr> getExpression() const;
-    void setExpression(const std::unique_ptr<OCLExpr> expression);
+    void setExpression(std::unique_ptr<OCLExpr> expression);
 };
 
 }

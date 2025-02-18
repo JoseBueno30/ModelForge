@@ -10,17 +10,18 @@ namespace MetaModel{
 class MetaType{};
 
 // Simple Types
-class SimpleType : MetaType{};
+class SimpleType : public MetaType{};
 
-class Real : SimpleType{};
-class Integer : SimpleType{};
-class String : SimpleType{};
-class Boolean : SimpleType{};
+class Real : public SimpleType{};
+class Integer : public SimpleType{};
+class String : public SimpleType{};
+class Boolean : public SimpleType{};
+class Void: public SimpleType{};
 
 
 
 // Collection Type
-class CollectionType : MetaType{
+class CollectionType : public MetaType{
 private:
     bool isOrdered;
     bool isUnique;
@@ -28,7 +29,7 @@ private:
     std::shared_ptr<MetaType> type;
 
 public:
-    CollectionType(bool ordered, bool unique, int multiplicity, std::shared_ptr<MetaType> type);
+    CollectionType(bool ordered, bool unique, int multiplicity, const std::shared_ptr<MetaType>& type);
 
     bool getIsOrdered() const;
     void setIsOrdered(bool isOrdered);
@@ -40,7 +41,7 @@ public:
     void setMultiplicity(int multiplicity);
 
     std::shared_ptr<MetaType> getType() const;
-    void setType(const std::shared_ptr<MetaType> &type);
+    void setType(const std::shared_ptr<MetaType>& type);
 };
 
 // Tuple Type
@@ -50,24 +51,25 @@ private:
     std::shared_ptr<MetaType> type;
 
 public:
-    TuplePart(std::string name, std::shared_ptr<MetaType> type);
+    TuplePart(const std::string& name, const std::shared_ptr<MetaType>& type);
 
     std::string getName() const;
-    void setName(std::string name);
+    void setName(const std::string& name);
 
     std::shared_ptr<MetaType> getType() const;
-    void setType(const std::shared_ptr<MetaType> &type);
+    void setType(const std::shared_ptr<MetaType>& type);
 };
 
-class TupleType : MetaType{
+class TupleType : public MetaType{
 private:
     std::vector<std::unique_ptr<TuplePart>> elements;
 
 public:
     TupleType(std::unique_ptr<TuplePart> element);
 
-    std::vector<std::unique_ptr<TuplePart> > getElements() const;
-    void addElement(const std::unique_ptr<TuplePart> &newElement);
+    std::vector<std::unique_ptr<TuplePart>>& getElements() const;
+    void addElement(std::unique_ptr<TuplePart> newElement);
+    void removeElement(int pos);
 };
 
 }

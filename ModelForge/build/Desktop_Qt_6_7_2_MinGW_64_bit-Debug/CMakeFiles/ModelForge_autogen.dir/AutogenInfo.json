@@ -1342,9 +1342,27 @@
 			null
 		],
 		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaAssociationClass.h",
+			"MU",
+			"UIOTKHEWZY/moc_MetaAssociationClass.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaAssociationEnd.h",
+			"MU",
+			"UIOTKHEWZY/moc_MetaAssociationEnd.cpp",
+			null
+		],
+		[
 			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaAttribute.h",
 			"MU",
 			"UIOTKHEWZY/moc_MetaAttribute.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaClass.h",
+			"MU",
+			"UIOTKHEWZY/moc_MetaClass.cpp",
 			null
 		],
 		[
@@ -1360,6 +1378,18 @@
 			null
 		],
 		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaModel.h",
+			"MU",
+			"UIOTKHEWZY/moc_MetaModel.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaOperation.h",
+			"MU",
+			"UIOTKHEWZY/moc_MetaOperation.cpp",
+			null
+		],
+		[
 			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaStateMachine.h",
 			"MU",
 			"UIOTKHEWZY/moc_MetaStateMachine.cpp",
@@ -1369,6 +1399,12 @@
 			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaType.h",
 			"MU",
 			"UIOTKHEWZY/moc_MetaType.cpp",
+			null
+		],
+		[
+			"C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/include/metamodel/MetaVariable.h",
+			"MU",
+			"UIOTKHEWZY/moc_MetaVariable.cpp",
 			null
 		],
 		[
@@ -1481,7 +1517,7 @@
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 4,
+	"PARALLEL" : 6,
 	"PARSE_CACHE_FILE" : "C:/Users/jabr3/Documents/GitHub/ModelForge/ModelForge/build/Desktop_Qt_6_7_2_MinGW_64_bit-Debug/CMakeFiles/ModelForge_autogen.dir/ParseCache.txt",
 	"QT_MOC_EXECUTABLE" : "C:/Qt/6.7.2/mingw_64/./bin/moc.exe",
 	"QT_UIC_EXECUTABLE" : "C:/Qt/6.7.2/mingw_64/./bin/uic.exe",

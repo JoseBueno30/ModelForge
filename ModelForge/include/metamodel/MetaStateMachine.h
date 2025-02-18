@@ -10,10 +10,10 @@ private:
     std::string stateMachineDefinition;
 
 public:
-    MetaStateMachine(std::string stateMachineDefinition);
+    MetaStateMachine(const std::string& stateMachineDefinition);
 
     std::string getStateMachineDefinition() const;
-    void setStateMachineDefinition(const std::string stateMachineDefinition);
+    void setStateMachineDefinition(const std::string& stateMachineDefinition);
 };
 
 }

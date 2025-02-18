@@ -386,6 +386,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/metamodel/MetaAttribute.h
         include/metamodel/MetaStateMachine.h
         include/metamodel/MetaConstraint.h
+        include/metamodel/MetaVariable.h
+        include/metamodel/MetaOperation.h
+        include/metamodel/MetaClass.h
+        include/metamodel/MetaAssociationEnd.h
+        include/metamodel/MetaAssociationClass.h
+        include/metamodel/MetaModel.h
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ModelForge APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
