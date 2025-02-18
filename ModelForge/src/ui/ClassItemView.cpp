@@ -10,5 +10,6 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setPen(QPen(Qt::black));
     painter->setBrush(QColor(0x8DD0FF));
     painter->drawRect(boundingRect());
+    painter->setFont(QFont("Arial", 13));
     painter->drawText(boundingRect(), Qt::AlignCenter, "Class");
 }

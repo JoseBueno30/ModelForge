@@ -1,0 +1,4 @@
+ModelGraphicsView{
+    background-color: #21252A;
+    border: 1px solid white;
+}

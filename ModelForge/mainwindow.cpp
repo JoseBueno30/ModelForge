@@ -1,8 +1,16 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
-#include <ui/ClassItemView.h>
-#include <ui/ModelGraphicsView.h>
+void toogleColorTheme(QString &theme){
+    QFile file(":/styles/" + theme + ".qss");
+    qDebug() << "prueba: " << file.exists();
+    if(file.open(QFile::ReadOnly)){
+        qDebug() << "entra";
+        QString stylesheet = file.readAll();
+        qApp->setStyleSheet(stylesheet);
+        file.close();
+    }
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -17,6 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     ClassItemView *classItem = new ClassItemView(nullptr);
     scene->addItem(classItem);
+
+    QString theme = "dark";
+    toogleColorTheme(theme);
 }
 
 MainWindow::~MainWindow()
@@ -27,3 +38,11 @@ MainWindow::~MainWindow()
 void MainWindow::setupModelGraphicsView(){
 
 }
+
+
+
+void MainWindow::on_actionSwitch_mode_triggered()
+{
+
+}
+
