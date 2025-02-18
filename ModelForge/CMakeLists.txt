@@ -360,6 +360,8 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.h")
 set(TS_FILES ModelForge_en_150.ts)
 
+
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
@@ -392,7 +394,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/metamodel/MetaAssociationEnd.h
         include/metamodel/MetaAssociationClass.h
         include/metamodel/MetaModel.h
+        include/ui/ModelGraphicsView.h
+        src/ui/ModelGraphicsView.cpp
+        include/ui/ClassItemView.h
+        resources.qrc
+        include/ui/ConsoleHandler.h
+        src/ui/ConsoleHandler.cpp
     )
+    #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ModelForge APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)

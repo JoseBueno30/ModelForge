@@ -66,6 +66,9 @@
        <layout class="QVBoxLayout" name="rightVerticalLayout" stretch="10,4">
         <item>
          <widget class="ModelGraphicsView" name="modelGraphicsView">
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
           <property name="backgroundBrush">
            <brush brushstyle="NoBrush">
             <color alpha="50">
@@ -96,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>1399</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -164,7 +167,7 @@
   </action>
   <action name="actionSwitch_mode">
    <property name="text">
-    <string>Switch mode</string>
+    <string>Toogle Theme</string>
    </property>
   </action>
  </widget>

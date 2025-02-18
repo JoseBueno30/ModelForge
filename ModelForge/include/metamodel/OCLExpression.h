@@ -1,5 +1,6 @@
 #ifndef OCLEXPRESSION_H
 #define OCLEXPRESSION_H
+#include <memory>
 #include <string>
 
 namespace MetaModel{
@@ -8,8 +9,10 @@ class OCLExpr{};
 // Binary Expressions -> formed by 2 OCLExpressions
 class BinaryExpr : OCLExpr{
 private:
-    MetaModel::OCLExpr* expr1;
-    MetaModel::OCLExpr* expr2;
+    std::unique_ptr<MetaModel::OCLExpr> expr1;
+    std::unique_ptr<MetaModel::OCLExpr> expr2;
+    //USE::OCLExpr* expr1;
+    //USE::OCLExpr* expr2;
 };
 
 // Logical Expressions

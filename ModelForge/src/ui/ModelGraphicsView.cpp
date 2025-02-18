@@ -1,10 +1,13 @@
 #include<ui/ModelGraphicsView.h>
 
 ModelGraphicsView::ModelGraphicsView(QWidget *parent) : QGraphicsView(parent){
+    setObjectName("modelGraphicsView");
     setDragMode(QGraphicsView::NoDrag);
     setRenderHint(QPainter::Antialiasing);
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setSceneRect(-10000, -10000, 20000, 20000);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     //this->setBackgroundBrush(QBrush(QColor(0x21252A)));
 }
 
@@ -44,5 +47,5 @@ void ModelGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void ModelGraphicsView::drawBackground(QPainter *painter, const QRectF &rect){
-    painter->fillRect(rect, QColor(0x21252A));
+    //painter->fillRect(rect, QColor(0x21252A));
 }

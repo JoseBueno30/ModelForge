@@ -1,0 +1,9 @@
+ModelGraphicsView{
+    background-color: #292C34;
+    border: 1px solid white;
+}
+
+QTextEdit#consoleTextEdit{
+    background-color: #292C34;
+    border: 1px solid white;
+}
