@@ -392,6 +392,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/ModelGraphicsView.cpp
         include/ui/ClassItemView.h
         resources.qrc
+        include/ui/ConsoleHandler.h
+        src/ui/ConsoleHandler.cpp
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:

@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "ui/ConsoleHandler.h"
 #include <QMainWindow>
 #include <QApplication>
 #include <ui/ClassItemView.h>
@@ -26,7 +27,8 @@ public Q_SLOTS:
 
 private:
     Ui::MainWindow *ui;
-    std::string theme;
+    QString theme;
+    ConsoleHandler* consoleHandler;
     void setupModelGraphicsView();
 
 };

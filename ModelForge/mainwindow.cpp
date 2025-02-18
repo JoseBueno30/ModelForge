@@ -14,7 +14,9 @@ void toogleColorTheme(QString &theme){
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow),
+    theme("dark"),
+    consoleHandler(new ConsoleHandler())
 {
     ui->setupUi(this);
 
@@ -26,8 +28,11 @@ MainWindow::MainWindow(QWidget *parent)
     ClassItemView *classItem = new ClassItemView(nullptr);
     scene->addItem(classItem);
 
-    QString theme = "dark";
     toogleColorTheme(theme);
+
+    consoleHandler->setConsole(this->ui->consoleTextEdit);
+    consoleHandler->appendErrorLog("Esto es un error");
+    consoleHandler->appendSuccessfulLog("Esto es un mensaje gucci");
 }
 
 MainWindow::~MainWindow()
