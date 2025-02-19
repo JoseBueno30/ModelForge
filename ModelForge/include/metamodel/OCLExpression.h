@@ -4,7 +4,16 @@
 #include <string>
 
 namespace MetaModel{
-class OCLExpr{};
+class OCLExpr{
+private:
+    std::string expression;
+
+public:
+    OCLExpr(const std::string& expression);
+
+    std::string getExpression() const;
+    void setExpression(const std::string& expression);
+};
 
 // Binary Expressions -> formed by 2 OCLExpressions
 class BinaryExpr : OCLExpr{

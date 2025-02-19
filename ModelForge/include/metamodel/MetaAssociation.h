@@ -28,7 +28,7 @@ public:
     int getType() const;
     void setType(int type);
 
-    std::vector<std::unique_ptr<MetaAssociationEnd>>& getAssociationEnds() const;
+    const std::vector<std::unique_ptr<MetaAssociationEnd>>& getAssociationEnds() const;
     void addAssociationEnd(std::unique_ptr<MetaAssociationEnd> associationEnd);
     void removeAssociationEnd(int pos);
 };

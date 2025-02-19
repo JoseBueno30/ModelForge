@@ -33,23 +33,23 @@ public:
     bool getIsAbstract() const;
     void setIsAbstract(bool isAbstract);
 
-    std::vector<std::shared_ptr<MetaClass>>& getSuperClasses() const;
+    const std::vector<std::shared_ptr<MetaClass>>& getSuperClasses() const;
     void addSuperClass(const std::shared_ptr<MetaClass>& metaClass);
     void removeSuperClass(int pos);
 
-    std::vector<std::unique_ptr<MetaAttribute>>& getAttributes() const;
+    const std::vector<std::unique_ptr<MetaAttribute>>& getAttributes() const;
     void addAttribute(std::unique_ptr<MetaAttribute> attribute);
     void removeAttribute(int pos);
 
-    std::vector<std::unique_ptr<MetaOperation>>& getOperations() const;
+    const std::vector<std::unique_ptr<MetaOperation>>& getOperations() const;
     void addOperation(std::unique_ptr<MetaOperation> operation);
     void removeOperation(int pos);
 
-    std::vector<std::unique_ptr<MetaConstraint>>& getConstraints() const;
+    const std::vector<std::unique_ptr<MetaConstraint>>& getConstraints() const;
     void addConstraint(std::unique_ptr<MetaConstraint> constraint);
     void removeConstraint(int pos);
 
-    std::vector<std::unique_ptr<MetaStateMachine>>& getStateMachines() const;
+    const std::vector<std::unique_ptr<MetaStateMachine>>& getStateMachines() const;
     void addStateMachine(std::unique_ptr<MetaStateMachine> stateMachine);
     void removeStateMachine(int pos);
 };

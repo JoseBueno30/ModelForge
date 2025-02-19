@@ -2,7 +2,6 @@
 #define METAVARIABLE_H
 
 #include "MetaType.h"
-#include "OCLExpression.h"
 
 #include<string>
 
@@ -19,7 +18,7 @@ public:
     std::string getName() const;
     void setName(const std::string& name);
 
-    std::shared_ptr<MetaType> getType() const;
+    const MetaType& getType() const;
     void setType(const std::shared_ptr<MetaType>& type);
 };
 

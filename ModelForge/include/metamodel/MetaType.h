@@ -12,11 +12,51 @@ class MetaType{};
 // Simple Types
 class SimpleType : public MetaType{};
 
-class Real : public SimpleType{};
-class Integer : public SimpleType{};
-class String : public SimpleType{};
-class Boolean : public SimpleType{};
-class Void: public SimpleType{};
+class Real : public SimpleType{
+private:
+    Real();
+public:
+    static std::shared_ptr<Real> instance(){
+        static std::shared_ptr<Real> inst(new Real());
+        return inst;
+    }
+};
+class Integer : public SimpleType{
+private:
+    Integer();
+public:
+    static std::shared_ptr<Integer> instance(){
+        static std::shared_ptr<Integer> inst(new Integer());
+        return inst;
+    }
+};
+class String : public SimpleType{
+private:
+    String();
+public:
+    static std::shared_ptr<String> instance(){
+        static std::shared_ptr<String> inst(new String());
+        return inst;
+    }
+};
+class Boolean : public SimpleType{
+private:
+    Boolean();
+public:
+    static std::shared_ptr<Boolean> instance(){
+        static std::shared_ptr<Boolean> inst(new Boolean());
+        return inst;
+    }
+};
+class Void: public SimpleType{
+private:
+    Void();
+public:
+    static std::shared_ptr<Void> instance(){
+        static std::shared_ptr<Void> inst(new Void());
+        return inst;
+    }
+};
 
 
 
@@ -40,7 +80,7 @@ public:
     int getMultiplicity() const;
     void setMultiplicity(int multiplicity);
 
-    std::shared_ptr<MetaType> getType() const;
+    const MetaType& getType() const;
     void setType(const std::shared_ptr<MetaType>& type);
 };
 
@@ -56,7 +96,7 @@ public:
     std::string getName() const;
     void setName(const std::string& name);
 
-    std::shared_ptr<MetaType> getType() const;
+    const MetaType& getType() const;
     void setType(const std::shared_ptr<MetaType>& type);
 };
 
@@ -67,7 +107,7 @@ private:
 public:
     TupleType(std::unique_ptr<TuplePart> element);
 
-    std::vector<std::unique_ptr<TuplePart>>& getElements() const;
+    const std::vector<std::unique_ptr<TuplePart>>& getElements() const;
     void addElement(std::unique_ptr<TuplePart> newElement);
     void removeElement(int pos);
 };

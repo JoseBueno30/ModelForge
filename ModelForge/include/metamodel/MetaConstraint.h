@@ -25,7 +25,7 @@ public:
     bool getIsExistential() const;
     void setIsExistential(const bool isExistential);
 
-    std::unique_ptr<OCLExpr> getExpression() const;
+    const OCLExpr* getExpression() const;
     void setExpression(std::unique_ptr<OCLExpr> expression);
 };
 

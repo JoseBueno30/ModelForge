@@ -30,7 +30,7 @@ public:
     std::string getName() const;
     void setName(const std::string& name);
 
-    std::vector<std::unique_ptr<MetaEnumElement>>& getElements() const;
+    const std::vector<std::unique_ptr<MetaEnumElement>>& getElements() const;
     void addElement(std::unique_ptr<MetaEnumElement> element);
     void removeElement(int pos);
 };

@@ -400,6 +400,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         resources.qrc
         include/ui/ConsoleHandler.h
         src/ui/ConsoleHandler.cpp
+        src/metamodel/MetaType.cpp
+        src/metamodel/MetaAttribute.cpp
+        src/metamodel/MetaVariable.cpp
+        src/metamodel/MetaStateMachine.cpp
+        src/metamodel/MetaConstraint.cpp
+
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:

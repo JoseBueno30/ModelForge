@@ -26,19 +26,19 @@ private:
     std::string getName() const;
     void setName(const std::string& name);
 
-    std::vector<std::unique_ptr<MetaEnum>>& getEnums() const;
+    const std::vector<std::unique_ptr<MetaEnum>>& getEnums() const;
     void addEnum(std::unique_ptr<MetaEnum> modelEnum);
     void removeEnum(int pos);
 
-    std::vector<std::unique_ptr<MetaClass>>& getClasses() const;
+    const std::vector<std::unique_ptr<MetaClass>>& getClasses() const;
     void addClass(std::unique_ptr<MetaClass> modelClass);
     void removeClass(int pos);
 
-    std::vector<std::unique_ptr<MetaAssociation>>& getAssociations() const;
+    const std::vector<std::unique_ptr<MetaAssociation>>& getAssociations() const;
     void addAssociation(std::unique_ptr<MetaAssociation> modelAssociation);
     void removeAssociation(int pos);
 
-    std::vector<std::unique_ptr<MetaAssociationClass>>& getAssociationClasses() const;
+    const std::vector<std::unique_ptr<MetaAssociationClass>>& getAssociationClasses() const;
     void addAssociationClass(std::unique_ptr<MetaAssociationClass> modelAssociationClass);
     void removeAssociationClass(int pos);
 };

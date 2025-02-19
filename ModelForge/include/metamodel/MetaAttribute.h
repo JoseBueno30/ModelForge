@@ -23,13 +23,13 @@ public:
     std::string getName() const;
     void setName(const std::string& name);
 
-    std::shared_ptr<MetaType> getType() const;
+    const MetaType& getType() const;
     void setType(const std::shared_ptr<MetaType>& type);
 
-    std::unique_ptr<OCLExpr> getInitExpr() const;
+    const OCLExpr* getInitExpr() const;
     void setInitExpr(std::unique_ptr<OCLExpr> initExpr);
 
-    std::unique_ptr<OCLExpr> getDeriveExpr() const;
+    const OCLExpr* getDeriveExpr() const;
     void setDeriveExpr(std::unique_ptr<OCLExpr> deriveExpr);
 };
 

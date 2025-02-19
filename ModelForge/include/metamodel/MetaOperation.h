@@ -24,7 +24,7 @@ public:
     std::string getName() const;
     void setName(const std::string& name);
 
-    std::unique_ptr<OCLExpr> getExpression() const;
+    const OCLExpr* getExpression() const;
     void setExpression(std::unique_ptr<OCLExpr> expression);
 };
 
@@ -47,18 +47,18 @@ public:
     std::string getOperationDefinition() const;
     void setOperationDefinition(const std::string& operationDefinition);
 
-    std::shared_ptr<MetaType> getReturnType() const;
+    const MetaType& getReturnType() const;
     void setReturnType(const std::shared_ptr<MetaType>& returnType);
 
-    std::vector<std::unique_ptr<MetaVariable>>& getVariables() const;
+    const std::vector<std::unique_ptr<MetaVariable>>& getVariables() const;
     void addVariable(std::unique_ptr<MetaVariable> variable);
     void removeVariable(int pos);
 
-    std::vector<std::unique_ptr<PrePostClause>>& getPreConditions() const;
+    const std::vector<std::unique_ptr<PrePostClause>>& getPreConditions() const;
     void addPreCondition(std::unique_ptr<PrePostClause> preCondition);
     void removePreCondition(int pos);
 
-    std::vector<std::unique_ptr<PrePostClause>>& getPostConditions() const;
+    const std::vector<std::unique_ptr<PrePostClause>>& getPostConditions() const;
     void addPostCondition(std::unique_ptr<PrePostClause> postCondition);
     void removePostCondition(int pos);
 };
