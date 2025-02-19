@@ -1,4 +1,4 @@
-#include<ui/ModelGraphicsView.h>
+#include<ui/components/ModelGraphicsView.h>
 
 ModelGraphicsView::ModelGraphicsView(QWidget *parent) : QGraphicsView(parent){
     setObjectName("modelGraphicsView");

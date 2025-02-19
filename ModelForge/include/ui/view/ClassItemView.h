@@ -1,7 +1,7 @@
 #ifndef CLASSITEMVIEW_H
 #define CLASSITEMVIEW_H
 
-#include <ui/ClassItemModel.h>
+#include <ui/model/ClassItemModel.h>
 
 #include <QGraphicsItem>
 #include <QPainter>

@@ -99,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>1399</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -175,7 +175,7 @@
   <customwidget>
    <class>ModelGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header>ui/ModelGraphicsView.h</header>
+   <header>ui/components/ModelGraphicsView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
