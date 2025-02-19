@@ -1,4 +1,4 @@
-#include<ui/ConsoleHandler.h>
+#include<ui/components/ConsoleHandler.h>
 
 ConsoleHandler::ConsoleHandler(){}
 

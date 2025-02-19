@@ -1,11 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "ui/ConsoleHandler.h"
+#include "ui/components/ConsoleHandler.h"
 #include <QMainWindow>
 #include <QApplication>
-#include <ui/ClassItemView.h>
-#include <ui/ModelGraphicsView.h>
+#include <ui/view/ClassItemView.h>
+#include <ui/components/ModelGraphicsView.h>
 #include <QFile>
 
 QT_BEGIN_NAMESPACE

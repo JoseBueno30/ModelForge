@@ -1,4 +1,4 @@
-#include<ui/ClassItemView.h>
+#include<ui/view/ClassItemView.h>
 #define PADDING 20
 #define TEST_NAME "ClassLongTextAdriduty"
 

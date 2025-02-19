@@ -382,9 +382,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/metamodel/MetaAssociation.h
         include/metamodel/MetaType.h
         include/metamodel/MetaEnum.h
-        include/ui/ModelGraphicsView.h
-        src/ui/ModelGraphicsView.cpp
-        include/ui/ClassItemView.h
+        include/ui/components/ModelGraphicsView.h
+        src/ui/components//ModelGraphicsView.cpp
+        include/ui/view/ClassItemView.h
         include/metamodel/MetaAttribute.h
         include/metamodel/MetaStateMachine.h
         include/metamodel/MetaConstraint.h
@@ -394,12 +394,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/metamodel/MetaAssociationEnd.h
         include/metamodel/MetaAssociationClass.h
         include/metamodel/MetaModel.h
-        include/ui/ModelGraphicsView.h
-        src/ui/ModelGraphicsView.cpp
-        include/ui/ClassItemView.h
+        include/ui/components/ModelGraphicsView.h
+        src/ui/components/ModelGraphicsView.cpp
+        include/ui/view/ClassItemView.h
         resources.qrc
-        include/ui/ConsoleHandler.h
-        src/ui/ConsoleHandler.cpp
+        include/ui/components/ConsoleHandler.h
+        src/ui/components/ConsoleHandler.cpp
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:
