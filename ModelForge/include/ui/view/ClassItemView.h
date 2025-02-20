@@ -1,23 +1,24 @@
 #ifndef CLASSITEMVIEW_H
 #define CLASSITEMVIEW_H
 
-#include <QGraphicsItem>
+#include <ui/view/BoxItemView.h>
 #include <QPainter>
-
 #include <metamodel/MetaClass.h>
 
-class ClassItemView : public QGraphicsItem{
-public:
-    ClassItemView(MetaModel::MetaClass *model);
-    ClassItemView(MetaModel::MetaClass *model, int x, int y, int width, int height);
+using std::shared_ptr;
 
-    QRectF boundingRect() const override;
+class ClassItemView : public BoxItemView{
+public:
+    ClassItemView(shared_ptr<MetaModel::MetaClass> model);
+    ClassItemView(shared_ptr<MetaModel::MetaClass> model, int x, int y, int width, int height);
+
     QRectF classNameRect();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+    ~ClassItemView();
+
 private:
-    MetaModel::MetaClass * model;
-    int x,y,width,height;
+    shared_ptr<MetaModel::MetaClass> model;
 
     void calculateMinimumSize();
 

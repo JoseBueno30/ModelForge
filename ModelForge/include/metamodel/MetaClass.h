@@ -38,7 +38,7 @@ public:
     void removeSuperClass(int pos);
 
     const std::vector<std::unique_ptr<MetaAttribute>>& getAttributes() const;
-    void addAttribute(std::unique_ptr<MetaAttribute> attribute);
+    void addAttribute(std::unique_ptr<MetaAttribute> &attribute);
     void removeAttribute(int pos);
 
     const std::vector<std::unique_ptr<MetaOperation>>& getOperations() const;

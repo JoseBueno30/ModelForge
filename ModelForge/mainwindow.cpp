@@ -25,7 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     QGraphicsScene *scene = modelGraphicsView->scene();
 
-    MetaModel::MetaClass *class1 = new MetaModel::MetaClass("ClaseDePrueba", false);
+    std::shared_ptr<MetaModel::MetaClass> class1 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba", false);
+    const std::shared_ptr<MetaModel::MetaType> type = std::make_shared<MetaModel::MetaType>();
+    std::unique_ptr<MetaModel::MetaAttribute> att1 = std::make_unique<MetaModel::MetaAttribute>("att", type);
+    class1->addAttribute(att1);
     ClassItemView *classItem = new ClassItemView(class1);
     scene->addItem(classItem);
 
