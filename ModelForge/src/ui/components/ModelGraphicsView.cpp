@@ -1,6 +1,6 @@
 #include<ui/components/ModelGraphicsView.h>
 
-ModelGraphicsView::ModelGraphicsView(QWidget *parent) : QGraphicsView(parent){
+void ModelGraphicsView::setupGraphicsView(){
     setObjectName("modelGraphicsView");
     setDragMode(QGraphicsView::NoDrag);
     setRenderHint(QPainter::Antialiasing);
@@ -8,9 +8,16 @@ ModelGraphicsView::ModelGraphicsView(QWidget *parent) : QGraphicsView(parent){
     setSceneRect(-10000, -10000, 20000, 20000);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+}
+
+ModelGraphicsView::ModelGraphicsView(QWidget *parent, MetaModel::MetaModel *model) : QGraphicsView(parent), model(model){
+    setupGraphicsView();
     //this->setBackgroundBrush(QBrush(QColor(0x21252A)));
 }
 
+void ModelGraphicsView::setModel(MetaModel::MetaModel *model){
+    this->model = model;
+}
 
 void ModelGraphicsView::wheelEvent(QWheelEvent *event){
     double scaleFactor = 1.15;

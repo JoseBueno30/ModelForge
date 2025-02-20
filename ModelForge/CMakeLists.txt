@@ -412,8 +412,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/metamodel/MetaAssociationEnd.cpp
         src/metamodel/MetaAssociation.cpp
         src/metamodel/MetaAssociationClass.cpp
-        src/metamodel/MetaOCLExpression.cpp
+        src/metamodel/OCLExpression.cpp
         src/metamodel/MetaModel.cpp
+        include/ui/view/AssociationClassItemView.h
+        include/ui/view/AssociationItemView.h
+        include/ui/view/EnumItemView.h
+
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:

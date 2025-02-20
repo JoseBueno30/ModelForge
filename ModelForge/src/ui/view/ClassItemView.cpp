@@ -10,9 +10,15 @@ void ClassItemView::calculateMinimumSize(){
     //TODO Check attributtes and operations longitude
 }
 
-ClassItemView::ClassItemView(ClassItemModel *classModel) : model(classModel), x(0), y(0), width(150), height(100){
+ClassItemView::ClassItemView(MetaModel::MetaClass *classModel) : model(classModel), x(0), y(0), width(150), height(100){
     calculateMinimumSize();
 }
+
+ClassItemView::ClassItemView(MetaModel::MetaClass *classModel, int x, int y, int width, int height) :
+    model(classModel),
+    x(x), y(y),
+    width(width),
+    height(height){}
 
 QRectF ClassItemView::boundingRect() const {
     return QRectF(x, y, width, height); // Replace with coordinates from ui
@@ -20,7 +26,8 @@ QRectF ClassItemView::boundingRect() const {
 
 QRectF ClassItemView::classNameRect() {
     QFontMetrics fm(QFont("Arial", 13, QFont::Bold));
-    return QRectF(x + width/2 - fm.horizontalAdvance(TEST_NAME)/2, y, fm.horizontalAdvance(TEST_NAME) , fm.height());
+    return QRectF(x + width / 2 - fm.horizontalAdvance(QString::fromStdString(this->model->getName())) / 2, y,
+                  fm.horizontalAdvance(QString::fromStdString(this->model->getName())) , fm.height());
 }
 
 void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
@@ -28,5 +35,5 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setBrush(QColor(0x8DD0FF));
     painter->drawRoundedRect(boundingRect(),10,10);
     painter->setFont(QFont("Arial", 13, QFont::Bold));
-    painter->drawText(classNameRect(), Qt::AlignCenter, TEST_NAME);
+    painter->drawText(classNameRect(), Qt::AlignCenter, QString::fromStdString(this->model->getName()));
 }

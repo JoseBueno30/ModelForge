@@ -25,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     QGraphicsScene *scene = modelGraphicsView->scene();
 
-    ClassItemView *classItem = new ClassItemView(nullptr);
+    MetaModel::MetaClass *class1 = new MetaModel::MetaClass("ClaseDePrueba", false);
+    ClassItemView *classItem = new ClassItemView(class1);
     scene->addItem(classItem);
 
     toogleColorTheme(theme);
