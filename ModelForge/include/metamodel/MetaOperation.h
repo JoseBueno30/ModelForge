@@ -24,7 +24,7 @@ public:
     std::string getName() const;
     void setName(const std::string& name);
 
-    const OCLExpr* getExpression() const;
+    const OCLExpr& getExpression() const;
     void setExpression(std::unique_ptr<OCLExpr> expression);
 };
 

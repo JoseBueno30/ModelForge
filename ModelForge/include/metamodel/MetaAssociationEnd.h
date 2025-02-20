@@ -27,6 +27,7 @@ public:
     int getUpperBound() const;
     void setUpperBound(int upperBound);
 };
+
 class MetaMultiplicity{
 private:
     std::vector<std::unique_ptr<MetaMultiplicityRange>> ranges;
@@ -34,7 +35,7 @@ private:
 public:
     MetaMultiplicity(int lowerBound, int upperBound);
 
-    const std::vector<std::unique_ptr<MetaMultiplicityRange>> getRanges() const;
+    const std::vector<std::unique_ptr<MetaMultiplicityRange>>& getRanges() const;
     void addRange(int lowerBound, int upperBound);
     void deleteRange(int pos);
 

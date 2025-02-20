@@ -84,6 +84,10 @@ void TupleType::addElement(std::unique_ptr<TuplePart> newElement) {
 void TupleType::removeElement(int pos) {
     if (pos >= 0 && pos < static_cast<int>(elements.size())) {
         elements.erase(elements.begin() + pos);
+
+        if(elements.size() < elements.capacity()/2){
+            elements.shrink_to_fit();
+        }
     }
 }
 

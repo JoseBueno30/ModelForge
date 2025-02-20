@@ -11,6 +11,9 @@ public:
     MetaAssociationClass(const std::string& name, bool isAbstract, int type);
 
     MetaAssociationClass(const std::string& name, bool isAbstract, int type, std::vector<std::unique_ptr<MetaAssociationEnd>> associationEnds);
+
+    std::string getName() const;
+    void setName(const std::string& name);
 };
 
 }
