@@ -8,17 +8,17 @@
 
 #include <string>
 #include <memory>
-#include <vector>
+#include <map>
 
 namespace MetaModel{
 
 class MetaModel{
 private:
     std::string name;
-    std::vector<std::unique_ptr<MetaEnum>> enums;
-    std::vector<std::unique_ptr<MetaClass>> classes;
-    std::vector<std::unique_ptr<MetaAssociation>> associations;
-    std::vector<std::unique_ptr<MetaAssociationClass>> associationClasses;
+    std::map<std::string, std::shared_ptr<MetaEnum>> enums;
+    std::map<std::string, std::shared_ptr<MetaClass>> classes;
+    std::map<std::string, std::shared_ptr<MetaAssociation>> associations;
+    std::map<std::string, std::shared_ptr<MetaAssociationClass>> associationClasses;
 
 private:
     MetaModel(const std::string& name);
@@ -26,21 +26,25 @@ private:
     std::string getName() const;
     void setName(const std::string& name);
 
-    const std::vector<std::unique_ptr<MetaEnum>>& getEnums() const;
-    void addEnum(std::unique_ptr<MetaEnum> modelEnum);
-    void removeEnum(int pos);
+    const std::map<std::string, std::shared_ptr<MetaEnum>>& getEnums() const;
+    const MetaEnum* getEnum(const std::string& key) const;
+    void addEnum(const std::string& key, std::unique_ptr<MetaEnum> modelEnum);
+    void removeEnum(const std::string& key);
 
-    const std::vector<std::unique_ptr<MetaClass>>& getClasses() const;
-    void addClass(std::unique_ptr<MetaClass> modelClass);
-    void removeClass(int pos);
+    const std::map<std::string, std::shared_ptr<MetaClass>>& getClasses() const;
+    const MetaClass& getClass(const std::string& key) const;
+    void addClass(const std::string& key, std::unique_ptr<MetaClass> modelClass);
+    void removeClass(const std::string& key);
 
-    const std::vector<std::unique_ptr<MetaAssociation>>& getAssociations() const;
-    void addAssociation(std::unique_ptr<MetaAssociation> modelAssociation);
-    void removeAssociation(int pos);
+    const std::map<std::string, std::shared_ptr<MetaAssociation>>& getAssociations() const;
+    const MetaAssociation& getAssociation(const std::string& key) const;
+    void addAssociation(const std::string& key, std::unique_ptr<MetaAssociation> modelAssociation);
+    void removeAssociation(const std::string& key);
 
-    const std::vector<std::unique_ptr<MetaAssociationClass>>& getAssociationClasses() const;
-    void addAssociationClass(std::unique_ptr<MetaAssociationClass> modelAssociationClass);
-    void removeAssociationClass(int pos);
+    const std::map<std::string, std::shared_ptr<MetaAssociationClass>>& getAssociationClasses() const;
+    const MetaAssociationClass& getAssociationClass(const std::string& key) const;
+    void addAssociationClass(const std::string& key, std::unique_ptr<MetaAssociationClass> modelAssociationClass);
+    void removeAssociationClass(const std::string& key);
 };
 
 }

@@ -13,84 +13,92 @@ void MetaModel::setName(const std::string& name){
     this->name = name;
 }
 
-const std::vector<std::unique_ptr<MetaEnum>>& MetaModel::getEnums() const{
+const std::map<std::string, std::shared_ptr<MetaEnum>>& MetaModel::getEnums() const{
     return enums;
 }
 
-void MetaModel::addEnum(std::unique_ptr<MetaEnum> modelEnum){
+const MetaEnum* MetaModel::getEnum(const std::string& key) const{
+    auto iterator = enums.find(key);
+    if(iterator != enums.end()){
+        return (iterator->second).get();
+    }
+    return nullptr;
+}
+
+void MetaModel::addEnum(const std::string& key, std::shared_ptr<MetaEnum> modelEnum){
     if(modelEnum){
-        enums.push_back(std::move(modelEnum));
+        enums[key] = modelEnum;
     }
 }
 
-void MetaModel::removeEnum(int pos){
-    if(pos>=0 && pos <  static_cast<int>(enums.size())){
-        enums.erase(enums.begin() + pos);
-
-        if(enums.size() < enums.capacity()/2){
-            enums.shrink_to_fit();
-        }
-    }
+void MetaModel::removeEnum(const std::string& key){
+    enums.erase(key);
 }
 
-const std::vector<std::unique_ptr<MetaClass>>& MetaModel::getClasses() const{
+const std::map<std::string, std::shared_ptr<MetaClass>>& MetaModel::getClasses() const{
     return classes;
 }
 
-void MetaModel::addClass(std::unique_ptr<MetaClass> modelClass){
+const MetaClass* MetaModel::getClass(const std::string& key) const{
+    auto iterator = classes.find(key);
+    if(iterator != classes.end()){
+        return (iterator->second).get();
+    }
+    return nullptr;
+}
+
+void MetaModel::addClass(const std::string& key, std::shared_ptr<MetaClass> modelClass){
     if(modelClass){
-        classes.push_back(std::move(modelClass));
+        classes[key] = modelClass;
     }
 }
 
-void MetaModel::removeClass(int pos){
-    if(pos>=0 && pos <  static_cast<int>(classes.size())){
-        classes.erase(classes.begin() + pos);
-
-        if(classes.size() < classes.capacity()/2){
-            classes.shrink_to_fit();
-        }
-    }
+void MetaModel::removeClass(const std::string& key){
+    classes.erase(key);
 }
 
-const std::vector<std::unique_ptr<MetaAssociation>>& MetaModel::getAssociations() const{
+const std::map<std::string, std::shared_ptr<MetaAssociation>>& MetaModel::getAssociations() const{
     return associations;
 }
 
-void MetaModel::addAssociation(std::unique_ptr<MetaAssociation> modelAssociation){
+const MetaAssociation* MetaModel::getAssociation(const std::string& key) const{
+    auto iterator = associations.find(key);
+    if(iterator != associations.end()){
+        return (iterator->second).get();
+    }
+    return nullptr;
+}
+
+void MetaModel::addAssociation(const std::string& key, std::shared_ptr<MetaAssociation> modelAssociation){
     if(modelAssociation){
-        associations.push_back(std::move(modelAssociation));
+        associations[key] = modelAssociation;
     }
 }
 
-void MetaModel::removeAssociation(int pos){
-    if(pos>=0 && pos <  static_cast<int>(associations.size())){
-        associations.erase(associations.begin() + pos);
-
-        if(associations.size() < associations.capacity()/2){
-            associations.shrink_to_fit();
-        }
-    }
+void MetaModel::removeAssociation(const std::string& key){
+    associations.erase(key);
 }
 
-const std::vector<std::unique_ptr<MetaAssociationClass>>& MetaModel::getAssociationClasses() const{
+const std::map<std::string, std::shared_ptr<MetaAssociationClass>>& MetaModel::getAssociationClasses() const{
     return associationClasses;
 }
 
-void MetaModel::addAssociationClass(std::unique_ptr<MetaAssociationClass> modelAssociationClass){
+const MetaAssociationClass* MetaModel::getAssociationClass(const std::string& key) const{
+    auto iterator = associationClasses.find(key);
+    if(iterator != associationClasses.end()){
+        return (iterator->second).get();
+    }
+    return nullptr;
+}
+
+void MetaModel::addAssociationClass(const std::string& key, std::shared_ptr<MetaAssociationClass> modelAssociationClass){
     if(modelAssociationClass){
-        associationClasses.push_back(std::move(modelAssociationClass));
+        associationClasses[key] = modelAssociationClass;
     }
 }
 
-void MetaModel::removeAssociationClass(int pos){
-    if(pos>=0 && pos <  static_cast<int>(associationClasses.size())){
-        associationClasses.erase(associationClasses.begin() + pos);
-
-        if(associationClasses.size() < associationClasses.capacity()/2){
-            associationClasses.shrink_to_fit();
-        }
-    }
+void MetaModel::removeAssociationClass(const std::string& key){
+    associationClasses.erase(key);
 }
 
 
