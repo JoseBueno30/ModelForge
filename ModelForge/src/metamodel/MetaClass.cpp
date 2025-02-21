@@ -42,7 +42,7 @@ const std::vector<std::unique_ptr<MetaAttribute>>& MetaClass::getAttributes() co
     return attributes;
 }
 
-void MetaClass::addAttribute(std::unique_ptr<MetaAttribute> &attribute){
+void MetaClass::addAttribute(std::unique_ptr<MetaAttribute> attribute){
     if(attribute){
         attributes.push_back(std::move(attribute));
     }
