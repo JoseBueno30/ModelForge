@@ -1,4 +1,5 @@
 #include <metamodel/MetaModel.h>
+#include<stdexcept>
 
 namespace MetaModel{
 
@@ -26,9 +27,15 @@ const MetaEnum* MetaModel::getEnum(const std::string& key) const{
 }
 
 void MetaModel::addEnum(const std::string& key, std::shared_ptr<MetaEnum> modelEnum){
-    if(modelEnum){
-        enums[key] = modelEnum;
+    if (!modelEnum) {
+        throw std::invalid_argument("Null enum");
     }
+
+    if (modelContainsKey(key)) {
+        throw std::runtime_error("Model already contains element named: " + key);
+    }
+
+    enums[key] = modelEnum;
 }
 
 void MetaModel::removeEnum(const std::string& key){
@@ -48,9 +55,15 @@ const MetaClass* MetaModel::getClass(const std::string& key) const{
 }
 
 void MetaModel::addClass(const std::string& key, std::shared_ptr<MetaClass> modelClass){
-    if(modelClass){
-        classes[key] = modelClass;
+    if (!modelClass) {
+        throw std::invalid_argument("Null class");
     }
+
+    if (modelContainsKey(key)) {
+        throw std::runtime_error("Model already contains element named: " + key);
+    }
+
+    classes[key] = modelClass;
 }
 
 void MetaModel::removeClass(const std::string& key){
@@ -70,9 +83,15 @@ const MetaAssociation* MetaModel::getAssociation(const std::string& key) const{
 }
 
 void MetaModel::addAssociation(const std::string& key, std::shared_ptr<MetaAssociation> modelAssociation){
-    if(modelAssociation){
-        associations[key] = modelAssociation;
+    if (!modelAssociation) {
+        throw std::invalid_argument("Null association");
     }
+
+    if (modelContainsKey(key)) {
+        throw std::runtime_error("Model already contains element named: " + key);
+    }
+
+    associations[key] = modelAssociation;
 }
 
 void MetaModel::removeAssociation(const std::string& key){
@@ -92,14 +111,27 @@ const MetaAssociationClass* MetaModel::getAssociationClass(const std::string& ke
 }
 
 void MetaModel::addAssociationClass(const std::string& key, std::shared_ptr<MetaAssociationClass> modelAssociationClass){
-    if(modelAssociationClass){
-        associationClasses[key] = modelAssociationClass;
+    if (!modelAssociationClass) {
+        throw std::invalid_argument("Null associationClass");
     }
+
+    if (modelContainsKey(key)) {
+        throw std::runtime_error("Model already contains element named: " + key);
+    }
+
+    associationClasses[key] = modelAssociationClass;
 }
 
 void MetaModel::removeAssociationClass(const std::string& key){
     associationClasses.erase(key);
 }
 
+
+bool MetaModel::modelContainsKey(const std::string& key){
+    return (enums.find(key) != enums.end()) ||
+           (classes.find(key) != classes.end()) ||
+           (associations.find(key) != associations.end()) ||
+           (associationClasses.find(key) != associationClasses.end());
+}
 
 }

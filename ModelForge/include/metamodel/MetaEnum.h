@@ -4,7 +4,7 @@
 #include "MetaType.h"
 
 #include<string>
-#include<vector>
+#include<map>
 #include<memory>
 
 namespace MetaModel {
@@ -23,16 +23,17 @@ public:
 class MetaEnum : public SimpleType{
 private:
     std::string name;
-    std::vector<std::unique_ptr<MetaEnumElement>> elements;
+    std::map<std::string, std::unique_ptr<MetaEnumElement>> elements;
 public:
     MetaEnum(const std::string& name, std::unique_ptr<MetaEnumElement> element);
 
     std::string getName() const;
     void setName(const std::string& name);
 
-    const std::vector<std::unique_ptr<MetaEnumElement>>& getElements() const;
-    void addElement(std::unique_ptr<MetaEnumElement> element);
-    void removeElement(int pos);
+    const std::map<std::string, std::unique_ptr<MetaEnumElement>>& getElements() const;
+    const MetaEnumElement* getElement(const std::string& key) const;
+    void addElement(const std::string& key, std::unique_ptr<MetaEnumElement> element);
+    void removeElement(const std::string& key);
 };
 
 }

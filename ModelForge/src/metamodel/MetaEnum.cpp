@@ -1,5 +1,7 @@
 #include <metamodel/MetaEnum.h>
 
+#include <stdexcept>
+
 namespace MetaModel {
 
 
@@ -19,7 +21,7 @@ void MetaEnumElement::setName(const std::string& name){
 MetaEnum::MetaEnum(const std::string& name, std::unique_ptr<MetaEnumElement> element)
     : name(name){
     if(element){
-        elements.push_back(std::move(element));
+        elements[element->getName()] = std::move(element);
     }
 }
 
@@ -30,25 +32,32 @@ void MetaEnum::setName(const std::string& name){
     this->name = name;
 }
 
-
-const std::vector<std::unique_ptr<MetaEnumElement>>& MetaEnum::getElements() const{
+const std::map<std::string, std::unique_ptr<MetaEnumElement>>& MetaEnum::getElements() const{
     return elements;
 }
 
-void MetaEnum::addElement(std::unique_ptr<MetaEnumElement> element){
-    if(element){
-        elements.push_back(std::move(element));
+const MetaEnumElement* MetaEnum::getElement(const std::string& key) const{
+    auto iterator = elements.find(key);
+    if(iterator != elements.end()){
+        return (iterator->second).get();
     }
+    return nullptr;
 }
 
-void MetaEnum::removeElement(int pos){
-    if(pos>=0 && pos <  static_cast<int>(elements.size())){
-        elements.erase(elements.begin() + pos);
-
-        if(elements.size() < elements.capacity()/2){
-            elements.shrink_to_fit();
-        }
+void MetaEnum::addElement(const std::string& key, std::unique_ptr<MetaEnumElement> element){
+    if (!element) {
+        throw std::invalid_argument("Null enum");
     }
+
+    if (elements.find(key) != elements.end()) {
+        throw std::runtime_error("Enum: " + name + " already contains element named: " + key);
+    }
+
+    elements[key] = std::move(element);
+}
+
+void MetaEnum::removeElement(const std::string& key){
+    elements.erase(key);
 }
 
 }
