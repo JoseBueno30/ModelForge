@@ -2,6 +2,34 @@
 
 namespace MetaModel {
 
+std::string MetaType::toString() const{
+    return "MetaType";
+}
+
+std::string SimpleType::toString() const{
+    return "SimpleType";
+}
+
+std::string Real::toString() const{
+    return "Real";
+}
+
+std::string Integer::toString() const{
+    return "Integer";
+}
+
+std::string Boolean::toString() const{
+    return "Boolean";
+}
+
+std::string String::toString() const{
+    return "String";
+}
+
+std::string Void::toString() const{
+    return "Void";
+}
+
 CollectionType::CollectionType(bool ordered, bool unique, int multiplicity, const std::shared_ptr<MetaType>& type)
     : isOrdered(ordered), isUnique(unique), multiplicity(multiplicity), type(type)
 {
@@ -43,6 +71,11 @@ const MetaType& CollectionType::getType() const {
 void CollectionType::setType(const std::shared_ptr<MetaType>& type) {
     this->type = type;
 }
+
+std::string CollectionType::toString() const{
+    return "Collection<" + this->getType().toString() + ">";
+}
+
 
 TuplePart::TuplePart(const std::string& name, const std::shared_ptr<MetaType>& type)
     : name(name), type(type)
@@ -89,6 +122,10 @@ void TupleType::removeElement(int pos) {
             elements.shrink_to_fit();
         }
     }
+}
+
+std::string TupleType::toString() const{
+    return "Tuple";
 }
 
 }

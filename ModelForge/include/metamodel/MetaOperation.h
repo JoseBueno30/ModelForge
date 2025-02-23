@@ -39,7 +39,7 @@ private:
     std::map<std::string, std::unique_ptr<PrePostClause>> postConditions;;
 
 public:
-    MetaOperation(std::string& name, std::string& operationDefinition, const std::shared_ptr<MetaType>& returnType);
+    MetaOperation(const std::string& name, const std::string& operationDefinition, const std::shared_ptr<MetaType>& returnType);
 
     std::string getName() const;
     void setName(const std::string& name);

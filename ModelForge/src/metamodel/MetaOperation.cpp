@@ -25,7 +25,7 @@ void PrePostClause::setExpression(std::unique_ptr<OCLExpr> expression){
 
 
 
-MetaOperation::MetaOperation(std::string& name, std::string& operationDefinition, const std::shared_ptr<MetaType>& returnType)
+MetaOperation::MetaOperation(const std::string& name, const std::string& operationDefinition, const std::shared_ptr<MetaType>& returnType)
     : name(name), operationDefinition(operationDefinition), returnType(returnType){}
 
 std::string MetaOperation::getName() const{

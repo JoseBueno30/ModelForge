@@ -7,15 +7,24 @@
 
 namespace MetaModel{
 
-class MetaType{};
+class MetaType{
+public:
+    virtual std::string toString() const;
+    virtual ~MetaType(){};
+};
 
 // Simple Types
-class SimpleType : public MetaType{};
+class SimpleType : public MetaType{
+public:
+    virtual std::string toString() const override;
+    virtual ~SimpleType(){};
+};
 
 class Real : public SimpleType{
 private:
-    Real();
+    Real(){};
 public:
+    std::string toString() const override;
     static std::shared_ptr<Real> instance(){
         static std::shared_ptr<Real> inst(new Real());
         return inst;
@@ -23,8 +32,9 @@ public:
 };
 class Integer : public SimpleType{
 private:
-    Integer();
+    Integer(){};
 public:
+    std::string toString() const override;
     static std::shared_ptr<Integer> instance(){
         static std::shared_ptr<Integer> inst(new Integer());
         return inst;
@@ -32,8 +42,9 @@ public:
 };
 class String : public SimpleType{
 private:
-    String();
+    String(){};
 public:
+    std::string toString() const override;
     static std::shared_ptr<String> instance(){
         static std::shared_ptr<String> inst(new String());
         return inst;
@@ -41,8 +52,9 @@ public:
 };
 class Boolean : public SimpleType{
 private:
-    Boolean();
+    Boolean(){};
 public:
+    std::string toString() const override;
     static std::shared_ptr<Boolean> instance(){
         static std::shared_ptr<Boolean> inst(new Boolean());
         return inst;
@@ -50,8 +62,9 @@ public:
 };
 class Void: public SimpleType{
 private:
-    Void();
+    Void(){};
 public:
+    std::string toString() const override;
     static std::shared_ptr<Void> instance(){
         static std::shared_ptr<Void> inst(new Void());
         return inst;
@@ -82,6 +95,8 @@ public:
 
     const MetaType& getType() const;
     void setType(const std::shared_ptr<MetaType>& type);
+
+    std::string toString() const override;
 };
 
 // Tuple Type
@@ -110,6 +125,8 @@ public:
     const std::vector<std::unique_ptr<TuplePart>>& getElements() const;
     void addElement(std::unique_ptr<TuplePart> newElement);
     void removeElement(int pos);
+
+    std::string toString() const override;
 };
 
 }

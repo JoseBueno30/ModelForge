@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <ui/view/EnumItemView.h>
+
 void toogleColorTheme(QString &theme){
     QFile file(":/styles/" + theme + ".qss");
     qDebug() << "prueba: " << file.exists();
@@ -26,11 +28,28 @@ MainWindow::MainWindow(QWidget *parent)
     QGraphicsScene *scene = modelGraphicsView->scene();
 
     std::shared_ptr<MetaModel::MetaClass> class1 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba", false);
-    const std::shared_ptr<MetaModel::MetaType> type = std::make_shared<MetaModel::MetaType>();
+    const std::shared_ptr<MetaModel::Integer> type = MetaModel::Integer::instance();
     std::unique_ptr<MetaModel::MetaAttribute> att1 = std::make_unique<MetaModel::MetaAttribute>("att", type);
-    class1->addAttribute(att1);
+    std::string key = att1->getName();
+    class1->addAttribute(key,std::move(att1));
+
+    std::unique_ptr<MetaModel::MetaOperation> op = std::make_unique<MetaModel::MetaOperation>("operation", "i + 1", type);
+    key = op->getName();
+    class1->addOperation(key, std::move(op));
+
     ClassItemView *classItem = new ClassItemView(class1);
     scene->addItem(classItem);
+
+    // std::unique_ptr<MetaModel::MetaEnumElement> enumElement = std::make_unique<MetaModel::MetaEnumElement>("Adriduty");
+    // std::unique_ptr<MetaModel::MetaEnumElement> enumElement2 = std::make_unique<MetaModel::MetaEnumElement>("MrDeif");
+    // std::unique_ptr<MetaModel::MetaEnumElement> enumElement3 = std::make_unique<MetaModel::MetaEnumElement>("Kirito");
+    // std::shared_ptr<MetaModel::MetaEnum> enumModel = std::make_shared<MetaModel::MetaEnum>("Rukai", std::move(enumElement));
+    // std::string key = enumElement2->getName();
+    // enumModel->addElement(key, std::move(enumElement2));
+    // key = enumElement3->getName();
+    // enumModel->addElement(key, std::move(enumElement3));
+    // EnumItemView *enum1 = new EnumItemView(enumModel);
+    // scene->addItem(enum1);
 
     toogleColorTheme(theme);
 
