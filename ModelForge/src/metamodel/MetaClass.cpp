@@ -1,5 +1,7 @@
 #include <metamodel/MetaClass.h>
 
+#include <stdexcept>
+
 namespace MetaModel{
 
 MetaClass::MetaClass(const std::string& name, bool isAbstract)
@@ -19,103 +21,170 @@ void MetaClass::setIsAbstract(bool isAbstract){
     this->isAbstract = isAbstract;
 }
 
-const std::vector<std::shared_ptr<MetaClass>>& MetaClass::getSuperClasses() const{
+const std::map<std::string, std::shared_ptr<MetaClass>>& MetaClass::getSuperClasses() const{
     return superClasses;
 }
 
-void MetaClass::addSuperClass(const std::shared_ptr<MetaClass>& metaClass){
-    if(metaClass){
-        superClasses.push_back(metaClass);
+const MetaClass* MetaClass::getSuperClass(const std::string& key) const{
+    auto iterator = superClasses.find(key);
+    if(iterator != superClasses.end()){
+        return (iterator->second).get();
     }
-}
-void MetaClass::removeSuperClass(int pos){
-    if(pos>=0 && pos <  static_cast<int>(superClasses.size())){
-        superClasses.erase(superClasses.begin() + pos);
-
-        if(superClasses.size() < superClasses.capacity()/2){
-            superClasses.shrink_to_fit();
-        }
-    }
+    return nullptr;
 }
 
-const std::vector<std::unique_ptr<MetaAttribute>>& MetaClass::getAttributes() const{
+void MetaClass::addSuperClass(const std::string& key, const std::shared_ptr<MetaClass> metaClass){
+    if (!metaClass) {
+        throw std::invalid_argument("Null super class");
+    }
+
+    if (superClasses.find(key) != superClasses.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Generalization already declared: " + key);
+    }
+
+    superClasses[key] = metaClass;
+}
+void MetaClass::removeSuperClass(const std::string& key){
+    superClasses.erase(key);
+}
+
+const std::map<std::string, std::shared_ptr<MetaClass>>& MetaClass::getChildrenClasses() const{
+    return childrenClasses;
+}
+
+const MetaClass* MetaClass::getChildrenClass(const std::string& key) const{
+    auto iterator = childrenClasses.find(key);
+    if(iterator != childrenClasses.end()){
+        return (iterator->second).get();
+    }
+    return nullptr;
+}
+
+void MetaClass::addChildrenClass(const std::string& key, const std::shared_ptr<MetaClass> metaClass){
+    if (!metaClass) {
+        throw std::invalid_argument("Null super class");
+    }
+
+    if (childrenClasses.find(key) != childrenClasses.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Generalization already declared: " + key);
+    }
+
+    childrenClasses[key] = metaClass;
+}
+void MetaClass::removeChildrenClass(const std::string& key){
+    childrenClasses.erase(key);
+}
+
+const std::map<std::string, std::unique_ptr<MetaAttribute>>& MetaClass::getAttributes() const{
     return attributes;
 }
 
-void MetaClass::addAttribute(std::unique_ptr<MetaAttribute> attribute){
-    if(attribute){
-        attributes.push_back(std::move(attribute));
+const MetaAttribute* MetaClass::getAttribute(const std::string& key) const{
+    auto iterator = attributes.find(key);
+    if(iterator != attributes.end()){
+        return (iterator->second).get();
     }
+    return nullptr;
 }
 
-void MetaClass::removeAttribute(int pos){
-    if(pos>=0 && pos <  static_cast<int>(attributes.size())){
-        attributes.erase(attributes.begin() + pos);
-
-        if(attributes.size() < attributes.capacity()/2){
-            attributes.shrink_to_fit();
-        }
+void MetaClass::addAttribute(const std::string& key, std::unique_ptr<MetaAttribute> attribute){
+    if (!attribute) {
+        throw std::invalid_argument("Null super class");
     }
+
+    if (attributes.find(key) != attributes.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Generalization already declared: " + key);
+    }
+
+    attributes[key] = std::move(attribute);
 }
 
-const std::vector<std::unique_ptr<MetaOperation>>& MetaClass::getOperations() const{
+void MetaClass::removeAttribute(const std::string& key){
+    attributes.erase(key);
+}
+
+const std::map<std::string, std::unique_ptr<MetaOperation>>& MetaClass::getOperations() const{
     return operations;
 }
 
-void MetaClass::addOperation(std::unique_ptr<MetaOperation> operation){
-    if(operation){
-        operations.push_back(std::move(operation));
+const MetaOperation* MetaClass::getOperation(const std::string& key) const{
+    auto iterator = operations.find(key);
+    if(iterator != operations.end()){
+        return (iterator->second).get();
     }
+    return nullptr;
 }
 
-void MetaClass::removeOperation(int pos){
-    if(pos>=0 && pos <  static_cast<int>(operations.size())){
-        operations.erase(operations.begin() + pos);
-
-        if(operations.size() < operations.capacity()/2){
-            operations.shrink_to_fit();
-        }
+void MetaClass::addOperation(const std::string& key, std::unique_ptr<MetaOperation> operation){
+    if (!operation) {
+        throw std::invalid_argument("Null operation");
     }
+
+    if (operations.find(key) != operations.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Operation already declared: " + key);
+    }
+
+    operations[key] = std::move(operation);
 }
 
-const std::vector<std::unique_ptr<MetaConstraint>>& MetaClass::getConstraints() const{
+void MetaClass::removeOperation(const std::string& key){
+    operations.erase(key);
+}
+
+const std::map<std::string, std::unique_ptr<MetaConstraint>>& MetaClass::getConstraints() const{
     return constraints;
 }
 
-void MetaClass::addConstraint(std::unique_ptr<MetaConstraint> constraint){
-    if(constraint){
-        constraints.push_back(std::move(constraint));
+const MetaConstraint* MetaClass::getConstraint(const std::string& key) const{
+    auto iterator = constraints.find(key);
+    if(iterator != constraints.end()){
+        return (iterator->second).get();
     }
+    return nullptr;
 }
 
-void MetaClass::removeConstraint(int pos){
-    if(pos>=0 && pos <  static_cast<int>(constraints.size())){
-        constraints.erase(constraints.begin() + pos);
-
-        if(constraints.size() < constraints.capacity()/2){
-            constraints.shrink_to_fit();
-        }
+void MetaClass::addConstraint(const std::string& key, std::unique_ptr<MetaConstraint> constraint){
+    if (!constraint) {
+        throw std::invalid_argument("Null constraint");
     }
+
+    if (constraints.find(key) != constraints.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Constraint already declared: " + key);
+    }
+
+    constraints[key] = std::move(constraint);
 }
 
-const std::vector<std::unique_ptr<MetaStateMachine>>& MetaClass::getStateMachines() const{
+void MetaClass::removeConstraint(const std::string& key){
+    constraints.erase(key);
+}
+
+const std::map<std::string, std::unique_ptr<MetaStateMachine>>& MetaClass::getStateMachines() const{
     return stateMachines;
 }
 
-void MetaClass::addStateMachine(std::unique_ptr<MetaStateMachine> stateMachine){
-    if(stateMachine){
-        stateMachines.push_back(std::move(stateMachine));
+const MetaStateMachine* MetaClass::getStateMachine(const std::string& key) const{
+    auto iterator = stateMachines.find(key);
+    if(iterator != stateMachines.end()){
+        return (iterator->second).get();
     }
+    return nullptr;
 }
 
-void MetaClass::removeStateMachine(int pos){
-    if(pos>=0 && pos <  static_cast<int>(stateMachines.size())){
-        stateMachines.erase(stateMachines.begin() + pos);
-
-        if(stateMachines.size() < stateMachines.capacity()/2){
-            stateMachines.shrink_to_fit();
-        }
+void MetaClass::addStateMachine(const std::string& key, std::unique_ptr<MetaStateMachine> stateMachine){
+    if (!stateMachine) {
+        throw std::invalid_argument("Null state machine");
     }
+
+    if (stateMachines.find(key) != stateMachines.end()) {//More generalization restrictions needed
+        throw std::runtime_error("StateMachine already declared: " + key);
+    }
+
+    stateMachines[key] = std::move(stateMachine);
+}
+
+void MetaClass::removeStateMachine(const std::string& key){
+    stateMachines.erase(key);
 }
 
 

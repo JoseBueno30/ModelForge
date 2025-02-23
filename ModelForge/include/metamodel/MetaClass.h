@@ -37,12 +37,12 @@ public:
 
     const std::map<std::string, std::shared_ptr<MetaClass>>& getSuperClasses() const;
     const MetaClass* getSuperClass(const std::string& key) const;
-    void addSuperClass(const std::string& key, std::unique_ptr<MetaClass> metaClass);
+    void addSuperClass(const std::string& key, std::shared_ptr<MetaClass> metaClass);
     void removeSuperClass(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<MetaClass>>& getChildrenClasses() const;
     const MetaClass* getChildrenClass(const std::string& key) const;
-    void addChildrenClass(const std::string& key, std::unique_ptr<MetaClass> metaClass);
+    void addChildrenClass(const std::string& key, std::shared_ptr<MetaClass> metaClass);
     void removeChildrenClass(const std::string& key);
 
     const std::map<std::string, std::unique_ptr<MetaAttribute>>& getAttributes() const;
