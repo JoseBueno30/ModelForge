@@ -1,5 +1,7 @@
 #include <metamodel/MetaType.h>
 
+#include <stdexcept>
+
 namespace MetaModel {
 
 std::string MetaType::toString() const{
@@ -99,29 +101,43 @@ void TuplePart::setType(const std::shared_ptr<MetaType>& type) {
 }
 
 TupleType::TupleType(std::unique_ptr<TuplePart> element) {
-    if (element) {
-        elements.push_back(std::move(element));
+    if (!element) {
+        throw std::invalid_argument("Null TuplePart");
     }
+
+    if (elements.find(element->getName()) != elements.end()) {
+        throw std::runtime_error("TuplePart already declared: " + element->getName());
+    }
+
+    elements[element->getName()] = std::move(element);
 }
 
-const std::vector<std::unique_ptr<TuplePart>>& TupleType::getElements() const {
+const std::map<std::string, std::unique_ptr<TuplePart>>& TupleType::getElements() const{
     return elements;
 }
 
-void TupleType::addElement(std::unique_ptr<TuplePart> newElement) {
-    if (newElement) {
-        elements.push_back(std::move(newElement));
+const TuplePart* TupleType::getElement(const std::string& key) const{
+    auto iterator = elements.find(key);
+    if(iterator != elements.end()){
+        return (iterator->second).get();
     }
+    return nullptr;
 }
 
-void TupleType::removeElement(int pos) {
-    if (pos >= 0 && pos < static_cast<int>(elements.size())) {
-        elements.erase(elements.begin() + pos);
-
-        if(elements.size() < elements.capacity()/2){
-            elements.shrink_to_fit();
-        }
+void TupleType::addElement(std::unique_ptr<TuplePart> newElement){
+    if (!newElement) {
+        throw std::invalid_argument("Null TuplePart");
     }
+
+    if (elements.find(newElement->getName()) != elements.end()) {
+        throw std::runtime_error("TuplePart already declared: " + newElement->getName());
+    }
+
+    elements[newElement->getName()] = std::move(newElement);
+}
+
+void TupleType::removeElement(const std::string& key){
+    elements.erase(key);
 }
 
 std::string TupleType::toString() const{

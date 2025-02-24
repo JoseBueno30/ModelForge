@@ -28,22 +28,22 @@ private:
 
     const std::map<std::string, std::shared_ptr<MetaEnum>>& getEnums() const;
     const MetaEnum* getEnum(const std::string& key) const;
-    void addEnum(const std::string& key, std::shared_ptr<MetaEnum> modelEnum);
+    void addEnum(std::shared_ptr<MetaEnum> modelEnum);
     void removeEnum(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<MetaClass>>& getClasses() const;
     const MetaClass* getClass(const std::string& key) const;
-    void addClass(const std::string& key, std::shared_ptr<MetaClass> modelClass);
+    void addClass(std::shared_ptr<MetaClass> modelClass);
     void removeClass(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<MetaAssociation>>& getAssociations() const;
     const MetaAssociation* getAssociation(const std::string& key) const;
-    void addAssociation(const std::string& key, std::shared_ptr<MetaAssociation> modelAssociation);
+    void addAssociation(std::shared_ptr<MetaAssociation> modelAssociation);
     void removeAssociation(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<MetaAssociationClass>>& getAssociationClasses() const;
     const MetaAssociationClass* getAssociationClass(const std::string& key) const;
-    void addAssociationClass(const std::string& key, std::shared_ptr<MetaAssociationClass> modelAssociationClass);
+    void addAssociationClass(std::shared_ptr<MetaAssociationClass> modelAssociationClass);
     void removeAssociationClass(const std::string& key);
 
     bool modelContainsKey(const std::string& key);

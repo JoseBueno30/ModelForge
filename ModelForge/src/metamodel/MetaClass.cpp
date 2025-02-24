@@ -33,16 +33,16 @@ const MetaClass* MetaClass::getSuperClass(const std::string& key) const{
     return nullptr;
 }
 
-void MetaClass::addSuperClass(const std::string& key, const std::shared_ptr<MetaClass> metaClass){
+void MetaClass::addSuperClass(const std::shared_ptr<MetaClass> metaClass){
     if (!metaClass) {
         throw std::invalid_argument("Null super class");
     }
 
-    if (superClasses.find(key) != superClasses.end()) {//More generalization restrictions needed
-        throw std::runtime_error("Generalization already declared: " + key);
+    if (superClasses.find(metaClass->getName()) != superClasses.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Generalization already declared: " + metaClass->getName());
     }
 
-    superClasses[key] = metaClass;
+    superClasses[metaClass->getName()] = metaClass;
 }
 void MetaClass::removeSuperClass(const std::string& key){
     superClasses.erase(key);
@@ -60,16 +60,16 @@ const MetaClass* MetaClass::getChildrenClass(const std::string& key) const{
     return nullptr;
 }
 
-void MetaClass::addChildrenClass(const std::string& key, const std::shared_ptr<MetaClass> metaClass){
+void MetaClass::addChildrenClass(const std::shared_ptr<MetaClass> metaClass){
     if (!metaClass) {
         throw std::invalid_argument("Null super class");
     }
 
-    if (childrenClasses.find(key) != childrenClasses.end()) {//More generalization restrictions needed
-        throw std::runtime_error("Generalization already declared: " + key);
+    if (childrenClasses.find(metaClass->getName()) != childrenClasses.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Generalization already declared: " + metaClass->getName());
     }
 
-    childrenClasses[key] = metaClass;
+    childrenClasses[metaClass->getName()] = metaClass;
 }
 void MetaClass::removeChildrenClass(const std::string& key){
     childrenClasses.erase(key);
@@ -87,16 +87,16 @@ const MetaAttribute* MetaClass::getAttribute(const std::string& key) const{
     return nullptr;
 }
 
-void MetaClass::addAttribute(const std::string& key, std::unique_ptr<MetaAttribute> attribute){
+void MetaClass::addAttribute(std::unique_ptr<MetaAttribute> attribute){
     if (!attribute) {
         throw std::invalid_argument("Null super class");
     }
 
-    if (attributes.find(key) != attributes.end()) {//More generalization restrictions needed
-        throw std::runtime_error("Generalization already declared: " + key);
+    if (attributes.find(attribute->getName()) != attributes.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Generalization already declared: " + attribute->getName());
     }
 
-    attributes[key] = std::move(attribute);
+    attributes[attribute->getName()] = std::move(attribute);
 }
 
 void MetaClass::removeAttribute(const std::string& key){
@@ -115,16 +115,16 @@ const MetaOperation* MetaClass::getOperation(const std::string& key) const{
     return nullptr;
 }
 
-void MetaClass::addOperation(const std::string& key, std::unique_ptr<MetaOperation> operation){
+void MetaClass::addOperation(std::unique_ptr<MetaOperation> operation){
     if (!operation) {
         throw std::invalid_argument("Null operation");
     }
 
-    if (operations.find(key) != operations.end()) {//More generalization restrictions needed
-        throw std::runtime_error("Operation already declared: " + key);
+    if (operations.find(operation->getName()) != operations.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Operation already declared: " + operation->getName());
     }
 
-    operations[key] = std::move(operation);
+    operations[operation->getName()] = std::move(operation);
 }
 
 void MetaClass::removeOperation(const std::string& key){
@@ -143,16 +143,16 @@ const MetaConstraint* MetaClass::getConstraint(const std::string& key) const{
     return nullptr;
 }
 
-void MetaClass::addConstraint(const std::string& key, std::unique_ptr<MetaConstraint> constraint){
+void MetaClass::addConstraint(std::unique_ptr<MetaConstraint> constraint){
     if (!constraint) {
         throw std::invalid_argument("Null constraint");
     }
 
-    if (constraints.find(key) != constraints.end()) {//More generalization restrictions needed
-        throw std::runtime_error("Constraint already declared: " + key);
+    if (constraints.find(constraint->getName()) != constraints.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Constraint already declared: " + constraint->getName());
     }
 
-    constraints[key] = std::move(constraint);
+    constraints[constraint->getName()] = std::move(constraint);
 }
 
 void MetaClass::removeConstraint(const std::string& key){
@@ -171,16 +171,16 @@ const MetaStateMachine* MetaClass::getStateMachine(const std::string& key) const
     return nullptr;
 }
 
-void MetaClass::addStateMachine(const std::string& key, std::unique_ptr<MetaStateMachine> stateMachine){
+void MetaClass::addStateMachine(std::unique_ptr<MetaStateMachine> stateMachine){
     if (!stateMachine) {
         throw std::invalid_argument("Null state machine");
     }
 
-    if (stateMachines.find(key) != stateMachines.end()) {//More generalization restrictions needed
-        throw std::runtime_error("StateMachine already declared: " + key);
+    if (stateMachines.find(stateMachine->getName()) != stateMachines.end()) {//More generalization restrictions needed
+        throw std::runtime_error("StateMachine already declared: " + stateMachine->getName());
     }
 
-    stateMachines[key] = std::move(stateMachine);
+    stateMachines[stateMachine->getName()] = std::move(stateMachine);
 }
 
 void MetaClass::removeStateMachine(const std::string& key){

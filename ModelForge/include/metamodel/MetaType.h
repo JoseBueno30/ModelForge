@@ -4,6 +4,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <map>
 
 namespace MetaModel{
 
@@ -117,14 +118,15 @@ public:
 
 class TupleType : public MetaType{
 private:
-    std::vector<std::unique_ptr<TuplePart>> elements;
+    std::map<std::string, std::unique_ptr<TuplePart>> elements;
 
 public:
     TupleType(std::unique_ptr<TuplePart> element);
 
-    const std::vector<std::unique_ptr<TuplePart>>& getElements() const;
+    const std::map<std::string, std::unique_ptr<TuplePart>>& getElements() const;
+    const TuplePart* getElement(const std::string& key) const;
     void addElement(std::unique_ptr<TuplePart> newElement);
-    void removeElement(int pos);
+    void removeElement(const std::string& key);
 
     std::string toString() const override;
 };

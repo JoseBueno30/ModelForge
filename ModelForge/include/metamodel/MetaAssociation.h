@@ -11,7 +11,7 @@ class MetaAssociation{
 private:
     std::string name;
     int type;
-    std::vector<std::unique_ptr<MetaAssociationEnd>> associationEnds;
+    std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds;
 
 public:
     static const int ASSOCIATION = 0;
@@ -20,7 +20,7 @@ public:
 
     MetaAssociation(const std::string& name, int type);
 
-    MetaAssociation(const std::string& name, int type, std::vector<std::unique_ptr<MetaAssociationEnd>> associationEnds);
+    MetaAssociation(const std::string& name, int type, std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds);
 
     std::string getName() const;
     void setName(const std::string& name);
@@ -28,9 +28,10 @@ public:
     int getType() const;
     void setType(int type);
 
-    const std::vector<std::unique_ptr<MetaAssociationEnd>>& getAssociationEnds() const;
-    void addAssociationEnd(std::unique_ptr<MetaAssociationEnd> associationEnd);
-    void removeAssociationEnd(int pos);
+    const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>& getAssociationEnds() const;
+    const MetaAssociationEnd* getAssociationEnd(const std::string& key) const;
+    void addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd);
+    void removeAssociationEnd(const std::string& key);
 };
 }
 

@@ -63,16 +63,16 @@ const MetaVariable* MetaOperation::getVariable(const std::string& key) const{
     return nullptr;
 }
 
-void MetaOperation::addVariable(const std::string& key, std::unique_ptr<MetaVariable> variable){
+void MetaOperation::addVariable(std::unique_ptr<MetaVariable> variable){
     if (!variable) {
         throw std::invalid_argument("Null variable");
     }
 
-    if (variables.find(key) != variables.end()) {
-        throw std::runtime_error("Operation: " + name + " already contains variable named: " + key);
+    if (variables.find(variable->getName()) != variables.end()) {
+        throw std::runtime_error("Operation: " + name + " already contains variable named: " + variable->getName());
     }
 
-    variables[key] = std::move(variable);
+    variables[variable->getName()] = std::move(variable);
 }
 
 void MetaOperation::removeVariable(const std::string& key){
@@ -91,16 +91,16 @@ const PrePostClause* MetaOperation::getPreCondition(const std::string& key) cons
     return nullptr;
 }
 
-void MetaOperation::addPreCondition(const std::string& key, std::unique_ptr<PrePostClause> preCondition){
+void MetaOperation::addPreCondition(std::unique_ptr<PrePostClause> preCondition){
     if (!preCondition) {
         throw std::invalid_argument("Null PreCondition");
     }
 
-    if (isPrePostConditionDefined(key)) {
-        throw std::runtime_error("Operation: " + name + " already contains Pre/Post condition named: " + key);
+    if (isPrePostConditionDefined(preCondition->getName())) {
+        throw std::runtime_error("Operation: " + name + " already contains Pre/Post condition named: " + preCondition->getName());
     }
 
-    preConditions[key] = std::move(preCondition);
+    preConditions[preCondition->getName()] = std::move(preCondition);
 }
 
 void MetaOperation::removePreCondition(const std::string& key){
@@ -119,16 +119,16 @@ const PrePostClause* MetaOperation::getPostCondition(const std::string& key) con
     return nullptr;
 }
 
-void MetaOperation::addPostCondition(const std::string& key, std::unique_ptr<PrePostClause> postCondition){
+void MetaOperation::addPostCondition(std::unique_ptr<PrePostClause> postCondition){
     if (!postCondition) {
         throw std::invalid_argument("Null PostCondition");
     }
 
-    if (isPrePostConditionDefined(key)) {
-        throw std::runtime_error("Operation: " + name + " already contains Pre/Post condition named: " + key);
+    if (isPrePostConditionDefined(postCondition->getName())) {
+        throw std::runtime_error("Operation: " + name + " already contains Pre/Post condition named: " + postCondition->getName());
     }
 
-    postConditions[key] = std::move(postCondition);
+    postConditions[postCondition->getName()] = std::move(postCondition);
 }
 
 void MetaOperation::removePostCondition(const std::string& key){

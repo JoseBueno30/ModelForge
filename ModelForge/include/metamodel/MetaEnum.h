@@ -32,7 +32,7 @@ public:
 
     const std::map<std::string, std::unique_ptr<MetaEnumElement>>& getElements() const;
     const MetaEnumElement* getElement(const std::string& key) const;
-    void addElement(const std::string& key, std::unique_ptr<MetaEnumElement> element);
+    void addElement(std::unique_ptr<MetaEnumElement> element);
     void removeElement(const std::string& key);
 };
 
