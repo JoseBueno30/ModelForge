@@ -24,7 +24,7 @@ public:
 
 
     QRectF boundingRect() const override{
-        return QRectF(this->pos().x(), this->pos().y(), width, height);
+        return QRectF(0, 0, width, height);
     };
 
     virtual ~BoxItemView() = default;

@@ -31,8 +31,8 @@ EnumItemView::EnumItemView(shared_ptr<MetaModel::MetaEnum> model, int x, int y, 
 
 QRectF EnumItemView::enumNameRect(){
     QFontMetrics fm(QFont("Arial", 13, QFont::Bold));
-    return QRectF(this->pos().x() + this->getDimensions().x() / 2 - fm.horizontalAdvance(QString::fromStdString(this->model->getName())) / 2,
-                  this->pos().y(),
+    return QRectF(this->getDimensions().x() / 2 - fm.horizontalAdvance(QString::fromStdString(this->model->getName())) / 2,
+                  0,
                   fm.horizontalAdvance(QString::fromStdString(this->model->getName())) , fm.height() + NAME_PADDING);
 }
 
@@ -43,12 +43,12 @@ void EnumItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->setFont(QFont("Arial", 13, QFont::Bold));
     painter->drawText(enumNameRect(), Qt::AlignCenter, QString::fromStdString(this->model->getName()));
 
-    painter->drawLine(QLine(this->pos().x(),this->pos().y() + enumNameRect().height(), this->pos().x() + this->getDimensions().x(), this->pos().y() + enumNameRect().height()));
+    painter->drawLine(QLine(0,this->pos().y() + enumNameRect().height(), this->getDimensions().x(), enumNameRect().height()));
     int yOffset = enumNameRect().height() + ATTS_PADDING;
 
     painter->setFont(QFont("Arial", 10, QFont::StyleNormal));
     for(const auto& pair : this->model->getElements()){
-        QRectF rect(this->pos().x() + ATTS_PADDING, this->pos().y() + yOffset, this->getDimensions().x(), ATTS_HEIGHT);
+        QRectF rect(ATTS_PADDING, yOffset, this->getDimensions().x(), ATTS_HEIGHT);
         painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.first));
         yOffset += ATTS_HEIGHT;
     }

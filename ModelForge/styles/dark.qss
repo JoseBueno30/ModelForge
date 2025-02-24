@@ -7,3 +7,6 @@ QTextEdit#consoleTextEdit{
     background-color: #292C34;
     border: 1px solid white;
 }
+QMainWindow {
+    qproperty-associationColor: #FFFFFF;
+}

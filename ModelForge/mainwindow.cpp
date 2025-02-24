@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <ui/view/AssociationItemView.h>
 #include <ui/view/EnumItemView.h>
 
 void toogleColorTheme(QString &theme){
@@ -39,6 +40,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     ClassItemView *classItem = new ClassItemView(class1);
     scene->addItem(classItem);
+
+    std::shared_ptr<MetaModel::MetaClass> class2 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba2", false);
+    ClassItemView *classItem2 = new ClassItemView(class2, 250, 0);
+    scene->addItem(classItem2);
+
+    // qDebug() << classItem->scenePos() << "\t" <<classItem2->scenePos();
+
+    std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>("prueba", 0);
+    AssociationItemView * associationItemView = new AssociationItemView(association, classItem, classItem2);
+    scene->addItem(associationItemView);
 
     // std::unique_ptr<MetaModel::MetaEnumElement> enumElement = std::make_unique<MetaModel::MetaEnumElement>("Adriduty");
     // std::unique_ptr<MetaModel::MetaEnumElement> enumElement2 = std::make_unique<MetaModel::MetaEnumElement>("MrDeif");

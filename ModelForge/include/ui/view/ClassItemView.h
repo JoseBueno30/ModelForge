@@ -10,6 +10,7 @@ using std::shared_ptr;
 class ClassItemView : public BoxItemView{
 public:
     ClassItemView(shared_ptr<MetaModel::MetaClass> model);
+    ClassItemView(shared_ptr<MetaModel::MetaClass> model, int x, int y);
     ClassItemView(shared_ptr<MetaModel::MetaClass> model, int x, int y, int width, int height);
 
     QRectF classNameRect();

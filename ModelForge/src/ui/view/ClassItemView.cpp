@@ -33,18 +33,28 @@ ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel) : mode
     this->setPos(0,0);
     this->setDimensions(150,100);
     calculateMinimumSize();
+    // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
+}
+
+ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel, int x, int y) : model(classModel){
+    this->setPos(x,y);
+    this->setDimensions(150,100);
+    calculateMinimumSize();
+    // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
 }
 
 ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel, int x, int y, int width, int height) :
     model(classModel){
     this->setPos(x,y);
     this->setDimensions(width, height);
+    calculateMinimumSize();
+    // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
 }
 
 QRectF ClassItemView::classNameRect() {
     QFontMetrics fm(QFont("Arial", 13, QFont::Bold));
-    return QRectF(this->pos().x() + this->getDimensions().x() / 2 - fm.horizontalAdvance(QString::fromStdString(this->model->getName())) / 2,
-                  this->pos().y(),
+    return QRectF(this->getDimensions().x() / 2 - fm.horizontalAdvance(QString::fromStdString(this->model->getName())) / 2,
+                  0,
                   fm.horizontalAdvance(QString::fromStdString(this->model->getName())) , fm.height() + NAME_PADDING);
 }
 
@@ -55,22 +65,24 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setFont(QFont("Arial", 13, QFont::Bold));
     painter->drawText(classNameRect(), Qt::AlignCenter, QString::fromStdString(this->model->getName()));
 
-    painter->drawLine(QLine(this->pos().x(),this->pos().y() + classNameRect().height(), this->pos().x() + this->getDimensions().x(), this->pos().y() + classNameRect().height()));
+    painter->drawLine(QLine(0,this->pos().y() + classNameRect().height(), this->getDimensions().x(), classNameRect().height()));
     int yOffset = classNameRect().height() + ATTS_PADDING;
 
     painter->setFont(QFont("Arial", 10, QFont::StyleNormal));
     for(const auto& pair : this->model->getAttributes()){
-        QRectF rect(this->pos().x() + ATTS_PADDING, this->pos().y() + yOffset, this->getDimensions().x(), ATTS_HEIGHT);
+        QRectF rect(ATTS_PADDING, yOffset, this->getDimensions().x(), ATTS_HEIGHT);
         painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.first + " : " + pair.second->getType().toString())); //TODO MetaAttribute toString
         yOffset += ATTS_HEIGHT;
     }
 
     yOffset += ATTS_PADDING;
-    painter->drawLine(QLine(this->pos().x(),this->pos().y() + yOffset, this->pos().x() + this->getDimensions().x(), this->pos().y() + yOffset));
+    if(!this->model->getOperations().empty()){
+        painter->drawLine(QLine(0, yOffset, this->getDimensions().x(), yOffset));
+    }
     yOffset += ATTS_PADDING;
 
     for(const auto& pair: this->model->getOperations()){
-        QRectF rect(this->pos().x() + ATTS_PADDING, this->pos().y() + yOffset, this->getDimensions().x(), ATTS_HEIGHT);
+        QRectF rect(ATTS_PADDING, yOffset, this->getDimensions().x(), ATTS_HEIGHT);
         painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.first + "() : " + pair.second->getReturnType().toString())); //TODO MetaOperation toString
         yOffset += ATTS_HEIGHT;
     }
