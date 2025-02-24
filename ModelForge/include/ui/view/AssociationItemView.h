@@ -26,8 +26,8 @@ private:
     QPointF p1;
     QPointF p2;
 
-    void drawArrow();
-    void drawDiamond();
+    void drawArrow(QLineF &line, QPainter *painter);
+    void drawDiamond(QLineF &line, QPainter *painter);
     QPointF getNearestEdgeIntersection(const QRectF &rect, const QLineF &line);
 
     void setP1(QPointF p){this->p1 = p;}

@@ -13,9 +13,9 @@ void AssociationItemView::updatePosition(){
     QRectF class1Rect = class1->boundingRect();
     QRectF class2Rect = class2->boundingRect();
 
-    qDebug() << class1Rect << "\t" <<class2Rect;
+    //qDebug() << class1Rect << "\t" <<class2Rect;
 
-    qDebug() << class1Rect.center() + class1->scenePos() << "\t" << class2Rect.center() + class2->scenePos();
+    //qDebug() << class1Rect.center() + class1->scenePos() << "\t" << class2Rect.center() + class2->scenePos();
 
     QLineF line(class1Rect.center() + class1->scenePos(), class2Rect.center() + class2->scenePos());
 
@@ -55,15 +55,38 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     if (!class1 || !class2) return;
 
-    painter->setPen(QPen(Qt::white, 2));
+    painter->setPen(QPen(Qt::white, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p1, this->p2);
-    painter->drawLine(line);
 
     //TODO DIBUJAR TIPO DE ASOCIACION
+    //qDebug() << "tipo: " << this->model->getType();
+    if(this->model->getType() == 1){
+        drawArrow(line, painter);
+        line.setLength(92.5);
+    }else if(this->model->getType() == 2){
+        drawDiamond(line, painter);
+    }
+
+
+    painter->drawLine(line);
 }
 
 QRectF AssociationItemView::boundingRect() const {return QRectF(p1, p2).normalized().adjusted(-2, -2, 2, 2);}
 QRectF AssociationItemView::associationNameRect(){return QRectF();}
 
-void AssociationItemView::drawArrow(){}
-void AssociationItemView::drawDiamond(){}
+void AssociationItemView::drawArrow(QLineF &line, QPainter *painter){
+    double angle = std::atan2(-line.dy(), line.dx()) - M_PI_2;
+    qDebug() << "Angulo: " << angle;
+    qreal arrowSize = 8;
+    QPointF head(line.pointAt(0.99));
+
+    QPointF arrowP1 = head + QPointF(std::sin(angle + M_PI / 6) * arrowSize, std::cos(angle + M_PI / 6) * arrowSize);
+    QPointF arrowP2 = head + QPointF(std::sin(angle - M_PI / 6) * arrowSize, std::cos(angle - M_PI / 6) * arrowSize);
+
+    QPolygonF arrowHead;
+    arrowHead << head << arrowP1 << arrowP2;
+
+    //painter->setBrush(Qt::white);
+    painter->drawPolygon(arrowHead);
+}
+void AssociationItemView::drawDiamond(QLineF &line, QPainter *painter){}

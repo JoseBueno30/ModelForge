@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // qDebug() << classItem->scenePos() << "\t" <<classItem2->scenePos();
 
-    std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>("prueba", 0);
+    std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>("prueba", 1);
     AssociationItemView * associationItemView = new AssociationItemView(association, classItem, classItem2);
     scene->addItem(associationItemView);
 
