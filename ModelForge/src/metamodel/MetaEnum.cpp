@@ -44,16 +44,16 @@ const MetaEnumElement* MetaEnum::getElement(const std::string& key) const{
     return nullptr;
 }
 
-void MetaEnum::addElement(const std::string& key, std::unique_ptr<MetaEnumElement> element){
+void MetaEnum::addElement(std::unique_ptr<MetaEnumElement> element){
     if (!element) {
         throw std::invalid_argument("Null enum");
     }
 
-    if (elements.find(key) != elements.end()) {
-        throw std::runtime_error("Enum: " + name + " already contains element named: " + key);
+    if (elements.find(element->getName()) != elements.end()) {
+        throw std::runtime_error("Enum: " + name + " already contains element named: " + element->getName());
     }
 
-    elements[key] = std::move(element);
+    elements[element->getName()] = std::move(element);
 }
 
 void MetaEnum::removeElement(const std::string& key){

@@ -51,9 +51,9 @@ private:
     bool isUnique;
     bool isUnion;
     std::shared_ptr<MetaMultiplicity> multiplicity;
-    std::vector<std::shared_ptr<MetaAssociationEnd>> redefinedEnds;
-    std::vector<std::shared_ptr<MetaAssociationEnd>> subsettedEnds;
-    std::vector<std::unique_ptr<MetaVariable>> qualifiers;
+    std::map<std::string, std::shared_ptr<MetaAssociationEnd>> redefinedEnds;
+    std::map<std::string, std::shared_ptr<MetaAssociationEnd>> subsettedEnds;
+    std::map<std::string, std::unique_ptr<MetaVariable>> qualifiers;
     std::unique_ptr<OCLExpr> deriveExpr;
 
 public:
@@ -83,17 +83,20 @@ public:
     const MetaMultiplicity& getMultiplicity() const;
     void setMultiplicity(const std::shared_ptr<MetaMultiplicity>& multiplicity);
 
-    const std::vector<std::shared_ptr<MetaAssociationEnd>>& getRedefinedEnds() const;
+    const std::map<std::string,std::shared_ptr<MetaAssociationEnd>>& getRedefinedEnds() const;
+    const MetaAssociationEnd* getRedefinedEnd(const std::string& key) const;
     void addRedefinedEnd(const std::shared_ptr<MetaAssociationEnd>& redefinedEnd);
-    void removeRedefinedEnd(int pos);
+    void removeRedefinedEnd(const std::string& key);
 
-    const std::vector<std::shared_ptr<MetaAssociationEnd>>& getSubsettedEnds() const;
+    const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>& getSubsettedEnds() const;
+    const MetaAssociationEnd* getSubsettedEnd(const std::string& key) const;
     void addSubsettedEnd(const std::shared_ptr<MetaAssociationEnd>& subsettedEnd);
-    void removeSubsettedEnd(int pos);
+    void removeSubsettedEnd(const std::string& key);
 
-    const std::vector<std::unique_ptr<MetaVariable>>& getQualifiers() const;
+    const std::map<std::string,std::unique_ptr<MetaVariable>>& getQualifiers() const;
+    const MetaVariable* getQualifier(const std::string& key) const;
     void addQualifier(std::unique_ptr<MetaVariable> qualifier);
-    void removeQualifier(int pos);
+    void removeQualifier(const std::string& key);
 
     const OCLExpr* getDeriveExpr() const;
     void setDeriveExpr(std::unique_ptr<OCLExpr> deriveExpr);

@@ -52,17 +52,17 @@ public:
 
     const std::map<std::string, std::unique_ptr<MetaVariable>>& getVariables() const;
     const MetaVariable* getVariable(const std::string& key) const;
-    void addVariable(const std::string& key, std::unique_ptr<MetaVariable> variable);
+    void addVariable(std::unique_ptr<MetaVariable> variable);
     void removeVariable(const std::string& key);
 
     const std::map<std::string, std::unique_ptr<PrePostClause>>& getPreConditions() const;
     const PrePostClause* getPreCondition(const std::string& key) const;
-    void addPreCondition(const std::string& key, std::unique_ptr<PrePostClause> preCondition);
+    void addPreCondition(std::unique_ptr<PrePostClause> preCondition);
     void removePreCondition(const std::string& key);
 
     const std::map<std::string, std::unique_ptr<PrePostClause>>& getPostConditions() const;
     const PrePostClause* getPostCondition(const std::string& key) const;
-    void addPostCondition(const std::string& key, std::unique_ptr<PrePostClause> postCondition);
+    void addPostCondition(std::unique_ptr<PrePostClause> postCondition);
     void removePostCondition(const std::string& key);
 
     bool isPrePostConditionDefined(const std::string& key);

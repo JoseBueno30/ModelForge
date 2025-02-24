@@ -1,5 +1,7 @@
 #include <metamodel/MetaAssociationEnd.h>
 
+#include <stdexcept>
+
 namespace MetaModel{
 
 MetaMultiplicityRange::MetaMultiplicityRange(int lowerBound, int upperBound)
@@ -113,64 +115,72 @@ void MetaAssociationEnd::setMultiplicity(const std::shared_ptr<MetaMultiplicity>
     this->multiplicity = multiplicity;
 }
 
-const std::vector<std::shared_ptr<MetaAssociationEnd>>& MetaAssociationEnd::getRedefinedEnds() const{
+const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>& MetaAssociationEnd::getRedefinedEnds() const{
     return redefinedEnds;
 }
 
+const MetaAssociationEnd* MetaAssociationEnd::getRedefinedEnd(const std::string& key) const{
+    auto iterator = redefinedEnds.find(key);
+    if(iterator != redefinedEnds.end()){
+        return (iterator->second).get();
+    }
+    return nullptr;
+}
+
 void MetaAssociationEnd::addRedefinedEnd(const std::shared_ptr<MetaAssociationEnd>& redefinedEnd){
-    if(redefinedEnd){
-        redefinedEnds.push_back(redefinedEnd);
+    if (!redefinedEnd) {
+        throw std::invalid_argument("Null redefined end");
     }
+
+    if (redefinedEnds.find(redefinedEnd->getRole()) != redefinedEnds.end()) {//More generalization restrictions needed
+        throw std::runtime_error("RedefinedEnd already declared: " + redefinedEnd->getRole());
+    }
+
+    redefinedEnds[redefinedEnd->getRole()] = redefinedEnd;
 }
 
-void MetaAssociationEnd::removeRedefinedEnd(int pos){
-    if(pos>=0 && pos <  static_cast<int>(redefinedEnds.size())){
-        redefinedEnds.erase(redefinedEnds.begin() + pos);
-
-        if(redefinedEnds.size() < redefinedEnds.capacity()/2){
-            redefinedEnds.shrink_to_fit();
-        }
-    }
+void MetaAssociationEnd::removeRedefinedEnd(const std::string& key){
+    redefinedEnds.erase(key);
 }
 
-const std::vector<std::shared_ptr<MetaAssociationEnd>>& MetaAssociationEnd::getSubsettedEnds() const{
+const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>& MetaAssociationEnd::getSubsettedEnds() const{
     return subsettedEnds;
 }
 
 void MetaAssociationEnd::addSubsettedEnd(const std::shared_ptr<MetaAssociationEnd>& subsettedEnd){
-    if(subsettedEnd){
-        subsettedEnds.push_back(subsettedEnd);
+    if (!subsettedEnd) {
+        throw std::invalid_argument("Null subsetted end");
     }
+
+    if (subsettedEnds.find(subsettedEnd->getRole()) != subsettedEnds.end()) {//More generalization restrictions needed
+        throw std::runtime_error("SubsettedEnd already declared: " + subsettedEnd->getRole());
+    }
+
+    subsettedEnds[subsettedEnd->getRole()] = subsettedEnd;
 }
 
-void MetaAssociationEnd::removeSubsettedEnd(int pos){
-    if(pos>=0 && pos <  static_cast<int>(subsettedEnds.size())){
-        subsettedEnds.erase(subsettedEnds.begin() + pos);
-
-        if(subsettedEnds.size() < subsettedEnds.capacity()/2){
-            subsettedEnds.shrink_to_fit();
-        }
-    }
+void MetaAssociationEnd::removeSubsettedEnd(const std::string& key){
+    subsettedEnds.erase(key);
 }
 
-const std::vector<std::unique_ptr<MetaVariable>>& MetaAssociationEnd::getQualifiers() const{
+const std::map<std::string, std::unique_ptr<MetaVariable>>& MetaAssociationEnd::getQualifiers() const{
     return qualifiers;
 }
 
 void MetaAssociationEnd::addQualifier(std::unique_ptr<MetaVariable> qualifier){
-    if(qualifier){
-        qualifiers.push_back(std::move(qualifier));
+    if (!qualifier) {
+        throw std::invalid_argument("Null qualifier");
     }
+
+    if (qualifiers.find(qualifier->getName()) != qualifiers.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Qualifier already declared: " + qualifier->getName());
+    }
+
+    qualifiers[qualifier->getName()] = std::move(qualifier);
 }
 
-void MetaAssociationEnd::removeQualifier(int pos){
-    if(pos>=0 && pos <  static_cast<int>(qualifiers.size())){
-        qualifiers.erase(qualifiers.begin() + pos);
-
-        if(qualifiers.size() < qualifiers.capacity()/2){
-            qualifiers.shrink_to_fit();
-        }
-    }
+void MetaAssociationEnd::removeQualifier(const std::string& key){
+    qualifiers.erase(key);
 }
 
 const OCLExpr* MetaAssociationEnd::getDeriveExpr() const{

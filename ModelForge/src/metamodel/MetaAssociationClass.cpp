@@ -5,7 +5,7 @@ namespace MetaModel{
 MetaAssociationClass::MetaAssociationClass(const std::string& name, bool isAbstract, int type)
     : MetaClass(name, isAbstract), MetaAssociation(name, type){}
 
-MetaAssociationClass::MetaAssociationClass(const std::string& name, bool isAbstract, int type, std::vector<std::unique_ptr<MetaAssociationEnd>> associationEnds)
+MetaAssociationClass::MetaAssociationClass(const std::string& name, bool isAbstract, int type, std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds)
     : MetaClass(name, isAbstract), MetaAssociation(name, type, std::move(associationEnds)){}
 
 std::string MetaAssociationClass::getName() const{

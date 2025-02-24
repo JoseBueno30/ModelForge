@@ -1,12 +1,14 @@
 #include <metamodel/MetaAssociation.h>
 
+#include <stdexcept>
+
 namespace MetaModel{
 
 
 MetaAssociation::MetaAssociation(const std::string& name, int type)
     : name(name), type(type){}
 
-MetaAssociation::MetaAssociation(const std::string& name, int type, std::vector<std::unique_ptr<MetaAssociationEnd>> associationEnds)
+MetaAssociation::MetaAssociation(const std::string& name, int type, std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds)
     : name(name), type(type), associationEnds(std::move(associationEnds)){}
 
 std::string MetaAssociation::getName() const{
@@ -25,23 +27,32 @@ void MetaAssociation::setType(int type){
     this->type = type;
 }
 
-const std::vector<std::unique_ptr<MetaAssociationEnd>>& MetaAssociation::getAssociationEnds() const{
+const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>& MetaAssociation::getAssociationEnds() const{
     return associationEnds;
 }
 
-void MetaAssociation::addAssociationEnd(std::unique_ptr<MetaAssociationEnd> associationEnd){
-    if(associationEnd){
-        associationEnds.push_back(std::move(associationEnd));
+const MetaAssociationEnd* MetaAssociation::getAssociationEnd(const std::string& key) const{
+    auto iterator = associationEnds.find(key);
+    if(iterator != associationEnds.end()){
+        return (iterator->second).get();
     }
+    return nullptr;
 }
-void MetaAssociation::removeAssociationEnd(int pos){
-    if(pos>=0 && pos <  static_cast<int>(associationEnds.size())){
-        associationEnds.erase(associationEnds.begin() + pos);
 
-        if(associationEnds.size() < associationEnds.capacity()/2){
-            associationEnds.shrink_to_fit();
-        }
+
+void MetaAssociation::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd){
+    if (!associationEnd) {
+        throw std::invalid_argument("Null super class");
     }
+
+    if (associationEnds.find(associationEnd->getRole()) != associationEnds.end()) {//More generalization restrictions needed
+        throw std::runtime_error("Generalization already declared: " + associationEnd->getRole());
+    }
+
+    associationEnds[associationEnd->getRole()] = associationEnd;
+}
+void MetaAssociation::removeAssociationEnd(const std::string& key){
+    associationEnds.erase(key);
 }
 
 }
