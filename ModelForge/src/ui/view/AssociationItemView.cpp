@@ -58,15 +58,16 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->setPen(QPen(Qt::white, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p1, this->p2);
 
-    //TODO DIBUJAR TIPO DE ASOCIACION
-    //qDebug() << "tipo: " << this->model->getType();
+    // Arrow metrics:
+    // drawArrow(line, painter);
+    // line.setLength(92.5);
     if(this->model->getType() == 1){
-        drawArrow(line, painter);
-        line.setLength(92.5);
+        drawDiamond(line, painter, false);
+        line.setLength(86);
     }else if(this->model->getType() == 2){
-        drawDiamond(line, painter);
+        drawDiamond(line, painter, true);
+        line.setLength(86);
     }
-
 
     painter->drawLine(line);
 }
@@ -76,7 +77,7 @@ QRectF AssociationItemView::associationNameRect(){return QRectF();}
 
 void AssociationItemView::drawArrow(QLineF &line, QPainter *painter){
     double angle = std::atan2(-line.dy(), line.dx()) - M_PI_2;
-    qDebug() << "Angulo: " << angle;
+
     qreal arrowSize = 8;
     QPointF head(line.pointAt(0.99));
 
@@ -89,4 +90,21 @@ void AssociationItemView::drawArrow(QLineF &line, QPainter *painter){
     //painter->setBrush(Qt::white);
     painter->drawPolygon(arrowHead);
 }
-void AssociationItemView::drawDiamond(QLineF &line, QPainter *painter){}
+void AssociationItemView::drawDiamond(QLineF &line, QPainter *painter, bool filled){
+    double angle = std::atan2(-line.dy(), line.dx()) - M_PI_2;
+    qreal diamondSize = 8;
+    QPointF head(line.pointAt(0.99));
+
+    QPointF diamondP1 = head + QPointF(std::sin(angle + M_PI / 6) * diamondSize, std::cos(angle + M_PI / 6) * diamondSize);
+    QPointF diamondP2 = head + QPointF(std::sin(angle - M_PI / 6) * diamondSize, std::cos(angle - M_PI / 6) * diamondSize);
+
+    QPointF center = (diamondP1 + diamondP2) / 2;
+    QPointF diamondP3 = 2 * center - head;
+
+    QPolygonF diamondHead;
+    diamondHead << head << diamondP1 << diamondP3 << diamondP2;
+
+    if(filled) painter->setBrush(Qt::white);
+
+    painter->drawPolygon(diamondHead);
+}
