@@ -420,6 +420,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/view/EnumItemView.cpp
         include/ui/view/BoxItemView.h
         src/ui/view/AssociationItemView.cpp
+        src/ui/view/AssociationClassItemView.cpp
 
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)

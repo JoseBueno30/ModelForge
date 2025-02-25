@@ -1,6 +1,6 @@
 #include <ui/view/AssociationItemView.h>
 
-AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> model, QGraphicsItem* class1, QGraphicsItem* class2)
+AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> model, BoxItemView* class1, BoxItemView* class2)
     : model(model), class1(class1), class2(class2){
 
     setZValue(-1);
@@ -17,12 +17,11 @@ void AssociationItemView::updatePosition(){
 
     //qDebug() << class1Rect.center() + class1->scenePos() << "\t" << class2Rect.center() + class2->scenePos();
 
-    QLineF line(class1Rect.center() + class1->scenePos(), class2Rect.center() + class2->scenePos());
 
-    QPointF p1 = getNearestEdgeIntersection(QRectF(class1->scenePos().x(), class1->scenePos().y(),
-                                                   class1Rect.width(), class1Rect.height()), line);
-    QPointF p2 = getNearestEdgeIntersection(QRectF(class2->scenePos().x(), class2->scenePos().y(),
-                                                   class2Rect.width(), class2Rect.height()), line);
+    QLineF line(class1Rect.center(), class2Rect.center());
+
+    QPointF p1 = getNearestEdgeIntersection(class1Rect, line);
+    QPointF p2 = getNearestEdgeIntersection(class2Rect, line);
 
     setP1(p1);
     setP2(p2);
@@ -57,19 +56,18 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     painter->setPen(QPen(Qt::white, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p1, this->p2);
-
+    //qDebug() << line;
     // Arrow metrics:
     // drawArrow(line, painter);
     // line.setLength(92.5);
-    if(this->model->getType() == 1){
-        drawDiamond(line, painter, false);
-        line.setLength(86);
-    }else if(this->model->getType() == 2){
-        drawDiamond(line, painter, true);
-        line.setLength(86);
+    if(this->model->getType() != 0){
+         QPointF newP2 = drawDiamond(line, painter, this->model->getType() == 2);
+        line.setP2(newP2);
     }
 
     painter->drawLine(line);
+
+    // TODO paint multiplicity and name
 }
 
 QRectF AssociationItemView::boundingRect() const {return QRectF(p1, p2).normalized().adjusted(-2, -2, 2, 2);}
@@ -90,7 +88,7 @@ void AssociationItemView::drawArrow(QLineF &line, QPainter *painter){
     //painter->setBrush(Qt::white);
     painter->drawPolygon(arrowHead);
 }
-void AssociationItemView::drawDiamond(QLineF &line, QPainter *painter, bool filled){
+QPointF AssociationItemView::drawDiamond(QLineF &line, QPainter *painter, bool filled){
     double angle = std::atan2(-line.dy(), line.dx()) - M_PI_2;
     qreal diamondSize = 8;
     QPointF head(line.pointAt(0.99));
@@ -107,4 +105,21 @@ void AssociationItemView::drawDiamond(QLineF &line, QPainter *painter, bool fill
     if(filled) painter->setBrush(Qt::white);
 
     painter->drawPolygon(diamondHead);
+    return diamondP3;
+}
+
+QPointF AssociationItemView::getP1()const{
+    return this->p1;
+}
+QPointF AssociationItemView::getP2() const{
+    return this->p2;
+}
+QGraphicsItem* AssociationItemView::getClass1() const{
+    return this->class1;
+}
+QGraphicsItem* AssociationItemView::getClass2() const{
+    return this->class2;
+}
+shared_ptr<MetaModel::MetaAssociation> AssociationItemView::getAssociationModel(){
+    return this->model;
 }

@@ -18,6 +18,9 @@ public:
 
     ~ClassItemView();
 
+protected:
+    shared_ptr<MetaModel::MetaClass>& getClassModel();
+
 private:
     shared_ptr<MetaModel::MetaClass> model;
 
