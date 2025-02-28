@@ -1,7 +1,10 @@
 #include <ui/view/AssociationItemView.h>
 
-AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> model, BoxItemView* class1, BoxItemView* class2)
+AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> model, ClassItemView* class1, ClassItemView* class2)
     : model(model), class1(class1), class2(class2){
+
+    class1->addAssociation(this);
+    class2->addAssociation(this);
 
     setZValue(-1);
     updatePosition();
@@ -17,18 +20,19 @@ void AssociationItemView::updatePosition(){
 
     //qDebug() << class1Rect.center() + class1->scenePos() << "\t" << class2Rect.center() + class2->scenePos();
 
+    QLineF line(class1Rect.center() + class1->scenePos(), class2Rect.center() + class2->scenePos());
 
-    QLineF line(class1Rect.center(), class2Rect.center());
-
-    QPointF p1 = getNearestEdgeIntersection(class1Rect, line);
-    QPointF p2 = getNearestEdgeIntersection(class2Rect, line);
-
+    QPointF p1 = getNearestEdgeIntersection(QRectF(class1->scenePos().x(), class1->scenePos().y(),
+                                                   class1Rect.width(), class1Rect.height()), line, p1);
+    QPointF p2 = getNearestEdgeIntersection(QRectF(class2->scenePos().x(), class2->scenePos().y(),
+                                                   class2Rect.width(), class2Rect.height()), line, p2);
     setP1(p1);
     setP2(p2);
+    update();
     qDebug() << "P1: " << this->p1 << "\tP2:" << this->p2;
 }
 
-QPointF AssociationItemView::getNearestEdgeIntersection(const QRectF &rect, const QLineF &line){
+QPointF AssociationItemView::getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last){
     QPolygonF polygon(rect);
     QLineF edges[] = {
         QLineF(polygon.at(0), polygon.at(1)),  // Top
@@ -44,7 +48,7 @@ QPointF AssociationItemView::getNearestEdgeIntersection(const QRectF &rect, cons
         }
     }
 
-    return QPoint(); // Fallback
+    return last; // Fallback
 }
 
 void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
@@ -70,7 +74,7 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
     // TODO paint multiplicity and name
 }
 
-QRectF AssociationItemView::boundingRect() const {return QRectF(p1, p2).normalized().adjusted(-2, -2, 2, 2);}
+QRectF AssociationItemView::boundingRect() const {return QRectF(p1, p2).normalized().adjusted(-10, -10, 10, 10);}
 QRectF AssociationItemView::associationNameRect(){return QRectF();}
 
 void AssociationItemView::drawArrow(QLineF &line, QPainter *painter){

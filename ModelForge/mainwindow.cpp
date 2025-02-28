@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     std::shared_ptr<MetaModel::MetaAssociationClass> associationClass = std::make_shared<MetaModel::MetaAssociationClass>("ClaseDePrueba3", false, 2);
     AssociationClassItemView * associationClassItemView = new AssociationClassItemView(associationClass, classItem, classItem2);
     scene->addItem(associationClassItemView);
+    associationClassItemView->addItemsToScene();
 
     // std::unique_ptr<MetaModel::MetaEnumElement> enumElement = std::make_unique<MetaModel::MetaEnumElement>("Adriduty");
     // std::unique_ptr<MetaModel::MetaEnumElement> enumElement2 = std::make_unique<MetaModel::MetaEnumElement>("MrDeif");
