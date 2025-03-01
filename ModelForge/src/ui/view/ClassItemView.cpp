@@ -13,21 +13,25 @@ void ClassItemView::calculateMinimumSize(){
 
     //TODO Check attributtes and operations longitude
     fm = QFontMetrics(QFont("Arial", 10, QFont::StyleNormal));
+
     for(const auto& pair : this->model->getAttributes()){
         int attrWidth = fm.horizontalAdvance(QString::fromStdString(pair.first + " : " + pair.second->getType().toString())) + HORIZONTAL_PADDING; //TODO MetaAttribute toString
         this->setMinWidth(qMax(int(this->getMinDimensions().x()), attrWidth));
 
         minHeight += ATTS_HEIGHT;
     }
+
     if(!this->model->getOperations().empty() && !this->model->getAttributes().empty()){
         minHeight += 2*ATTS_PADDING;
     }
+
     for(const auto& pair: this->model->getOperations()){
         int attrWidth = fm.horizontalAdvance(QString::fromStdString(pair.first + "() : " + pair.second->getReturnType().toString())); //TODO MetaOperation toString
         this->setMinWidth(qMax(int(this->getMinDimensions().x()), attrWidth));
 
         minHeight += ATTS_HEIGHT;
     }
+
     this->setMinHeight(minHeight+ATTS_PADDING);
     this->setDimensions(this->getMinDimensions());
 }
@@ -69,8 +73,14 @@ QRectF ClassItemView::classNameRect() {
 }
 
 void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+
+    if(model->getIsAbstract()){
+        painter->setBrush(QColor(0xCC9FED));
+    }else{
+        painter->setBrush(QColor(0x8DD0FF));
+    }
+
     painter->setPen(QPen(Qt::black));
-    painter->setBrush(QColor(0x8DD0FF));
     painter->drawRoundedRect(ClassItemView::boundingRect(),10,10);
 
     painter->setFont(QFont("Arial", 13, QFont::Bold));

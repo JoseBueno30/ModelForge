@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
     ClassItemView *classItem = new ClassItemView(class1);
     scene->addItem(classItem);
 
-    std::shared_ptr<MetaModel::MetaClass> class2 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba2", false);
+    std::shared_ptr<MetaModel::MetaClass> class2 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba2", true);
     ClassItemView *classItem2 = new ClassItemView(class2, 350, 0);
     scene->addItem(classItem2);
 
