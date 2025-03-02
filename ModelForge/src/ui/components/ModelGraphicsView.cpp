@@ -34,7 +34,7 @@ void ModelGraphicsView::wheelEvent(QWheelEvent *event){
 }
 
 void ModelGraphicsView::mousePressEvent(QMouseEvent *event){
-    if(event->button() == Qt::MiddleButton){
+    if(event->button() == Qt::MiddleButton || event->button() == Qt::LeftButton){
         viewport()->update();
         setDragMode(QGraphicsView::ScrollHandDrag);
 
