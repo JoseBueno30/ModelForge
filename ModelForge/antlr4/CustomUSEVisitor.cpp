@@ -7,7 +7,7 @@ class CustomUSEVisitor : public USEBaseVisitor{
 public:
     std::shared_ptr<MetaModel::MetaModel> model;
 
-    virtual antlrcpp::Any visitModel(USEParser::ModelContext *ctx) override {
+    antlrcpp::Any visitModel(USEParser::ModelContext *ctx) override {
 
         // Create model
         if (ctx->ID()) {
@@ -71,11 +71,11 @@ public:
         return model;
     }
 
-    virtual std::any visitEnum(USEParser::EnumContext *ctx) override {
+    std::any visitEnum(USEParser::EnumContext *ctx) override {
         return visit(ctx->enumTypeDefinition());
     }
 
-    virtual std::any visitEnumTypeDefinition(USEParser::EnumTypeDefinitionContext *ctx) override {
+    std::any visitEnumTypeDefinition(USEParser::EnumTypeDefinitionContext *ctx) override {
 
         std::shared_ptr<MetaModel::MetaEnum> metaEnum = nullptr;
 
@@ -97,7 +97,7 @@ public:
         return visit(ctx->classDefinition());
     }
 
-    virtual std::any visitClassDefinition(USEParser::ClassDefinitionContext *ctx) override {
+    std::any visitClassDefinition(USEParser::ClassDefinitionContext *ctx) override {
         auto metaClass = model->getClass(ctx->ID()->getText());
 
         //Add super classes
@@ -126,10 +126,11 @@ public:
         return nullptr;
     }
 
-    virtual std::any visitAttributeDefinition(USEParser::AttributeDefinitionContext *ctx) override {
+    std::any visitAttributeDefinition(USEParser::AttributeDefinitionContext *ctx) override {
         std::string name = ctx->ID()->getText();
         std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
 
+        //En el constructor y el setter de attribute comprobar que type no sea void
         std::shared_ptr<MetaModel::MetaAttribute> attribute = std::make_shared<MetaModel::MetaAttribute>(name, type);
 
         if(ctx->initDefinition()){
@@ -145,15 +146,107 @@ public:
         return attribute;
     }
 
-    virtual std::any visitInitDefinition(USEParser::InitDefinitionContext *ctx) override {
+    std::any visitTypeSimple(USEParser::TypeSimpleContext *ctx) override {
+        return visitChildren(ctx->simpleType());
+    }
+
+    std::any visitTypeCollection(USEParser::TypeCollectionContext *ctx) override {
+        return visit(ctx->collectionType());
+    }
+
+    std::any visitTypeTuple(USEParser::TypeTupleContext *ctx) override {
+        return visit(ctx->tupleType());
+    }
+
+    std::any visitSimpleType(USEParser::SimpleTypeContext *ctx) override {
+        std::string typeName = ctx->ID()->getText();
+
+        if(typeName == "Real"){
+            return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Real::instance());
+        }else if(typeName == "Integer"){
+            return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Integer::instance());
+        }else if(typeName == "String"){
+            return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::String::instance());
+        }else if(typeName == "Boolean"){
+            return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Boolean::instance());
+        }else if(typeName == "Void"){
+            return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Void::instance());
+        }
+
+        if(auto enumType = model->getEnum(typeName)){
+            return std::static_pointer_cast<MetaModel::MetaType>(enumType);
+        }
+
+        if(auto classType = model->getClass(typeName)){
+            return std::static_pointer_cast<MetaModel::MetaType>(classType);
+        }
+
+        if(auto assocClassType = model->getAssociationClass(typeName)){
+            return std::static_pointer_cast<MetaModel::MetaType>(assocClassType);
+        }
+
+        throw std::invalid_argument("Expexted valid type name, found '"+ typeName + "'.");
+
+        return nullptr;
+    }
+
+    std::any visitTypeSimpleCollection(USEParser::TypeSimpleCollectionContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        std::shared_ptr<MetaModel::CollectionType> collectionType = std::make_shared<MetaModel::CollectionType>(false, false, 0, type);
+
+        return std::static_pointer_cast<MetaModel::MetaType>(collectionType);
+    }
+
+    std::any visitTypeSet(USEParser::TypeSetContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        std::shared_ptr<MetaModel::CollectionType> setType = std::make_shared<MetaModel::CollectionType>(false, true, 0, type);
+
+        return std::static_pointer_cast<MetaModel::MetaType>(setType);
+    }
+
+    std::any visitTypeSequence(USEParser::TypeSequenceContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        std::shared_ptr<MetaModel::CollectionType> sequenceType = std::make_shared<MetaModel::CollectionType>(true, false, 0, type);
+
+        return std::static_pointer_cast<MetaModel::MetaType>(sequenceType);
+    }
+
+    std::any visitTypeBag(USEParser::TypeBagContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        std::shared_ptr<MetaModel::CollectionType> bagType = std::make_shared<MetaModel::CollectionType>(false, false, 0, type);
+
+        return std::static_pointer_cast<MetaModel::MetaType>(bagType);
+    }
+
+    std::any visitTypeOrderedSet(USEParser::TypeOrderedSetContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        std::shared_ptr<MetaModel::CollectionType> orderedSetType = std::make_shared<MetaModel::CollectionType>(true, true, 0, type);
+
+        return std::static_pointer_cast<MetaModel::MetaType>(orderedSetType);
+    }
+
+    std::any visitTupleType(USEParser::TupleTypeContext *ctx) override {
+        return visitChildren(ctx);
+    }
+
+    std::any visitTuplePart(USEParser::TuplePartContext *ctx) override {
+        return visitChildren(ctx);
+    }
+
+    std::any visitInitDefinition(USEParser::InitDefinitionContext *ctx) override {
         return visit(ctx->expression());
     }
 
-    virtual std::any visitDerivedDefinition(USEParser::DerivedDefinitionContext *ctx) override {
+    std::any visitDerivedDefinition(USEParser::DerivedDefinitionContext *ctx) override {
         return visit(ctx->expression());
     }
 
-    virtual std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
+    std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
 
         return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
     }
