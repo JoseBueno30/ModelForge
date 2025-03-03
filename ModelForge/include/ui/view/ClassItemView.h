@@ -4,8 +4,14 @@
 #include <ui/view/BoxItemView.h>
 #include <QPainter>
 #include <metamodel/MetaClass.h>
+#include <QCursor>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsScene>
 
 using std::shared_ptr;
+
+class AssociationItemView;
+class AssociationClassItemView;
 
 class ClassItemView : public BoxItemView{
 public:
@@ -15,11 +21,24 @@ public:
 
     QRectF classNameRect();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void addAssociation(AssociationItemView* association);
+    void deleteAssociation(AssociationItemView* association);
+    void addAssociationClass(AssociationClassItemView* associationClass);
+    void deleteAssociationClass(AssociationClassItemView* associationClass);
+
 
     ~ClassItemView();
 
+protected:
+    shared_ptr<MetaModel::MetaClass>& getClassModel();
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
+
 private:
     shared_ptr<MetaModel::MetaClass> model;
+    std::vector<AssociationItemView *> associations;
+    std::vector<AssociationClassItemView *> associationClasses;
 
     void calculateMinimumSize();
 

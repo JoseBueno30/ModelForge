@@ -2,13 +2,21 @@
 #define ASSOCIATIONCLASSITEMVIEW_H
 
 
+#include <ui/view/AssociationItemView.h>
 #include <ui/view/ClassItemView.h>
 
 #include <metamodel/MetaAssociationClass.h>
 
-class AssociationClassItemView : public ClassItemView{
+class AssociationClassItemView : public BoxItemView{
 public:
-    AssociationClassItemView(MetaModel::MetaAssociationClass);
+    AssociationClassItemView(std::shared_ptr<MetaModel::MetaAssociationClass> model, ClassItemView* class1, ClassItemView* class2);
+
+    QRectF boundingRect() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void addItemsToScene();
+private:
+    ClassItemView* classItem;
+    AssociationItemView* associationItem;
 };
 
 #endif // ASSOCIATIONCLASSITEMVIEW_H

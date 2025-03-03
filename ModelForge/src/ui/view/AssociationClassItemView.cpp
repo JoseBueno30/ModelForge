@@ -1,0 +1,47 @@
+#include <ui/view/AssociationClassItemView.h>
+
+AssociationClassItemView::AssociationClassItemView(std::shared_ptr<MetaModel::MetaAssociationClass> model, ClassItemView* class1, ClassItemView* class2)
+    : classItem(new ClassItemView(model)), associationItem(new AssociationItemView(model, class1, class2)){
+    QPointF center = (this->associationItem->getP1() + this->associationItem->getP2()) /2;
+    class1->addAssociation(this->associationItem);
+    class1->addAssociationClass(this);
+    class2->addAssociation(this->associationItem);
+    class2->addAssociationClass(this);
+    this->classItem->addAssociationClass(this);
+    this->classItem->setPos(center.x() - this->classItem->getDimensions().x() / 2, center.y() + 40);
+    //this->setPos(this->boundingRect().center());
+}
+
+QRectF AssociationClassItemView::boundingRect() const {
+    qreal margin = 10;
+    QPointF center = (this->associationItem->getP1() + this->associationItem->getP2()) /2;
+    QRectF auxRect = this->classItem->sceneBoundingRect();
+    QLineF auxLine(center, auxRect.center());
+    QPointF p2 = this->associationItem->getNearestEdgeIntersection(auxRect, auxLine, p2);
+    return QRectF(center, p2).normalized().adjusted(-10, -10, 10, 10);;
+}
+void AssociationClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    // painter->save();
+    // painter->translate(this->associationItem->pos());
+    // this->associationItem->paint(painter, option, widget);
+    // painter->restore();
+    //qDebug()<<"Scene:" << this->scenePos() << "\tnormal:" << this->pos();
+    QPointF center = (this->associationItem->getP1() + this->associationItem->getP2()) /2;
+
+    QRectF auxRect = this->classItem->sceneBoundingRect();
+    QLineF auxLine(center, auxRect.center());
+    QPointF p2 = this->associationItem->getNearestEdgeIntersection(auxRect, auxLine, p2);
+    // QPointF auxP2(center.x(), center.y() + 40); // TODO Find the nearest class edge and use its center
+    QLineF line(center, p2);
+
+    painter->setPen(QPen(Qt::white, 1, Qt::DashLine));
+    painter->drawLine(line);
+
+    // painter->translate(this->classItem->pos());
+    // this->classItem->paint(painter, option, widget);
+}
+
+void AssociationClassItemView::addItemsToScene(){
+    this->scene()->addItem(this->classItem);
+    this->scene()->addItem(this->associationItem);
+}

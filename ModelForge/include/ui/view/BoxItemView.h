@@ -8,7 +8,7 @@
 #include <QGraphicsItem>
 
 
-class BoxItemView : public QGraphicsItem{
+class BoxItemView : virtual public QGraphicsItem{
 public:
     virtual void setWidth(qreal width){this->width=width;};
     virtual void setHeight(qreal height){this->height=height;};
@@ -21,7 +21,13 @@ public:
     virtual void setMinDimensions(qreal width, qreal height){setMinWidth(width);setMinHeight(height);};
     virtual QPointF getMinDimensions() const {return QPointF(minWidth, minHeight);}
 
-
+    virtual void setX(qreal x){this->x = x;}
+    virtual qreal getX() const {return this->x;}
+    virtual void setY(qreal y){this->y = y;}
+    virtual qreal getY() const {return this->y;}
+    virtual QPointF getPosition() const{return QPointF(x,y);}
+    virtual void setPosition(qreal x, qreal y){setX(x);setY(y);}
+    virtual void setPosition(QPointF p){setX(p.x());setY(p.y());}
 
     QRectF boundingRect() const override{
         return QRectF(0, 0, width, height);
@@ -30,7 +36,7 @@ public:
     virtual ~BoxItemView() = default;
 
 private:
-    qreal width, height, minWidth, minHeight;
+    qreal x,y, width, height, minWidth, minHeight;
 };
 
 #endif // BOXITEMVIEW_H

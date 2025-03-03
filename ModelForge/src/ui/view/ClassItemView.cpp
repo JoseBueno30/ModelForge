@@ -1,4 +1,7 @@
+
 #include<ui/view/ClassItemView.h>
+#include <ui/view/AssociationItemView.h>
+#include <ui/view/AssociationClassItemView.h>
 #define PADDING 20
 #define TEST_NAME "ClassLongTextAdriduty"
 
@@ -10,21 +13,25 @@ void ClassItemView::calculateMinimumSize(){
 
     //TODO Check attributtes and operations longitude
     fm = QFontMetrics(QFont("Arial", 10, QFont::StyleNormal));
+
     for(const auto& pair : this->model->getAttributes()){
         int attrWidth = fm.horizontalAdvance(QString::fromStdString(pair.first + " : " + pair.second->getType().toString())) + HORIZONTAL_PADDING; //TODO MetaAttribute toString
         this->setMinWidth(qMax(int(this->getMinDimensions().x()), attrWidth));
 
         minHeight += ATTS_HEIGHT;
     }
+
     if(!this->model->getOperations().empty() && !this->model->getAttributes().empty()){
         minHeight += 2*ATTS_PADDING;
     }
+
     for(const auto& pair: this->model->getOperations()){
         int attrWidth = fm.horizontalAdvance(QString::fromStdString(pair.first + "() : " + pair.second->getReturnType().toString())); //TODO MetaOperation toString
         this->setMinWidth(qMax(int(this->getMinDimensions().x()), attrWidth));
 
         minHeight += ATTS_HEIGHT;
     }
+
     this->setMinHeight(minHeight+ATTS_PADDING);
     this->setDimensions(this->getMinDimensions());
 }
@@ -33,6 +40,8 @@ ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel) : mode
     this->setPos(0,0);
     this->setDimensions(150,100);
     calculateMinimumSize();
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
     // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
 }
 
@@ -40,14 +49,19 @@ ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel, int x,
     this->setPos(x,y);
     this->setDimensions(150,100);
     calculateMinimumSize();
+
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
     // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
 }
 
 ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel, int x, int y, int width, int height) :
     model(classModel){
-    this->setPos(x,y);
+    this->setPosition(x,y);
     this->setDimensions(width, height);
     calculateMinimumSize();
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
     // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
 }
 
@@ -59,18 +73,26 @@ QRectF ClassItemView::classNameRect() {
 }
 
 void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+
+    if(model->getIsAbstract()){
+        painter->setBrush(QColor(0xCC9FED));
+    }else{
+        painter->setBrush(QColor(0x8DD0FF));
+    }
+
     painter->setPen(QPen(Qt::black));
-    painter->setBrush(QColor(0x8DD0FF));
-    painter->drawRoundedRect(boundingRect(),10,10);
+    painter->drawRoundedRect(ClassItemView::boundingRect(),10,10);
+
     painter->setFont(QFont("Arial", 13, QFont::Bold));
     painter->drawText(classNameRect(), Qt::AlignCenter, QString::fromStdString(this->model->getName()));
 
-    painter->drawLine(QLine(0,this->pos().y() + classNameRect().height(), this->getDimensions().x(), classNameRect().height()));
+    painter->drawLine(QLine(0, classNameRect().height(),this->getDimensions().x(), classNameRect().height()));
+
     int yOffset = classNameRect().height() + ATTS_PADDING;
 
     painter->setFont(QFont("Arial", 10, QFont::StyleNormal));
     for(const auto& pair : this->model->getAttributes()){
-        QRectF rect(ATTS_PADDING, yOffset, this->getDimensions().x(), ATTS_HEIGHT);
+        QRectF rect(ATTS_PADDING, yOffset,this->getDimensions().x(),ATTS_HEIGHT);
         painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.first + " : " + pair.second->getType().toString())); //TODO MetaAttribute toString
         yOffset += ATTS_HEIGHT;
     }
@@ -82,10 +104,51 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     yOffset += ATTS_PADDING;
 
     for(const auto& pair: this->model->getOperations()){
-        QRectF rect(ATTS_PADDING, yOffset, this->getDimensions().x(), ATTS_HEIGHT);
+        QRectF rect(ATTS_PADDING, yOffset,this->getDimensions().x(), ATTS_HEIGHT);
         painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.first + "() : " + pair.second->getReturnType().toString())); //TODO MetaOperation toString
         yOffset += ATTS_HEIGHT;
     }
+}
+
+shared_ptr<MetaModel::MetaClass>& ClassItemView::getClassModel(){
+    return this->model;
+}
+
+void ClassItemView::addAssociation(AssociationItemView* association){
+    this->associations.push_back(association);
+}
+
+void ClassItemView::deleteAssociation(AssociationItemView* association){
+    this->associations.erase(std::remove(this->associations.begin(), this->associations.end(), association), this->associations.end());
+}
+void ClassItemView::addAssociationClass(AssociationClassItemView* associationClass){
+    this->associationClasses.push_back(associationClass);
+}
+void ClassItemView::deleteAssociationClass(AssociationClassItemView* associationClass){
+    this->associationClasses.erase(std::remove(this->associationClasses.begin(), this->associationClasses.end(), associationClass), this->associationClasses.end());
+}
+
+
+void ClassItemView::mousePressEvent(QGraphicsSceneMouseEvent* event){
+    setCursor(Qt::ClosedHandCursor);
+    QGraphicsItem::mousePressEvent(event);
+}
+
+void ClassItemView::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
+    //this->setPosition(event->pos() - this->ClassItemView::boundingRect().center());
+    //this->scene()->update();
+    QGraphicsItem::mouseMoveEvent(event);
+    for(auto association: this->associations){
+        association->updatePosition();
+    }
+    for(auto associationClass : associationClasses){
+        associationClass->update();
+    }
+}
+
+void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
+    setCursor(Qt::ArrowCursor);
+    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 ClassItemView::~ClassItemView(){}

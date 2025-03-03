@@ -24,6 +24,9 @@ protected:
     void drawBackground(QPainter *painter, const QRectF &rect) override;
 
 private:
+    const double minScale;
+    const double maxScale;
+    double currentScale;
     MetaModel::MetaModel *model;
 
     void setupGraphicsView();

@@ -8,9 +8,11 @@ void ModelGraphicsView::setupGraphicsView(){
     setSceneRect(-10000, -10000, 20000, 20000);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
 }
 
-ModelGraphicsView::ModelGraphicsView(QWidget *parent, MetaModel::MetaModel *model) : QGraphicsView(parent), model(model){
+ModelGraphicsView::ModelGraphicsView(QWidget *parent, MetaModel::MetaModel *model)
+    : QGraphicsView(parent), model(model), minScale(0.25), maxScale(3.0), currentScale(1.0){
     setupGraphicsView();
     //this->setBackgroundBrush(QBrush(QColor(0x21252A)));
 }
@@ -20,15 +22,19 @@ void ModelGraphicsView::setModel(MetaModel::MetaModel *model){
 }
 
 void ModelGraphicsView::wheelEvent(QWheelEvent *event){
-    double scaleFactor = 1.15;
-    if (event->angleDelta().y() > 0)
-        scale(scaleFactor, scaleFactor);
-    else
-        scale(1.0 / scaleFactor, 1.0 / scaleFactor);
+    constexpr double scaleFactor = 1.15;
+    double factor = (event->angleDelta().y() > 0) ? scaleFactor : (1.0 / scaleFactor);
+
+    double newScale = currentScale * factor;
+
+    if (newScale >= minScale && newScale <= maxScale) {
+        scale(factor, factor);
+        currentScale = newScale;
+    }
 }
 
 void ModelGraphicsView::mousePressEvent(QMouseEvent *event){
-    if(event->button() == Qt::MiddleButton){
+    if(event->button() == Qt::MiddleButton || event->button() == Qt::LeftButton){
         viewport()->update();
         setDragMode(QGraphicsView::ScrollHandDrag);
 

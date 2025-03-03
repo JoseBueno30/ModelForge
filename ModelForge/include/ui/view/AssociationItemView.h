@@ -1,17 +1,18 @@
 #ifndef ASSOCIATIONITEMVIEW_H
 #define ASSOCIATIONITEMVIEW_H
 
+#include <ui/view/ClassItemView.h>
 #include <QGraphicsItem>
 #include <QPainter>
 #include <metamodel/MetaAssociation.h>
 using std::shared_ptr;
 
 
-class AssociationItemView : public QGraphicsItem{
+class AssociationItemView : virtual public QGraphicsItem{
 public:
     AssociationItemView(shared_ptr<MetaModel::MetaAssociation> model,
-                        QGraphicsItem* class1,
-                        QGraphicsItem* class2);
+                        ClassItemView* class1,
+                        ClassItemView* class2);
 
     QRectF associationNameRect();
     QRectF boundingRect() const override;
@@ -19,20 +20,25 @@ public:
 
     void updatePosition();
 
+    QPointF getP1() const;
+    QPointF getP2() const;
+    QGraphicsItem* getClass1() const;
+    QGraphicsItem* getClass2() const;
+    shared_ptr<MetaModel::MetaAssociation> getAssociationModel();
+    QPointF getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last);
+
 private:
     shared_ptr<MetaModel::MetaAssociation> model;
-    QGraphicsItem* class1;
-    QGraphicsItem* class2;
+    BoxItemView* class1;
+    BoxItemView* class2;
     QPointF p1;
     QPointF p2;
 
     void drawArrow(QLineF &line, QPainter *painter);
-    void drawDiamond(QLineF &line, QPainter *painter);
-    QPointF getNearestEdgeIntersection(const QRectF &rect, const QLineF &line);
+    QPointF drawDiamond(QLineF &line, QPainter *painter, bool filled);
 
     void setP1(QPointF p){this->p1 = p;}
     void setP2(QPointF p){this->p2 = p;}
-
 };
 
 #endif // ASSOCIATIONITEMVIEW_H

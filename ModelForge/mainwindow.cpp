@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include <ui/view/AssociationClassItemView.h>
 #include <ui/view/AssociationItemView.h>
 #include <ui/view/EnumItemView.h>
 
@@ -41,15 +42,18 @@ MainWindow::MainWindow(QWidget *parent)
     ClassItemView *classItem = new ClassItemView(class1);
     scene->addItem(classItem);
 
-    std::shared_ptr<MetaModel::MetaClass> class2 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba2", false);
-    ClassItemView *classItem2 = new ClassItemView(class2, 250, 0);
+    std::shared_ptr<MetaModel::MetaClass> class2 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba2", true);
+    ClassItemView *classItem2 = new ClassItemView(class2, 350, 0);
     scene->addItem(classItem2);
 
     // qDebug() << classItem->scenePos() << "\t" <<classItem2->scenePos();
 
-    std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>("prueba", 1);
-    AssociationItemView * associationItemView = new AssociationItemView(association, classItem, classItem2);
-    scene->addItem(associationItemView);
+    // std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>("prueba", 2);
+    // AssociationItemView * associationItemView = new AssociationItemView(association, classItem, classItem2);
+    std::shared_ptr<MetaModel::MetaAssociationClass> associationClass = std::make_shared<MetaModel::MetaAssociationClass>("ClaseDePrueba3", false, 2);
+    AssociationClassItemView * associationClassItemView = new AssociationClassItemView(associationClass, classItem, classItem2);
+    scene->addItem(associationClassItemView);
+    associationClassItemView->addItemsToScene();
 
     // std::unique_ptr<MetaModel::MetaEnumElement> enumElement = std::make_unique<MetaModel::MetaEnumElement>("Adriduty");
     // std::unique_ptr<MetaModel::MetaEnumElement> enumElement2 = std::make_unique<MetaModel::MetaEnumElement>("MrDeif");

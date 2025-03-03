@@ -427,6 +427,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/ui/view/BoxItemView.h
         src/ui/view/AssociationItemView.cpp
         antlr4/CustomUSEVisitor.cpp
+        src/ui/view/AssociationClassItemView.cpp
 
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
