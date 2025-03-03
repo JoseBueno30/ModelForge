@@ -9,7 +9,6 @@
 
 #include <string>
 #include <memory>
-#include <vector>
 #include <map>
 #include <unordered_set>
 
@@ -50,24 +49,24 @@ public:
 
     const std::map<std::string, std::shared_ptr<MetaAttribute>>& getAttributes() const;
     std::map<std::string, const MetaAttribute*> getAllAttributes() const;
-    const MetaAttribute* getAttribute(const std::string& key) const;
-    void addAttribute(const std::shared_ptr<MetaAttribute>& attribute);
+    std::shared_ptr<MetaAttribute> getAttribute(const std::string& key);
+    void addAttribute(std::shared_ptr<MetaAttribute> attribute);
     void removeAttribute(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<MetaOperation>>& getOperations() const;
     std::map<std::string, const MetaOperation*> getAllOperations() const;
-    const MetaOperation* getOperation(const std::string& key) const;
-    void addOperation(const std::shared_ptr<MetaOperation>& operation);
+    std::shared_ptr<MetaOperation> getOperation(const std::string& key);
+    void addOperation(std::shared_ptr<MetaOperation> operation);
     void removeOperation(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<MetaConstraint>>& getConstraints() const;
-    const MetaConstraint* getConstraint(const std::string& key) const;
-    void addConstraint(const std::shared_ptr<MetaConstraint>& constraint);
+    std::shared_ptr<MetaConstraint> getConstraint(const std::string& key);
+    void addConstraint(std::shared_ptr<MetaConstraint> constraint);
     void removeConstraint(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<MetaStateMachine>>& getStateMachines() const;
-    const MetaStateMachine* getStateMachine(const std::string& key) const;
-    void addStateMachine(const std::shared_ptr<MetaStateMachine>& stateMachine);
+    std::shared_ptr<MetaStateMachine> getStateMachine(const std::string& key);
+    void addStateMachine(std::shared_ptr<MetaStateMachine> stateMachine);
     void removeStateMachine(const std::string& key);
 
     bool isSubClassOf(const MetaClass& metaClass) const;

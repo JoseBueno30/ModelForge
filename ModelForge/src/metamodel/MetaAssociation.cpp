@@ -31,10 +31,10 @@ const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>& MetaAssociatio
     return associationEnds;
 }
 
-const MetaAssociationEnd* MetaAssociation::getAssociationEnd(const std::string& key) const{
+std::shared_ptr<MetaAssociationEnd> MetaAssociation::getAssociationEnd(const std::string& key) {
     auto iterator = associationEnds.find(key);
     if(iterator != associationEnds.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
@@ -49,7 +49,7 @@ void MetaAssociation::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> asso
         throw std::runtime_error("Generalization already declared: " + associationEnd->getRole());
     }
 
-    associationEnds[associationEnd->getRole()] = associationEnd;
+    associationEnds[associationEnd->getRole()] = std::move(associationEnd);
 }
 void MetaAssociation::removeAssociationEnd(const std::string& key){
     associationEnds.erase(key);

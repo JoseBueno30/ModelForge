@@ -350,14 +350,10 @@ set(ANTLR_GENERATED_SOURCES
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEParser.cpp
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEBaseVisitor.cpp
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEVisitor.cpp
-    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEBaseListener.cpp
-    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEListener.cpp
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USELexer.h
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEParser.h
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEBaseVisitor.h
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEVisitor.h
-    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEBaseListener.h
-    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEListener.h
 )
 
 

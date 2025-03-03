@@ -141,6 +141,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
     return visitChildren(ctx);
   }

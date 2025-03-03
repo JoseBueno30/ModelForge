@@ -85,6 +85,8 @@ public:
 
     virtual std::any visitExpressionOnly(USEParser::ExpressionOnlyContext *context) = 0;
 
+    virtual std::any visitOclExpression(USEParser::OclExpressionContext *context) = 0;
+
     virtual std::any visitLogicalExpr(USEParser::LogicalExprContext *context) = 0;
 
     virtual std::any visitConditionalExpr(USEParser::ConditionalExprContext *context) = 0;

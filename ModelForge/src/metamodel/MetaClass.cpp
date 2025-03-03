@@ -138,15 +138,15 @@ std::map<std::string, const MetaAttribute*> MetaClass::getAllAttributes() const{
     return allAttributes;
 }
 
-const MetaAttribute* MetaClass::getAttribute(const std::string& key) const{
+std::shared_ptr<MetaAttribute> MetaClass::getAttribute(const std::string& key){
     auto iterator = attributes.find(key);
     if(iterator != attributes.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
 
-void MetaClass::addAttribute(const std::shared_ptr<MetaAttribute>& attribute){
+void MetaClass::addAttribute(std::shared_ptr<MetaAttribute> attribute){
     if (!attribute) {
         throw std::invalid_argument("Null attribute");
     }
@@ -155,7 +155,7 @@ void MetaClass::addAttribute(const std::shared_ptr<MetaAttribute>& attribute){
         throw std::runtime_error("Attribute already declared: " + attribute->getName());
     }
 
-    attributes[attribute->getName()] = attribute;
+    attributes[attribute->getName()] = std::move(attribute);
 }
 
 void MetaClass::removeAttribute(const std::string& key){
@@ -187,15 +187,15 @@ std::map<std::string, const MetaOperation*> MetaClass::getAllOperations() const{
     return allOperations;
 }
 
-const MetaOperation* MetaClass::getOperation(const std::string& key) const{
+std::shared_ptr<MetaOperation> MetaClass::getOperation(const std::string& key){
     auto iterator = operations.find(key);
     if(iterator != operations.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
 
-void MetaClass::addOperation(const std::shared_ptr<MetaOperation>& operation){
+void MetaClass::addOperation(std::shared_ptr<MetaOperation> operation){
     if (!operation) {
         throw std::invalid_argument("Null operation");
     }
@@ -204,7 +204,7 @@ void MetaClass::addOperation(const std::shared_ptr<MetaOperation>& operation){
         throw std::runtime_error("Operation already declared: " + operation->getName());
     }
 
-    operations[operation->getName()] = operation;
+    operations[operation->getName()] = std::move(operation);
 }
 
 void MetaClass::removeOperation(const std::string& key){
@@ -215,15 +215,15 @@ const std::map<std::string, std::shared_ptr<MetaConstraint>>& MetaClass::getCons
     return constraints;
 }
 
-const MetaConstraint* MetaClass::getConstraint(const std::string& key) const{
+std::shared_ptr<MetaConstraint> MetaClass::getConstraint(const std::string& key){
     auto iterator = constraints.find(key);
     if(iterator != constraints.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
 
-void MetaClass::addConstraint(const std::shared_ptr<MetaConstraint>& constraint){
+void MetaClass::addConstraint(std::shared_ptr<MetaConstraint> constraint){
     if (!constraint) {
         throw std::invalid_argument("Null constraint");
     }
@@ -232,7 +232,7 @@ void MetaClass::addConstraint(const std::shared_ptr<MetaConstraint>& constraint)
         throw std::runtime_error("Constraint already declared: " + constraint->getName());
     }
 
-    constraints[constraint->getName()] = constraint;
+    constraints[constraint->getName()] = std::move(constraint);
 }
 
 void MetaClass::removeConstraint(const std::string& key){
@@ -243,15 +243,15 @@ const std::map<std::string, std::shared_ptr<MetaStateMachine>>& MetaClass::getSt
     return stateMachines;
 }
 
-const MetaStateMachine* MetaClass::getStateMachine(const std::string& key) const{
+std::shared_ptr<MetaStateMachine> MetaClass::getStateMachine(const std::string& key){
     auto iterator = stateMachines.find(key);
     if(iterator != stateMachines.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
 
-void MetaClass::addStateMachine(const std::shared_ptr<MetaStateMachine>& stateMachine){
+void MetaClass::addStateMachine(std::shared_ptr<MetaStateMachine> stateMachine){
     if (!stateMachine) {
         throw std::invalid_argument("Null state machine");
     }
@@ -260,7 +260,7 @@ void MetaClass::addStateMachine(const std::shared_ptr<MetaStateMachine>& stateMa
         throw std::runtime_error("StateMachine already declared: " + stateMachine->getName());
     }
 
-    stateMachines[stateMachine->getName()] = stateMachine;
+    stateMachines[stateMachine->getName()] = std::move(stateMachine);
 }
 
 void MetaClass::removeStateMachine(const std::string& key){

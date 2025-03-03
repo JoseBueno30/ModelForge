@@ -305,7 +305,11 @@ transitionDefinition
 expressionOnly
     : expression EOF
     ;
-    
+
+oclExpression
+    : expression
+    ;
+ 
 /* ------------------------------------
   expression ::= 
     logicalExpression | conditionalExpresion | lambdaExpression

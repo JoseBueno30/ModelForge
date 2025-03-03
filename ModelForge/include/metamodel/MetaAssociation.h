@@ -29,7 +29,7 @@ public:
     void setType(int type);
 
     const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>& getAssociationEnds() const;
-    const MetaAssociationEnd* getAssociationEnd(const std::string& key) const;
+    std::shared_ptr<MetaAssociationEnd> getAssociationEnd(const std::string& key);
     void addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd);
     void removeAssociationEnd(const std::string& key);
 };

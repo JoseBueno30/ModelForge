@@ -1,5 +1,6 @@
 #include "generated/USEBaseVisitor.h"
 #include "metamodel/MetaModel.h"
+#include <QDebug>
 #include <any>
 
 class CustomUSEVisitor : public USEBaseVisitor{
@@ -92,22 +93,30 @@ public:
         return nullptr;
     }
 
-    virtual std::any visitClass(USEParser::ClassContext *ctx) override {
+    std::any visitClass(USEParser::ClassContext *ctx) override {
         return visit(ctx->classDefinition());
     }
 
     virtual std::any visitClassDefinition(USEParser::ClassDefinitionContext *ctx) override {
+        auto metaClass = model->getClass(ctx->ID()->getText());
+
         //Add super classes
-        for(auto superClassElem : ctx->idList()->ID()){
-            auto superClass = model->getClass(superClassElem->getText());
-            if(!superClass){
-                throw std::runtime_error("Undefined Super Class: " + superClassElem->getText() + ". Declare Super Classes before Child Classes");
+        if(ctx->idList()){
+            for(auto superClassElem : ctx->idList()->ID()){
+                auto superClass = model->getClass(superClassElem->getText());
+                if(!superClass){
+                    throw std::runtime_error("Undefined Super Class: " + superClassElem->getText() + ". Declare Super Classes before Child Classes");
+                }
+
+                metaClass->addSuperClass(superClass);
             }
         }
 
         //Add attributes
         for(auto attributeDefinition : ctx->attributeDefinition()){
             std::shared_ptr<MetaModel::MetaAttribute> attribute = std::any_cast<std::shared_ptr<MetaModel::MetaAttribute>>(visit(attributeDefinition));
+
+            metaClass->addAttribute(attribute);
         }
 
 
@@ -123,6 +132,29 @@ public:
 
         std::shared_ptr<MetaModel::MetaAttribute> attribute = std::make_shared<MetaModel::MetaAttribute>(name, type);
 
+        if(ctx->initDefinition()){
+            std::shared_ptr<MetaModel::OCLExpr> initExpression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->initDefinition()));
+
+            attribute->setInitExpr(initExpression);
+        }else if(ctx->derivedDefinition()){
+            std::shared_ptr<MetaModel::OCLExpr> deriveExpression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->derivedDefinition()));
+
+            attribute->setDeriveExpr(deriveExpression);
+        }
+
         return attribute;
+    }
+
+    virtual std::any visitInitDefinition(USEParser::InitDefinitionContext *ctx) override {
+        return visit(ctx->expression());
+    }
+
+    virtual std::any visitDerivedDefinition(USEParser::DerivedDefinitionContext *ctx) override {
+        return visit(ctx->expression());
+    }
+
+    virtual std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
+
+        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
     }
 };

@@ -18,10 +18,10 @@ void MetaEnumElement::setName(const std::string& name){
 
 
 
-MetaEnum::MetaEnum(const std::string& name, const std::shared_ptr<MetaEnumElement>& element)
+MetaEnum::MetaEnum(const std::string& name, std::shared_ptr<MetaEnumElement> element)
     : name(name){
     if(element){
-        elements[element->getName()] = element;
+        elements[element->getName()] = std::move(element);
     }
 }
 
@@ -36,24 +36,24 @@ const std::map<std::string, std::shared_ptr<MetaEnumElement>>& MetaEnum::getElem
     return elements;
 }
 
-const MetaEnumElement* MetaEnum::getElement(const std::string& key) const{
+std::shared_ptr<MetaEnumElement> MetaEnum::getElement(const std::string& key){
     auto iterator = elements.find(key);
     if(iterator != elements.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
 
-void MetaEnum::addElement(const std::shared_ptr<MetaEnumElement>& element){
+void MetaEnum::addElement(std::shared_ptr<MetaEnumElement> element){
     if (!element) {
-        throw std::invalid_argument("Null enum");
+        throw std::invalid_argument("Null EnumElement");
     }
 
     if (elements.find(element->getName()) != elements.end()) {
         throw std::runtime_error("Enum: " + name + " already contains element named: " + element->getName());
     }
 
-    elements[element->getName()] = element;
+    elements[element->getName()] = std::move(element);
 }
 
 void MetaEnum::removeElement(const std::string& key){

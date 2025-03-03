@@ -18,10 +18,10 @@ const std::map<std::string, std::shared_ptr<MetaEnum>>& MetaModel::getEnums() co
     return enums;
 }
 
-const MetaEnum* MetaModel::getEnum(const std::string& key) const{
+std::shared_ptr<MetaEnum> MetaModel::getEnum(const std::string& key){
     auto iterator = enums.find(key);
     if(iterator != enums.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
@@ -35,7 +35,7 @@ void MetaModel::addEnum(std::shared_ptr<MetaEnum> modelEnum){
         throw std::runtime_error("Model already contains element named: " + modelEnum->getName());
     }
 
-    enums[modelEnum->getName()] = modelEnum;
+    enums[modelEnum->getName()] = std::move(modelEnum);
 }
 
 void MetaModel::removeEnum(const std::string& key){
@@ -46,10 +46,10 @@ const std::map<std::string, std::shared_ptr<MetaClass>>& MetaModel::getClasses()
     return classes;
 }
 
-const MetaClass* MetaModel::getClass(const std::string& key) const{
+std::shared_ptr<MetaClass> MetaModel::getClass(const std::string& key){
     auto iterator = classes.find(key);
     if(iterator != classes.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
@@ -63,7 +63,7 @@ void MetaModel::addClass(std::shared_ptr<MetaClass> modelClass){
         throw std::runtime_error("Model already contains element named: " + modelClass->getName());
     }
 
-    classes[modelClass->getName()] = modelClass;
+    classes[modelClass->getName()] = std::move(modelClass);
 }
 
 void MetaModel::removeClass(const std::string& key){
@@ -74,10 +74,10 @@ const std::map<std::string, std::shared_ptr<MetaAssociation>>& MetaModel::getAss
     return associations;
 }
 
-const MetaAssociation* MetaModel::getAssociation(const std::string& key) const{
+std::shared_ptr<MetaAssociation> MetaModel::getAssociation(const std::string& key){
     auto iterator = associations.find(key);
     if(iterator != associations.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
@@ -91,7 +91,7 @@ void MetaModel::addAssociation(std::shared_ptr<MetaAssociation> modelAssociation
         throw std::runtime_error("Model already contains element named: " + modelAssociation->getName());
     }
 
-    associations[modelAssociation->getName()] = modelAssociation;
+    associations[modelAssociation->getName()] = std::move(modelAssociation);
 }
 
 void MetaModel::removeAssociation(const std::string& key){
@@ -102,10 +102,10 @@ const std::map<std::string, std::shared_ptr<MetaAssociationClass>>& MetaModel::g
     return associationClasses;
 }
 
-const MetaAssociationClass* MetaModel::getAssociationClass(const std::string& key) const{
+std::shared_ptr<MetaAssociationClass> MetaModel::getAssociationClass(const std::string& key){
     auto iterator = associationClasses.find(key);
     if(iterator != associationClasses.end()){
-        return (iterator->second).get();
+        return (iterator->second);
     }
     return nullptr;
 }
@@ -119,7 +119,7 @@ void MetaModel::addAssociationClass(std::shared_ptr<MetaAssociationClass> modelA
         throw std::runtime_error("Model already contains element named: " + modelAssociationClass->getName());
     }
 
-    associationClasses[modelAssociationClass->getName()] = modelAssociationClass;
+    associationClasses[modelAssociationClass->getName()] = std::move(modelAssociationClass);
 }
 
 void MetaModel::removeAssociationClass(const std::string& key){

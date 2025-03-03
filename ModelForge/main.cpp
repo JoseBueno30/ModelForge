@@ -23,7 +23,7 @@ void test_grammar(){
 }
 
 void test_visitor(){
-    std::string modelTest = "model Test enum EnumTest { A, B }";
+    std::string modelTest = "model Test class TestClass end";
     std::cout<<"Modelo a probar: " << modelTest << std::endl;
 
     antlr4::ANTLRInputStream input(modelTest);
@@ -52,6 +52,14 @@ void test_visitor(){
         for(const auto& pair: model->getEnum("EnumTest")->getElements()){
             std::cout << "El enumElem es:" << pair.second->getName() << std::endl;
         }
+    }
+
+    if(model->getClass("TestClass")){
+        std::cout << "AAAAAAAAAAA" << std::endl;
+    }
+
+    for(const auto& pair: model->getClasses()){
+        std::cout << "La clase es:" << pair.second->getName() << std::endl;
     }
 }
 
