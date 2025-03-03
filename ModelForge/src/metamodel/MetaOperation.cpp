@@ -4,8 +4,8 @@
 
 namespace MetaModel{
 
-PrePostClause::PrePostClause(const std::string& name, const std::shared_ptr<OCLExpr>& expression)
-    : name(name),  expression(expression){}
+PrePostClause::PrePostClause(const std::string& name, const std::shared_ptr<OCLExpr>& expression, bool isPre, bool isPost)
+    : name(name),  expression(expression), isPre(isPre), isPost(isPost){}
 
 std::string PrePostClause::getName() const{
     return name;
@@ -23,6 +23,19 @@ void PrePostClause::setExpression(const std::shared_ptr<OCLExpr>& expression){
     this->expression = expression;
 }
 
+bool PrePostClause::getIsPre() const{
+    return isPre;
+}
+void PrePostClause::setIsPre(bool isPre){
+    this->isPre = isPre;
+}
+
+bool PrePostClause::getIsPost() const{
+    return isPost;
+}
+void PrePostClause::setIsPost(bool isPost){
+    this->isPost = isPost;
+}
 
 
 MetaOperation::MetaOperation(const std::string& name, const std::string& operationDefinition, const std::shared_ptr<MetaType>& returnType)

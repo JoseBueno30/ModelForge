@@ -6,6 +6,8 @@
 class CustomUSEVisitor : public USEBaseVisitor{
 public:
     std::shared_ptr<MetaModel::MetaModel> model;
+    int preConditionCounter = 0;
+    int postConditionCounter = 0;
 
     antlrcpp::Any visitModel(USEParser::ModelContext *ctx) override {
 
@@ -119,6 +121,13 @@ public:
             metaClass->addAttribute(attribute);
         }
 
+        //Add operations
+        for(auto operationDefinition : ctx->operationDefinition()){
+            std::shared_ptr<MetaModel::MetaOperation> operation = std::any_cast<std::shared_ptr<MetaModel::MetaOperation>>(visit(operationDefinition));
+
+            metaClass->addOperation(operation);
+        }
+
 
 
 
@@ -144,6 +153,81 @@ public:
         }
 
         return attribute;
+    }
+
+    std::any visitOperationDefinition(USEParser::OperationDefinitionContext *ctx) override {
+        std::string name = ctx->ID()->getText();
+
+        std::shared_ptr<MetaModel::MetaType> returnType = MetaModel::Void::instance();
+        if(ctx->type()){
+            returnType = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+        }
+
+        std::string operationDefinition = "";
+        if(ctx->expression()){
+            operationDefinition = ctx->expression()->getText();
+        }else if(ctx->SOIL_OPERATION()){
+            operationDefinition = ctx->SOIL_OPERATION()->getText();
+        }
+
+        std::shared_ptr<MetaModel::MetaOperation> operation = std::make_shared<MetaModel::MetaOperation>(name, operationDefinition, returnType);
+
+        for(auto variableDeclaration : ctx->paramList()->variableDeclaration()){
+            std::shared_ptr<MetaModel::MetaVariable> variable = std::any_cast<std::shared_ptr<MetaModel::MetaVariable>>(visit(variableDeclaration));
+
+            operation->addVariable(variable);
+        }
+
+        for(auto prePostClauseDefinition : ctx->prePostClause()){
+            std::shared_ptr<MetaModel::PrePostClause> prePostClause = std::any_cast<std::shared_ptr<MetaModel::PrePostClause>>(visit(prePostClauseDefinition));
+
+            if(prePostClause->getIsPre()){
+                operation->addPreCondition(prePostClause);
+            }else if(prePostClause->getIsPost()){
+                operation->addPostCondition(prePostClause);
+            }
+        }
+
+        return operation;
+    }
+
+    std::any visitVariableDeclaration(USEParser::VariableDeclarationContext *ctx) override {
+        std::string name = ctx->ID()->getText();
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        return std::make_shared<MetaModel::MetaVariable>(name, type);
+    }
+
+    std::any visitPreCondition(USEParser::PreConditionContext *ctx) override {
+        std::string name = "";
+        if(ctx->ID()){
+            name = ctx->ID()->getText();
+        }else{
+            name = "PreCondition" + std::to_string(preConditionCounter);
+            preConditionCounter++;
+        }
+
+        std::shared_ptr<MetaModel::OCLExpr> expression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->expression()));
+
+
+
+        return std::make_shared<MetaModel::PrePostClause>(name, expression, true, false);
+    }
+
+    std::any visitPostCondition(USEParser::PostConditionContext *ctx) override {
+        std::string name = "";
+        if(ctx->ID()){
+            name = ctx->ID()->getText();
+        }else{
+            name = "PostCondition" + std::to_string(postConditionCounter);
+            postConditionCounter++;
+        }
+
+        std::shared_ptr<MetaModel::OCLExpr> expression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->expression()));
+
+
+
+        return std::make_shared<MetaModel::PrePostClause>(name, expression, false, true);
     }
 
     std::any visitTypeSimple(USEParser::TypeSimpleContext *ctx) override {

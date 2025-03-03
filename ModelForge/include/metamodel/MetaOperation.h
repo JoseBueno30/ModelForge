@@ -17,15 +17,23 @@ class PrePostClause{
 private:
     std::string name;
     std::shared_ptr<OCLExpr> expression;
+    bool isPre;
+    bool isPost;
 
 public:
-    PrePostClause(const std::string& name, const std::shared_ptr<OCLExpr>& expression);
+    PrePostClause(const std::string& name, const std::shared_ptr<OCLExpr>& expression, bool isPre, bool isPost);
 
     std::string getName() const;
     void setName(const std::string& name);
 
     const OCLExpr& getExpression() const;
     void setExpression(const std::shared_ptr<OCLExpr>& expression);
+
+    bool getIsPre() const;
+    void setIsPre(bool isPre);
+
+    bool getIsPost() const;
+    void setIsPost(bool isPost);
 };
 
 class MetaOperation{
