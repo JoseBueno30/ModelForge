@@ -1,11 +1,17 @@
 #include <metamodel/MetaAttribute.h>
 
+#include <stdexcept>
+
 
 namespace MetaModel{
 
 
 MetaAttribute::MetaAttribute(const std::string& name, const std::shared_ptr<MetaType>& type)
-    : name(name), type(type){}
+    : name(name), type(type){
+    if (std::dynamic_pointer_cast<MetaModel::Void>(type)) {
+        throw std::invalid_argument("Attribute cannot be of type Void.");
+    }
+}
 
 std::string MetaAttribute::getName() const{
     return name;

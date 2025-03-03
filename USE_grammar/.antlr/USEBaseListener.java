@@ -4,8 +4,6 @@
  * HEADER TEST
  */
 
-package org.tzi.use.parser.use; 
-
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -379,6 +377,18 @@ public class USEBaseListener implements USEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpressionOnly(USEParser.ExpressionOnlyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOclExpression(USEParser.OclExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOclExpression(USEParser.OclExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

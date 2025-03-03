@@ -4,8 +4,6 @@
  * HEADER TEST
  */
 
-package org.tzi.use.parser.use; 
-
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -334,6 +332,16 @@ public interface USEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExpressionOnly(USEParser.ExpressionOnlyContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link USEParser#oclExpression}.
+	 * @param ctx the parse tree
+	 */
+	void enterOclExpression(USEParser.OclExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link USEParser#oclExpression}.
+	 * @param ctx the parse tree
+	 */
+	void exitOclExpression(USEParser.OclExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code LogicalExpr}
 	 * labeled alternative in {@link USEParser#expression}.

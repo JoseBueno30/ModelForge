@@ -181,6 +181,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_model; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterModel(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitModel(this);
+		}
 	}
 
 	public final ModelContext model() throws RecognitionException {
@@ -241,6 +249,14 @@ public class USEParser extends Parser {
 			return getRuleContext(EnumTypeDefinitionContext.class,0);
 		}
 		public EnumContext(ModelElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterEnum(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitEnum(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AssociationContext extends ModelElementContext {
@@ -248,6 +264,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationDefinitionContext.class,0);
 		}
 		public AssociationContext(ModelElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAssociation(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAssociation(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ConstraintsContext extends ModelElementContext {
@@ -258,6 +282,14 @@ public class USEParser extends Parser {
 			return getRuleContext(ConstraintDefinitionContext.class,i);
 		}
 		public ConstraintsContext(ModelElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterConstraints(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitConstraints(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ClassContext extends ModelElementContext {
@@ -265,6 +297,14 @@ public class USEParser extends Parser {
 			return getRuleContext(ClassDefinitionContext.class,0);
 		}
 		public ClassContext(ModelElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterClass(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitClass(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AssociationClassContext extends ModelElementContext {
@@ -272,6 +312,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationClassDefinitionContext.class,0);
 		}
 		public AssociationClassContext(ModelElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAssociationClass(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAssociationClass(this);
+		}
 	}
 
 	public final ModelElementContext modelElement() throws RecognitionException {
@@ -362,6 +410,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumTypeDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterEnumTypeDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitEnumTypeDefinition(this);
+		}
 	}
 
 	public final EnumTypeDefinitionContext enumTypeDefinition() throws RecognitionException {
@@ -440,6 +496,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterClassDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitClassDefinition(this);
+		}
 	}
 
 	public final ClassDefinitionContext classDefinition() throws RecognitionException {
@@ -630,6 +694,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_associationClassDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAssociationClassDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAssociationClassDefinition(this);
+		}
 	}
 
 	public final AssociationClassDefinitionContext associationClassDefinition() throws RecognitionException {
@@ -838,6 +910,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributeDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAttributeDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAttributeDefinition(this);
+		}
 	}
 
 	public final AttributeDefinitionContext attributeDefinition() throws RecognitionException {
@@ -915,6 +995,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_initDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterInitDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitInitDefinition(this);
+		}
 	}
 
 	public final InitDefinitionContext initDefinition() throws RecognitionException {
@@ -962,6 +1050,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_derivedDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterDerivedDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitDerivedDefinition(this);
+		}
 	}
 
 	public final DerivedDefinitionContext derivedDefinition() throws RecognitionException {
@@ -1032,6 +1128,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_operationDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOperationDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOperationDefinition(this);
+		}
 	}
 
 	public final OperationDefinitionContext operationDefinition() throws RecognitionException {
@@ -1149,6 +1253,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationEndContext.class,i);
 		}
 		public AggregationContext(AssociationDefinitionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAggregation(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAggregation(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class CompositionContext extends AssociationDefinitionContext {
@@ -1161,6 +1273,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationEndContext.class,i);
 		}
 		public CompositionContext(AssociationDefinitionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterComposition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitComposition(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SimpleAssociationContext extends AssociationDefinitionContext {
@@ -1172,6 +1292,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationEndContext.class,i);
 		}
 		public SimpleAssociationContext(AssociationDefinitionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSimpleAssociation(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSimpleAssociation(this);
+		}
 	}
 
 	public final AssociationDefinitionContext associationDefinition() throws RecognitionException {
@@ -1333,6 +1461,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_associationEnd; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAssociationEnd(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAssociationEnd(this);
+		}
 	}
 
 	public final AssociationEndContext associationEnd() throws RecognitionException {
@@ -1486,6 +1622,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_multiplicity; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterMultiplicity(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitMultiplicity(this);
+		}
 	}
 
 	public final MultiplicityContext multiplicity() throws RecognitionException {
@@ -1539,6 +1683,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_multiplicityRange; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterMultiplicityRange(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitMultiplicityRange(this);
+		}
 	}
 
 	public final MultiplicityRangeContext multiplicityRange() throws RecognitionException {
@@ -1583,6 +1735,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_multiplicitySpec; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterMultiplicitySpec(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitMultiplicitySpec(this);
+		}
 	}
 
 	public final MultiplicitySpecContext multiplicitySpec() throws RecognitionException {
@@ -1627,6 +1787,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_constraintDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterConstraintDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitConstraintDefinition(this);
+		}
 	}
 
 	public final ConstraintDefinitionContext constraintDefinition() throws RecognitionException {
@@ -1687,6 +1855,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_invariant; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterInvariant(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitInvariant(this);
+		}
 	}
 
 	public final InvariantContext invariant() throws RecognitionException {
@@ -1766,6 +1942,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_invariantClause; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterInvariantClause(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitInvariantClause(this);
+		}
 	}
 
 	public final InvariantClauseContext invariantClause() throws RecognitionException {
@@ -1859,6 +2043,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_prePost; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterPrePost(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitPrePost(this);
+		}
 	}
 
 	public final PrePostContext prePost() throws RecognitionException {
@@ -1937,6 +2129,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode ID() { return getToken(USEParser.ID, 0); }
 		public PreConditionContext(PrePostClauseContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterPreCondition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitPreCondition(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class PostConditionContext extends PrePostClauseContext {
@@ -1946,6 +2146,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode ID() { return getToken(USEParser.ID, 0); }
 		public PostConditionContext(PrePostClauseContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterPostCondition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitPostCondition(this);
+		}
 	}
 
 	public final PrePostClauseContext prePostClause() throws RecognitionException {
@@ -2034,6 +2242,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stateMachine; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterStateMachine(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitStateMachine(this);
+		}
 	}
 
 	public final StateMachineContext stateMachine() throws RecognitionException {
@@ -2110,6 +2326,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stateDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterStateDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitStateDefinition(this);
+		}
 	}
 
 	public final StateDefinitionContext stateDefinition() throws RecognitionException {
@@ -2192,6 +2416,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_transitionDefinition; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTransitionDefinition(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTransitionDefinition(this);
+		}
 	}
 
 	public final TransitionDefinitionContext transitionDefinition() throws RecognitionException {
@@ -2288,6 +2520,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expressionOnly; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterExpressionOnly(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitExpressionOnly(this);
+		}
 	}
 
 	public final ExpressionOnlyContext expressionOnly() throws RecognitionException {
@@ -2322,6 +2562,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_oclExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOclExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOclExpression(this);
+		}
 	}
 
 	public final OclExpressionContext oclExpression() throws RecognitionException {
@@ -2363,6 +2611,14 @@ public class USEParser extends Parser {
 			return getRuleContext(LetExpressionContext.class,0);
 		}
 		public LetExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLetExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLetExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LambdaExprContext extends ExpressionContext {
@@ -2370,6 +2626,14 @@ public class USEParser extends Parser {
 			return getRuleContext(LambdaExpressionContext.class,0);
 		}
 		public LambdaExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLambdaExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLambdaExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ConditionalExprContext extends ExpressionContext {
@@ -2377,6 +2641,14 @@ public class USEParser extends Parser {
 			return getRuleContext(ConditionalExpressionContext.class,0);
 		}
 		public ConditionalExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterConditionalExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitConditionalExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LogicalExprContext extends ExpressionContext {
@@ -2384,6 +2656,14 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,0);
 		}
 		public LogicalExprContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLogicalExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLogicalExpr(this);
+		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -2490,6 +2770,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_lambdaExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLambdaExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLambdaExpression(this);
+		}
 	}
 
 	public final LambdaExpressionContext lambdaExpression() throws RecognitionException {
@@ -2541,6 +2829,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_letExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLetExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLetExpression(this);
+		}
 	}
 
 	public final LetExpressionContext letExpression() throws RecognitionException {
@@ -2608,6 +2904,14 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,i);
 		}
 		public AndExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAndExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAndExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class EqualityExprContext extends LogicalExpressionContext {
@@ -2615,6 +2919,14 @@ public class USEParser extends Parser {
 			return getRuleContext(EqualityExpressionContext.class,0);
 		}
 		public EqualityExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterEqualityExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitEqualityExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class XorExprContext extends LogicalExpressionContext {
@@ -2625,6 +2937,14 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,i);
 		}
 		public XorExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterXorExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitXorExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ImpliesExprContext extends LogicalExpressionContext {
@@ -2635,6 +2955,14 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,i);
 		}
 		public ImpliesExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterImpliesExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitImpliesExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class OrExprContext extends LogicalExpressionContext {
@@ -2645,6 +2973,14 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,i);
 		}
 		public OrExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOrExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOrExpr(this);
+		}
 	}
 
 	public final LogicalExpressionContext logicalExpression() throws RecognitionException {
@@ -2792,6 +3128,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_paramList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterParamList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitParamList(this);
+		}
 	}
 
 	public final ParamListContext paramList() throws RecognitionException {
@@ -2858,6 +3202,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_idList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterIdList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitIdList(this);
+		}
 	}
 
 	public final IdListContext idList() throws RecognitionException {
@@ -2909,6 +3261,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterVariableDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitVariableDeclaration(this);
+		}
 	}
 
 	public final VariableDeclarationContext variableDeclaration() throws RecognitionException {
@@ -2958,6 +3318,14 @@ public class USEParser extends Parser {
 			return getRuleContext(RelationalExpressionContext.class,0);
 		}
 		public EqualExprContext(EqualityExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterEqualExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitEqualExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class RelationalExprContext extends EqualityExpressionContext {
@@ -2965,6 +3333,14 @@ public class USEParser extends Parser {
 			return getRuleContext(RelationalExpressionContext.class,0);
 		}
 		public RelationalExprContext(EqualityExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterRelationalExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitRelationalExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class NotEqualExprContext extends EqualityExpressionContext {
@@ -2976,6 +3352,14 @@ public class USEParser extends Parser {
 			return getRuleContext(RelationalExpressionContext.class,0);
 		}
 		public NotEqualExprContext(EqualityExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterNotEqualExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitNotEqualExpr(this);
+		}
 	}
 
 	public final EqualityExpressionContext equalityExpression() throws RecognitionException {
@@ -3079,6 +3463,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public LessThanOrEqualExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLessThanOrEqualExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLessThanOrEqualExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class GreaterThanExprContext extends RelationalExpressionContext {
@@ -3090,6 +3482,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public GreaterThanExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterGreaterThanExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitGreaterThanExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AdditiveExprContext extends RelationalExpressionContext {
@@ -3097,6 +3497,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public AdditiveExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAdditiveExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAdditiveExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LessThanExprContext extends RelationalExpressionContext {
@@ -3108,6 +3516,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public LessThanExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLessThanExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLessThanExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class GreaterThanOrEqualExprContext extends RelationalExpressionContext {
@@ -3119,6 +3535,14 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public GreaterThanOrEqualExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterGreaterThanOrEqualExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitGreaterThanOrEqualExpr(this);
+		}
 	}
 
 	public final RelationalExpressionContext relationalExpression() throws RecognitionException {
@@ -3246,6 +3670,14 @@ public class USEParser extends Parser {
 			return getRuleContext(FactorExpressionContext.class,0);
 		}
 		public AdditionExprContext(AdditiveExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAdditionExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAdditionExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SubtractionExprContext extends AdditiveExpressionContext {
@@ -3257,6 +3689,14 @@ public class USEParser extends Parser {
 			return getRuleContext(FactorExpressionContext.class,0);
 		}
 		public SubtractionExprContext(AdditiveExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSubtractionExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSubtractionExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class FactorExprContext extends AdditiveExpressionContext {
@@ -3264,6 +3704,14 @@ public class USEParser extends Parser {
 			return getRuleContext(FactorExpressionContext.class,0);
 		}
 		public FactorExprContext(AdditiveExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterFactorExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitFactorExpr(this);
+		}
 	}
 
 	public final AdditiveExpressionContext additiveExpression() throws RecognitionException {
@@ -3367,6 +3815,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode SLASH() { return getToken(USEParser.SLASH, 0); }
 		public DivisionExprContext(FactorExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterDivisionExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitDivisionExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class MultiplicationExprContext extends FactorExpressionContext {
@@ -3378,6 +3834,14 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public MultiplicationExprContext(FactorExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterMultiplicationExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitMultiplicationExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class UnaryExprContext extends FactorExpressionContext {
@@ -3385,6 +3849,14 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public UnaryExprContext(FactorExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterUnaryExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitUnaryExpr(this);
+		}
 	}
 
 	public final FactorExpressionContext factorExpression() throws RecognitionException {
@@ -3493,6 +3965,14 @@ public class USEParser extends Parser {
 			return getRuleContext(PostfixExpressionContext.class,0);
 		}
 		public PostfixExprContext(UnaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterPostfixExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitPostfixExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class PlusExprContext extends UnaryExpressionContext {
@@ -3501,6 +3981,14 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public PlusExprContext(UnaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterPlusExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitPlusExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class NotExprContext extends UnaryExpressionContext {
@@ -3508,6 +3996,14 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public NotExprContext(UnaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterNotExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitNotExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class MinusExprContext extends UnaryExpressionContext {
@@ -3516,6 +4012,14 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public MinusExprContext(UnaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterMinusExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitMinusExpr(this);
+		}
 	}
 
 	public final UnaryExpressionContext unaryExpression() throws RecognitionException {
@@ -3643,6 +4147,14 @@ public class USEParser extends Parser {
 			return getToken(USEParser.ARROW, i);
 		}
 		public PropertyCallExprContext(PostfixExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterPropertyCallExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitPropertyCallExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class PrimaryExprContext extends PostfixExpressionContext {
@@ -3650,6 +4162,14 @@ public class USEParser extends Parser {
 			return getRuleContext(PrimaryExpressionContext.class,0);
 		}
 		public PrimaryExprContext(PostfixExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterPrimaryExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitPrimaryExpr(this);
+		}
 	}
 
 	public final PostfixExpressionContext postfixExpression() throws RecognitionException {
@@ -3738,6 +4258,14 @@ public class USEParser extends Parser {
 			return getRuleContext(PropertyCallContext.class,0);
 		}
 		public EmptyPropertyCallExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterEmptyPropertyCallExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitEmptyPropertyCallExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ByUseIdExprContext extends PrimaryExpressionContext {
@@ -3750,6 +4278,14 @@ public class USEParser extends Parser {
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TerminalNode AT() { return getToken(USEParser.AT, 0); }
 		public ByUseIdExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterByUseIdExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitByUseIdExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralExprContext extends PrimaryExpressionContext {
@@ -3757,6 +4293,14 @@ public class USEParser extends Parser {
 			return getRuleContext(LiteralContext.class,0);
 		}
 		public LiteralExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ParenthesizedExprContext extends PrimaryExpressionContext {
@@ -3766,6 +4310,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public ParenthesizedExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterParenthesizedExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitParenthesizedExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AllInstancesExprContext extends PrimaryExpressionContext {
@@ -3775,6 +4327,14 @@ public class USEParser extends Parser {
 		public TerminalNode LPAREN() { return getToken(USEParser.LPAREN, 0); }
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public AllInstancesExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterAllInstancesExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitAllInstancesExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ObjectReferenceExprContext extends PrimaryExpressionContext {
@@ -3782,6 +4342,14 @@ public class USEParser extends Parser {
 			return getRuleContext(ObjectReferenceContext.class,0);
 		}
 		public ObjectReferenceExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterObjectReferenceExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitObjectReferenceExpr(this);
+		}
 	}
 
 	public final PrimaryExpressionContext primaryExpression() throws RecognitionException {
@@ -3914,6 +4482,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_objectReference; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterObjectReference(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitObjectReference(this);
+		}
 	}
 
 	public final ObjectReferenceContext objectReference() throws RecognitionException {
@@ -3957,6 +4533,14 @@ public class USEParser extends Parser {
 			return getRuleContext(QueryExpressionContext.class,0);
 		}
 		public QueryExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterQueryExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitQueryExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class OperationExprContext extends PropertyCallContext {
@@ -3964,6 +4548,14 @@ public class USEParser extends Parser {
 			return getRuleContext(OperationExpressionContext.class,0);
 		}
 		public OperationExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOperationExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOperationExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class IterateExprContext extends PropertyCallContext {
@@ -3971,6 +4563,14 @@ public class USEParser extends Parser {
 			return getRuleContext(IterateExpressionContext.class,0);
 		}
 		public IterateExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterIterateExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitIterateExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeExprContext extends PropertyCallContext {
@@ -3978,6 +4578,14 @@ public class USEParser extends Parser {
 			return getRuleContext(TypeExpressionContext.class,0);
 		}
 		public TypeExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class InStateExprContext extends PropertyCallContext {
@@ -3985,6 +4593,14 @@ public class USEParser extends Parser {
 			return getRuleContext(InStateExpressionContext.class,0);
 		}
 		public InStateExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterInStateExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitInStateExpr(this);
+		}
 	}
 
 	public final PropertyCallContext propertyCall() throws RecognitionException {
@@ -4083,6 +4699,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public IsUniqueExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterIsUniqueExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitIsUniqueExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SortedByExprContext extends QueryExpressionContext {
@@ -4096,6 +4720,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public SortedByExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSortedByExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSortedByExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SelectExprContext extends QueryExpressionContext {
@@ -4109,6 +4741,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public SelectExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSelectExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSelectExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class CollectExprContext extends QueryExpressionContext {
@@ -4122,6 +4762,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public CollectExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterCollectExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitCollectExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ForAllExprContext extends QueryExpressionContext {
@@ -4135,6 +4783,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public ForAllExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterForAllExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitForAllExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExistsExprContext extends QueryExpressionContext {
@@ -4148,6 +4804,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public ExistsExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterExistsExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitExistsExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class RejectExprContext extends QueryExpressionContext {
@@ -4161,6 +4825,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public RejectExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterRejectExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitRejectExpr(this);
+		}
 	}
 
 	public final QueryExpressionContext queryExpression() throws RecognitionException {
@@ -4386,6 +5058,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_iterateExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterIterateExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitIterateExpression(this);
+		}
 	}
 
 	public final IterateExpressionContext iterateExpression() throws RecognitionException {
@@ -4451,6 +5131,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_operationExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOperationExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOperationExpression(this);
+		}
 	}
 
 	public final OperationExpressionContext operationExpression() throws RecognitionException {
@@ -4594,6 +5282,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_inStateExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterInStateExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitInStateExpression(this);
+		}
 	}
 
 	public final InStateExpressionContext inStateExpression() throws RecognitionException {
@@ -4643,6 +5339,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public OclIsTypeOfExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOclIsTypeOfExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOclIsTypeOfExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class OclIsKindOfExprContext extends TypeExpressionContext {
@@ -4652,6 +5356,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public OclIsKindOfExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOclIsKindOfExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOclIsKindOfExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SelectByKindExprContext extends TypeExpressionContext {
@@ -4661,6 +5373,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public SelectByKindExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSelectByKindExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSelectByKindExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SelectByTypeExprContext extends TypeExpressionContext {
@@ -4670,6 +5390,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public SelectByTypeExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSelectByTypeExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSelectByTypeExpr(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class OclAsTypeExprContext extends TypeExpressionContext {
@@ -4679,6 +5407,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public OclAsTypeExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOclAsTypeExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOclAsTypeExpr(this);
+		}
 	}
 
 	public final TypeExpressionContext typeExpression() throws RecognitionException {
@@ -4797,6 +5533,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_elemVarsDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterElemVarsDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitElemVarsDeclaration(this);
+		}
 	}
 
 	public final ElemVarsDeclarationContext elemVarsDeclaration() throws RecognitionException {
@@ -4876,6 +5620,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableInitialization; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterVariableInitialization(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitVariableInitialization(this);
+		}
 	}
 
 	public final VariableInitializationContext variableInitialization() throws RecognitionException {
@@ -4919,6 +5671,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_conditionalExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterConditionalExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitConditionalExpression(this);
+		}
 	}
 
 	public final ConditionalExpressionContext conditionalExpression() throws RecognitionException {
@@ -4970,6 +5730,14 @@ public class USEParser extends Parser {
 	public static class LiteralIntegerContext extends LiteralContext {
 		public TerminalNode INT() { return getToken(USEParser.INT, 0); }
 		public LiteralIntegerContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralInteger(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralInteger(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralEmptyCollectionContext extends LiteralContext {
@@ -4977,16 +5745,40 @@ public class USEParser extends Parser {
 			return getRuleContext(EmptyCollectionLiteralContext.class,0);
 		}
 		public LiteralEmptyCollectionContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralEmptyCollection(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralEmptyCollection(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralStringContext extends LiteralContext {
 		public TerminalNode STRING() { return getToken(USEParser.STRING, 0); }
 		public LiteralStringContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralString(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralString(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralUnlimitedNaturalContext extends LiteralContext {
 		public TerminalNode STAR() { return getToken(USEParser.STAR, 0); }
 		public LiteralUnlimitedNaturalContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralUnlimitedNatural(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralUnlimitedNatural(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralCollectionContext extends LiteralContext {
@@ -4994,16 +5786,40 @@ public class USEParser extends Parser {
 			return getRuleContext(CollectionLiteralContext.class,0);
 		}
 		public LiteralCollectionContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralCollection(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralCollection(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralBooleanFalseContext extends LiteralContext {
 		public LiteralBooleanFalseContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralBooleanFalse(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralBooleanFalse(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralEnumContext extends LiteralContext {
 		public TerminalNode HASH() { return getToken(USEParser.HASH, 0); }
 		public TerminalNode ID() { return getToken(USEParser.ID, 0); }
 		public LiteralEnumContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralEnum(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralEnum(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralQualifiedEnumContext extends LiteralContext {
@@ -5013,6 +5829,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode COLON_COLON() { return getToken(USEParser.COLON_COLON, 0); }
 		public LiteralQualifiedEnumContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralQualifiedEnum(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralQualifiedEnum(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralUndefinedContext extends LiteralContext {
@@ -5020,6 +5844,14 @@ public class USEParser extends Parser {
 			return getRuleContext(UndefinedLiteralContext.class,0);
 		}
 		public LiteralUndefinedContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralUndefined(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralUndefined(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralTupleContext extends LiteralContext {
@@ -5027,15 +5859,39 @@ public class USEParser extends Parser {
 			return getRuleContext(TupleLiteralContext.class,0);
 		}
 		public LiteralTupleContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralTuple(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralTuple(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralBooleanTrueContext extends LiteralContext {
 		public LiteralBooleanTrueContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralBooleanTrue(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralBooleanTrue(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralRealContext extends LiteralContext {
 		public TerminalNode REAL() { return getToken(USEParser.REAL, 0); }
 		public LiteralRealContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralReal(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralReal(this);
+		}
 	}
 
 	public final LiteralContext literal() throws RecognitionException {
@@ -5187,6 +6043,14 @@ public class USEParser extends Parser {
 			return getToken(USEParser.COMMA, i);
 		}
 		public OrderedSetLiteralContext(CollectionLiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterOrderedSetLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitOrderedSetLiteral(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SequenceLiteralContext extends CollectionLiteralContext {
@@ -5203,6 +6067,14 @@ public class USEParser extends Parser {
 			return getToken(USEParser.COMMA, i);
 		}
 		public SequenceLiteralContext(CollectionLiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSequenceLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSequenceLiteral(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class BagLiteralContext extends CollectionLiteralContext {
@@ -5219,6 +6091,14 @@ public class USEParser extends Parser {
 			return getToken(USEParser.COMMA, i);
 		}
 		public BagLiteralContext(CollectionLiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterBagLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitBagLiteral(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SetLiteralContext extends CollectionLiteralContext {
@@ -5235,6 +6115,14 @@ public class USEParser extends Parser {
 			return getToken(USEParser.COMMA, i);
 		}
 		public SetLiteralContext(CollectionLiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSetLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSetLiteral(this);
+		}
 	}
 
 	public final CollectionLiteralContext collectionLiteral() throws RecognitionException {
@@ -5425,6 +6313,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_collectionItem; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterCollectionItem(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitCollectionItem(this);
+		}
 	}
 
 	public final CollectionItemContext collectionItem() throws RecognitionException {
@@ -5474,6 +6370,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_emptyCollectionLiteral; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterEmptyCollectionLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitEmptyCollectionLiteral(this);
+		}
 	}
 
 	public final EmptyCollectionLiteralContext emptyCollectionLiteral() throws RecognitionException {
@@ -5537,6 +6441,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_undefinedLiteral; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterUndefinedLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitUndefinedLiteral(this);
+		}
 	}
 
 	public final UndefinedLiteralContext undefinedLiteral() throws RecognitionException {
@@ -5617,6 +6529,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_tupleLiteral; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTupleLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTupleLiteral(this);
+		}
 	}
 
 	public final TupleLiteralContext tupleLiteral() throws RecognitionException {
@@ -5684,6 +6604,14 @@ public class USEParser extends Parser {
 		public TerminalNode COLON() { return getToken(USEParser.COLON, 0); }
 		public TerminalNode EQUAL() { return getToken(USEParser.EQUAL, 0); }
 		public UntypedTupleItemContext(TupleItemContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterUntypedTupleItem(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitUntypedTupleItem(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypedTupleItemContext extends TupleItemContext {
@@ -5697,6 +6625,14 @@ public class USEParser extends Parser {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public TypedTupleItemContext(TupleItemContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypedTupleItem(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypedTupleItem(this);
+		}
 	}
 
 	public final TupleItemContext tupleItem() throws RecognitionException {
@@ -5774,6 +6710,14 @@ public class USEParser extends Parser {
 			return getRuleContext(TupleTypeContext.class,0);
 		}
 		public TypeTupleContext(TypeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeTuple(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeTuple(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeCollectionContext extends TypeContext {
@@ -5781,6 +6725,14 @@ public class USEParser extends Parser {
 			return getRuleContext(CollectionTypeContext.class,0);
 		}
 		public TypeCollectionContext(TypeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeCollection(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeCollection(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeSimpleContext extends TypeContext {
@@ -5788,6 +6740,14 @@ public class USEParser extends Parser {
 			return getRuleContext(SimpleTypeContext.class,0);
 		}
 		public TypeSimpleContext(TypeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeSimple(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeSimple(this);
+		}
 	}
 
 	public final TypeContext type() throws RecognitionException {
@@ -5850,6 +6810,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_typeOnly; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeOnly(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeOnly(this);
+		}
 	}
 
 	public final TypeOnlyContext typeOnly() throws RecognitionException {
@@ -5882,6 +6850,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_simpleType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterSimpleType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitSimpleType(this);
+		}
 	}
 
 	public final SimpleTypeContext simpleType() throws RecognitionException {
@@ -5925,6 +6901,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeBagContext(CollectionTypeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeBag(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeBag(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeSimpleCollectionContext extends CollectionTypeContext {
@@ -5934,6 +6918,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeSimpleCollectionContext(CollectionTypeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeSimpleCollection(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeSimpleCollection(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeOrderedSetContext extends CollectionTypeContext {
@@ -5943,6 +6935,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeOrderedSetContext(CollectionTypeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeOrderedSet(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeOrderedSet(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeSequenceContext extends CollectionTypeContext {
@@ -5952,6 +6952,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeSequenceContext(CollectionTypeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeSequence(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeSequence(this);
+		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeSetContext extends CollectionTypeContext {
@@ -5961,6 +6969,14 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeSetContext(CollectionTypeContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeSet(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeSet(this);
+		}
 	}
 
 	public final CollectionTypeContext collectionType() throws RecognitionException {
@@ -6073,6 +7089,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_tupleType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTupleType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTupleType(this);
+		}
 	}
 
 	public final TupleTypeContext tupleType() throws RecognitionException {
@@ -6130,6 +7154,14 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_tuplePart; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).enterTuplePart(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof USEListener ) ((USEListener)listener).exitTuplePart(this);
+		}
 	}
 
 	public final TuplePartContext tuplePart() throws RecognitionException {

@@ -231,11 +231,27 @@ public:
     }
 
     std::any visitTupleType(USEParser::TupleTypeContext *ctx) override {
-        return visitChildren(ctx);
+        std::shared_ptr<MetaModel::TupleType> tupleType = nullptr;
+
+        for(auto tuplePartDefinition : ctx->tuplePart()){
+            std::shared_ptr<MetaModel::TuplePart> tuplePart = std::any_cast<std::shared_ptr<MetaModel::TuplePart>>(visit(tuplePartDefinition));
+            if(tupleType == nullptr){
+                tupleType = std::make_shared<MetaModel::TupleType>(tuplePart);
+            }else{
+                tupleType->addElement(tuplePart);
+            }
+        }
+
+        return std::static_pointer_cast<MetaModel::MetaType>(tupleType);
     }
 
     std::any visitTuplePart(USEParser::TuplePartContext *ctx) override {
-        return visitChildren(ctx);
+        std::string name = ctx->ID()->getText();
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        std::shared_ptr<MetaModel::TuplePart> tuplePart = std::make_shared<MetaModel::TuplePart>(name, type);
+
+        return tuplePart;
     }
 
     std::any visitInitDefinition(USEParser::InitDefinitionContext *ctx) override {
