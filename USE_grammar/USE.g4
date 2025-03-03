@@ -148,12 +148,12 @@ associationDefinition
 */
 associationEnd
     : ID LBRACK multiplicity RBRACK
-    ( 'role' ID)?
+    ( ROLE ID)?
     (
-          'ordered'
-        | 'subsets' ID                                                               //SHOULD DELETE?
-        | 'union'                                                                       //SHOULD DELETE?
-        | 'redefines' ID                                                             //SHOULD DELETE?
+          ORDERED
+        | SUBSETS ID                                                               //SHOULD DELETE?
+        | UNION                                                                      //SHOULD DELETE?
+        | REDEFINES ID                                                             //SHOULD DELETE?
         | ('derived'|'derive') ( LPAREN elemVarsDeclaration RPAREN)? EQUAL expression   //SHOULD DELETE?
         | 'qualifier' paramList                                                         //SHOULD DELETE?
     )*
@@ -773,6 +773,11 @@ STAR          : '*';
 ABSTRACT      : 'abstract';
 AGGREGATION : 'aggregation';
 COMPOSITION : 'composition';
+ROLE          : 'role';
+REDEFINES     : 'redefines';
+SUBSETS       : 'subsets';
+ORDERED       : 'ordered';
+UNION         : 'union';
   
 INT:
     [0-9]+

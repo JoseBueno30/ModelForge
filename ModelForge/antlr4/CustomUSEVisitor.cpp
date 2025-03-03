@@ -350,4 +350,72 @@ public:
 
         return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
     }
+
+    // ASSOCIATION DEFINITION
+
+    std::any visitSimpleAssociation(USEParser::SimpleAssociationContext *ctx) override{
+        std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
+        std::shared_ptr<MetaModel::MetaAssociation> simpleAssociation = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 0);
+        for(auto endCtx : ctx->associationEnd()){
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
+            simpleAssociation->addAssociationEnd(associationEnd);
+        }
+        return simpleAssociation;
+    }
+
+    std::any visitAggregation(USEParser::AggregationContext *ctx) override{
+        std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
+        std::shared_ptr<MetaModel::MetaAssociation> aggregation = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 1);
+        for(auto endCtx : ctx->associationEnd()){
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
+            aggregation->addAssociationEnd(associationEnd);
+        }
+        return aggregation;
+    }
+
+    std::any visitComposition(USEParser::CompositionContext *ctx) override{
+        std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
+        std::shared_ptr<MetaModel::MetaAssociation> composition = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 1);
+        for(auto endCtx : ctx->associationEnd()){
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
+            composition->addAssociationEnd(associationEnd);
+        }
+        return composition;
+    }
+
+    std::any visitAssociationEnd(USEParser::AssociationEndContext *ctx) override{
+
+        std::shared_ptr<MetaModel::MetaMultiplicity> multiplicity = std::any_cast<std::shared_ptr<MetaModel::MetaMultiplicity>>(visit(ctx->multiplicity()));
+
+        // TODO
+        // check Ordered and union
+        // Redefines and Subsets must be checked when all associations have been created
+        // derive/derived: where vars declaration are saved
+
+        std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd;
+        return associationEnd;
+    }
+
+    std::any visitMultiplicity(USEParser::MultiplicityContext *ctx) override{
+        std::shared_ptr<MetaModel::MetaMultiplicityRange> firstRange = std::any_cast<std::shared_ptr<MetaModel::MetaMultiplicityRange>>(visit(ctx->multiplicityRange().at(0)));
+        std::shared_ptr<MetaModel::MetaMultiplicity> multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(firstRange->getLowerBound(), firstRange->getUpperBound());
+        for(int i = 1; i < ctx->multiplicityRange().size(); i++){
+            std::shared_ptr<MetaModel::MetaMultiplicityRange> range = std::any_cast<std::shared_ptr<MetaModel::MetaMultiplicityRange>>(visit(ctx->multiplicityRange().at(i)));
+            multiplicity->addRange(range->getLowerBound(), range->getUpperBound());
+        }
+
+        return multiplicity;
+    }
+
+    std::any visitMultiplicityRange(USEParser::MultiplicityRangeContext *ctx) override{
+        int lowerBound = std::any_cast<int>(visit(ctx->multiplicitySpec().at(0)));
+        int upperBound = ctx->DOTDOT() ? std::any_cast<int>(visit(ctx->multiplicitySpec().at(1))) : lowerBound;
+
+        std::shared_ptr<MetaModel::MetaMultiplicityRange> range = std::make_shared<MetaModel::MetaMultiplicityRange>(lowerBound, upperBound);
+        return range;
+    }
+
+    std::any visitMultiplicitySpec(USEParser::MultiplicitySpecContext *ctx) override{
+        return ctx->STAR() ? MetaModel::MetaMultiplicityRange::MANY : std::stoi(ctx->INT()->getText());
+    }
 };
