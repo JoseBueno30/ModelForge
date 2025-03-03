@@ -7,6 +7,8 @@
 namespace MetaModel{
 
 class MetaAssociationClass : public MetaAssociation, public MetaClass{
+private:
+
 public:
     MetaAssociationClass(const std::string& name, bool isAbstract, int type);
 
@@ -14,6 +16,8 @@ public:
 
     std::string getName() const;
     void setName(const std::string& name);
+
+    void addSuperClass(std::shared_ptr<MetaClass> metaClass) override;
 };
 
 }

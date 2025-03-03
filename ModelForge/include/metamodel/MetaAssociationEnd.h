@@ -30,12 +30,12 @@ public:
 
 class MetaMultiplicity{
 private:
-    std::vector<std::unique_ptr<MetaMultiplicityRange>> ranges;
+    std::vector<std::shared_ptr<MetaMultiplicityRange>> ranges;
 
 public:
     MetaMultiplicity(int lowerBound, int upperBound);
 
-    const std::vector<std::unique_ptr<MetaMultiplicityRange>>& getRanges() const;
+    const std::vector<std::shared_ptr<MetaMultiplicityRange>>& getRanges() const;
     void addRange(int lowerBound, int upperBound);
     void deleteRange(int pos);
 
@@ -53,8 +53,8 @@ private:
     std::shared_ptr<MetaMultiplicity> multiplicity;
     std::map<std::string, std::shared_ptr<MetaAssociationEnd>> redefinedEnds;
     std::map<std::string, std::shared_ptr<MetaAssociationEnd>> subsettedEnds;
-    std::map<std::string, std::unique_ptr<MetaVariable>> qualifiers;
-    std::unique_ptr<OCLExpr> deriveExpr;
+    std::map<std::string, std::shared_ptr<MetaVariable>> qualifiers;
+    std::shared_ptr<OCLExpr> deriveExpr;
 
 public:
     MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity);
@@ -93,13 +93,13 @@ public:
     void addSubsettedEnd(const std::shared_ptr<MetaAssociationEnd>& subsettedEnd);
     void removeSubsettedEnd(const std::string& key);
 
-    const std::map<std::string,std::unique_ptr<MetaVariable>>& getQualifiers() const;
+    const std::map<std::string,std::shared_ptr<MetaVariable>>& getQualifiers() const;
     const MetaVariable* getQualifier(const std::string& key) const;
-    void addQualifier(std::unique_ptr<MetaVariable> qualifier);
+    void addQualifier(const std::shared_ptr<MetaVariable>& qualifier);
     void removeQualifier(const std::string& key);
 
     const OCLExpr* getDeriveExpr() const;
-    void setDeriveExpr(std::unique_ptr<OCLExpr> deriveExpr);
+    void setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr);
 };
 
 }

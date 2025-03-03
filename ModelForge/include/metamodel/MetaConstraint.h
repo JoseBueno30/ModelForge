@@ -14,10 +14,10 @@ class MetaConstraint{
 private:
     std::string name;
     bool isExistential;
-    std::unique_ptr<OCLExpr> expression;
+    std::shared_ptr<OCLExpr> expression;
 
 public:
-    MetaConstraint(std::unique_ptr<OCLExpr> expression, const std::string& name="", bool isExistential=false);
+    MetaConstraint(const std::shared_ptr<OCLExpr>& expression, const std::string& name="", bool isExistential=false);
 
     std::string getName() const;
     void setName(const std::string& name);
@@ -26,7 +26,7 @@ public:
     void setIsExistential(const bool isExistential);
 
     const OCLExpr* getExpression() const;
-    void setExpression(std::unique_ptr<OCLExpr> expression);
+    void setExpression(const std::shared_ptr<OCLExpr>& expression);
 };
 
 }

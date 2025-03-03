@@ -28,7 +28,7 @@ MetaMultiplicity::MetaMultiplicity(int lowerBound, int upperBound){
     ranges.push_back(std::make_unique<MetaMultiplicityRange>(lowerBound, upperBound));
 }
 
-const std::vector<std::unique_ptr<MetaMultiplicityRange>>& MetaMultiplicity::getRanges() const{
+const std::vector<std::shared_ptr<MetaMultiplicityRange>>& MetaMultiplicity::getRanges() const{
     return ranges;
 }
 
@@ -163,11 +163,11 @@ void MetaAssociationEnd::removeSubsettedEnd(const std::string& key){
     subsettedEnds.erase(key);
 }
 
-const std::map<std::string, std::unique_ptr<MetaVariable>>& MetaAssociationEnd::getQualifiers() const{
+const std::map<std::string, std::shared_ptr<MetaVariable>>& MetaAssociationEnd::getQualifiers() const{
     return qualifiers;
 }
 
-void MetaAssociationEnd::addQualifier(std::unique_ptr<MetaVariable> qualifier){
+void MetaAssociationEnd::addQualifier(const std::shared_ptr<MetaVariable>& qualifier){
     if (!qualifier) {
         throw std::invalid_argument("Null qualifier");
     }
@@ -176,7 +176,7 @@ void MetaAssociationEnd::addQualifier(std::unique_ptr<MetaVariable> qualifier){
         throw std::runtime_error("Qualifier already declared: " + qualifier->getName());
     }
 
-    qualifiers[qualifier->getName()] = std::move(qualifier);
+    qualifiers[qualifier->getName()] = qualifier;
 }
 
 void MetaAssociationEnd::removeQualifier(const std::string& key){
@@ -186,8 +186,8 @@ void MetaAssociationEnd::removeQualifier(const std::string& key){
 const OCLExpr* MetaAssociationEnd::getDeriveExpr() const{
     return deriveExpr.get();
 }
-void MetaAssociationEnd::setDeriveExpr(std::unique_ptr<OCLExpr> deriveExpr){
-    this->deriveExpr = std::move(deriveExpr);
+void MetaAssociationEnd::setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr){
+    this->deriveExpr = deriveExpr;
 }
 
 

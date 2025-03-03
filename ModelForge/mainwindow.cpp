@@ -32,11 +32,11 @@ MainWindow::MainWindow(QWidget *parent)
     const std::shared_ptr<MetaModel::Integer> type = MetaModel::Integer::instance();
     std::unique_ptr<MetaModel::MetaAttribute> att1 = std::make_unique<MetaModel::MetaAttribute>("att", type);
     std::string key = att1->getName();
-    class1->addAttribute(key,std::move(att1));
+    class1->addAttribute(std::move(att1));
 
     std::unique_ptr<MetaModel::MetaOperation> op = std::make_unique<MetaModel::MetaOperation>("operation", "i + 1", type);
     key = op->getName();
-    class1->addOperation(key, std::move(op));
+    class1->addOperation(std::move(op));
 
     ClassItemView *classItem = new ClassItemView(class1);
     scene->addItem(classItem);

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <memory>
-#include <vector>
 #include <map>
 
 namespace MetaModel{
@@ -11,6 +10,7 @@ namespace MetaModel{
 class MetaType{
 public:
     virtual std::string toString() const;
+    virtual bool equals(const MetaType& type) const = 0;
     virtual ~MetaType(){};
 };
 
@@ -25,6 +25,7 @@ class Real : public SimpleType{
 private:
     Real(){};
 public:
+    virtual bool equals(const MetaType& type) const override;
     std::string toString() const override;
     static std::shared_ptr<Real> instance(){
         static std::shared_ptr<Real> inst(new Real());
@@ -35,6 +36,7 @@ class Integer : public SimpleType{
 private:
     Integer(){};
 public:
+    virtual bool equals(const MetaType& type) const override;
     std::string toString() const override;
     static std::shared_ptr<Integer> instance(){
         static std::shared_ptr<Integer> inst(new Integer());
@@ -45,6 +47,7 @@ class String : public SimpleType{
 private:
     String(){};
 public:
+    virtual bool equals(const MetaType& type) const override;
     std::string toString() const override;
     static std::shared_ptr<String> instance(){
         static std::shared_ptr<String> inst(new String());
@@ -55,6 +58,7 @@ class Boolean : public SimpleType{
 private:
     Boolean(){};
 public:
+    virtual bool equals(const MetaType& type) const override;
     std::string toString() const override;
     static std::shared_ptr<Boolean> instance(){
         static std::shared_ptr<Boolean> inst(new Boolean());
@@ -65,6 +69,7 @@ class Void: public SimpleType{
 private:
     Void(){};
 public:
+    virtual bool equals(const MetaType& type) const override;
     std::string toString() const override;
     static std::shared_ptr<Void> instance(){
         static std::shared_ptr<Void> inst(new Void());
@@ -97,6 +102,7 @@ public:
     const MetaType& getType() const;
     void setType(const std::shared_ptr<MetaType>& type);
 
+    virtual bool equals(const MetaType& type) const override;
     std::string toString() const override;
 };
 
@@ -118,17 +124,18 @@ public:
 
 class TupleType : public MetaType{
 private:
-    std::map<std::string, std::unique_ptr<TuplePart>> elements;
+    std::map<std::string, std::shared_ptr<TuplePart>> elements;
 
 public:
-    TupleType(std::unique_ptr<TuplePart> element);
+    TupleType(const std::shared_ptr<TuplePart>& element);
 
-    const std::map<std::string, std::unique_ptr<TuplePart>>& getElements() const;
+    const std::map<std::string, std::shared_ptr<TuplePart>>& getElements() const;
     const TuplePart* getElement(const std::string& key) const;
-    void addElement(std::unique_ptr<TuplePart> newElement);
+    void addElement(const std::shared_ptr<TuplePart>& newElement);
     void removeElement(const std::string& key);
 
     std::string toString() const override;
+    virtual bool equals(const MetaType& type) const override;
 };
 
 }

@@ -14,8 +14,8 @@ class MetaAttribute{
 private:
     std::string name;
     std::shared_ptr<MetaType> type;
-    std::unique_ptr<OCLExpr> initExpr;
-    std::unique_ptr<OCLExpr> deriveExpr;
+    std::shared_ptr<OCLExpr> initExpr;
+    std::shared_ptr<OCLExpr> deriveExpr;
 
 public:
     MetaAttribute(const std::string& name, const std::shared_ptr<MetaType>& type);
@@ -27,10 +27,10 @@ public:
     void setType(const std::shared_ptr<MetaType>& type);
 
     const OCLExpr* getInitExpr() const;
-    void setInitExpr(std::unique_ptr<OCLExpr> initExpr);
+    void setInitExpr(const std::shared_ptr<OCLExpr>& initExpr);
 
     const OCLExpr* getDeriveExpr() const;
-    void setDeriveExpr(std::unique_ptr<OCLExpr> deriveExpr);
+    void setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr);
 };
 
 }

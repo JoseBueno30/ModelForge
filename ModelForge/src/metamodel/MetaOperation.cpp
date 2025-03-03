@@ -4,8 +4,8 @@
 
 namespace MetaModel{
 
-PrePostClause::PrePostClause(const std::string& name, std::unique_ptr<OCLExpr> expression)
-    : name(name),  expression(std::move(expression)){}
+PrePostClause::PrePostClause(const std::string& name, const std::shared_ptr<OCLExpr>& expression)
+    : name(name),  expression(expression){}
 
 std::string PrePostClause::getName() const{
     return name;
@@ -19,8 +19,8 @@ const OCLExpr& PrePostClause::getExpression() const{
     return *expression;
 }
 
-void PrePostClause::setExpression(std::unique_ptr<OCLExpr> expression){
-    this->expression = std::move(expression);
+void PrePostClause::setExpression(const std::shared_ptr<OCLExpr>& expression){
+    this->expression = expression;
 }
 
 
@@ -51,7 +51,7 @@ void MetaOperation::setReturnType(const std::shared_ptr<MetaType>& returnType){
     this->returnType = returnType;
 }
 
-const std::map<std::string, std::unique_ptr<MetaVariable>>& MetaOperation::getVariables() const{
+const std::map<std::string, std::shared_ptr<MetaVariable>>& MetaOperation::getVariables() const{
     return variables;
 }
 
@@ -63,7 +63,7 @@ const MetaVariable* MetaOperation::getVariable(const std::string& key) const{
     return nullptr;
 }
 
-void MetaOperation::addVariable(std::unique_ptr<MetaVariable> variable){
+void MetaOperation::addVariable(const std::shared_ptr<MetaVariable>& variable){
     if (!variable) {
         throw std::invalid_argument("Null variable");
     }
@@ -72,14 +72,14 @@ void MetaOperation::addVariable(std::unique_ptr<MetaVariable> variable){
         throw std::runtime_error("Operation: " + name + " already contains variable named: " + variable->getName());
     }
 
-    variables[variable->getName()] = std::move(variable);
+    variables[variable->getName()] = variable;
 }
 
 void MetaOperation::removeVariable(const std::string& key){
     variables.erase(key);
 }
 
-const std::map<std::string, std::unique_ptr<PrePostClause>>& MetaOperation::getPreConditions() const{
+const std::map<std::string, std::shared_ptr<PrePostClause>>& MetaOperation::getPreConditions() const{
     return preConditions;
 }
 
@@ -91,7 +91,7 @@ const PrePostClause* MetaOperation::getPreCondition(const std::string& key) cons
     return nullptr;
 }
 
-void MetaOperation::addPreCondition(std::unique_ptr<PrePostClause> preCondition){
+void MetaOperation::addPreCondition(const std::shared_ptr<PrePostClause>& preCondition){
     if (!preCondition) {
         throw std::invalid_argument("Null PreCondition");
     }
@@ -100,14 +100,14 @@ void MetaOperation::addPreCondition(std::unique_ptr<PrePostClause> preCondition)
         throw std::runtime_error("Operation: " + name + " already contains Pre/Post condition named: " + preCondition->getName());
     }
 
-    preConditions[preCondition->getName()] = std::move(preCondition);
+    preConditions[preCondition->getName()] = preCondition;
 }
 
 void MetaOperation::removePreCondition(const std::string& key){
     preConditions.erase(key);
 }
 
-const std::map<std::string, std::unique_ptr<PrePostClause>>& MetaOperation::getPostConditions() const{
+const std::map<std::string, std::shared_ptr<PrePostClause>>& MetaOperation::getPostConditions() const{
     return postConditions;
 }
 
@@ -119,7 +119,7 @@ const PrePostClause* MetaOperation::getPostCondition(const std::string& key) con
     return nullptr;
 }
 
-void MetaOperation::addPostCondition(std::unique_ptr<PrePostClause> postCondition){
+void MetaOperation::addPostCondition(const std::shared_ptr<PrePostClause>& postCondition){
     if (!postCondition) {
         throw std::invalid_argument("Null PostCondition");
     }
@@ -128,7 +128,7 @@ void MetaOperation::addPostCondition(std::unique_ptr<PrePostClause> postConditio
         throw std::runtime_error("Operation: " + name + " already contains Pre/Post condition named: " + postCondition->getName());
     }
 
-    postConditions[postCondition->getName()] = std::move(postCondition);
+    postConditions[postCondition->getName()] = postCondition;
 }
 
 void MetaOperation::removePostCondition(const std::string& key){

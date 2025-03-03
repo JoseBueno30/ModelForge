@@ -25,16 +25,16 @@ void MetaAttribute::setType(const std::shared_ptr<MetaType>& type){
 const OCLExpr* MetaAttribute::getInitExpr() const{
     return initExpr.get();
 }
-void MetaAttribute::setInitExpr(std::unique_ptr<OCLExpr> initExpr){
-    this->initExpr = std::move(initExpr);
+void MetaAttribute::setInitExpr(const std::shared_ptr<OCLExpr>& initExpr){
+    this->initExpr = initExpr;
 }
 
 const OCLExpr* MetaAttribute::getDeriveExpr() const{
     return deriveExpr.get();
 }
-void MetaAttribute::setDeriveExpr(std::unique_ptr<OCLExpr> deriveExpr){
+void MetaAttribute::setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr){
 
-    this->deriveExpr = std::move(deriveExpr);
+    this->deriveExpr = deriveExpr;
 }
 
 

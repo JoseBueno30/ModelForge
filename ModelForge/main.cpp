@@ -1,6 +1,7 @@
 #include "antlr4/generated/USELexer.h"
 #include "antlr4/generated/USEParser.h"
 #include <mainwindow.h>
+#include "antlr4/CustomUSEVisitor.cpp"
 
 #include <QApplication>
 #include <QLocale>
@@ -21,6 +22,39 @@ void test_grammar(){
     std::cout<<tree->toStringTree(&parser, true) <<std::endl;
 }
 
+void test_visitor(){
+    std::string modelTest = "model Test enum EnumTest { A, B }";
+    std::cout<<"Modelo a probar: " << modelTest << std::endl;
+
+    antlr4::ANTLRInputStream input(modelTest);
+
+    USELexer lexer(&input);
+    antlr4::CommonTokenStream tokens(&lexer);
+    USEParser parser(&tokens);
+
+    USEParser::ModelContext* tree = parser.model();
+
+    // Crea el visitor y visita el árbol
+    CustomUSEVisitor visitor;
+    visitor.visit(tree);
+
+    // Verifica que el MetaModel se haya creado correctamente
+    auto model = visitor.model;
+
+    if (model) {
+        std::cout << "El nombre del MetaModel es: " << model->getName() << std::endl;
+    } else {
+        std::cerr << "MetaModel no fue inicializado." << std::endl;
+    }
+
+    if (model->getEnum("EnumTest")){
+        std::cout << "El enum es:" << model->getEnum("EnumTest")->getName() << std::endl;
+        for(const auto& pair: model->getEnum("EnumTest")->getElements()){
+            std::cout << "El enumElem es:" << pair.second->getName() << std::endl;
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -35,7 +69,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    //test_grammar();
+    test_visitor();
 
     MainWindow w;
     w.show();

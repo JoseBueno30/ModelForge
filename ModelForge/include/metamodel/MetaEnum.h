@@ -23,17 +23,19 @@ public:
 class MetaEnum : public SimpleType{
 private:
     std::string name;
-    std::map<std::string, std::unique_ptr<MetaEnumElement>> elements;
+    std::map<std::string, std::shared_ptr<MetaEnumElement>> elements;
 public:
-    MetaEnum(const std::string& name, std::unique_ptr<MetaEnumElement> element);
+    MetaEnum(const std::string& name, const std::shared_ptr<MetaEnumElement>& element);
 
     std::string getName() const;
     void setName(const std::string& name);
 
-    const std::map<std::string, std::unique_ptr<MetaEnumElement>>& getElements() const;
+    const std::map<std::string, std::shared_ptr<MetaEnumElement>>& getElements() const;
     const MetaEnumElement* getElement(const std::string& key) const;
-    void addElement(std::unique_ptr<MetaEnumElement> element);
+    void addElement(const std::shared_ptr<MetaEnumElement>& element);
     void removeElement(const std::string& key);
+
+    virtual bool equals(const MetaType& type) const override;
 };
 
 }

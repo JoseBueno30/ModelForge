@@ -16,20 +16,45 @@ std::string Real::toString() const{
     return "Real";
 }
 
+bool Real::equals(const MetaType& type) const{
+    const Real* realType = dynamic_cast<const Real*>(&type);
+    return realType != nullptr;
+}
+
 std::string Integer::toString() const{
     return "Integer";
+}
+
+bool Integer::equals(const MetaType& type) const{
+    const Integer* integerType = dynamic_cast<const Integer*>(&type);
+    return integerType != nullptr;
 }
 
 std::string Boolean::toString() const{
     return "Boolean";
 }
 
+bool Boolean::equals(const MetaType& type) const{
+    const Boolean* boolType = dynamic_cast<const Boolean*>(&type);
+    return boolType  != nullptr;
+}
+
 std::string String::toString() const{
     return "String";
 }
 
+bool String::equals(const MetaType& type) const{
+    const String* stringType = dynamic_cast<const String*>(&type);
+    return stringType != nullptr;
+}
+
 std::string Void::toString() const{
     return "Void";
+}
+
+bool Void::equals(const MetaType& type) const{
+    const Void* voidType = dynamic_cast<const Void*>(&type);
+    return voidType != nullptr;
 }
 
 CollectionType::CollectionType(bool ordered, bool unique, int multiplicity, const std::shared_ptr<MetaType>& type)
@@ -78,6 +103,19 @@ std::string CollectionType::toString() const{
     return "Collection<" + this->getType().toString() + ">";
 }
 
+bool CollectionType::equals(const MetaType& type) const{
+    const CollectionType* collectionType = dynamic_cast<const CollectionType*>(&type);
+
+    if(collectionType == nullptr){
+        return false;
+    }
+
+    return (this->isOrdered == collectionType->isOrdered) &&
+           (this->isUnique == collectionType->isUnique) &&
+           (this->multiplicity == collectionType->multiplicity) &&
+           (this->type->equals(collectionType->getType()));
+}
+
 
 TuplePart::TuplePart(const std::string& name, const std::shared_ptr<MetaType>& type)
     : name(name), type(type)
@@ -100,7 +138,7 @@ void TuplePart::setType(const std::shared_ptr<MetaType>& type) {
     this->type = type;
 }
 
-TupleType::TupleType(std::unique_ptr<TuplePart> element) {
+TupleType::TupleType(const std::shared_ptr<TuplePart>& element) {
     if (!element) {
         throw std::invalid_argument("Null TuplePart");
     }
@@ -109,10 +147,10 @@ TupleType::TupleType(std::unique_ptr<TuplePart> element) {
         throw std::runtime_error("TuplePart already declared: " + element->getName());
     }
 
-    elements[element->getName()] = std::move(element);
+    elements[element->getName()] = element;
 }
 
-const std::map<std::string, std::unique_ptr<TuplePart>>& TupleType::getElements() const{
+const std::map<std::string, std::shared_ptr<TuplePart>>& TupleType::getElements() const{
     return elements;
 }
 
@@ -124,7 +162,7 @@ const TuplePart* TupleType::getElement(const std::string& key) const{
     return nullptr;
 }
 
-void TupleType::addElement(std::unique_ptr<TuplePart> newElement){
+void TupleType::addElement(const std::shared_ptr<TuplePart>& newElement){
     if (!newElement) {
         throw std::invalid_argument("Null TuplePart");
     }
@@ -133,7 +171,7 @@ void TupleType::addElement(std::unique_ptr<TuplePart> newElement){
         throw std::runtime_error("TuplePart already declared: " + newElement->getName());
     }
 
-    elements[newElement->getName()] = std::move(newElement);
+    elements[newElement->getName()] = newElement;
 }
 
 void TupleType::removeElement(const std::string& key){
@@ -142,6 +180,36 @@ void TupleType::removeElement(const std::string& key){
 
 std::string TupleType::toString() const{
     return "Tuple";
+}
+
+bool TupleType::equals(const MetaType& type) const {
+    const TupleType* tupleType = dynamic_cast<const TupleType*>(&type);
+    if (!tupleType) {
+        return false;
+    }
+
+    if (elements.size() != tupleType->elements.size()) {
+        return false;
+    }
+
+    for (const auto& pair : elements) {
+        const std::string& key = pair.first;
+        const TuplePart* tuplePart = pair.second.get();
+
+        auto it = tupleType->elements.find(key);
+
+        if (it == tupleType->elements.end()) {
+            return false;
+        }
+
+        const TuplePart* otherTuplePart = it->second.get();
+
+        if (tuplePart->getName() != otherTuplePart->getName() || !tuplePart->getType().equals(otherTuplePart->getType())) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 }

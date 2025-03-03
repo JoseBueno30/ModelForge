@@ -6,8 +6,6 @@ grammar USE;
  * HEADER TEST
  */
 
-package org.tzi.use.parser.use; 
-
 }
 
 /*
@@ -95,7 +93,7 @@ associationClassDefinition
   ('operations'    operationDefinition*)?
   ('constraints'   invariantClause*)?
   ('statemachines' stateMachine*)?
-  ('aggregation' | 'composition')?
+  (AGGREGATION | COMPOSITION)?
   'end'
   ;
     
@@ -139,8 +137,8 @@ operationDefinition
 */
 associationDefinition
     : 'association' ID 'between' associationEnd associationEnd+ 'end'    #SimpleAssociation
-    | 'aggregation' ID 'between' associationEnd associationEnd+ 'end'    #Aggregation
-    | 'composition' ID 'between' associationEnd associationEnd+ 'end'    #Composition
+    | AGGREGATION ID 'between' associationEnd associationEnd+ 'end'    #Aggregation
+    | COMPOSITION ID 'between' associationEnd associationEnd+ 'end'    #Composition
     ;
 
 
@@ -769,6 +767,8 @@ SEMI          : ';';
 SLASH         : '/';
 STAR          : '*';
 ABSTRACT      : 'abstract';
+AGGREGATION : 'aggregation';
+COMPOSITION : 'composition';
   
 INT:
     [0-9]+

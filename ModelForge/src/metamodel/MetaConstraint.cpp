@@ -4,8 +4,8 @@
 namespace MetaModel{
 
 
-MetaConstraint::MetaConstraint(std::unique_ptr<OCLExpr> expression, const std::string& name, bool isExistential)
-    : expression(std::move(expression)), name(name), isExistential(isExistential){}
+MetaConstraint::MetaConstraint(const std::shared_ptr<OCLExpr>& expression, const std::string& name, bool isExistential)
+    : expression(expression), name(name), isExistential(isExistential){}
 
 std::string MetaConstraint::getName() const{
     return name;
@@ -26,8 +26,8 @@ void MetaConstraint::setIsExistential(const bool isExistential){
 const OCLExpr* MetaConstraint::getExpression() const{
     return expression.get();
 }
-void MetaConstraint::setExpression(std::unique_ptr<OCLExpr> expression){
-    this->expression = std::move(expression);
+void MetaConstraint::setExpression(const std::shared_ptr<OCLExpr>& expression){
+    this->expression = expression;
 }
 
 

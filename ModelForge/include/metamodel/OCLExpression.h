@@ -18,8 +18,8 @@ public:
 // Binary Expressions -> formed by 2 OCLExpressions
 class BinaryExpr : OCLExpr{
 private:
-    std::unique_ptr<MetaModel::OCLExpr> expr1;
-    std::unique_ptr<MetaModel::OCLExpr> expr2;
+    std::shared_ptr<MetaModel::OCLExpr> expr1;
+    std::shared_ptr<MetaModel::OCLExpr> expr2;
     //USE::OCLExpr* expr1;
     //USE::OCLExpr* expr2;
 };

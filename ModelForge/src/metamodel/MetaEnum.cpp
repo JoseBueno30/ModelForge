@@ -18,10 +18,10 @@ void MetaEnumElement::setName(const std::string& name){
 
 
 
-MetaEnum::MetaEnum(const std::string& name, std::unique_ptr<MetaEnumElement> element)
+MetaEnum::MetaEnum(const std::string& name, const std::shared_ptr<MetaEnumElement>& element)
     : name(name){
     if(element){
-        elements[element->getName()] = std::move(element);
+        elements[element->getName()] = element;
     }
 }
 
@@ -32,7 +32,7 @@ void MetaEnum::setName(const std::string& name){
     this->name = name;
 }
 
-const std::map<std::string, std::unique_ptr<MetaEnumElement>>& MetaEnum::getElements() const{
+const std::map<std::string, std::shared_ptr<MetaEnumElement>>& MetaEnum::getElements() const{
     return elements;
 }
 
@@ -44,7 +44,7 @@ const MetaEnumElement* MetaEnum::getElement(const std::string& key) const{
     return nullptr;
 }
 
-void MetaEnum::addElement(std::unique_ptr<MetaEnumElement> element){
+void MetaEnum::addElement(const std::shared_ptr<MetaEnumElement>& element){
     if (!element) {
         throw std::invalid_argument("Null enum");
     }
@@ -53,11 +53,17 @@ void MetaEnum::addElement(std::unique_ptr<MetaEnumElement> element){
         throw std::runtime_error("Enum: " + name + " already contains element named: " + element->getName());
     }
 
-    elements[element->getName()] = std::move(element);
+    elements[element->getName()] = element;
 }
 
 void MetaEnum::removeElement(const std::string& key){
     elements.erase(key);
+}
+
+bool MetaEnum::equals(const MetaType& type) const{
+    const MetaEnum* metaEnum= dynamic_cast<const MetaEnum*>(&type);
+
+    return metaEnum != nullptr && this->name == metaEnum->getName();
 }
 
 }

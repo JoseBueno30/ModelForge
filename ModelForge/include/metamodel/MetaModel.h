@@ -20,7 +20,7 @@ private:
     std::map<std::string, std::shared_ptr<MetaAssociation>> associations;
     std::map<std::string, std::shared_ptr<MetaAssociationClass>> associationClasses;
 
-private:
+public:
     MetaModel(const std::string& name);
 
     std::string getName() const;

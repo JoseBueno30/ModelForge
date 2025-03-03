@@ -352,6 +352,12 @@ set(ANTLR_GENERATED_SOURCES
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEVisitor.cpp
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEBaseListener.cpp
     ${PROJECT_SOURCE_DIR}/antlr4/generated/USEListener.cpp
+    ${PROJECT_SOURCE_DIR}/antlr4/generated/USELexer.h
+    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEParser.h
+    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEBaseVisitor.h
+    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEVisitor.h
+    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEBaseListener.h
+    ${PROJECT_SOURCE_DIR}/antlr4/generated/USEListener.h
 )
 
 
@@ -420,6 +426,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/view/EnumItemView.cpp
         include/ui/view/BoxItemView.h
         src/ui/view/AssociationItemView.cpp
+        antlr4/CustomUSEVisitor.cpp
 
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
