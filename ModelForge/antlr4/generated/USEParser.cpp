@@ -2384,27 +2384,45 @@ USEParser::ConstraintDefinitionContext::ConstraintDefinitionContext(ParserRuleCo
   : ParserRuleContext(parent, invokingState) {
 }
 
-USEParser::InvariantContext* USEParser::ConstraintDefinitionContext::invariant() {
-  return getRuleContext<USEParser::InvariantContext>(0);
-}
-
-USEParser::PrePostContext* USEParser::ConstraintDefinitionContext::prePost() {
-  return getRuleContext<USEParser::PrePostContext>(0);
-}
-
 
 size_t USEParser::ConstraintDefinitionContext::getRuleIndex() const {
   return USEParser::RuleConstraintDefinition;
 }
 
+void USEParser::ConstraintDefinitionContext::copyFrom(ConstraintDefinitionContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
+}
 
-std::any USEParser::ConstraintDefinitionContext::accept(tree::ParseTreeVisitor *visitor) {
+//----------------- PrePostDefinitionContext ------------------------------------------------------------------
+
+USEParser::PrePostContext* USEParser::PrePostDefinitionContext::prePost() {
+  return getRuleContext<USEParser::PrePostContext>(0);
+}
+
+USEParser::PrePostDefinitionContext::PrePostDefinitionContext(ConstraintDefinitionContext *ctx) { copyFrom(ctx); }
+
+
+std::any USEParser::PrePostDefinitionContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<USEVisitor*>(visitor))
-    return parserVisitor->visitConstraintDefinition(this);
+    return parserVisitor->visitPrePostDefinition(this);
   else
     return visitor->visitChildren(this);
 }
+//----------------- InvariantDefinitionContext ------------------------------------------------------------------
 
+USEParser::InvariantContext* USEParser::InvariantDefinitionContext::invariant() {
+  return getRuleContext<USEParser::InvariantContext>(0);
+}
+
+USEParser::InvariantDefinitionContext::InvariantDefinitionContext(ConstraintDefinitionContext *ctx) { copyFrom(ctx); }
+
+
+std::any USEParser::InvariantDefinitionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<USEVisitor*>(visitor))
+    return parserVisitor->visitInvariantDefinition(this);
+  else
+    return visitor->visitChildren(this);
+}
 USEParser::ConstraintDefinitionContext* USEParser::constraintDefinition() {
   ConstraintDefinitionContext *_localctx = _tracker.createInstance<ConstraintDefinitionContext>(_ctx, getState());
   enterRule(_localctx, 28, USEParser::RuleConstraintDefinition);
@@ -2421,6 +2439,7 @@ USEParser::ConstraintDefinitionContext* USEParser::constraintDefinition() {
     _errHandler->sync(this);
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 44, _ctx)) {
     case 1: {
+      _localctx = _tracker.createInstance<USEParser::InvariantDefinitionContext>(_localctx);
       enterOuterAlt(_localctx, 1);
       setState(380);
       invariant();
@@ -2428,6 +2447,7 @@ USEParser::ConstraintDefinitionContext* USEParser::constraintDefinition() {
     }
 
     case 2: {
+      _localctx = _tracker.createInstance<USEParser::PrePostDefinitionContext>(_localctx);
       enterOuterAlt(_localctx, 2);
       setState(381);
       prePost();

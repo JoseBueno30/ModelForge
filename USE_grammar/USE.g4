@@ -190,8 +190,8 @@ multiplicitySpec
 */
 
 constraintDefinition
-  : invariant
-  | prePost
+  : invariant   #InvariantDefinition
+  | prePost     #PrePostDefinition
   ;
 
 /* ------------------------------------

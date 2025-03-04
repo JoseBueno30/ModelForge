@@ -493,13 +493,32 @@ public:
   class  ConstraintDefinitionContext : public antlr4::ParserRuleContext {
   public:
     ConstraintDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    ConstraintDefinitionContext() = default;
+    void copyFrom(ConstraintDefinitionContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
     virtual size_t getRuleIndex() const override;
-    InvariantContext *invariant();
+
+   
+  };
+
+  class  PrePostDefinitionContext : public ConstraintDefinitionContext {
+  public:
+    PrePostDefinitionContext(ConstraintDefinitionContext *ctx);
+
     PrePostContext *prePost();
 
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  InvariantDefinitionContext : public ConstraintDefinitionContext {
+  public:
+    InvariantDefinitionContext(ConstraintDefinitionContext *ctx);
+
+    InvariantContext *invariant();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
   };
 
   ConstraintDefinitionContext* constraintDefinition();

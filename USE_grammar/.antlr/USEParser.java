@@ -1635,16 +1635,29 @@ public class USEParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class ConstraintDefinitionContext extends ParserRuleContext {
-		public InvariantContext invariant() {
-			return getRuleContext(InvariantContext.class,0);
-		}
-		public PrePostContext prePost() {
-			return getRuleContext(PrePostContext.class,0);
-		}
 		public ConstraintDefinitionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_constraintDefinition; }
+	 
+		public ConstraintDefinitionContext() { }
+		public void copyFrom(ConstraintDefinitionContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class PrePostDefinitionContext extends ConstraintDefinitionContext {
+		public PrePostContext prePost() {
+			return getRuleContext(PrePostContext.class,0);
+		}
+		public PrePostDefinitionContext(ConstraintDefinitionContext ctx) { copyFrom(ctx); }
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class InvariantDefinitionContext extends ConstraintDefinitionContext {
+		public InvariantContext invariant() {
+			return getRuleContext(InvariantContext.class,0);
+		}
+		public InvariantDefinitionContext(ConstraintDefinitionContext ctx) { copyFrom(ctx); }
 	}
 
 	public final ConstraintDefinitionContext constraintDefinition() throws RecognitionException {
@@ -1655,6 +1668,7 @@ public class USEParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,44,_ctx) ) {
 			case 1:
+				_localctx = new InvariantDefinitionContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(380);
@@ -1662,6 +1676,7 @@ public class USEParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new PrePostDefinitionContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(381);

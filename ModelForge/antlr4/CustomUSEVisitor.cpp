@@ -93,6 +93,10 @@ public:
             addClassConstraints(classElem->classDefinition());
         }
 
+        for (auto constraint: constraintElements){
+            visit(constraint);
+        }
+
         // Generate global constraints. All class interfaces are known and association features are available for expressions
 
 
@@ -171,6 +175,38 @@ public:
 
         for(auto invariantClause : ctx->invariantClause()){
             visitInvariantClause(invariantClause, metaClass);
+        }
+        return nullptr;
+    }
+
+
+    std::any visitConstraints(USEParser::ConstraintsContext *ctx) override {
+        for(auto constraintDefinition : ctx->constraintDefinition()){
+            visit(constraintDefinition);
+        }
+        return nullptr;
+    }
+
+    virtual std::any visitInvariantDefinition(USEParser::InvariantDefinitionContext *ctx) override {
+        return visit(ctx->invariant());
+    }
+
+
+    virtual std::any visitInvariant(USEParser::InvariantContext *ctx) override {
+        std::vector<std::string> variableNames = {};
+        for(auto variable : ctx->ID()){
+            variableNames.push_back(variable->getText());
+        }
+
+        std::string className = ctx->simpleType()->ID()->getText();
+        std::shared_ptr<MetaModel::MetaClass> scopeClass = model->getClass(className);
+
+        if(!scopeClass){
+            throw std::invalid_argument("Expexted valid class name, found '"+ className + "'.");
+        }
+
+        for(auto invariantClause : ctx->invariantClause()){
+            visitInvariantClause(invariantClause, scopeClass, variableNames);
         }
 
         return nullptr;
@@ -288,10 +324,18 @@ public:
 
         std::shared_ptr<MetaModel::OCLExpr> expression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->expression()));
 
-
-
         return std::make_shared<MetaModel::PrePostClause>(name, expression, false, true);
     }
+
+    std::any visitPrePostDefinition(USEParser::PrePostDefinitionContext *ctx) override {
+        return visit(ctx->prePost());
+    }
+    //TODO: COMPROBAR QUE LA CLASE EXISTA, COMPROBAR QUE LA OPERACION EXISTA, INVESTIGAR COMO FUNCIONA LA LISTA DE PARAMETROS Y RETURN TIPE (SI DEBE COINCIDIR TAMBIEN)
+    //CREAR NUEVO METODO QUE AÑADA PREPOSTCONDICIONES A OPERACIONES DE UNA CLASE
+    std::any visitPrePost(USEParser::PrePostContext *ctx) override {
+        return visitChildren(ctx);
+    }
+
 
     // TYPE DEFINITION
 

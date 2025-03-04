@@ -65,7 +65,9 @@ public:
 
     virtual std::any visitMultiplicitySpec(USEParser::MultiplicitySpecContext *context) = 0;
 
-    virtual std::any visitConstraintDefinition(USEParser::ConstraintDefinitionContext *context) = 0;
+    virtual std::any visitInvariantDefinition(USEParser::InvariantDefinitionContext *context) = 0;
+
+    virtual std::any visitPrePostDefinition(USEParser::PrePostDefinitionContext *context) = 0;
 
     virtual std::any visitInvariant(USEParser::InvariantContext *context) = 0;
 

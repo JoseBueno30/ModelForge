@@ -101,7 +101,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitConstraintDefinition(USEParser::ConstraintDefinitionContext *ctx) override {
+  virtual std::any visitInvariantDefinition(USEParser::InvariantDefinitionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitPrePostDefinition(USEParser::PrePostDefinitionContext *ctx) override {
     return visitChildren(ctx);
   }
 
