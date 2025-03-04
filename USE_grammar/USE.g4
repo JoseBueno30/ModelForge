@@ -214,7 +214,7 @@ invariant
 */
 invariantClause
     : 'inv' (ID)? COLON expression 
-    | 'existential' 'inv' (ID)? COLON expression 
+    | EXISTENTIAL 'inv' (ID)? COLON expression 
     ;
 
 
@@ -771,8 +771,9 @@ SEMI          : ';';
 SLASH         : '/';
 STAR          : '*';
 ABSTRACT      : 'abstract';
-AGGREGATION : 'aggregation';
-COMPOSITION : 'composition';
+EXISTENTIAL   : 'existential';
+AGGREGATION   : 'aggregation';
+COMPOSITION   : 'composition';
 ROLE          : 'role';
 REDEFINES     : 'redefines';
 SUBSETS       : 'subsets';

@@ -8,6 +8,7 @@ public:
     std::shared_ptr<MetaModel::MetaModel> model;
     int preConditionCounter = 0;
     int postConditionCounter = 0;
+    int invariantCounter = 0;
 
     antlrcpp::Any visitModel(USEParser::ModelContext *ctx) override {
 
@@ -63,12 +64,39 @@ public:
             model->addAssociationClass(std::make_shared<MetaModel::MetaAssociationClass>(className, isAbstract, type));
         }
 
-        // Add attributes and set generalization  relationships. The names of all classes are known at this point
+        // Add attributes and set generalization relationships. The names of all classes are known at this point
         for (auto classElem : classElements) {
             visit(classElem);
         }
 
+        // Add attributes and set generalization relationships of the association classes. The names of all classes are known at this point
 
+
+        // add associations. Classes are known and can be referenced by role names
+
+
+        // Generalization of association classes might leave out new rolenames. Add them from parent
+
+
+        // Add associationEnd specific constraints, e. g. subsets. Role names are known and can be subset
+
+
+        // Add associationEnd specific constraints for association classes, e. g. subsets. Role names are known and can be subset
+
+
+        // Generate bodies of association and non-association classes All class interfaces are known and association features are available for expressions
+
+
+        // Generate constraints of association and non-association classes All class interfaces are known and association features are available for expressions
+
+        for (auto classElem : classElements) {
+            addClassConstraints(classElem->classDefinition());
+        }
+
+        // Generate global constraints. All class interfaces are known and association features are available for expressions
+
+
+        // Generate pre-/postconditions
 
         return model;
     }
@@ -128,9 +156,45 @@ public:
             metaClass->addOperation(operation);
         }
 
+        //Add state machines
+        for(auto stateMachiDefinition : ctx->stateMachine()){
+            std::shared_ptr<MetaModel::MetaStateMachine> stateMachine = std::make_shared<MetaModel::MetaStateMachine>(stateMachiDefinition->ID()->getText(), stateMachiDefinition->getText());
 
+            metaClass->addStateMachine(stateMachine);
+        }
 
+        return nullptr;
+    }
 
+    std::any addClassConstraints(USEParser::ClassDefinitionContext *ctx){
+        auto metaClass = model->getClass(ctx->ID()->getText());
+
+        for(auto invariantClause : ctx->invariantClause()){
+            visitInvariantClause(invariantClause, metaClass);
+        }
+
+        return nullptr;
+    }
+
+    std::any visitInvariantClause(USEParser::InvariantClauseContext *ctx, std::shared_ptr<MetaModel::MetaClass> scopeClass, const std::vector<std::string>& variableNames = {}){
+        std::shared_ptr<MetaModel::MetaConstraint> constraint = nullptr;
+        std::string name = "";
+        if(ctx->ID()){
+            name = ctx->ID()->getText();
+        }else{
+            name = "inv" + std::to_string(invariantCounter);
+            invariantCounter++;
+        }
+        std::shared_ptr<MetaModel::OCLExpr> expression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->expression()));
+        bool isExistential = ctx->EXISTENTIAL()? true : false;
+
+        if(variableNames.empty()){
+            constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, expression, name, isExistential);
+        }else{
+            constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, expression, name, isExistential, variableNames);
+        }
+
+        scopeClass->addConstraint(constraint);
 
         return nullptr;
     }
