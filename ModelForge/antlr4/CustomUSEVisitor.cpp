@@ -72,7 +72,7 @@ public:
         // Add attributes and set generalization relationships of the association classes. The names of all classes are known at this point
 
 
-        // add associations. Classes are known and can be referenced by role names
+        // Add associations. Classes are known and can be referenced by role names
 
 
         // Generalization of association classes might leave out new rolenames. Add them from parent
@@ -203,7 +203,6 @@ public:
         std::string name = ctx->ID()->getText();
         std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
 
-        //En el constructor y el setter de attribute comprobar que type no sea void
         std::shared_ptr<MetaModel::MetaAttribute> attribute = std::make_shared<MetaModel::MetaAttribute>(name, type);
 
         if(ctx->initDefinition()){
@@ -293,6 +292,8 @@ public:
 
         return std::make_shared<MetaModel::PrePostClause>(name, expression, false, true);
     }
+
+    // TYPE DEFINITION
 
     std::any visitTypeSimple(USEParser::TypeSimpleContext *ctx) override {
         return visitChildren(ctx->simpleType());
@@ -418,12 +419,13 @@ public:
     // ASSOCIATION DEFINITION
 
     std::any visitSimpleAssociation(USEParser::SimpleAssociationContext *ctx) override{
-        std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
         std::shared_ptr<MetaModel::MetaAssociation> simpleAssociation = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 0);
+        std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
         for(auto endCtx : ctx->associationEnd()){
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
             simpleAssociation->addAssociationEnd(associationEnd);
         }
+
         return simpleAssociation;
     }
 
@@ -439,7 +441,7 @@ public:
 
     std::any visitComposition(USEParser::CompositionContext *ctx) override{
         std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
-        std::shared_ptr<MetaModel::MetaAssociation> composition = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 1);
+        std::shared_ptr<MetaModel::MetaAssociation> composition = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 2);
         for(auto endCtx : ctx->associationEnd()){
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
             composition->addAssociationEnd(associationEnd);

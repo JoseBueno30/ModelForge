@@ -25,6 +25,9 @@ const MetaType& MetaAttribute::getType() const{
     return *type;
 }
 void MetaAttribute::setType(const std::shared_ptr<MetaType>& type){
+    if (std::dynamic_pointer_cast<MetaModel::Void>(type)) {
+        throw std::invalid_argument("Attribute cannot be of type Void.");
+    }
     this->type = type;
 }
 
