@@ -410,14 +410,14 @@ public:
             }
         }
 
-        return visitChildren(ctx);
+        return nullptr;
     }
 
 
     // TYPE DEFINITION
 
     std::any visitTypeSimple(USEParser::TypeSimpleContext *ctx) override {
-        return visitChildren(ctx->simpleType());
+        return visit(ctx->simpleType());
     }
 
     std::any visitTypeCollection(USEParser::TypeCollectionContext *ctx) override {

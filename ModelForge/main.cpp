@@ -22,8 +22,8 @@ void test_grammar(){
     std::cout<<tree->toStringTree(&parser, true) <<std::endl;
 }
 
-void test_visitor(){
-    std::string modelTest = "model Test class TestClass end";
+std::shared_ptr<MetaModel::MetaModel> test_visitor(){
+    std::string modelTest = "model Test class TestClass attributes name : String end";
     std::cout<<"Modelo a probar: " << modelTest << std::endl;
 
     antlr4::ANTLRInputStream input(modelTest);
@@ -61,6 +61,8 @@ void test_visitor(){
     for(const auto& pair: model->getClasses()){
         std::cout << "La clase es:" << pair.second->getName() << std::endl;
     }
+
+    return model;
 }
 
 int main(int argc, char *argv[])
@@ -77,9 +79,11 @@ int main(int argc, char *argv[])
         }
     }
 
-    test_visitor();
+    auto model = test_visitor();
 
     MainWindow w;
+    w.setupModelGraphicsView(model);
+
     w.show();
     return a.exec();
 }

@@ -25,11 +25,15 @@ public:
 public Q_SLOTS:
     void on_actionSwitch_mode_triggered();
 
+    void setModel(std::shared_ptr<MetaModel::MetaModel> model);
+    std::shared_ptr<MetaModel::MetaModel> getModel();
+    void setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> model);
+
 private:
     Ui::MainWindow *ui;
+    std::shared_ptr<MetaModel::MetaModel> model;
     QString theme;
     ConsoleHandler* consoleHandler;
-    void setupModelGraphicsView();
 
 };
 #endif // MAINWINDOW_H

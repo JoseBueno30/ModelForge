@@ -16,6 +16,14 @@ void toogleColorTheme(QString &theme){
     }
 }
 
+void MainWindow::setModel(std::shared_ptr<MetaModel::MetaModel> model){
+    this->model = model;
+}
+
+std::shared_ptr<MetaModel::MetaModel> MainWindow::getModel(){
+    return this->model;
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
@@ -68,6 +76,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     toogleColorTheme(theme);
 
+
+
     consoleHandler->setConsole(this->ui->consoleTextEdit);
     consoleHandler->appendErrorLog("Esto es un error");
     consoleHandler->appendSuccessfulLog("Esto es un mensaje gucci");
@@ -78,8 +88,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::setupModelGraphicsView(){
+void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> model){
+    // qDebug() << "El nombre del MetaModel es: " << model->getName();
 
+    QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
+
+    QGraphicsScene *scene = modelGraphicsView->scene();
+
+    for(const auto& modelClass : model->getClasses()){
+        scene->addItem(new ClassItemView(modelClass.second));
+    }
 }
 
 
