@@ -152,7 +152,12 @@ void MetaClass::addAttribute(std::shared_ptr<MetaAttribute> attribute){
     }
 
     if (attributes.find(attribute->getName()) != attributes.end()) {
-        throw std::runtime_error("Attribute already declared: " + attribute->getName());
+        throw std::runtime_error("Class '" + name + "' already contains attribute named: '" + attribute->getName() + "'.");
+    }
+
+    auto allAttributes = this->getAllAttributes();
+    if (allAttributes.find(attribute->getName()) != allAttributes.end()){
+        throw std::runtime_error("Attribute '" + attribute->getName() + "' already defined in SuperClass.");
     }
 
     attributes[attribute->getName()] = std::move(attribute);
@@ -200,8 +205,16 @@ void MetaClass::addOperation(std::shared_ptr<MetaOperation> operation){
         throw std::invalid_argument("Null operation");
     }
 
-    if (operations.find(operation->getName()) != operations.end()) {//More generalization restrictions needed
-        throw std::runtime_error("Operation already declared: " + operation->getName());
+    if (operations.find(operation->getName()) != operations.end()) {
+        throw std::runtime_error("Class '" + name + "' already contains operation named: '" + operation->getName() + "'.");
+    }
+
+    auto allOperations = this->getAllOperations();
+    auto superOperation = allOperations.find(operation->getName());
+    if (superOperation != allOperations.end()){
+        if(!operation->isValidOverrideOf(*(superOperation->second))){
+            throw std::runtime_error("Redefinition of operation '" + operation->getName() + "' requires same number and type of arguments.");
+        }
     }
 
     operations[operation->getName()] = std::move(operation);
@@ -228,7 +241,7 @@ void MetaClass::addConstraint(std::shared_ptr<MetaConstraint> constraint){
         throw std::invalid_argument("Null constraint");
     }
 
-    if (constraints.find(constraint->getName()) != constraints.end()) {//More generalization restrictions needed
+    if (constraints.find(constraint->getName()) != constraints.end()) {
         throw std::runtime_error("Constraint already declared: " + constraint->getName());
     }
 

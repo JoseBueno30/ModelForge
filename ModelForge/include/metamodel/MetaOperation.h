@@ -74,6 +74,8 @@ public:
     void removePostCondition(const std::string& key);
 
     bool isPrePostConditionDefined(const std::string& key);
+
+    bool isValidOverrideOf(const MetaOperation& operation) const;
 };
 
 }

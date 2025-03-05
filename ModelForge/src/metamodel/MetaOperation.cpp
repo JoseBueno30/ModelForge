@@ -152,4 +152,22 @@ bool MetaOperation::isPrePostConditionDefined(const std::string& key){
     return (preConditions.find(key) != preConditions.end()) ||
            (postConditions.find(key) != postConditions.end());
 }
+
+bool MetaOperation::isValidOverrideOf(const MetaOperation& operation) const{
+    if(this->getName() != operation.getName()) return false;
+
+    if(!this->getReturnType().equals(operation.getReturnType())) return false;
+
+    auto otherVariables = operation.getVariables();
+    if(this->variables.size() != otherVariables.size()) return false;
+
+    auto it1 = variables.begin();
+    auto it2 = otherVariables.begin();
+
+    for (; it1 != variables.end(); ++it1, ++it2) {
+        if (!it1->second->getType().equals(it2->second->getType())) return false;
+    }
+
+    return true;
+}
 }
