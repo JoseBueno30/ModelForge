@@ -70,7 +70,9 @@ public:
         }
 
         // Add attributes and set generalization relationships of the association classes. The names of all classes are known at this point
-
+        for (auto associationClassElem : associationClassElements) {
+            visit(associationClassElem);
+        }
 
         // Add associations. Classes are known and can be referenced by role names
 
@@ -90,6 +92,10 @@ public:
         // Generate constraints of association and non-association classes All class interfaces are known and association features are available for expressions
         for (auto classElem : classElements) {
             addClassConstraints(classElem->classDefinition());
+        }
+
+        for (auto associationClassElem : associationClassElements) {
+            addAssociationClassConstraints(associationClassElem->associationClassDefinition());
         }
 
 
@@ -199,6 +205,7 @@ public:
 
         std::string className = ctx->simpleType()->ID()->getText();
         std::shared_ptr<MetaModel::MetaClass> scopeClass = model->getClass(className);
+        if(!scopeClass) scopeClass = model->getAssociationClass(className);
 
         if(!scopeClass){
             throw std::invalid_argument("Expected valid class name, found '"+ className + "'.");
@@ -525,6 +532,62 @@ public:
 
         return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
     }
+
+    // ASSOCIAITON CLASS DEFINITION
+
+    std::any visitAssociationClass(USEParser::AssociationClassContext *ctx) override {
+        return visit(ctx->associationClassDefinition());
+    }
+
+    std::any visitAssociationClassDefinition(USEParser::AssociationClassDefinitionContext *ctx) override {
+        auto metaAssociationClass = model->getAssociationClass(ctx->ID()->getText());
+
+        //Add super classes
+        if(ctx->idList()){
+            for(auto superClassElem : ctx->idList()->ID()){
+                auto superClass = model->getAssociationClass(superClassElem->getText());
+                if(!superClass){
+                    throw std::runtime_error("Undefined Super Class: " + superClassElem->getText() + ". Declare Super Classes before Child Classes");
+                }
+
+                metaAssociationClass->addSuperClass(superClass);
+            }
+        }
+
+        //Add attributes
+        for(auto attributeDefinition : ctx->attributeDefinition()){
+            std::shared_ptr<MetaModel::MetaAttribute> attribute = std::any_cast<std::shared_ptr<MetaModel::MetaAttribute>>(visit(attributeDefinition));
+
+            metaAssociationClass->addAttribute(attribute);
+        }
+
+        //Add operations
+        for(auto operationDefinition : ctx->operationDefinition()){
+            std::shared_ptr<MetaModel::MetaOperation> operation = std::any_cast<std::shared_ptr<MetaModel::MetaOperation>>(visit(operationDefinition));
+
+            metaAssociationClass->addOperation(operation);
+        }
+
+        //Add state machines
+        for(auto stateMachiDefinition : ctx->stateMachine()){
+            std::shared_ptr<MetaModel::MetaStateMachine> stateMachine = std::make_shared<MetaModel::MetaStateMachine>(stateMachiDefinition->ID()->getText(), stateMachiDefinition->getText());
+
+            metaAssociationClass->addStateMachine(stateMachine);
+        }
+
+        return nullptr;
+    }
+
+    std::any addAssociationClassConstraints(USEParser::AssociationClassDefinitionContext *ctx){
+        auto metaAssociationClass = model->getAssociationClass(ctx->ID()->getText());
+
+        for(auto invariantClause : ctx->invariantClause()){
+            visitInvariantClause(invariantClause, metaAssociationClass);
+        }
+
+        return nullptr;
+    }
+
 
     // ASSOCIATION DEFINITION
 
