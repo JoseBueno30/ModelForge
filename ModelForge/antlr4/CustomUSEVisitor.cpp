@@ -88,19 +88,18 @@ public:
 
 
         // Generate constraints of association and non-association classes All class interfaces are known and association features are available for expressions
-
         for (auto classElem : classElements) {
             addClassConstraints(classElem->classDefinition());
         }
+
+
+        // Generate global constraints. All class interfaces are known and association features are available for expressions
+        // Generate pre-/postconditions
 
         for (auto constraint: constraintElements){
             visit(constraint);
         }
 
-        // Generate global constraints. All class interfaces are known and association features are available for expressions
-
-
-        // Generate pre-/postconditions
 
         return model;
     }
@@ -202,7 +201,7 @@ public:
         std::shared_ptr<MetaModel::MetaClass> scopeClass = model->getClass(className);
 
         if(!scopeClass){
-            throw std::invalid_argument("Expexted valid class name, found '"+ className + "'.");
+            throw std::invalid_argument("Expected valid class name, found '"+ className + "'.");
         }
 
         for(auto invariantClause : ctx->invariantClause()){
@@ -227,7 +226,7 @@ public:
         if(variableNames.empty()){
             constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, expression, name, isExistential);
         }else{
-            constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, expression, name, isExistential, variableNames);
+            constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, variableNames, expression, name, isExistential);
         }
 
         scopeClass->addConstraint(constraint);
@@ -330,9 +329,76 @@ public:
     std::any visitPrePostDefinition(USEParser::PrePostDefinitionContext *ctx) override {
         return visit(ctx->prePost());
     }
-    //TODO: COMPROBAR QUE LA CLASE EXISTA, COMPROBAR QUE LA OPERACION EXISTA, INVESTIGAR COMO FUNCIONA LA LISTA DE PARAMETROS Y RETURN TIPE (SI DEBE COINCIDIR TAMBIEN)
-    //CREAR NUEVO METODO QUE AÑADA PREPOSTCONDICIONES A OPERACIONES DE UNA CLASE
+
     std::any visitPrePost(USEParser::PrePostContext *ctx) override {
+        // Check that the class in the context exists
+        std::string className = ctx->ID()[0]->getText();
+        std::shared_ptr<MetaModel::MetaClass> scopeClass = model->getClass(className);
+
+        if(!scopeClass){
+            throw std::invalid_argument("Expected valid class name, found '"+ className + "'.");
+        }
+
+
+        // Check that the class has the operation declared in the context
+        std::string opName = ctx->ID()[1]->getText();
+        std::shared_ptr<MetaModel::MetaOperation> scopeOperation = scopeClass->getOperation(opName);
+
+        if(!scopeOperation){
+            throw std::invalid_argument("Class '" + className + "' has no operation '"+ opName + "'.");
+        }
+
+
+        // Check that the especified return type match the definition of the operation
+        std::shared_ptr<MetaModel::MetaType> returnType = MetaModel::Void::instance();
+
+        if(ctx->type()){
+            returnType = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+        }
+
+        if(!returnType->equals(scopeOperation->getReturnType())){
+            throw std::invalid_argument("Expected result type '" + scopeOperation->getReturnType().toString() + "' instead of '"+ returnType->toString() + "'.");
+        }
+
+
+        // Check that the especified parameters (size, name and type) match the definition of the operation
+        std::map<std::string, std::shared_ptr<MetaModel::MetaVariable>> variables;
+        std::map<std::string, std::shared_ptr<MetaModel::MetaVariable>> opVariables = scopeOperation->getVariables();
+
+        for(auto variableDeclaration : ctx->paramList()->variableDeclaration()){
+            std::shared_ptr<MetaModel::MetaVariable> variable = std::any_cast<std::shared_ptr<MetaModel::MetaVariable>>(visit(variableDeclaration));
+
+            if (variables.find(variable->getName()) != variables.end()) {
+                throw std::runtime_error("Redefinition of variable: '" + variable->getName() + "' in global constraint declaration.");
+            }
+
+            variables[variable->getName()] = variable;
+        }
+
+        if(variables.size() != opVariables.size()){
+            throw std::runtime_error("This signature of operation: '" + opName + "' does not match its previous declaration in class: '" + className + "'.");
+        }
+
+        auto it1 = variables.begin();
+        auto it2 = opVariables.begin();
+
+        for (; it1 != variables.end(); ++it1, ++it2) {
+            if (!(it1->second->getName() != it2->second->getName()) || !(it1->second->getType().equals(it2->second->getType()))){
+                throw std::runtime_error("This signature of operation: '" + opName + "' does not match its previous declaration in class: '" + className + "'.");
+            };
+        }
+
+        // Generate and add Pre and Post Conditions to the operation
+        for(auto prePostClauseDefinition : ctx->prePostClause()){
+            std::shared_ptr<MetaModel::PrePostClause> prePostClause = std::any_cast<std::shared_ptr<MetaModel::PrePostClause>>(visit(prePostClauseDefinition));
+
+            if(prePostClause->getIsPre()){
+                scopeOperation->addPreCondition(prePostClause);
+            }else if(prePostClause->getIsPost()){
+                scopeOperation->addPostCondition(prePostClause);
+            }
+        }
+
         return visitChildren(ctx);
     }
 
