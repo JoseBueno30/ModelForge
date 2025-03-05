@@ -5,7 +5,7 @@
 
 
 
-// Generated from USE.g4 by ANTLR 4.13.2
+// Generated from c:/Users/Victor/Documents/ModelForge/USE_grammar/USE.g4 by ANTLR 4.13.1
 
 #pragma once
 
@@ -284,6 +284,12 @@ public:
     virtual std::any visitTupleType(USEParser::TupleTypeContext *context) = 0;
 
     virtual std::any visitTuplePart(USEParser::TuplePartContext *context) = 0;
+
+    virtual std::any visitRole(USEParser::RoleContext *context) = 0;
+
+    virtual std::any visitRedefines(USEParser::RedefinesContext *context) = 0;
+
+    virtual std::any visitSubsets(USEParser::SubsetsContext *context) = 0;
 
 
 };

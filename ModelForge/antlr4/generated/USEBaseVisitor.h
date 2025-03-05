@@ -5,7 +5,7 @@
 
 
 
-// Generated from USE.g4 by ANTLR 4.13.2
+// Generated from c:/Users/Victor/Documents/ModelForge/USE_grammar/USE.g4 by ANTLR 4.13.1
 
 #pragma once
 
@@ -538,6 +538,18 @@ public:
   }
 
   virtual std::any visitTuplePart(USEParser::TuplePartContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitRole(USEParser::RoleContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitRedefines(USEParser::RedefinesContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitSubsets(USEParser::SubsetsContext *ctx) override {
     return visitChildren(ctx);
   }
 

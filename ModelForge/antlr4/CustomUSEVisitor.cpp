@@ -75,13 +75,17 @@ public:
         }
 
         // Add associations. Classes are known and can be referenced by role names
-
+        for(auto assocElem : associationElements){
+            model->addAssociation(std::any_cast<std::shared_ptr<MetaModel::MetaAssociation>>(visit(assocElem)));
+        }
 
         // Generalization of association classes might leave out new rolenames. Add them from parent
 
 
         // Add associationEnd specific constraints, e. g. subsets. Role names are known and can be subset
-
+        for(auto assocElem : associationElements){
+            checkRedefinesAndSubsetsInAssociationEnds(assocElem)
+        }
 
         // Add associationEnd specific constraints for association classes, e. g. subsets. Role names are known and can be subset
 
@@ -593,7 +597,6 @@ public:
 
     std::any visitSimpleAssociation(USEParser::SimpleAssociationContext *ctx) override{
         std::shared_ptr<MetaModel::MetaAssociation> simpleAssociation = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 0);
-        std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
         for(auto endCtx : ctx->associationEnd()){
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
             simpleAssociation->addAssociationEnd(associationEnd);
@@ -603,7 +606,6 @@ public:
     }
 
     std::any visitAggregation(USEParser::AggregationContext *ctx) override{
-        std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
         std::shared_ptr<MetaModel::MetaAssociation> aggregation = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 1);
         for(auto endCtx : ctx->associationEnd()){
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
@@ -613,7 +615,6 @@ public:
     }
 
     std::any visitComposition(USEParser::CompositionContext *ctx) override{
-        std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> map;
         std::shared_ptr<MetaModel::MetaAssociation> composition = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 2);
         for(auto endCtx : ctx->associationEnd()){
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
@@ -623,16 +624,27 @@ public:
     }
 
     std::any visitAssociationEnd(USEParser::AssociationEndContext *ctx) override{
-
+        if(!model->getClass(ctx->ID()->getText())){
+            throw std::runtime_error("Class '"+ ctx->ID()->getText() +"' is not defined.");
+        }
         std::shared_ptr<MetaModel::MetaMultiplicity> multiplicity = std::any_cast<std::shared_ptr<MetaModel::MetaMultiplicity>>(visit(ctx->multiplicity()));
-
-        // TODO
+        std::string role = "";
+        if(ctx->role()){
+            role = std::any_cast<std::string>(visit(ctx->role()));
+        }
         // check Ordered and union
-        // Redefines and Subsets must be checked when all associations have been created
-        // derive/derived: where vars declaration are saved
+        bool isOrdered = !ctx->ORDERED().empty();
+        bool isUnion = !ctx->UNION().empty();
 
         std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd;
         return associationEnd;
+    }
+
+    std::any visitRole(USEParser::RoleContext *ctx) override{
+        return ctx->ID()->getText();
+    }
+
+    void checkRedefinesAndSubsetsInAssociationEnds(USEParser::AssociationContext * ctx){
     }
 
     std::any visitMultiplicity(USEParser::MultiplicityContext *ctx) override{
