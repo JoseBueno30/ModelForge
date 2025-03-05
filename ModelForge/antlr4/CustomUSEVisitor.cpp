@@ -84,7 +84,7 @@ public:
 
         // Add associationEnd specific constraints, e. g. subsets. Role names are known and can be subset
         for(auto assocElem : associationElements){
-            checkRedefinesAndSubsetsInAssociationEnds(assocElem)
+            checkRedefinesAndSubsetsInAssociationEnds(assocElem);
         }
 
         // Add associationEnd specific constraints for association classes, e. g. subsets. Role names are known and can be subset

@@ -160,6 +160,17 @@ associationEnd
     (SEMI)?
     ;
 
+role          
+    : 'role' ID
+    ;
+
+redefines     
+    : 'redefines' ID
+    ;
+
+subsets       
+    : 'subsets' ID
+    ;
 
 /* ------------------------------------
   multiplicity ::= 
@@ -774,9 +785,6 @@ ABSTRACT      : 'abstract';
 EXISTENTIAL   : 'existential';
 AGGREGATION   : 'aggregation';
 COMPOSITION   : 'composition';
-role          : 'role' ID;
-redefines     : 'redefines' ID;
-subsets       : 'subsets' ID;
 ORDERED       : 'ordered';
 UNION         : 'union';
   
