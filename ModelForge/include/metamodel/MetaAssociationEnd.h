@@ -4,12 +4,16 @@
 
 
 #include "MetaVariable.h"
-#include "MetaClass.h"
+#include "OCLExpression.h"
 
 #include <memory>
 #include <string>
 #include <vector>
+
+
+
 namespace MetaModel{
+class MetaClass;
 
 class MetaMultiplicityRange{
 private:
@@ -60,6 +64,7 @@ public:
     MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity);
 
     const MetaClass& getClass() const;
+    std::shared_ptr<MetaClass> getClassSharedPtr() const;
     void setClass(const std::shared_ptr<MetaClass>& endClass);
 
     std::string getRole() const;

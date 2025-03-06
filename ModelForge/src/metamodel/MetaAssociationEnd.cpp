@@ -55,6 +55,10 @@ const MetaClass& MetaAssociationEnd::getClass() const{
     return *endClass;
 }
 
+std::shared_ptr<MetaClass> MetaAssociationEnd::getClassSharedPtr() const{
+    return this->endClass;
+}
+
 void MetaAssociationEnd::setClass(const std::shared_ptr<MetaClass>& endClass){
     this->endClass = endClass;
 }

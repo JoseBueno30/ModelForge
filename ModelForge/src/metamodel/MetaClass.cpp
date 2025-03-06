@@ -167,6 +167,57 @@ void MetaClass::removeAttribute(const std::string& key){
     attributes.erase(key);
 }
 
+const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>  MetaClass::getAssociationEnds() const{
+    return this->associationEnds;
+}
+std::map<std::string, const MetaAssociationEnd *>  MetaClass::getAllAssociationEnds() const{
+    std::map<std::string, const MetaAssociationEnd*> allAttributes;
+
+    for (const auto& associationEndPair : associationEnds) {
+        allAttributes[associationEndPair.first] = associationEndPair.second.get();
+    }
+
+    for (const auto& superClassPair : superClasses) {
+
+        std::map<std::string, const MetaAssociationEnd*> superClassAssociationEnds = superClassPair.second->getAllAssociationEnds();
+
+        for (const auto& superClassAssociationEnd: superClassAssociationEnds) {
+            if (allAttributes.find(superClassAssociationEnd.first) == allAttributes.end()) {
+                allAttributes[superClassAssociationEnd.first] = superClassAssociationEnd.second;
+            }
+        }
+    }
+
+    return allAttributes;
+}
+std::shared_ptr<MetaAssociationEnd>  MetaClass::getAssociationEnd(const std::string& key){
+    auto iterator = associationEnds.find(key);
+    if(iterator != associationEnds.end()){
+        return (iterator->second);
+    }
+    return nullptr;
+}
+void  MetaClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd){
+    if (!associationEnd) {
+        throw std::invalid_argument("Null attribute");
+    }
+
+    if (associationEnds.find(associationEnd->getRole()) != associationEnds.end()) {
+        throw std::runtime_error("Class '" + name + "' already contains associationEnd roled: '" + associationEnd->getRole() + "'.");
+    }
+
+    auto allAssociationEnds = this->getAllAssociationEnds();
+    if (allAssociationEnds.find(associationEnd->getRole()) != allAssociationEnds.end()){
+        throw std::runtime_error("AssociationEnd '" + associationEnd->getRole() + "' already defined in SuperClass.");
+    }
+
+    associationEnds[associationEnd->getRole()] = associationEnd;
+}
+void  MetaClass::removeAssociationEnd(const std::string& key){
+    associationEnds.erase(key);
+}
+
+
 const std::map<std::string, std::shared_ptr<MetaOperation>>& MetaClass::getOperations() const{
     return operations;
 }

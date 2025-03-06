@@ -75,7 +75,7 @@ public:
 
         // Add associations. Classes are known and can be referenced by role names
         for(auto assocElem : associationElements){
-            model->addAssociation(std::any_cast<std::shared_ptr<MetaModel::MetaAssociation>>(visit(assocElem)));
+            visit(assocElem);
         }
 
         // Generalization of association classes might leave out new rolenames. Add them from parent
@@ -83,7 +83,7 @@ public:
 
         // Add associationEnd specific constraints, e. g. subsets. Role names are known and can be subset
         for(auto assocElem : associationElements){
-            checkRedefinesAndSubsetsInAssociationEnds(assocElem);
+            visit(assocElem);
         }
 
         // Add associationEnd specific constraints for association classes, e. g. subsets. Role names are known and can be subset
@@ -595,55 +595,111 @@ public:
     // ASSOCIATION DEFINITION
 
     std::any visitSimpleAssociation(USEParser::SimpleAssociationContext *ctx) override{
-        std::shared_ptr<MetaModel::MetaAssociation> simpleAssociation = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 0);
-        for(auto endCtx : ctx->associationEnd()){
-            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
-            simpleAssociation->addAssociationEnd(associationEnd);
+        std::shared_ptr<MetaModel::MetaAssociation> association = model->getAssociation(ctx->ID()->getText());
+        if(association == nullptr){
+            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), 0);
+        }else{
+            addSubsetsAndRedefines(association ,ctx->associationEnd());
         }
-
-        return simpleAssociation;
+        return nullptr;
     }
 
     std::any visitAggregation(USEParser::AggregationContext *ctx) override{
-        std::shared_ptr<MetaModel::MetaAssociation> aggregation = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 1);
-        for(auto endCtx : ctx->associationEnd()){
-            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
-            aggregation->addAssociationEnd(associationEnd);
+        std::shared_ptr<MetaModel::MetaAssociation> aggregation = model->getAssociation(ctx->ID()->getText());
+        if(aggregation == nullptr){
+            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), 1);
+        }else{
+            addSubsetsAndRedefines(aggregation ,ctx->associationEnd());
         }
-        return aggregation;
+        return nullptr;
     }
 
     std::any visitComposition(USEParser::CompositionContext *ctx) override{
-        std::shared_ptr<MetaModel::MetaAssociation> composition = std::make_shared<MetaModel::MetaAssociation>(ctx->ID()->getText(), 2);
-        for(auto endCtx : ctx->associationEnd()){
-            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
-            composition->addAssociationEnd(associationEnd);
+        std::shared_ptr<MetaModel::MetaAssociation> composition = model->getAssociation(ctx->ID()->getText());
+        if(composition == nullptr){
+            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), 2);
+        }else{
+            addSubsetsAndRedefines(composition ,ctx->associationEnd());
         }
-        return composition;
+        return nullptr;
+    }
+
+    void addAssociationToModel(const std::string& id, const std::vector<USEParser::AssociationEndContext *>& associationEnds, int type){
+        std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>(id, type);
+        for(auto endCtx : associationEnds){
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
+            association->addAssociationEnd(associationEnd);
+        }
+        model->addAssociation(association);
+    }
+
+    void addSubsetsAndRedefines(std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, const std::vector<USEParser::AssociationEndContext *>& associationEnds){
+        for(auto associationEnd : associationEnds){
+            std::string role;
+            if(associationEnd->role()){
+                role = std::any_cast<std::string>(visit(associationEnd->role()));
+            }else{
+                role = associationEnd->ID()->getText();
+            }
+            std::shared_ptr<MetaModel::MetaAssociationEnd> metaAssociationEnd = metaAssociation->getAssociationEnd(role);
+            if(!associationEnd->redefines().empty()){
+                addRedefinesToAssociationEnd(metaAssociationEnd, associationEnd->redefines());
+            }
+            if(!associationEnd->subsets().empty()){
+                addSubsetsToAssociationEnds(metaAssociationEnd, associationEnd->subsets());
+            }
+        }
+    }
+
+    void addRedefinesToAssociationEnd(std::shared_ptr<MetaModel::MetaAssociationEnd> metaAssociationEnd, const std::vector<USEParser::RedefinesContext *>& redefinitions){
+        // TODO - Check duplicated names and USE code to find more restrictions.
+        for(auto redefinition : redefinitions){
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEndToRedefine = metaAssociationEnd->getClassSharedPtr()->getAssociationEnd(redefinition->ID()->getText());
+            if(!associationEndToRedefine){
+                throw std::runtime_error("AssociationEnd '" + redefinition->ID()->getText() + "' doesn't exist.");
+            }
+            metaAssociationEnd->addRedefinedEnd(associationEndToRedefine);
+        }
+    }
+    void addSubsetsToAssociationEnds(std::shared_ptr<MetaModel::MetaAssociationEnd> metaAssociationEnd, const std::vector<USEParser::SubsetsContext *>& subsets){
+        // TODO - Check duplicated names and USE code to find more restrictions.
+        for(auto subset : subsets){
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEndSubsetted = metaAssociationEnd->getClassSharedPtr()->getAssociationEnd(subset->ID()->getText());
+            if(!associationEndSubsetted){
+                throw std::runtime_error("AssociationEnd'" + subset->ID()->getText() + "' doesn't exist.");
+            }
+            metaAssociationEnd->addSubsettedEnd(associationEndSubsetted);
+        }
     }
 
     std::any visitAssociationEnd(USEParser::AssociationEndContext *ctx) override{
-        if(!model->getClass(ctx->ID()->getText())){
+        std::shared_ptr<MetaModel::MetaClass> endClass = model->getClass(ctx->ID()->getText());
+        if(endClass == nullptr){
             throw std::runtime_error("Class '"+ ctx->ID()->getText() +"' is not defined.");
         }
+
         std::shared_ptr<MetaModel::MetaMultiplicity> multiplicity = std::any_cast<std::shared_ptr<MetaModel::MetaMultiplicity>>(visit(ctx->multiplicity()));
-        std::string role = "";
-        if(ctx->role()){
-            role = std::any_cast<std::string>(visit(ctx->role()));
-        }
+        std::string role = checkRole(ctx);
+
         // check Ordered and union
         bool isOrdered = !ctx->ORDERED().empty();
         bool isUnion = !ctx->UNION().empty();
 
-        std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd;
+        //TODO Check IsUnique and ¿type?
+        std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(endClass, role, 0, true, isOrdered, false, isUnion, multiplicity);
         return associationEnd;
+    }
+
+    std::string checkRole(USEParser::AssociationEndContext *ctx){
+        if(ctx->role()){
+            return std::any_cast<std::string>(visit(ctx->role()));
+        }else{
+            return ctx->ID()->getText();
+        }
     }
 
     std::any visitRole(USEParser::RoleContext *ctx) override{
         return ctx->ID()->getText();
-    }
-
-    void checkRedefinesAndSubsetsInAssociationEnds(USEParser::AssociationContext * ctx){
     }
 
     std::any visitMultiplicity(USEParser::MultiplicityContext *ctx) override{

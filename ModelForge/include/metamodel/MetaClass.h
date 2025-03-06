@@ -1,6 +1,7 @@
 #ifndef METACLASS_H
 #define METACLASS_H
 
+#include "MetaAssociationEnd.h"
 #include "MetaAttribute.h"
 #include "MetaConstraint.h"
 #include "MetaOperation.h"
@@ -22,6 +23,7 @@ private:
     std::map<std::string, std::shared_ptr<MetaClass>> superClasses;
     std::map<std::string, std::shared_ptr<MetaClass>> childrenClasses;
     std::map<std::string, std::shared_ptr<MetaAttribute>> attributes;
+    std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds;
     std::map<std::string, std::shared_ptr<MetaOperation>> operations;
     std::map<std::string, std::shared_ptr<MetaConstraint>> constraints;
     std::map<std::string, std::shared_ptr<MetaStateMachine>> stateMachines;
@@ -52,6 +54,12 @@ public:
     std::shared_ptr<MetaAttribute> getAttribute(const std::string& key);
     void addAttribute(std::shared_ptr<MetaAttribute> attribute);
     void removeAttribute(const std::string& key);
+
+    const std::map<std::string, std::shared_ptr<MetaAssociationEnd>> getAssociationEnds() const;
+    std::map<std::string, const MetaAssociationEnd *> getAllAssociationEnds() const;
+    std::shared_ptr<MetaAssociationEnd> getAssociationEnd(const std::string& key);
+    void addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd);
+    void removeAssociationEnd(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<MetaOperation>>& getOperations() const;
     std::map<std::string, const MetaOperation*> getAllOperations() const;
