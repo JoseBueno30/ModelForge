@@ -7,6 +7,7 @@
 #include <QCursor>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsScene>
+#include <ui/components/ModelGraphicsView.h>
 
 using std::shared_ptr;
 

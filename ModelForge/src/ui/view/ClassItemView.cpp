@@ -131,6 +131,8 @@ void ClassItemView::deleteAssociationClass(AssociationClassItemView* association
 
 void ClassItemView::mousePressEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ClosedHandCursor);
+    setZValue(ModelGraphicsView::highestZIndex);
+    ModelGraphicsView::highestZIndex++;
     QGraphicsItem::mousePressEvent(event);
 }
 

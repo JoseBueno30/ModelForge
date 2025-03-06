@@ -1,5 +1,7 @@
 #include<ui/components/ModelGraphicsView.h>
 
+int ModelGraphicsView::highestZIndex = 1;
+
 void ModelGraphicsView::setupGraphicsView(){
     setObjectName("modelGraphicsView");
     setDragMode(QGraphicsView::NoDrag);

@@ -48,7 +48,7 @@ QPointF AssociationItemView::getNearestEdgeIntersection(const QRectF &rect, cons
         }
     }
 
-    return last; // Fallback
+    return polygon.boundingRect().center(); // Fallback
 }
 
 void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
