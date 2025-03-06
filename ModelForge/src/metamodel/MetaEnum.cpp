@@ -50,7 +50,7 @@ void MetaEnum::addElement(std::shared_ptr<MetaEnumElement> element){
     }
 
     if (elements.find(element->getName()) != elements.end()) {
-        throw std::runtime_error("Enum: " + name + " already contains element named: " + element->getName());
+        throw std::invalid_argument("Enum: " + name + " already contains element named: " + element->getName());
     }
 
     elements[element->getName()] = std::move(element);
