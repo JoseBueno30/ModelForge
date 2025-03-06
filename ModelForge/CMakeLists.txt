@@ -8,20 +8,13 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets LinguistTools Test)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets LinguistTools Test)
+
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
-
-# find_package(antlr4-runtime REQUIRED)
-
-# set(ANTLR4_RUNTIME "C:/antlr/runtime")
-
-# include_directories(${ANTLR4_RUNTIME}/include)
-
-# include_directories(${ANTLR4_RUNTIME}/include/antlr4-runtime)
-# include_directories(${PROJECT_SOURCE_DIR}/antlr4/generated))
 
 include_directories(${PROJECT_SOURCE_DIR}/antlr4/src)
 include_directories(${PROJECT_SOURCE_DIR}/antlr4/src/atn)
@@ -362,68 +355,73 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.h")
 set(TS_FILES ModelForge_en_150.ts)
 
+add_library(antlr4Lib SHARED
+    ${ANTLR_GENERATED_SOURCES}
+    ${ANTLR4_CPP_RUNTIME}
+    antlr4/CustomUSEVisitor.cpp
+    )
+
+add_library(MetaModelLib SHARED
+
+    include/metamodel/MetaModel.h
+    src/metamodel/MetaModel.cpp
+    include/metamodel/MetaType.h
+    src/metamodel/MetaType.cpp
+    include/metamodel/OCLExpression.h
+    src/metamodel/OCLExpression.cpp
+    include/metamodel/MetaEnum.h
+    src/metamodel/MetaEnum.cpp
+    include/metamodel/MetaClass.h
+    src/metamodel/MetaClass.cpp
+    include/metamodel/MetaAttribute.h
+    src/metamodel/MetaAttribute.cpp
+    include/metamodel/MetaOperation.h
+    src/metamodel/MetaOperation.cpp
+    include/metamodel/MetaVariable.h
+    src/metamodel/MetaVariable.cpp
+    include/metamodel/MetaConstraint.h
+    src/metamodel/MetaConstraint.cpp
+    include/metamodel/MetaStateMachine.h
+    src/metamodel/MetaStateMachine.cpp
+    include/metamodel/MetaAssociation.h
+    src/metamodel/MetaAssociation.cpp
+    include/metamodel/MetaAssociationEnd.h
+    src/metamodel/MetaAssociationEnd.cpp
+    include/metamodel/MetaAssociationClass.h
+    src/metamodel/MetaAssociationClass.cpp
+
+)
 
 
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
-        #mainwindow.h
+        mainwindow.h
         mainwindow.ui
         ${TS_FILES}
-        ${ANTLR_GENERATED_SOURCES}
-        ${ANTLR4_CPP_RUNTIME}
-        ${SOURCES}
-        ${HEADERS}
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ModelForge
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        include/metamodel/OCLExpression.h
-        include/metamodel/MetaAssociation.h
-        include/metamodel/MetaType.h
-        include/metamodel/MetaEnum.h
+
         include/ui/components/ModelGraphicsView.h
         src/ui/components//ModelGraphicsView.cpp
-        include/ui/view/ClassItemView.h
-        include/metamodel/MetaAttribute.h
-        include/metamodel/MetaStateMachine.h
-        include/metamodel/MetaConstraint.h
-        include/metamodel/MetaVariable.h
-        include/metamodel/MetaOperation.h
-        include/metamodel/MetaClass.h
-        include/metamodel/MetaAssociationEnd.h
-        include/metamodel/MetaAssociationClass.h
-        include/metamodel/MetaModel.h
-        include/ui/components/ModelGraphicsView.h
-        src/ui/components/ModelGraphicsView.cpp
-        include/ui/view/ClassItemView.h
-        resources.qrc
-        src/metamodel/MetaType.cpp
-        src/metamodel/MetaAttribute.cpp
-        src/metamodel/MetaVariable.cpp
-        src/metamodel/MetaStateMachine.cpp
-        src/metamodel/MetaConstraint.cpp
-
         include/ui/components/ConsoleHandler.h
         src/ui/components/ConsoleHandler.cpp
-        src/metamodel/MetaOperation.cpp
-        src/metamodel/MetaClass.cpp
-        src/metamodel/MetaEnum.cpp
-        src/metamodel/MetaAssociationEnd.cpp
-        src/metamodel/MetaAssociation.cpp
-        src/metamodel/MetaAssociationClass.cpp
-        src/metamodel/OCLExpression.cpp
-        src/metamodel/MetaModel.cpp
-        include/ui/view/AssociationClassItemView.h
-        include/ui/view/AssociationItemView.h
         include/ui/view/EnumItemView.h
         src/ui/view/EnumItemView.cpp
-        include/ui/view/BoxItemView.h
+        include/ui/view/ClassItemView.h
+        src/ui/view/ClassItemView.cpp
+        include/ui/view/AssociationItemView.h
         src/ui/view/AssociationItemView.cpp
-        antlr4/CustomUSEVisitor.cpp
+        include/ui/view/AssociationClassItemView.h
         src/ui/view/AssociationClassItemView.cpp
+        include/ui/view/BoxItemView.h
+
+        resources.qrc
 
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
@@ -450,34 +448,39 @@ else()
 endif()
 
 
-
-
 target_link_libraries(ModelForge PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(ModelForge PRIVATE MetaModelLib)
+target_link_libraries(ModelForge PRIVATE antlr4Lib)
+
+
+add_subdirectory(tests)
 
 
 add_definitions(-DQT_NO_KEYWORDS)
 
+
+
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ModelForge)
-endif()
-set_target_properties(ModelForge PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
+# if(${QT_VERSION} VERSION_LESS 6.1.0)
+#   set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.ModelForge)
+# endif()
+# set_target_properties(ModelForge PROPERTIES
+#     ${BUNDLE_ID_OPTION}
+#     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+#     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+#     MACOSX_BUNDLE TRUE
+#     WIN32_EXECUTABLE TRUE
+# )
 
-include(GNUInstallDirs)
-install(TARGETS ModelForge
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+# include(GNUInstallDirs)
+# install(TARGETS ModelForge
+#     BUNDLE DESTINATION .
+#     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+# )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(ModelForge)
-endif()
+# if(QT_VERSION_MAJOR EQUAL 6)
+#     qt_finalize_executable(ModelForge)
+# endif()

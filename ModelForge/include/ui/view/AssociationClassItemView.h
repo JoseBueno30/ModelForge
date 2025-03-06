@@ -2,10 +2,10 @@
 #define ASSOCIATIONCLASSITEMVIEW_H
 
 
+#include "metamodel/MetaAssociationClass.h"
 #include <ui/view/AssociationItemView.h>
 #include <ui/view/ClassItemView.h>
 
-#include <metamodel/MetaAssociationClass.h>
 
 class AssociationClassItemView : public BoxItemView{
 public:

@@ -1,6 +1,5 @@
 #include "generated/USEBaseVisitor.h"
 #include "metamodel/MetaModel.h"
-#include <QDebug>
 #include <any>
 
 class CustomUSEVisitor : public USEBaseVisitor{

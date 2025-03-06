@@ -1,6 +1,6 @@
 #include "antlr4/generated/USELexer.h"
 #include "antlr4/generated/USEParser.h"
-#include <mainwindow.h>
+#include "mainwindow.h"
 #include "antlr4/CustomUSEVisitor.cpp"
 
 #include <QApplication>
@@ -23,7 +23,7 @@ void test_grammar(){
 }
 
 std::shared_ptr<MetaModel::MetaModel> test_visitor(){
-    std::string modelTest = "model Test class TestClass attributes name : String end";
+    std::string modelTest = "model Test class MrDick attributes name : String end";
     std::cout<<"Modelo a probar: " << modelTest << std::endl;
 
     antlr4::ANTLRInputStream input(modelTest);

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+
 #include <ui/view/AssociationClassItemView.h>
 #include <ui/view/AssociationItemView.h>
 #include <ui/view/EnumItemView.h>
