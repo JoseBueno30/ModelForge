@@ -27,7 +27,7 @@ void MetaVariableTest::init() {
 }
 
 void MetaVariableTest::metaVariable_getName_returnsCorrectName(){
-    QCOMPARE("TestVariable", metaVariable->getName());
+    QCOMPARE(metaVariable->getName(), "TestVariable");
 }
 
 void MetaVariableTest::metaVariable_setName_updatesName(){
@@ -35,7 +35,7 @@ void MetaVariableTest::metaVariable_setName_updatesName(){
 
     metaVariable->setName(newName);
 
-    QCOMPARE(newName, metaVariable->getName());
+    QCOMPARE(metaVariable->getName(), newName);
 }
 
 void MetaVariableTest::metaVariable_getType_returnsCorrectType(){

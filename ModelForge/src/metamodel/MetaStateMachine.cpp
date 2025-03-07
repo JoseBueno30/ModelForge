@@ -5,7 +5,7 @@ namespace MetaModel{
 
 
 MetaStateMachine::MetaStateMachine(const std::string& name, const std::string& stateMachineDefinition)
-    : stateMachineDefinition(stateMachineDefinition){}
+    : name(name), stateMachineDefinition(stateMachineDefinition){}
 
 
 std::string MetaStateMachine::getName() const{

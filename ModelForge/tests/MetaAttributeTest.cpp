@@ -20,9 +20,9 @@ private slots:
     void metaAttribute_setType_voidType_throwsInvalidArgumentException();
 
     void metaAttribute_getInitExpr_returnsCorrectOCLExpression();
-    void metaAttribute_setInitExpr_notVoidType_updatesInitExpr();
+    void metaAttribute_setInitExpr_updatesInitExpr();
     void metaAttribute_getDeriveExpr_returnsCorrectOCLExpression();
-    void metaAttribute_setDeriveExpr_notVoidType_updatesDeriveExpr();
+    void metaAttribute_setDeriveExpr_updatesDeriveExpr();
 
 };
 
@@ -33,7 +33,7 @@ void MetaAttributeTest::init() {
 }
 
 void MetaAttributeTest::metaAttribute_getName_returnsCorrectName(){
-    QCOMPARE("TestAttribute", metaAttribute->getName());
+    QCOMPARE(metaAttribute->getName(), "TestAttribute");
 }
 
 void MetaAttributeTest::metaAttribute_setName_updatesName(){
@@ -41,7 +41,7 @@ void MetaAttributeTest::metaAttribute_setName_updatesName(){
 
     metaAttribute->setName(newName);
 
-    QCOMPARE(newName, metaAttribute->getName());
+    QCOMPARE(metaAttribute->getName(), newName);
 }
 
 void MetaAttributeTest::metaAttribute_getType_returnsCorrectType(){
@@ -67,29 +67,29 @@ void MetaAttributeTest::metaAttribute_setType_voidType_throwsInvalidArgumentExce
 }
 
 void MetaAttributeTest::metaAttribute_getInitExpr_returnsCorrectOCLExpression(){
-    QCOMPARE(nullptr, metaAttribute->getInitExpr());
+    QCOMPARE(metaAttribute->getInitExpr(), nullptr);
 }
 
-void MetaAttributeTest::metaAttribute_setInitExpr_notVoidType_updatesInitExpr(){
+void MetaAttributeTest::metaAttribute_setInitExpr_updatesInitExpr(){
     auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
 
     metaAttribute->setInitExpr(expression);
 
 
-    QCOMPARE("TestOCLExpression", metaAttribute->getInitExpr()->getExpression());
+    QCOMPARE(metaAttribute->getInitExpr()->getExpression(), "TestOCLExpression");
 }
 
 void MetaAttributeTest::metaAttribute_getDeriveExpr_returnsCorrectOCLExpression(){
-    QCOMPARE(nullptr, metaAttribute->getDeriveExpr());
+    QCOMPARE(metaAttribute->getDeriveExpr(), nullptr);
 }
 
-void MetaAttributeTest::metaAttribute_setDeriveExpr_notVoidType_updatesDeriveExpr(){
+void MetaAttributeTest::metaAttribute_setDeriveExpr_updatesDeriveExpr(){
     auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
 
     metaAttribute->setDeriveExpr(expression);
 
 
-    QCOMPARE("TestOCLExpression", metaAttribute->getDeriveExpr()->getExpression());
+    QCOMPARE(metaAttribute->getDeriveExpr()->getExpression(), "TestOCLExpression");
 }
 
 

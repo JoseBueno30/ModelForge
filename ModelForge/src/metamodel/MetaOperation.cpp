@@ -82,7 +82,7 @@ void MetaOperation::addVariable(const std::shared_ptr<MetaVariable>& variable){
     }
 
     if (variables.find(variable->getName()) != variables.end()) {
-        throw std::runtime_error("Operation: " + name + " already contains variable named: " + variable->getName());
+        throw std::invalid_argument("Operation: " + name + " already contains variable named: " + variable->getName());
     }
 
     variables[variable->getName()] = variable;
@@ -110,7 +110,7 @@ void MetaOperation::addPreCondition(const std::shared_ptr<PrePostClause>& preCon
     }
 
     if (isPrePostConditionDefined(preCondition->getName())) {
-        throw std::runtime_error("Operation: " + name + " already contains Pre/Post condition named: " + preCondition->getName());
+        throw std::invalid_argument("Operation: " + name + " already contains Pre/Post condition named: " + preCondition->getName());
     }
 
     preConditions[preCondition->getName()] = preCondition;
@@ -138,7 +138,7 @@ void MetaOperation::addPostCondition(const std::shared_ptr<PrePostClause>& postC
     }
 
     if (isPrePostConditionDefined(postCondition->getName())) {
-        throw std::runtime_error("Operation: " + name + " already contains Pre/Post condition named: " + postCondition->getName());
+        throw std::invalid_argument("Operation: " + name + " already contains Pre/Post condition named: " + postCondition->getName());
     }
 
     postConditions[postCondition->getName()] = postCondition;

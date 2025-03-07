@@ -13,9 +13,11 @@ private:
 private slots:
     void init();
 
+    //MetaEnumElement Tests
     void metaEnumElement_getName_returnsCorrectName();
     void metaEnumElement_setName_updatesName();
 
+    //MetaEnum Tests
     void metaEnum_getName_returnsCorrectName();
     void metaEnum_setName_updatesName();
 
@@ -37,7 +39,7 @@ void MetaEnumTest::init() {
 }
 
 void MetaEnumTest::metaEnumElement_getName_returnsCorrectName(){
-    QCOMPARE("TestEnumElement", metaEnumElement->getName());
+    QCOMPARE(metaEnumElement->getName(), "TestEnumElement");
 }
 
 void MetaEnumTest::metaEnumElement_setName_updatesName(){
@@ -45,11 +47,11 @@ void MetaEnumTest::metaEnumElement_setName_updatesName(){
 
     metaEnumElement->setName(newName);
 
-    QCOMPARE(newName, metaEnumElement->getName());
+    QCOMPARE(metaEnumElement->getName(), newName);
 }
 
 void MetaEnumTest::metaEnum_getName_returnsCorrectName(){
-    QCOMPARE("TestEnum", metaEnum->getName());
+    QCOMPARE(metaEnum->getName(), "TestEnum");
 }
 
 
@@ -58,7 +60,7 @@ void MetaEnumTest::metaEnum_setName_updatesName(){
 
     metaEnum->setName(newName);
 
-    QCOMPARE(newName, metaEnum->getName());
+    QCOMPARE(metaEnum->getName(), newName);
 }
 
 void MetaEnumTest::metaEnum_getElements_returnsCorrectMap(){
@@ -69,15 +71,17 @@ void MetaEnumTest::metaEnum_getElements_returnsCorrectMap(){
 }
 
 void MetaEnumTest::metaEnum_getElement_returnsCorrectEnumElement(){
-    QCOMPARE("TestEnumElement", metaEnum->getElement("TestEnumElement")->getName());
+    QCOMPARE(metaEnum->getElement("TestEnumElement")->getName(), "TestEnumElement");
 }
 
 void MetaEnumTest::metaEnum_addElement_validEnumElement_updatesEnumElementsMap(){
+    int originalEnumElementsSize = metaEnum->getElements().size();
     std::shared_ptr<MetaModel::MetaEnumElement> newEnumElement = std::make_shared<MetaModel::MetaEnumElement>("NewEnumElement");
 
     metaEnum->addElement(newEnumElement);
 
-    QCOMPARE("NewEnumElement", metaEnum->getElement("NewEnumElement")->getName());
+    QCOMPARE(metaEnum->getElement("NewEnumElement")->getName(), "NewEnumElement");
+    QCOMPARE(metaEnum->getElements().size(), originalEnumElementsSize + 1);
 }
 
 void MetaEnumTest::metaEnum_addElement_nullEnumElement_throwsInvalidArgumentException(){
@@ -102,7 +106,7 @@ void MetaEnumTest::metaEnum_removeElement_existingKey_updatesEnumElementsMap(){
 
     int newEnumElementsSize = metaEnum->getElements().size();
 
-    QCOMPARE(originalEnumElementsSize - 1, newEnumElementsSize);
+    QCOMPARE(newEnumElementsSize, originalEnumElementsSize - 1);
 }
 
 void MetaEnumTest::metaEnum_removeElement_nonExistingKey_doesNothing(){
@@ -115,23 +119,23 @@ void MetaEnumTest::metaEnum_removeElement_nonExistingKey_doesNothing(){
 
     int newEnumElementsSize = metaEnum->getElements().size();
 
-    QCOMPARE(originalEnumElementsSize, newEnumElementsSize);
+    QCOMPARE(newEnumElementsSize, originalEnumElementsSize);
 }
 
 void MetaEnumTest::metaEnum_equals_sameMetaEnum_returnsTrue(){
-    QVERIFY(metaEnum->equals(*metaEnum));
+    QCOMPARE(metaEnum->equals(*metaEnum), true);
 }
 
 void MetaEnumTest::metaEnum_equals_differentMetaEnum_returnsFalse(){
     MetaModel::MetaEnum* metaEnum2 = new MetaModel::MetaEnum("TestEnum2", metaEnumElement);
 
-    QCOMPARE(false, metaEnum->equals(*metaEnum2));
+    QCOMPARE(metaEnum->equals(*metaEnum2), false);
 }
 
 void MetaEnumTest::metaEnum_equals_differentMetaType_returnsFalse(){
     std::shared_ptr<MetaModel::MetaType> metaType = MetaModel::String::instance();
 
-    QCOMPARE(false, metaEnum->equals(*metaType));
+    QCOMPARE(metaEnum->equals(*metaType), false);
 }
 
 
