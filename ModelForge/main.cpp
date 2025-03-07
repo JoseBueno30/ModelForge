@@ -23,7 +23,7 @@ void test_grammar(){
 }
 
 std::shared_ptr<MetaModel::MetaModel> test_visitor(){
-    std::string modelTest = "model Test class MrDick attributes name : String end";
+    std::string modelTest = "model Test enum Season {Winter, Spring, Summer, Fall} class Person attributes name : String age : Integer end";
     std::cout<<"Modelo a probar: " << modelTest << std::endl;
 
     antlr4::ANTLRInputStream input(modelTest);

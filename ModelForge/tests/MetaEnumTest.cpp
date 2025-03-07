@@ -13,11 +13,11 @@ private:
 private slots:
     void init();
 
-    void metaEnumElement_GetName_returnsCorrectName();
-    void metaEnumElement_SetName_updatesName();
+    void metaEnumElement_getName_returnsCorrectName();
+    void metaEnumElement_setName_updatesName();
 
-    void metaEnum_GetName_returnsCorrectName();
-    void metaEnum_SetName_updatesName();
+    void metaEnum_getName_returnsCorrectName();
+    void metaEnum_setName_updatesName();
 
     void metaEnum_getElements_returnsCorrectMap();
     void metaEnum_getElement_returnsCorrectEnumElement();
@@ -36,13 +36,11 @@ void MetaEnumTest::init() {
     metaEnum = new MetaModel::MetaEnum("TestEnum", metaEnumElement);
 }
 
-void MetaEnumTest::metaEnumElement_GetName_returnsCorrectName()
-{
+void MetaEnumTest::metaEnumElement_getName_returnsCorrectName(){
     QCOMPARE("TestEnumElement", metaEnumElement->getName());
 }
 
-void MetaEnumTest::metaEnumElement_SetName_updatesName()
-{
+void MetaEnumTest::metaEnumElement_setName_updatesName(){
     std::string newName = "NewName";
 
     metaEnumElement->setName(newName);
@@ -50,14 +48,12 @@ void MetaEnumTest::metaEnumElement_SetName_updatesName()
     QCOMPARE(newName, metaEnumElement->getName());
 }
 
-void MetaEnumTest::metaEnum_GetName_returnsCorrectName()
-{
+void MetaEnumTest::metaEnum_getName_returnsCorrectName(){
     QCOMPARE("TestEnum", metaEnum->getName());
 }
 
 
-void MetaEnumTest::metaEnum_SetName_updatesName()
-{
+void MetaEnumTest::metaEnum_setName_updatesName(){
     std::string newName = "NewName";
 
     metaEnum->setName(newName);

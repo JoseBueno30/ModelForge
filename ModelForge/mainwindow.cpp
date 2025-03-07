@@ -96,9 +96,21 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
 
     QGraphicsScene *scene = modelGraphicsView->scene();
 
+    for(const auto& modelEnum : model->getEnums()){
+        scene->addItem(new EnumItemView(modelEnum.second));
+    }
+
     for(const auto& modelClass : model->getClasses()){
         scene->addItem(new ClassItemView(modelClass.second));
     }
+
+    // for(const auto& modelAssoc : model->getAssociations()){
+    //     scene->addItem(new AssociationItemView(modelAssoc.second));
+    // }
+
+    // for(const auto& modelAssocClass : model->getAssociationClasses()){
+    //     scene->addItem(new AssociationClassItemView(modelAssocClass.second));
+    // }
 }
 
 
