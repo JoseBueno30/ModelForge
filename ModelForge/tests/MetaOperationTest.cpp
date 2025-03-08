@@ -59,6 +59,16 @@ private slots:
     void metaOperation_addPostCondition_repeatedPostConditionName_throwsInvalidArgumentException();
     void metaOperation_removePostCondition_existingKey_updatesPostConditionsMap();
     void metaOperation_removePostCondition_nonExistingKey_doesNothing();
+
+    void metaOperation_isPrePostConditionDefined_definedPreCondition_returnsTrue();
+    void metaOperation_isPrePostConditionDefined_definedPostCondition_returnsTrue();
+    void metaOperation_isPrePostConditionDefined_undefinedPrePostCondition_returnsFalse();
+
+    void metaOperation_isValidOverrideOf_validOverrideOperation_returnsTrue();
+    void metaOperation_isValidOverrideOf_diffentNameOperation_returnsFalse();
+    void metaOperation_isValidOverrideOf_diffentReturnTypeOperation_returnsFalse();
+    void metaOperation_isValidOverrideOf_diffentVariablesMapSizeOperation_returnsFalse();
+    void metaOperation_isValidOverrideOf_diffentVariableTypeOperation_returnsFalse();
 };
 
 void MetaOperationTest::init() {
@@ -420,6 +430,67 @@ void MetaOperationTest::metaOperation_removePostCondition_nonExistingKey_doesNot
 
     QCOMPARE(newPostConditionsSize, originalPostConditionsSize);
 }
+
+void MetaOperationTest::metaOperation_isPrePostConditionDefined_definedPreCondition_returnsTrue(){
+    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
+    metaOperation->addPostCondition(preCondition);
+
+    QCOMPARE(metaOperation->isPrePostConditionDefined("TestPreCondition"), true);
+}
+
+void MetaOperationTest::metaOperation_isPrePostConditionDefined_definedPostCondition_returnsTrue(){
+    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestPostCondition", expression, false, true);
+    metaOperation->addPostCondition(postCondition);
+
+    QCOMPARE(metaOperation->isPrePostConditionDefined("TestPostCondition"), true);
+}
+
+void MetaOperationTest::metaOperation_isPrePostConditionDefined_undefinedPrePostCondition_returnsFalse(){
+    QCOMPARE(metaOperation->isPrePostConditionDefined("TestPostCondition"), false);
+}
+
+
+void MetaOperationTest::metaOperation_isValidOverrideOf_validOverrideOperation_returnsTrue(){
+    QCOMPARE(metaOperation->isValidOverrideOf(*metaOperation), true);
+}
+
+void MetaOperationTest::metaOperation_isValidOverrideOf_diffentNameOperation_returnsFalse(){
+    auto metaOperation2 = new MetaModel::MetaOperation("TestOperation2", "operationDefinition", metaType);
+
+    QCOMPARE(metaOperation->isValidOverrideOf(*metaOperation2), false);
+}
+
+void MetaOperationTest::metaOperation_isValidOverrideOf_diffentReturnTypeOperation_returnsFalse(){
+    auto metaType2 = MetaModel::Integer::instance();
+    auto metaOperation2 = new MetaModel::MetaOperation(metaOperation->getName(), "operationDefinition", metaType2);
+
+    QCOMPARE(metaOperation->isValidOverrideOf(*metaOperation2), false);
+}
+
+void MetaOperationTest::metaOperation_isValidOverrideOf_diffentVariablesMapSizeOperation_returnsFalse(){
+    auto metaOperation2 = new MetaModel::MetaOperation(metaOperation->getName(), "operationDefinition", metaType);
+
+    std::shared_ptr<MetaModel::MetaVariable> newVariable = std::make_shared<MetaModel::MetaVariable>("NewVariable", MetaModel::String::instance());
+
+    metaOperation->addVariable(newVariable);
+
+    QCOMPARE(metaOperation->isValidOverrideOf(*metaOperation2), false);
+}
+
+void MetaOperationTest::metaOperation_isValidOverrideOf_diffentVariableTypeOperation_returnsFalse(){
+    auto metaOperation2 = new MetaModel::MetaOperation(metaOperation->getName(), "operationDefinition", metaType);
+
+    std::shared_ptr<MetaModel::MetaVariable> newVariable1 = std::make_shared<MetaModel::MetaVariable>("NewVariable1", MetaModel::String::instance());
+    std::shared_ptr<MetaModel::MetaVariable> newVariable2 = std::make_shared<MetaModel::MetaVariable>("NewVariable2", MetaModel::Integer::instance());
+
+    metaOperation->addVariable(newVariable1);
+    metaOperation2->addVariable(newVariable2);
+
+    QCOMPARE(metaOperation->isValidOverrideOf(*metaOperation2), false);
+}
+
 
 QTEST_MAIN(MetaOperationTest)
 #include "MetaOperationTest.moc"
