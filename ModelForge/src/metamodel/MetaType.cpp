@@ -168,7 +168,7 @@ void TupleType::addElement(const std::shared_ptr<TuplePart>& newElement){
     }
 
     if (elements.find(newElement->getName()) != elements.end()) {
-        throw std::runtime_error("TuplePart already declared: " + newElement->getName());
+        throw std::invalid_argument("TuplePart already declared: " + newElement->getName());
     }
 
     elements[newElement->getName()] = newElement;
