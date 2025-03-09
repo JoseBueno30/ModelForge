@@ -5,7 +5,8 @@
 namespace MetaModel{
 
 MetaMultiplicityRange::MetaMultiplicityRange(int lowerBound, int upperBound)
-    : lowerBound(lowerBound), upperBound(upperBound){}
+    : lowerBound(lowerBound), upperBound(upperBound){
+}
 
 int MetaMultiplicityRange::getLowerBound() const{
     return lowerBound;
@@ -25,7 +26,7 @@ void MetaMultiplicityRange::setUpperBound(int upperBound){
 
 
 MetaMultiplicity::MetaMultiplicity(int lowerBound, int upperBound){
-    ranges.push_back(std::make_unique<MetaMultiplicityRange>(lowerBound, upperBound));
+    this->addRange(lowerBound, upperBound);
 }
 
 const std::vector<std::shared_ptr<MetaMultiplicityRange>>& MetaMultiplicity::getRanges() const{
@@ -33,6 +34,13 @@ const std::vector<std::shared_ptr<MetaMultiplicityRange>>& MetaMultiplicity::get
 }
 
 void MetaMultiplicity::addRange(int lowerBound, int upperBound){
+    if(lowerBound < 0 && lowerBound != -1 || upperBound < 0 && upperBound != -1){
+        throw std::invalid_argument("Bounds can't be lower than 0.");
+    }
+    if(lowerBound > upperBound && upperBound != -1){
+        throw std::invalid_argument("LowerBound can't be greater than upperBound. " + std::to_string(lowerBound) + " > " + std::to_string(upperBound));
+    }
+
     ranges.push_back(std::make_unique<MetaMultiplicityRange>(lowerBound, upperBound));
 }
 
@@ -171,6 +179,15 @@ const std::map<std::string, std::shared_ptr<MetaVariable>>& MetaAssociationEnd::
     return qualifiers;
 }
 
+const MetaAssociationEnd* MetaAssociationEnd::getSubsettedEnd(const std::string& key) const{
+    auto iterator = subsettedEnds.find(key);
+    if(iterator != subsettedEnds.end()){
+        return (iterator->second).get();
+    }
+    return nullptr;
+}
+
+
 void MetaAssociationEnd::addQualifier(const std::shared_ptr<MetaVariable>& qualifier){
     if (!qualifier) {
         throw std::invalid_argument("Null qualifier");
@@ -185,6 +202,14 @@ void MetaAssociationEnd::addQualifier(const std::shared_ptr<MetaVariable>& quali
 
 void MetaAssociationEnd::removeQualifier(const std::string& key){
     qualifiers.erase(key);
+}
+
+const MetaVariable* MetaAssociationEnd::getQualifier(const std::string& key) const{
+    auto iterator = qualifiers.find(key);
+    if(iterator != qualifiers.end()){
+        return (iterator->second).get();
+    }
+    return nullptr;
 }
 
 const OCLExpr* MetaAssociationEnd::getDeriveExpr() const{
