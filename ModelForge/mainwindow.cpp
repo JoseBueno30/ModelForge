@@ -108,9 +108,13 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
         scene->addItem(item);
     }
 
-    // for(const auto& modelAssoc : model->getAssociations()){
-    //     scene->addItem(new AssociationItemView(modelAssoc.second));
-    // }
+    for(const auto& modelAssoc : model->getAssociations()){
+        ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(0)));
+        ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(1)));
+        AssociationItemView* item = new AssociationItemView(modelAssoc.second, class1, class2);
+        this->addModelItemView(modelAssoc.second->getName(), item);
+        scene->addItem(item);
+    }
 
     // for(const auto& modelAssocClass : model->getAssociationClasses()){
     //     scene->addItem(new AssociationClassItemView(modelAssocClass.second));
