@@ -97,11 +97,15 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
     QGraphicsScene *scene = modelGraphicsView->scene();
 
     for(const auto& modelEnum : model->getEnums()){
-        scene->addItem(new EnumItemView(modelEnum.second));
+        EnumItemView * item = new EnumItemView(modelEnum.second);
+        this->addModelItemView(modelEnum.second->getName(), item);
+        scene->addItem(item);
     }
 
     for(const auto& modelClass : model->getClasses()){
-        scene->addItem(new ClassItemView(modelClass.second));
+        ClassItemView* item = new ClassItemView(modelClass.second);
+        this->addModelItemView(modelClass.second->getName(), item);
+        scene->addItem(item);
     }
 
     // for(const auto& modelAssoc : model->getAssociations()){
@@ -113,7 +117,21 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
     // }
 }
 
+QGraphicsItem* MainWindow::getModelItemView(const std::string& key){
+    auto iterator = this->modelItemViewElementsMap.find(key);
+    if(iterator != this->modelItemViewElementsMap.end()){
+        return (iterator->second);
+    }
+    return nullptr;
+}
 
+void MainWindow::addModelItemView(const std::string& key, QGraphicsItem *item){
+    this->modelItemViewElementsMap[key] = item;
+}
+
+void MainWindow::removeModelItemView(const std::string& key){
+    this->modelItemViewElementsMap.erase(key);
+}
 
 void MainWindow::on_actionSwitch_mode_triggered()
 {

@@ -29,11 +29,16 @@ public Q_SLOTS:
     std::shared_ptr<MetaModel::MetaModel> getModel();
     void setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> model);
 
+    QGraphicsItem* getModelItemView(const std::string& key);
+    void addModelItemView(const std::string& key, QGraphicsItem *item);
+    void removeModelItemView(const std::string& key);
+
 private:
     Ui::MainWindow *ui;
     std::shared_ptr<MetaModel::MetaModel> model;
     QString theme;
     ConsoleHandler* consoleHandler;
+    std::map<std::string, QGraphicsItem*> modelItemViewElementsMap;
 
 };
 #endif // MAINWINDOW_H
