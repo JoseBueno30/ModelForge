@@ -32,6 +32,8 @@ public:
     std::shared_ptr<MetaAssociationEnd> getAssociationEnd(const std::string& key);
     void addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd);
     void removeAssociationEnd(const std::string& key);
+
+    std::vector<std::string> getAssociationEndsClassesNames();
 };
 }
 

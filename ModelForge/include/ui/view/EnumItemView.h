@@ -5,6 +5,10 @@
 #include <QGraphicsItem>
 #include <metamodel/MetaEnum.h>
 #include <QPainter>
+#include <QCursor>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsScene>
+#include <ui/components/ModelGraphicsView.h>
 
 using std::shared_ptr;
 
@@ -17,6 +21,10 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     ~EnumItemView();
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent* event) override;
 
 private:
     shared_ptr<MetaModel::MetaEnum> model;

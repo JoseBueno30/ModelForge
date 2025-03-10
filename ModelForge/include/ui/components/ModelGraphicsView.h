@@ -5,7 +5,7 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QPainter>
-
+#include <QGraphicsItem>
 #include <metamodel/MetaModel.h>
 
 class ModelGraphicsView : public QGraphicsView{
@@ -16,6 +16,7 @@ public:
 
     void setModel(MetaModel::MetaModel *model);
     static int highestZIndex;
+
 //explicit ModelGraphicsView(QWidget *parent=nullptr, QGraphicsView *gview=nullptr);
 
 protected:
@@ -29,7 +30,6 @@ private:
     const double maxScale;
     double currentScale;
     MetaModel::MetaModel *model;
-
 
     void setupGraphicsView();
 };

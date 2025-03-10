@@ -97,23 +97,45 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
     QGraphicsScene *scene = modelGraphicsView->scene();
 
     for(const auto& modelEnum : model->getEnums()){
-        scene->addItem(new EnumItemView(modelEnum.second));
+        EnumItemView * item = new EnumItemView(modelEnum.second);
+        this->addModelItemView(modelEnum.second->getName(), item);
+        scene->addItem(item);
     }
 
     for(const auto& modelClass : model->getClasses()){
-        scene->addItem(new ClassItemView(modelClass.second));
+        ClassItemView* item = new ClassItemView(modelClass.second);
+        this->addModelItemView(modelClass.second->getName(), item);
+        scene->addItem(item);
     }
 
-    // for(const auto& modelAssoc : model->getAssociations()){
-    //     scene->addItem(new AssociationItemView(modelAssoc.second));
-    // }
+    for(const auto& modelAssoc : model->getAssociations()){
+        ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(0)));
+        ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(1)));
+        AssociationItemView* item = new AssociationItemView(modelAssoc.second, class1, class2);
+        this->addModelItemView(modelAssoc.second->getName(), item);
+        scene->addItem(item);
+    }
 
     // for(const auto& modelAssocClass : model->getAssociationClasses()){
     //     scene->addItem(new AssociationClassItemView(modelAssocClass.second));
     // }
 }
 
+QGraphicsItem* MainWindow::getModelItemView(const std::string& key){
+    auto iterator = this->modelItemViewElementsMap.find(key);
+    if(iterator != this->modelItemViewElementsMap.end()){
+        return (iterator->second);
+    }
+    return nullptr;
+}
 
+void MainWindow::addModelItemView(const std::string& key, QGraphicsItem *item){
+    this->modelItemViewElementsMap[key] = item;
+}
+
+void MainWindow::removeModelItemView(const std::string& key){
+    this->modelItemViewElementsMap.erase(key);
+}
 
 void MainWindow::on_actionSwitch_mode_triggered()
 {

@@ -1,6 +1,7 @@
 #include <metamodel/MetaAssociation.h>
 
 #include <stdexcept>
+#include <metamodel/MetaClass.h>
 
 namespace MetaModel{
 
@@ -53,6 +54,14 @@ void MetaAssociation::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> asso
 }
 void MetaAssociation::removeAssociationEnd(const std::string& key){
     associationEnds.erase(key);
+}
+
+std::vector<std::string> MetaAssociation::getAssociationEndsClassesNames(){
+    std::vector<std::string> names;
+    for(auto& pair : this->associationEnds){
+        names.push_back(pair.second->getClass().getName());
+    }
+    return names;
 }
 
 }

@@ -21,12 +21,16 @@ EnumItemView::EnumItemView(shared_ptr<MetaModel::MetaEnum> model) : model(model)
     this->setPos(0,0);
     this->setDimensions(150, 150);
     calculateMinimumSize();
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 EnumItemView::EnumItemView(shared_ptr<MetaModel::MetaEnum> model, int x, int y, int width, int height) : model(model){
     this->setPos(x,y);
     this->setDimensions(width, height);
     calculateMinimumSize();
+    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 QRectF EnumItemView::enumNameRect(){
@@ -43,7 +47,7 @@ void EnumItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     painter->setFont(QFont("Arial", 13, QFont::Bold));
     painter->drawText(enumNameRect(), Qt::AlignCenter, QString::fromStdString(this->model->getName()));
 
-    painter->drawLine(QLine(0,this->pos().y() + enumNameRect().height(), this->getDimensions().x(), enumNameRect().height()));
+    painter->drawLine(QLine(0,enumNameRect().height(), this->getDimensions().x(), enumNameRect().height()));
     int yOffset = enumNameRect().height() + ATTS_PADDING;
 
     painter->setFont(QFont("Arial", 10, QFont::StyleNormal));
@@ -52,6 +56,22 @@ void EnumItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.first));
         yOffset += ATTS_HEIGHT;
     }
+}
+
+void EnumItemView::mousePressEvent(QGraphicsSceneMouseEvent* event){
+    setCursor(Qt::ClosedHandCursor);
+    setZValue(ModelGraphicsView::highestZIndex);
+    ModelGraphicsView::highestZIndex++;
+    QGraphicsItem::mousePressEvent(event);
+}
+
+void EnumItemView::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
+    QGraphicsItem::mouseMoveEvent(event);
+}
+
+void EnumItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
+    setCursor(Qt::ArrowCursor);
+    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 EnumItemView::~EnumItemView(){}
