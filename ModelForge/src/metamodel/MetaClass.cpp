@@ -39,28 +39,30 @@ void MetaClass::addSuperClass(const std::shared_ptr<MetaClass> metaClass){
     }
 
     if (superClasses.find(metaClass->getName()) != superClasses.end()) {
-        throw std::runtime_error("Generalization already declared: " + metaClass->getName());
+        throw std::invalid_argument("Generalization already declared: " + metaClass->getName());
     }
 
     if(this->equals(*metaClass)){
-        throw std::runtime_error("Class: " + metaClass->getName() + " cannot be a SuperClass of itself");
+        throw std::invalid_argument("Class: " + metaClass->getName() + " cannot be a SuperClass of itself");
     }
 
     if(this->hasInheritanceCycle(*metaClass)){
-        throw std::runtime_error("Detected cycle in generalization hierarchy. Class: " + metaClass->getName() + " is already a child of Class: " + this->getName());
+        throw std::invalid_argument("Detected cycle in generalization hierarchy. Class: " + metaClass->getName() + " is already a child of Class: " + this->getName());
     }
+
 
     for(const auto& pair: superClasses){
         auto otherSuperClass = pair.second;
+
 
         for(const auto& otherSuperClassAttributePair: otherSuperClass->getAllAttributes()){
             auto otherSuperClassAttribute = otherSuperClass->getAttribute(otherSuperClassAttributePair.first);
 
             for(const auto& superClassAttributePair: metaClass->getAllAttributes()){
-                auto superClassAttribute = otherSuperClass->getAttribute(superClassAttributePair.first);
+                auto superClassAttribute = metaClass->getAttribute(superClassAttributePair.first);
 
                 if(superClassAttribute->getName()==otherSuperClassAttribute->getName() && !superClassAttribute->getType().equals(otherSuperClassAttribute->getType())){
-                    throw std::runtime_error("Inheritance conflict: attribute" + superClassAttribute->getName() + " occurs with different type in the bases classes of " + this->name);
+                    throw std::invalid_argument("Inheritance conflict: attribute" + superClassAttribute->getName() + " occurs with different type in the bases classes of " + this->name);
                 }
             }
         }
@@ -69,12 +71,12 @@ void MetaClass::addSuperClass(const std::shared_ptr<MetaClass> metaClass){
             auto otherSuperClassOperation = otherSuperClass->getOperation(otherSuperClassOperationPair.first);
 
             for(const auto& superClassOperationPair: metaClass->getAllOperations()){
-                auto superClassOperation = otherSuperClass->getOperation(superClassOperationPair.first);
+                auto superClassOperation = metaClass->getOperation(superClassOperationPair.first);
 
                 if(superClassOperation->getName()==otherSuperClassOperation->getName() &&
                     !superClassOperation->getReturnType().equals(otherSuperClassOperation->getReturnType()) &&
                     !(metaClass->isSubClassOf(*otherSuperClass) || otherSuperClass->isSubClassOf(*metaClass))){
-                    throw std::runtime_error("Inheritance conflict: operation" + superClassOperation->getName() + " occurs with different signatures in the bases classes of " + this->name);
+                    throw std::invalid_argument("Inheritance conflict: operation" + superClassOperation->getName() + " occurs with different signatures in the bases classes of " + this->name);
                 }
             }
         }
@@ -104,7 +106,7 @@ void MetaClass::addChildrenClass(const std::shared_ptr<MetaClass> metaClass){
     }
 
     if (childrenClasses.find(metaClass->getName()) != childrenClasses.end()) {//More generalization restrictions needed
-        throw std::runtime_error("Generalization already declared: " + metaClass->getName());
+        throw std::invalid_argument("Generalization already declared: " + metaClass->getName());
     }
 
     childrenClasses[metaClass->getName()] = metaClass;
@@ -152,12 +154,12 @@ void MetaClass::addAttribute(std::shared_ptr<MetaAttribute> attribute){
     }
 
     if (attributes.find(attribute->getName()) != attributes.end()) {
-        throw std::runtime_error("Class '" + name + "' already contains attribute named: '" + attribute->getName() + "'.");
+        throw std::invalid_argument("Class '" + name + "' already contains attribute named: '" + attribute->getName() + "'.");
     }
 
     auto allAttributes = this->getAllAttributes();
     if (allAttributes.find(attribute->getName()) != allAttributes.end()){
-        throw std::runtime_error("Attribute '" + attribute->getName() + "' already defined in SuperClass.");
+        throw std::invalid_argument("Attribute '" + attribute->getName() + "' already defined in SuperClass.");
     }
 
     attributes[attribute->getName()] = std::move(attribute);
@@ -170,11 +172,12 @@ void MetaClass::removeAttribute(const std::string& key){
 const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>  MetaClass::getAssociationEnds() const{
     return this->associationEnds;
 }
+
 std::map<std::string, const MetaAssociationEnd *>  MetaClass::getAllAssociationEnds() const{
-    std::map<std::string, const MetaAssociationEnd*> allAttributes;
+    std::map<std::string, const MetaAssociationEnd*> allAssociationEnds;
 
     for (const auto& associationEndPair : associationEnds) {
-        allAttributes[associationEndPair.first] = associationEndPair.second.get();
+        allAssociationEnds[associationEndPair.first] = associationEndPair.second.get();
     }
 
     for (const auto& superClassPair : superClasses) {
@@ -182,13 +185,13 @@ std::map<std::string, const MetaAssociationEnd *>  MetaClass::getAllAssociationE
         std::map<std::string, const MetaAssociationEnd*> superClassAssociationEnds = superClassPair.second->getAllAssociationEnds();
 
         for (const auto& superClassAssociationEnd: superClassAssociationEnds) {
-            if (allAttributes.find(superClassAssociationEnd.first) == allAttributes.end()) {
-                allAttributes[superClassAssociationEnd.first] = superClassAssociationEnd.second;
+            if (allAssociationEnds.find(superClassAssociationEnd.first) == allAssociationEnds.end()) {
+                allAssociationEnds[superClassAssociationEnd.first] = superClassAssociationEnd.second;
             }
         }
     }
 
-    return allAttributes;
+    return allAssociationEnds;
 }
 std::shared_ptr<MetaAssociationEnd>  MetaClass::getAssociationEnd(const std::string& key){
     auto iterator = associationEnds.find(key);
@@ -203,12 +206,12 @@ void  MetaClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associati
     }
 
     if (associationEnds.find(associationEnd->getRole()) != associationEnds.end()) {
-        throw std::runtime_error("Class '" + name + "' already contains associationEnd roled: '" + associationEnd->getRole() + "'.");
+        throw std::invalid_argument("Class '" + name + "' already contains associationEnd roled: '" + associationEnd->getRole() + "'.");
     }
 
     auto allAssociationEnds = this->getAllAssociationEnds();
     if (allAssociationEnds.find(associationEnd->getRole()) != allAssociationEnds.end()){
-        throw std::runtime_error("AssociationEnd '" + associationEnd->getRole() + "' already defined in SuperClass.");
+        throw std::invalid_argument("AssociationEnd '" + associationEnd->getRole() + "' already defined in SuperClass.");
     }
 
     associationEnds[associationEnd->getRole()] = associationEnd;
@@ -257,14 +260,14 @@ void MetaClass::addOperation(std::shared_ptr<MetaOperation> operation){
     }
 
     if (operations.find(operation->getName()) != operations.end()) {
-        throw std::runtime_error("Class '" + name + "' already contains operation named: '" + operation->getName() + "'.");
+        throw std::invalid_argument("Class '" + name + "' already contains operation named: '" + operation->getName() + "'.");
     }
 
     auto allOperations = this->getAllOperations();
     auto superOperation = allOperations.find(operation->getName());
     if (superOperation != allOperations.end()){
         if(!operation->isValidOverrideOf(*(superOperation->second))){
-            throw std::runtime_error("Redefinition of operation '" + operation->getName() + "' requires same number and type of arguments.");
+            throw std::invalid_argument("Redefinition of operation '" + operation->getName() + "' requires same number and type of arguments.");
         }
     }
 
@@ -293,7 +296,7 @@ void MetaClass::addConstraint(std::shared_ptr<MetaConstraint> constraint){
     }
 
     if (constraints.find(constraint->getName()) != constraints.end()) {
-        throw std::runtime_error("Constraint already declared: " + constraint->getName());
+        throw std::invalid_argument("Constraint already declared: " + constraint->getName());
     }
 
     constraints[constraint->getName()] = std::move(constraint);
@@ -321,7 +324,7 @@ void MetaClass::addStateMachine(std::shared_ptr<MetaStateMachine> stateMachine){
     }
 
     if (stateMachines.find(stateMachine->getName()) != stateMachines.end()) {//More generalization restrictions needed
-        throw std::runtime_error("StateMachine already declared: " + stateMachine->getName());
+        throw std::invalid_argument("StateMachine already declared: " + stateMachine->getName());
     }
 
     stateMachines[stateMachine->getName()] = std::move(stateMachine);
