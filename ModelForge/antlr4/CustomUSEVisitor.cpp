@@ -597,7 +597,7 @@ public:
     std::any visitSimpleAssociation(USEParser::SimpleAssociationContext *ctx) override{
         std::shared_ptr<MetaModel::MetaAssociation> association = model->getAssociation(ctx->ID()->getText());
         if(association == nullptr){
-            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), 0);
+            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), MetaModel::MetaAssociation::ASSOCIATION);
         }else{
             addSubsetsAndRedefines(association ,ctx->associationEnd());
         }
@@ -607,7 +607,7 @@ public:
     std::any visitAggregation(USEParser::AggregationContext *ctx) override{
         std::shared_ptr<MetaModel::MetaAssociation> aggregation = model->getAssociation(ctx->ID()->getText());
         if(aggregation == nullptr){
-            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), 1);
+            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), MetaModel::MetaAssociation::AGGREGATION);
         }else{
             addSubsetsAndRedefines(aggregation ,ctx->associationEnd());
         }
@@ -617,7 +617,7 @@ public:
     std::any visitComposition(USEParser::CompositionContext *ctx) override{
         std::shared_ptr<MetaModel::MetaAssociation> composition = model->getAssociation(ctx->ID()->getText());
         if(composition == nullptr){
-            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), 2);
+            addAssociationToModel(ctx->ID()->getText(), ctx->associationEnd(), MetaModel::MetaAssociation::COMPOSITION);
         }else{
             addSubsetsAndRedefines(composition ,ctx->associationEnd());
         }
