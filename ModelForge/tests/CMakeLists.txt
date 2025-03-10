@@ -17,5 +17,5 @@ function(SETUP_TESTS)
 endfunction()
 
 SETUP_TESTS(
-   MetaEnum MetaAttribute MetaVariable MetaStateMachine MetaOperation MetaType MetaAssociation MetaAssociationClass MetaAssociationEnd MetaModel
+   MetaEnum MetaAttribute MetaVariable MetaStateMachine MetaOperation MetaType MetaClass MetaAssociation MetaAssociationClass MetaAssociationEnd MetaModel
 )
