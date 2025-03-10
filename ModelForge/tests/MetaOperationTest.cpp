@@ -32,8 +32,8 @@ private slots:
     void metaOperation_setReturnType_updatesReturnType();
 
     void metaOperation_getVariables_returnsCorrectMap();
-    void metaOperation_getVariable_ExistingVariable_returnsCorrectVariable();
-    void metaOperation_getVariable_NonExistingVariable_returnsNullptr();
+    void metaOperation_getVariable_existingVariable_returnsCorrectVariable();
+    void metaOperation_getVariable_nonExistingVariable_returnsNullptr();
     void metaOperation_addVariable_validVariable_updatesVariablesMap();
     void metaOperation_addVariable_nullVariable_throwsInvalidArgumentException();
     void metaOperation_addVariable_repeatedVariable_throwsInvalidArgumentException();
@@ -41,8 +41,8 @@ private slots:
     void metaOperation_removeVariable_nonExistingKey_doesNothing();
 
     void metaOperation_getPreConditions_returnsCorrectMap();
-    void metaOperation_getPreCondition_ExistingPreCondition_returnsCorrectPreCondition();
-    void metaOperation_getPreCondition_NonExistingPreCondition_returnsNullptr();
+    void metaOperation_getPreCondition_existingPreCondition_returnsCorrectPreCondition();
+    void metaOperation_getPreCondition_nonExistingPreCondition_returnsNullptr();
     void metaOperation_addPreCondition_validPreCondition_updatesPreConditionsMap();
     void metaOperation_addPreCondition_nullPreCondition_throwsInvalidArgumentException();
     void metaOperation_addPreCondition_repeatedPreConditionName_throwsInvalidArgumentException();
@@ -51,8 +51,8 @@ private slots:
     void metaOperation_removePreCondition_nonExistingKey_doesNothing();
 
     void metaOperation_getPostConditions_returnsCorrectMap();
-    void metaOperation_getPostCondition_ExistingPostCondition_returnsCorrectPostCondition();
-    void metaOperation_getPostCondition_NonExistingPostCondition_returnsNullptr();
+    void metaOperation_getPostCondition_existingPostCondition_returnsCorrectPostCondition();
+    void metaOperation_getPostCondition_nonExistingPostCondition_returnsNullptr();
     void metaOperation_addPostCondition_validPostCondition_updatesPostConditionsMap();
     void metaOperation_addPostCondition_nullPostCondition_throwsInvalidArgumentException();
     void metaOperation_addPostCondition_repeatedPreConditionName_throwsInvalidArgumentException();
@@ -208,14 +208,14 @@ void MetaOperationTest::metaOperation_getVariables_returnsCorrectMap(){
     QCOMPARE(variable->getName(), metaVariable->getName());
 }
 
-void MetaOperationTest::metaOperation_getVariable_ExistingVariable_returnsCorrectVariable(){
+void MetaOperationTest::metaOperation_getVariable_existingVariable_returnsCorrectVariable(){
     auto variable = std::make_shared<MetaModel::MetaVariable>("TestVariable", MetaModel::String::instance());
     metaOperation->addVariable(variable);
 
     QCOMPARE(metaOperation->getVariable("TestVariable")->getName(), "TestVariable");
 }
 
-void MetaOperationTest::metaOperation_getVariable_NonExistingVariable_returnsNullptr(){
+void MetaOperationTest::metaOperation_getVariable_nonExistingVariable_returnsNullptr(){
     QCOMPARE(metaOperation->getVariable("TestVariable"), nullptr);
 }
 
@@ -277,7 +277,7 @@ void MetaOperationTest::metaOperation_getPreConditions_returnsCorrectMap(){
     QCOMPARE(actualPreCondition->getName(), preCondition->getName());
 }
 
-void MetaOperationTest::metaOperation_getPreCondition_ExistingPreCondition_returnsCorrectPreCondition(){
+void MetaOperationTest::metaOperation_getPreCondition_existingPreCondition_returnsCorrectPreCondition(){
     auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
     metaOperation->addPreCondition(preCondition);
@@ -285,7 +285,7 @@ void MetaOperationTest::metaOperation_getPreCondition_ExistingPreCondition_retur
     QCOMPARE(metaOperation->getPreCondition("TestPreCondition")->getName(), "TestPreCondition");
 }
 
-void MetaOperationTest::metaOperation_getPreCondition_NonExistingPreCondition_returnsNullptr(){
+void MetaOperationTest::metaOperation_getPreCondition_nonExistingPreCondition_returnsNullptr(){
     QCOMPARE(metaOperation->getPreCondition("TestPreCondition"), nullptr);
 }
 
@@ -359,7 +359,7 @@ void MetaOperationTest::metaOperation_getPostConditions_returnsCorrectMap(){
     QCOMPARE(actualPostCondition->getName(), postCondition->getName());
 }
 
-void MetaOperationTest::metaOperation_getPostCondition_ExistingPostCondition_returnsCorrectPostCondition(){
+void MetaOperationTest::metaOperation_getPostCondition_existingPostCondition_returnsCorrectPostCondition(){
     auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestPostCondition", expression, false, true);
     metaOperation->addPostCondition(postCondition);
@@ -367,7 +367,7 @@ void MetaOperationTest::metaOperation_getPostCondition_ExistingPostCondition_ret
     QCOMPARE(metaOperation->getPostCondition("TestPostCondition")->getName(), "TestPostCondition");
 }
 
-void MetaOperationTest::metaOperation_getPostCondition_NonExistingPostCondition_returnsNullptr(){
+void MetaOperationTest::metaOperation_getPostCondition_nonExistingPostCondition_returnsNullptr(){
     QCOMPARE(metaOperation->getPostCondition("TestPostCondition"), nullptr);
 }
 

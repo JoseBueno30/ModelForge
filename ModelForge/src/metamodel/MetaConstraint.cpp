@@ -71,7 +71,7 @@ void MetaConstraint::addVariable(const std::string& variableName){
     }
 
     if (variables.find(variableName) != variables.end()) {
-        throw std::runtime_error("Redefinition of : '" + variableName+ "' in constraint: '" + name +"'.");
+        throw std::invalid_argument("Redefinition of : '" + variableName+ "' in constraint: '" + name +"'.");
     }
 
     variables[variableName] = std::make_shared<MetaVariable>(variableName, std::static_pointer_cast<MetaType>(this->metaClass));
