@@ -36,33 +36,33 @@ MainWindow::MainWindow(QWidget *parent)
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     modelGraphicsView->setScene(new QGraphicsScene(this));
 
-    QGraphicsScene *scene = modelGraphicsView->scene();
+    // QGraphicsScene *scene = modelGraphicsView->scene();
 
-    std::shared_ptr<MetaModel::MetaClass> class1 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba", false);
-    const std::shared_ptr<MetaModel::Integer> type = MetaModel::Integer::instance();
-    std::unique_ptr<MetaModel::MetaAttribute> att1 = std::make_unique<MetaModel::MetaAttribute>("att", type);
-    std::string key = att1->getName();
-    class1->addAttribute(std::move(att1));
+    // std::shared_ptr<MetaModel::MetaClass> class1 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba", false);
+    // const std::shared_ptr<MetaModel::Integer> type = MetaModel::Integer::instance();
+    // std::unique_ptr<MetaModel::MetaAttribute> att1 = std::make_unique<MetaModel::MetaAttribute>("att", type);
+    // std::string key = att1->getName();
+    // class1->addAttribute(std::move(att1));
 
-    std::unique_ptr<MetaModel::MetaOperation> op = std::make_unique<MetaModel::MetaOperation>("operation", "i + 1", type);
-    key = op->getName();
-    class1->addOperation(std::move(op));
+    // std::unique_ptr<MetaModel::MetaOperation> op = std::make_unique<MetaModel::MetaOperation>("operation", "i + 1", type);
+    // key = op->getName();
+    // class1->addOperation(std::move(op));
 
-    ClassItemView *classItem = new ClassItemView(class1);
-    scene->addItem(classItem);
+    // ClassItemView *classItem = new ClassItemView(class1);
+    // scene->addItem(classItem);
 
-    std::shared_ptr<MetaModel::MetaClass> class2 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba2", true);
-    ClassItemView *classItem2 = new ClassItemView(class2, 350, 0);
-    scene->addItem(classItem2);
+    // std::shared_ptr<MetaModel::MetaClass> class2 = std::make_shared<MetaModel::MetaClass>("ClaseDePrueba2", true);
+    // ClassItemView *classItem2 = new ClassItemView(class2, 350, 0);
+    // scene->addItem(classItem2);
 
-    // qDebug() << classItem->scenePos() << "\t" <<classItem2->scenePos();
+    // // qDebug() << classItem->scenePos() << "\t" <<classItem2->scenePos();
 
-    // std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>("prueba", 2);
-    // AssociationItemView * associationItemView = new AssociationItemView(association, classItem, classItem2);
-    std::shared_ptr<MetaModel::MetaAssociationClass> associationClass = std::make_shared<MetaModel::MetaAssociationClass>("ClaseDePrueba3", false, 2);
-    AssociationClassItemView * associationClassItemView = new AssociationClassItemView(associationClass, classItem, classItem2);
-    scene->addItem(associationClassItemView);
-    associationClassItemView->addItemsToScene();
+    // // std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>("prueba", 2);
+    // // AssociationItemView * associationItemView = new AssociationItemView(association, classItem, classItem2);
+    // std::shared_ptr<MetaModel::MetaAssociationClass> associationClass = std::make_shared<MetaModel::MetaAssociationClass>("ClaseDePrueba3", false, 2);
+    // AssociationClassItemView * associationClassItemView = new AssociationClassItemView(associationClass, classItem, classItem2);
+    // scene->addItem(associationClassItemView);
+    // associationClassItemView->addItemsToScene();
 
     // std::unique_ptr<MetaModel::MetaEnumElement> enumElement = std::make_unique<MetaModel::MetaEnumElement>("Adriduty");
     // std::unique_ptr<MetaModel::MetaEnumElement> enumElement2 = std::make_unique<MetaModel::MetaEnumElement>("MrDeif");
@@ -116,9 +116,12 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
         scene->addItem(item);
     }
 
-    // for(const auto& modelAssocClass : model->getAssociationClasses()){
-    //     scene->addItem(new AssociationClassItemView(modelAssocClass.second));
-    // }
+    for(const auto& modelAssocClass : model->getAssociationClasses()){
+        ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(0)));
+        ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(1)));
+        AssociationClassItemView* item = new AssociationClassItemView(modelAssocClass.second, class1, class2);
+        scene->addItem(item);
+    }
 }
 
 QGraphicsItem* MainWindow::getModelItemView(const std::string& key){

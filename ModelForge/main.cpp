@@ -4,6 +4,7 @@
 #include "antlr4/CustomUSEVisitor.cpp"
 
 #include <QApplication>
+#include <QDir>
 #include <QLocale>
 #include <QTranslator>
 #include <antlr4-runtime.h>
@@ -22,8 +23,20 @@ void test_grammar(){
     std::cout<<tree->toStringTree(&parser, true) <<std::endl;
 }
 
+std::string getModelFromFile(const std::string& path){
+    qDebug() << QDir::currentPath();
+    std::ifstream file(path);
+    if (!file) {
+        throw std::runtime_error("No se pudo abrir el archivo");
+    }
+
+    std::ostringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
 std::shared_ptr<MetaModel::MetaModel> test_visitor(){
-    std::string modelTest = "model Test enum Season {Winter, Spring, Summer, Fall} class Person attributes name : String age : Integer end";
+    std::string modelTest = getModelFromFile(QDir::currentPath().toStdString() + "/examples/BankAccount.use");
     std::cout<<"Modelo a probar: " << modelTest << std::endl;
 
     antlr4::ANTLRInputStream input(modelTest);
