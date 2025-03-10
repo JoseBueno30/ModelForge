@@ -75,6 +75,7 @@ void  MetaAssociationEndTest::metaAssociationEnd_addRedefinedEnd_nullArgument_th
     QVERIFY_THROWS_EXCEPTION(std::invalid_argument, this->aEnd->addRedefinedEnd(nullptr));
 }
 void  MetaAssociationEndTest::metaAssociationEnd_addRedefinedEnd_existingRedefinedEnd_throwsException(){
+    this->aEnd->addRedefinedEnd(auxEnd);
 
     QVERIFY_THROWS_EXCEPTION(std::runtime_error, this->aEnd->addRedefinedEnd(auxEnd));
 }
@@ -107,6 +108,8 @@ void MetaAssociationEndTest::metaAssociationEnd_addSubsettedEnd_validArgument_in
 
 }
 void MetaAssociationEndTest::metaAssociationEnd_addSubsettedEnd_existingRedefinedEnd_throwsException(){
+    this->aEnd->addSubsettedEnd(auxEnd);
+
     QVERIFY_THROWS_EXCEPTION(std::runtime_error, this->aEnd->addSubsettedEnd(auxEnd));
 }
 
@@ -130,6 +133,8 @@ void MetaAssociationEndTest::metaAssociationEnd_addQualifier_validArgument_inser
     QCOMPARE(this->aEnd->getQualifier(auxVar->getName())->getName(), auxVar->getName());
 }
 void MetaAssociationEndTest::metaAssociationEnd_addQualifier_existingRedefinedEnd_throwsException(){
+    this->aEnd->addQualifier(auxVar);
+
     QVERIFY_THROWS_EXCEPTION(std::runtime_error, this->aEnd->addQualifier(auxVar));
 }
 

@@ -37,6 +37,9 @@ void MetaAssociationTest::addAssociationEnd_validArgument_addsTheArgument(){
 }
 void MetaAssociationTest::addAssociationEnd_argumentAlreadyExists_throwsException(){
     shared_ptr<MetaModel::MetaAssociationEnd> end = std::make_shared<MetaModel::MetaAssociationEnd>(this->classAux, "test", 0, false, false, false, false, nullptr);
+
+    this->association->addAssociationEnd(end);
+
     QVERIFY_THROWS_EXCEPTION(std::runtime_error, this->association->addAssociationEnd(end));
 }
 
