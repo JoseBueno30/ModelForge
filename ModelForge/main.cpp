@@ -36,6 +36,7 @@ std::string getModelFromFile(const std::string& path){
 }
 
 std::shared_ptr<MetaModel::MetaModel> test_visitor(){
+    std::cout<<"PATH: " << QDir::currentPath().toStdString() << std::endl;
     std::string modelTest = getModelFromFile(QDir::currentPath().toStdString() + "/examples/BankAccount.use");
     std::cout<<"Modelo a probar: " << modelTest << std::endl;
 

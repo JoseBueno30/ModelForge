@@ -455,6 +455,8 @@ target_link_libraries(ModelForge PRIVATE antlr4Lib)
 
 add_subdirectory(tests)
 
+add_subdirectory(examples)
+
 
 add_definitions(-DQT_NO_KEYWORDS)
 
