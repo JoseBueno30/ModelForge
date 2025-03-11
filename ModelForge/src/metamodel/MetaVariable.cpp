@@ -22,5 +22,9 @@ void MetaVariable::setType(const std::shared_ptr<MetaType>& type){
     this->type = type;
 }
 
+std::string MetaVariable::toString() const{
+    return this->getName() + " : " + this->getType().toString();
+}
+
 
 }

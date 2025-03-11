@@ -67,7 +67,7 @@ bool MetaEnum::equals(const MetaType& type) const{
 }
 
 std::string MetaEnum::toString() const{
-    return name;
+    return this->getName();
 }
 
 }

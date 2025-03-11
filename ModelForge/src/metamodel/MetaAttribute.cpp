@@ -46,5 +46,8 @@ void MetaAttribute::setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr){
     this->deriveExpr = deriveExpr;
 }
 
+std::string MetaAttribute::toString() const{
+    return this->getName() + " : " + this->getType().toString();
+}
 
 }

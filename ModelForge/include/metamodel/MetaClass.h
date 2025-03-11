@@ -83,6 +83,8 @@ public:
     bool hasInheritanceCycle(const MetaClass& metaClass) const;
 
     virtual bool equals(const MetaType& type) const override;
+
+    std::string toString() const override;
 };
 
 }

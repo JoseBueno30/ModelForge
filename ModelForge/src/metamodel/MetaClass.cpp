@@ -378,4 +378,8 @@ bool MetaClass::equals(const MetaType& type) const{
     return metaClass != nullptr && this->name == metaClass->getName();
 }
 
+std::string MetaClass::toString() const{
+    return this->getName();
+}
+
 }
