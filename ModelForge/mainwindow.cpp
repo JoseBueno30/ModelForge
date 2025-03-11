@@ -92,20 +92,31 @@ MainWindow::~MainWindow()
 void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> model){
     // qDebug() << "El nombre del MetaModel es: " << model->getName();
 
+    int xOffset = -450;
+    int yOffset = -200;
+    int width = 150;
+    int height = 150;
+
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
 
     QGraphicsScene *scene = modelGraphicsView->scene();
 
     for(const auto& modelEnum : model->getEnums()){
-        EnumItemView * item = new EnumItemView(modelEnum.second);
+        EnumItemView * item = new EnumItemView(modelEnum.second, xOffset, yOffset, width, height);
         this->addModelItemView(modelEnum.second->getName(), item);
         scene->addItem(item);
+
+        xOffset+=200;
     }
 
+    yOffset+=50;
+
     for(const auto& modelClass : model->getClasses()){
-        ClassItemView* item = new ClassItemView(modelClass.second);
+        ClassItemView* item = new ClassItemView(modelClass.second, xOffset, yOffset);
         this->addModelItemView(modelClass.second->getName(), item);
         scene->addItem(item);
+
+        xOffset += 200;
     }
 
     for(const auto& modelAssoc : model->getAssociations()){

@@ -66,4 +66,8 @@ bool MetaEnum::equals(const MetaType& type) const{
     return metaEnum != nullptr && this->name == metaEnum->getName();
 }
 
+std::string MetaEnum::toString() const{
+    return name;
+}
+
 }
