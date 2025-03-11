@@ -1,11 +1,14 @@
 model BankAccount
 
+enum AccountType {Savings, Investments}
+
 class Bank
 end
 
 class Account
 attributes
 balance : Integer
+type : AccountType
 end
 
 class Person

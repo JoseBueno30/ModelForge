@@ -100,7 +100,19 @@ void CollectionType::setType(const std::shared_ptr<MetaType>& type) {
 }
 
 std::string CollectionType::toString() const{
-    return "Collection<" + this->getType().toString() + ">";
+    std::string res = "";
+
+    if(this->isOrdered && this->isUnique){
+        res = "SortedSet";
+    }else if(!this->isOrdered && this->isUnique){
+        res = "Set";
+    }else if(this->isOrdered && !this->isUnique){
+        res = "Sequence";
+    }else if(!this->isOrdered && !this->isUnique){
+        res = "Bag";
+    }
+
+    return res + "<" + this->getType().toString() + ">";
 }
 
 bool CollectionType::equals(const MetaType& type) const{

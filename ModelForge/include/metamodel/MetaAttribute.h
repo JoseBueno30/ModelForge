@@ -31,6 +31,8 @@ public:
 
     const OCLExpr* getDeriveExpr() const;
     void setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr);
+
+    std::string toString() const;
 };
 
 }

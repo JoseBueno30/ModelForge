@@ -76,6 +76,8 @@ public:
     bool isPrePostConditionDefined(const std::string& key);
 
     bool isValidOverrideOf(const MetaOperation& operation) const;
+
+    std::string toString() const;
 };
 
 }

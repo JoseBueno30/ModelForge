@@ -170,4 +170,23 @@ bool MetaOperation::isValidOverrideOf(const MetaOperation& operation) const{
 
     return true;
 }
+
+std::string MetaOperation::toString() const{
+    std::string variableList = "(";
+
+    if(variables.size()>0){
+        auto variableIterator = variables.begin();
+
+        variableList += variableIterator->second->toString();
+
+        for(; variableIterator != variables.end(); variableIterator++){
+            variableList += ", " + variableIterator->second->toString();
+        }
+    }
+
+    variableList += ")";
+
+    return this->getName() + variableList + " : " + this->getReturnType().toString();
+}
+
 }

@@ -20,6 +20,8 @@ public:
 
     const MetaType& getType() const;
     void setType(const std::shared_ptr<MetaType>& type);
+
+    std::string toString() const;
 };
 
 }

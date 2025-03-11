@@ -24,5 +24,8 @@ void MetaStateMachine::setStateMachineDefinition(const std::string& stateMachine
     this->stateMachineDefinition = stateMachineDefinition;
 }
 
+std::string MetaStateMachine::toString() const{
+    return this->getStateMachineDefinition();
+}
 
 }

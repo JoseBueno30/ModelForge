@@ -57,7 +57,7 @@ std::shared_ptr<MetaModel::MetaModel> test_visitor(){
     }
 
     if(model->getClass("TestClass")){
-        std::cout << "AAAAAAAAAAA" << std::endl;
+        std::cout << "AAAAAAAAA" << std::endl;
     }
 
     for(const auto& pair: model->getClasses()){
