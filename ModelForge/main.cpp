@@ -23,21 +23,9 @@ void test_grammar(){
     std::cout<<tree->toStringTree(&parser, true) <<std::endl;
 }
 
-std::string getModelFromFile(const std::string& path){
-    qDebug() << QDir::currentPath();
-    std::ifstream file(path);
-    if (!file) {
-        throw std::runtime_error("No se pudo abrir el archivo");
-    }
-
-    std::ostringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
-}
-
 std::shared_ptr<MetaModel::MetaModel> test_visitor(){
     std::cout<<"PATH: " << QDir::currentPath().toStdString() << std::endl;
-    std::string modelTest = getModelFromFile(QDir::currentPath().toStdString() + "/examples/BankAccount.use");
+    std::string modelTest = "model test";
     std::cout<<"Modelo a probar: " << modelTest << std::endl;
 
     antlr4::ANTLRInputStream input(modelTest);
@@ -93,10 +81,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    auto model = test_visitor();
+    //auto model = test_visitor();
 
     MainWindow w;
-    w.setupModelGraphicsView(model);
+    //w.setupModelGraphicsView(model);
 
     w.show();
     return a.exec();

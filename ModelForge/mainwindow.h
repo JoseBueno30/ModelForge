@@ -33,6 +33,8 @@ public Q_SLOTS:
     void addModelItemView(const std::string& key, QGraphicsItem *item);
     void removeModelItemView(const std::string& key);
 
+    void openModelFile();
+
 private:
     Ui::MainWindow *ui;
     std::shared_ptr<MetaModel::MetaModel> model;
