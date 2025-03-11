@@ -390,6 +390,7 @@ add_library(MetaModelLib SHARED
     include/metamodel/MetaAssociationClass.h
     src/metamodel/MetaAssociationClass.cpp
 
+
 )
 
 
@@ -422,6 +423,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/ui/view/BoxItemView.h
 
         resources.qrc
+        include/ui/view/GeneralizationItemView.h
+        src/ui/view/GeneralizationItemView.cpp
+
 
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)

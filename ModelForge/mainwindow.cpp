@@ -5,6 +5,7 @@
 #include <ui/view/AssociationClassItemView.h>
 #include <ui/view/AssociationItemView.h>
 #include <ui/view/EnumItemView.h>
+#include <ui/view/GeneralizationItemView.h>
 #include <antlr4-runtime.h>
 #include <QFileDialog>
 #include <antlr4/generated/USELexer.h>
@@ -84,6 +85,21 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
         scene->addItem(item);
 
         xOffset += 200;
+    }
+
+    // Draw generalizations
+    for(const auto& modelClass : model->getClasses()){
+        if(!modelClass.second->getSuperClasses().empty()){
+            ClassItemView* subClass = dynamic_cast<ClassItemView*>(this->getModelItemView(modelClass.second->getName()));
+            auto superClassIterator = modelClass.second->getSuperClasses().begin();
+            for(; superClassIterator != modelClass.second->getSuperClasses().end(); superClassIterator++){
+                ClassItemView* superClass = dynamic_cast<ClassItemView*>(this->getModelItemView(superClassIterator->second->getName()));
+
+                GeneralizationItemView *generalization = new GeneralizationItemView(superClass, subClass);
+                scene->addItem(generalization);
+            }
+        }
+
     }
 
     //TODO - use model iterators

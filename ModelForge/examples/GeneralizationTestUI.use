@@ -1,0 +1,8 @@
+model test
+
+class Superclass
+end
+
+class Subclass < Superclass
+end
+

@@ -13,6 +13,7 @@ using std::shared_ptr;
 
 class AssociationItemView;
 class AssociationClassItemView;
+class GeneralizationItemView;
 
 class ClassItemView : public BoxItemView{
 public:
@@ -24,9 +25,12 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     void addAssociation(AssociationItemView* association);
     void deleteAssociation(AssociationItemView* association);
+
     void addAssociationClass(AssociationClassItemView* associationClass);
     void deleteAssociationClass(AssociationClassItemView* associationClass);
 
+    void addGeneralization(GeneralizationItemView * generalization);
+    void deleteGeneralization(GeneralizationItemView * generalization);
 
     ~ClassItemView();
 
@@ -39,6 +43,7 @@ protected:
 private:
     shared_ptr<MetaModel::MetaClass> model;
     std::vector<AssociationItemView *> associations;
+    std::vector<GeneralizationItemView *> generalizations;
     std::vector<AssociationClassItemView *> associationClasses;
 
     void calculateMinimumSize();

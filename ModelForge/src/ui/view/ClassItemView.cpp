@@ -2,6 +2,7 @@
 #include<ui/view/ClassItemView.h>
 #include <ui/view/AssociationItemView.h>
 #include <ui/view/AssociationClassItemView.h>
+#include <ui/view/GeneralizationItemView.h>
 #define PADDING 20
 #define TEST_NAME "ClassLongTextAdriduty"
 
@@ -128,6 +129,14 @@ void ClassItemView::deleteAssociationClass(AssociationClassItemView* association
     this->associationClasses.erase(std::remove(this->associationClasses.begin(), this->associationClasses.end(), associationClass), this->associationClasses.end());
 }
 
+void ClassItemView::addGeneralization(GeneralizationItemView * generalization){
+    this->generalizations.push_back(generalization);
+}
+
+void ClassItemView::deleteGeneralization(GeneralizationItemView * generalization){
+    this->generalizations.erase(std::remove(this->generalizations.begin(), this->generalizations.end(), generalization), this->generalizations.end());
+}
+
 
 void ClassItemView::mousePressEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ClosedHandCursor);
@@ -145,6 +154,9 @@ void ClassItemView::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
     }
     for(auto associationClass : associationClasses){
         associationClass->update();
+    }
+    for(auto generalization : generalizations){
+        generalization->updatePosition();
     }
 }
 

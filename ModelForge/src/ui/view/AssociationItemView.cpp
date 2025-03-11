@@ -77,21 +77,7 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
 QRectF AssociationItemView::boundingRect() const {return QRectF(p1, p2).normalized().adjusted(-10, -10, 10, 10);}
 QRectF AssociationItemView::associationNameRect(){return QRectF();}
 
-void AssociationItemView::drawArrow(QLineF &line, QPainter *painter){
-    double angle = std::atan2(-line.dy(), line.dx()) - M_PI_2;
 
-    qreal arrowSize = 8;
-    QPointF head(line.pointAt(0.99));
-
-    QPointF arrowP1 = head + QPointF(std::sin(angle + M_PI / 6) * arrowSize, std::cos(angle + M_PI / 6) * arrowSize);
-    QPointF arrowP2 = head + QPointF(std::sin(angle - M_PI / 6) * arrowSize, std::cos(angle - M_PI / 6) * arrowSize);
-
-    QPolygonF arrowHead;
-    arrowHead << head << arrowP1 << arrowP2;
-
-    //painter->setBrush(Qt::white);
-    painter->drawPolygon(arrowHead);
-}
 QPointF AssociationItemView::drawDiamond(QLineF &line, QPainter *painter, bool filled){
     double angle = std::atan2(-line.dy(), line.dx()) - M_PI_2;
     qreal diamondSize = 8;
