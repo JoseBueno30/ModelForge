@@ -2,12 +2,13 @@
 #define METAASSOCIATION_H
 
 #include "MetaAssociationEnd.h"
+#include "MetaElement.h"
 
 #include <string>
 
 namespace MetaModel{
 
-class MetaAssociation{
+class MetaAssociation : public MetaElement{
 private:
     std::string name;
     int type;
@@ -34,6 +35,8 @@ public:
     void removeAssociationEnd(const std::string& key);
 
     std::vector<std::string> getAssociationEndsClassesNames();
+
+    void accept(ModelToText::VisitorInterface& visitor) const override;
 };
 }
 

@@ -1,6 +1,7 @@
 #ifndef METAENUM_H
 #define METAENUM_H
 
+#include "MetaElement.h"
 #include "MetaType.h"
 
 #include<string>
@@ -20,7 +21,7 @@ public:
     void setName(const std::string& name);
 };
 
-class MetaEnum : public SimpleType{
+class MetaEnum : public SimpleType, public MetaElement{
 private:
     std::string name;
     std::map<std::string, std::shared_ptr<MetaEnumElement>> elements;
@@ -38,6 +39,8 @@ public:
     virtual bool equals(const MetaType& type) const override;
 
     std::string toString() const override;
+
+    void accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

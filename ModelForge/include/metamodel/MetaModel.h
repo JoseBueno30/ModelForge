@@ -4,6 +4,7 @@
 #include "MetaAssociation.h"
 #include "MetaAssociationClass.h"
 #include "MetaClass.h"
+#include "MetaElement.h"
 #include "MetaEnum.h"
 
 #include <string>
@@ -12,7 +13,7 @@
 
 namespace MetaModel{
 
-class MetaModel{
+class MetaModel : public MetaElement{
 private:
     std::string name;
     std::map<std::string, std::shared_ptr<MetaEnum>> enums;
@@ -47,6 +48,8 @@ public:
     void removeAssociationClass(const std::string& key);
 
     bool modelContainsKey(const std::string& key);
+
+    void accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

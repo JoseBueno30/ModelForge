@@ -389,8 +389,9 @@ add_library(MetaModelLib SHARED
     src/metamodel/MetaAssociationEnd.cpp
     include/metamodel/MetaAssociationClass.h
     src/metamodel/MetaAssociationClass.cpp
+    include/metamodel/MetaElement.h
 
-
+    include/modelToText/VisitorInterface.h
 )
 
 
@@ -450,7 +451,6 @@ else()
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
-
 
 target_link_libraries(ModelForge PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(ModelForge PRIVATE MetaModelLib)

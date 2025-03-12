@@ -1,4 +1,6 @@
+#include <metamodel/MetaElement.h>
 #include <metamodel/MetaModel.h>
+#include <modelToText/VisitorInterface.h>
 #include<stdexcept>
 
 namespace MetaModel{
@@ -132,6 +134,10 @@ bool MetaModel::modelContainsKey(const std::string& key){
            (classes.find(key) != classes.end()) ||
            (associations.find(key) != associations.end()) ||
            (associationClasses.find(key) != associationClasses.end());
+}
+
+void MetaModel::accept(ModelToText::VisitorInterface& visitor) const {
+    visitor.visit(*this);
 }
 
 }

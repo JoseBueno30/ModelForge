@@ -18,6 +18,8 @@ public:
     void setName(const std::string& name);
 
     void addSuperClass(std::shared_ptr<MetaClass> metaClass) override;
+
+    void accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include <modelToText/VisitorInterface.h>
+
 namespace MetaModel {
 
 
@@ -68,6 +70,10 @@ bool MetaEnum::equals(const MetaType& type) const{
 
 std::string MetaEnum::toString() const{
     return this->getName();
+}
+
+void MetaEnum::accept(ModelToText::VisitorInterface& visitor) const{
+    visitor.visit(*this);
 }
 
 }

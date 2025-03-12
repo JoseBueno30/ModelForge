@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include <modelToText/VisitorInterface.h>
+
 namespace MetaModel{
 
 MetaAssociationClass::MetaAssociationClass(const std::string& name, bool isAbstract, int type)
@@ -24,6 +26,10 @@ void MetaAssociationClass::addSuperClass(std::shared_ptr<MetaClass> metaClass){
         throw std::invalid_argument("MetaAssociationClass can only inherit from another MetaAssociationClass");
     }
     MetaClass::addSuperClass(metaClass);
+}
+
+void MetaAssociationClass::accept(ModelToText::VisitorInterface& visitor) const{
+    visitor.visit(*this);
 }
 
 }

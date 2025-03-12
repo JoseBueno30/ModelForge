@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include <modelToText/VisitorInterface.h>
+
 namespace MetaModel{
 
 MetaClass::MetaClass(const std::string& name, bool isAbstract)
@@ -380,6 +382,10 @@ bool MetaClass::equals(const MetaType& type) const{
 
 std::string MetaClass::toString() const{
     return this->getName();
+}
+
+void MetaClass::accept(ModelToText::VisitorInterface& visitor) const{
+    visitor.visit(*this);
 }
 
 }

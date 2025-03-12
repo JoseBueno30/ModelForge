@@ -4,6 +4,7 @@
 #include "MetaAssociationEnd.h"
 #include "MetaAttribute.h"
 #include "MetaConstraint.h"
+#include "MetaElement.h"
 #include "MetaOperation.h"
 #include "MetaStateMachine.h"
 #include "MetaType.h"
@@ -15,7 +16,7 @@
 
 namespace MetaModel{
 
-class MetaClass : public SimpleType{
+class MetaClass : public SimpleType, public MetaElement{
 
 private:
     std::string name;
@@ -85,6 +86,8 @@ public:
     virtual bool equals(const MetaType& type) const override;
 
     std::string toString() const override;
+
+    void accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

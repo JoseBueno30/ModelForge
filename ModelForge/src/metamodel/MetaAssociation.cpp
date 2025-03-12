@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <metamodel/MetaClass.h>
+#include <modelToText/VisitorInterface.h>
 
 namespace MetaModel{
 
@@ -62,6 +63,10 @@ std::vector<std::string> MetaAssociation::getAssociationEndsClassesNames(){
         names.push_back(pair.second->getClass().getName());
     }
     return names;
+}
+
+void MetaAssociation::accept(ModelToText::VisitorInterface& visitor) const{
+    visitor.visit(*this);
 }
 
 }
