@@ -1,0 +1,18 @@
+model BankAccount
+
+enum AccountType {Investments, Savings}
+
+class Account
+attributes
+balance : Integer
+type : AccountType
+end
+
+class Bank
+end
+
+class Person
+attributes
+age : Integer
+end
+

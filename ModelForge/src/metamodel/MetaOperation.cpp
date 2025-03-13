@@ -179,6 +179,8 @@ std::string MetaOperation::toString() const{
 
         variableList += variableIterator->second->toString();
 
+        variableIterator++;
+
         for(; variableIterator != variables.end(); variableIterator++){
             variableList += ", " + variableIterator->second->toString();
         }

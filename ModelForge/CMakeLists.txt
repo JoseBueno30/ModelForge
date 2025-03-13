@@ -392,6 +392,8 @@ add_library(MetaModelLib SHARED
     include/metamodel/MetaElement.h
 
     include/modelToText/VisitorInterface.h
+    include/modelToText/VisitorUSE.h
+    src/modelTotText/VisitorUSE.cpp
 )
 
 

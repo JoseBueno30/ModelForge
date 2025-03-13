@@ -11,6 +11,7 @@
 #include <antlr4/generated/USELexer.h>
 #include <antlr4/generated/USEParser.h>
 #include <antlr4/CustomUSEVisitor.cpp>
+#include <modelToText/VisitorUSE.h>
 
 void toogleColorTheme(QString &theme){
     QFile file(":/styles/" + theme + ".qss");
@@ -66,6 +67,7 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
     int height = 150;
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
+    modelGraphicsView->setScene(new QGraphicsScene(this));
 
     QGraphicsScene *scene = modelGraphicsView->scene();
 
@@ -142,7 +144,12 @@ void MainWindow::on_actionSwitch_mode_triggered()
 
 void MainWindow::openModelFile(){
     QString path = QFileDialog::getOpenFileName(this, "Select file", "", "USE files (*.use);;All files (*.*)");
+    if (path.isEmpty()) {
+        throw std::runtime_error("No se seleccionó ningún archivo");
+    }
+
     std::ifstream file(path.toStdString());
+
     if (!file) {
         throw std::runtime_error("No se pudo abrir el archivo");
     }
@@ -164,5 +171,11 @@ void MainWindow::openModelFile(){
     // Verifica que el MetaModel se haya creado correctamente
     auto model = visitor.model;
     this->setupModelGraphicsView(model);
+
+    QFileInfo fileInfo(path);
+    QString directory = fileInfo.absolutePath();
+    ModelToText::VisitorUSE visitorUSE((directory + "/TEST.use").toStdString());
+
+    model->accept(visitorUSE);
 }
 
