@@ -32,6 +32,8 @@ public:
     void addGeneralization(GeneralizationItemView * generalization);
     void deleteGeneralization(GeneralizationItemView * generalization);
 
+    std::vector<AssociationItemView *> associationsShared(ClassItemView *class2);
+
     ~ClassItemView();
 
 protected:

@@ -138,6 +138,20 @@ void ClassItemView::deleteGeneralization(GeneralizationItemView * generalization
 }
 
 
+std::vector<AssociationItemView *> ClassItemView::associationsShared(ClassItemView *class2){
+    //TODO Add generalizations and associationClasses in the future
+
+    std::vector<AssociationItemView *> associationsShared;
+    for(auto association : this->associations){
+        if(association->getClass1()->getClassModel()->equals(*class2->model) ||
+            association->getClass2()->getClassModel()->equals(*class2->model)){
+            associationsShared.push_back(association);
+        }
+    }
+    return associationsShared;
+}
+
+
 void ClassItemView::mousePressEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ClosedHandCursor);
     setZValue(ModelGraphicsView::highestZIndex);

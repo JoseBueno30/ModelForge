@@ -1,5 +1,16 @@
 #include <ui/view/AssociationItemView.h>
 
+void applyOffsetToSharedAssociations(std::vector<AssociationItemView *>& associationsShared){
+    int cont = 1;
+    for(auto association : associationsShared){
+        qreal offset = (qreal) cont/(associationsShared.size() + 1);
+        //qDebug() << "Offset calculated: " << cont << " / " << (associationsShared.size() + 1) << " = " << offset;
+
+        association->setOffset(offset);
+        cont++;
+    }
+}
+
 AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> model, ClassItemView* class1, ClassItemView* class2)
     : model(model), class1(class1), class2(class2){
 
@@ -7,10 +18,23 @@ AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> 
     class2->addAssociation(this);
 
     setZValue(-1);
+
+    std::vector<AssociationItemView *> associationsShared = class1->associationsShared(class2);
+    applyOffsetToSharedAssociations(associationsShared);
+
     updatePosition();
 }
 
+ClassesOrientation AssociationItemView::checkOrientation(QRectF& class1Rect, QRectF& class2Rect){
+    qreal angle = QLineF(class1Rect.center() + this->class1->scenePos(), class2Rect.center() + this->class2->scenePos()).angle();
+    int angleOffset = 20;
+    //qDebug() <<"Angulo: " << angle;
+    return angle < angleOffset || angle > 360 - angleOffset || (angle > 180 - angleOffset && angle < 180 + angleOffset) ? HORIZONTAL : VERTICAL;
+}
+
 void AssociationItemView::updatePosition(){
+    qDebug() << "Offset: " << offset;
+
     if(!class1 || !class2) throw std::runtime_error("ERROR: No hay clases en la asociacion.");
 
     QRectF class1Rect = class1->boundingRect();
@@ -19,13 +43,26 @@ void AssociationItemView::updatePosition(){
     //qDebug() << class1Rect << "\t" <<class2Rect;
 
     //qDebug() << class1Rect.center() + class1->scenePos() << "\t" << class2Rect.center() + class2->scenePos();
+    QLineF axis1;
+    QLineF axis2;
+    if(checkOrientation(class1Rect, class2Rect) == VERTICAL){
+        axis1 = QLineF(QPointF(0, class1Rect.center().y()), QPointF(class1->getDimensions().x(), class1Rect.center().y()));
+        axis2 = QLineF(QPointF(0, class2Rect.center().y()), QPointF(class2->getDimensions().x(), class2Rect.center().y()));
+    }else{
+        axis1 = QLineF(QPointF(class1Rect.center().x(), 0), QPointF(class1Rect.center().x(), class1->getDimensions().y()));
+        axis2 = QLineF(QPointF(class2Rect.center().x(), 0), QPointF(class2Rect.center().x(), class2->getDimensions().y()));
+    }
 
-    QLineF line(class1Rect.center() + class1->scenePos(), class2Rect.center() + class2->scenePos());
+    QPointF offsetCenter1 = axis1.pointAt(offset);
+    QPointF offsetCenter2 = axis2.pointAt(offset);
+    QLineF line(offsetCenter1 + class1->scenePos(), offsetCenter2 + class2->scenePos());
 
     QPointF p1 = getNearestEdgeIntersection(QRectF(class1->scenePos().x(), class1->scenePos().y(),
-                                                   class1Rect.width(), class1Rect.height()), line, p1);
+                                                     class1Rect.width(), class1Rect.height()), line, p1);
+
     QPointF p2 = getNearestEdgeIntersection(QRectF(class2->scenePos().x(), class2->scenePos().y(),
                                                    class2Rect.width(), class2Rect.height()), line, p2);
+
     setP1(p1);
     setP2(p2);
     update();
@@ -48,7 +85,7 @@ QPointF AssociationItemView::getNearestEdgeIntersection(const QRectF &rect, cons
         }
     }
 
-    return polygon.boundingRect().center(); // Fallback
+    return rect.center(); // Fallback
 }
 
 void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
@@ -104,10 +141,10 @@ QPointF AssociationItemView::getP1()const{
 QPointF AssociationItemView::getP2() const{
     return this->p2;
 }
-QGraphicsItem* AssociationItemView::getClass1() const{
+ClassItemView* AssociationItemView::getClass1() const{
     return this->class1;
 }
-QGraphicsItem* AssociationItemView::getClass2() const{
+ClassItemView* AssociationItemView::getClass2() const{
     return this->class2;
 }
 shared_ptr<MetaModel::MetaAssociation> AssociationItemView::getAssociationModel(){
