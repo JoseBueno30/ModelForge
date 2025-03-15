@@ -12,7 +12,7 @@ namespace ModelToText {
 class VisitorUSE : public VisitorInterface{
 private:
     std::ofstream outFile;
-    const std::map<std::string, std::shared_ptr<MetaModel::MetaClass>>& metaClasses;
+    const std::map<std::string, std::shared_ptr<MetaModel::MetaClass>>* metaClasses;
     std::unordered_set<std::string> visitedClasses;
 
 

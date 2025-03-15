@@ -175,6 +175,7 @@ std::string MetaOperation::toString() const{
     std::string variableList = "(";
 
     if(variables.size()>0){
+
         auto variableIterator = variables.begin();
 
         variableList += variableIterator->second->toString();

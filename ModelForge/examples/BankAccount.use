@@ -9,6 +9,10 @@ class Account
 attributes
 type : AccountType
 balance : Integer
+operations
+transfer(variable : Integer) : Integer
+    begin
+    end
 end
 
 class Person

@@ -23,6 +23,8 @@ void VisitorUSE::visit(MetaModel::MetaModel metaModel){
         metaEnumPair.second->accept(*this);
     }
 
+    metaClasses = &metaModel.getClasses();
+
     for(const auto &metaClassPair : metaModel.getClasses()){
         metaClassPair.second->accept(*this);
     }

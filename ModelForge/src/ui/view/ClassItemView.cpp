@@ -16,7 +16,7 @@ void ClassItemView::calculateMinimumSize(){
     fm = QFontMetrics(QFont("Arial", 10, QFont::StyleNormal));
 
     for(const auto& pair : this->model->getAttributes()){
-        int attrWidth = fm.horizontalAdvance(QString::fromStdString(pair.first + " : " + pair.second->getType().toString())) + HORIZONTAL_PADDING; //TODO MetaAttribute toString
+        int attrWidth = fm.horizontalAdvance(QString::fromStdString(pair.second->toString())) + HORIZONTAL_PADDING;
         this->setMinWidth(qMax(int(this->getMinDimensions().x()), attrWidth));
 
         minHeight += ATTS_HEIGHT;
@@ -27,7 +27,7 @@ void ClassItemView::calculateMinimumSize(){
     }
 
     for(const auto& pair: this->model->getOperations()){
-        int attrWidth = fm.horizontalAdvance(QString::fromStdString(pair.first + "() : " + pair.second->getReturnType().toString())); //TODO MetaOperation toString
+        int attrWidth = fm.horizontalAdvance(QString::fromStdString(pair.second->toString())) + HORIZONTAL_PADDING;
         this->setMinWidth(qMax(int(this->getMinDimensions().x()), attrWidth));
 
         minHeight += ATTS_HEIGHT;
@@ -94,7 +94,7 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setFont(QFont("Arial", 10, QFont::StyleNormal));
     for(const auto& pair : this->model->getAttributes()){
         QRectF rect(ATTS_PADDING, yOffset,this->getDimensions().x(),ATTS_HEIGHT);
-        painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.first + " : " + pair.second->getType().toString())); //TODO MetaAttribute toString
+        painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.second->toString()));
         yOffset += ATTS_HEIGHT;
     }
 
@@ -106,7 +106,7 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     for(const auto& pair: this->model->getOperations()){
         QRectF rect(ATTS_PADDING, yOffset,this->getDimensions().x(), ATTS_HEIGHT);
-        painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.first + "() : " + pair.second->getReturnType().toString())); //TODO MetaOperation toString
+        painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.second->toString()));
         yOffset += ATTS_HEIGHT;
     }
 }

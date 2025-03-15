@@ -2,17 +2,15 @@ model BankAccount
 
 enum AccountType {Investments, Savings}
 
-class Account
-attributes
+class Accountattributes
 balance : Integer
 type : AccountType
+operations
 end
 
-class Bank
-end
+class Bankend
 
-class Person
-attributes
+class Personattributes
 age : Integer
 end
 
