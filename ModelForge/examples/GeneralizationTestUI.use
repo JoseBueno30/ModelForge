@@ -1,8 +1,10 @@
 model test
 
-class Superclass
+class Subclass < Superclass1, Superclass2
 end
 
-class Subclass < Superclass
+class Superclass1
 end
 
+class Superclass2
+end

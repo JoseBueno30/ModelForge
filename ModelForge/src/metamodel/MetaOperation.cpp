@@ -171,7 +171,7 @@ bool MetaOperation::isValidOverrideOf(const MetaOperation& operation) const{
     return true;
 }
 
-std::string MetaOperation::toString() const{
+std::string MetaOperation::variablesToString() const{
     std::string variableList = "(";
 
     if(variables.size()>0){
@@ -189,7 +189,12 @@ std::string MetaOperation::toString() const{
 
     variableList += ")";
 
-    return this->getName() + variableList + " : " + this->getReturnType().toString();
+    return variableList;
+}
+
+std::string MetaOperation::toString() const{
+
+    return this->getName() + this->variablesToString() + " : " + this->getReturnType().toString();
 }
 
 }

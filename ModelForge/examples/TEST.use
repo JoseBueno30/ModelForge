@@ -2,15 +2,28 @@ model BankAccount
 
 enum AccountType {Investments, Savings}
 
-class Accountattributes
+class Account
+attributes
 balance : Integer
 type : AccountType
 operations
+transfer(variable : Integer) : Integer begin
+        self.balance := self.balance + 1;
+    end
+constraints
+inv Positive_Balance:
+	self.balance>0
 end
 
-class Bankend
+class Bank
+end
 
-class Personattributes
+class Person
+attributes
 age : Integer
 end
+
+constraints
+context x, y: Account inv Prueba:
+	y.balance>x.balanceimpliesx.balance<y.balance
 

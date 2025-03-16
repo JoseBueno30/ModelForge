@@ -230,7 +230,9 @@ public:
             name = "inv" + std::to_string(invariantCounter);
             invariantCounter++;
         }
+
         std::shared_ptr<MetaModel::OCLExpr> expression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->expression()));
+
         bool isExistential = ctx->EXISTENTIAL()? true : false;
 
         if(variableNames.empty()){
@@ -273,7 +275,7 @@ public:
 
         std::string operationDefinition = "";
         if(ctx->expression()){
-            operationDefinition = ctx->expression()->getText();
+            operationDefinition = "= " + ctx->expression()->getText();
         }else if(ctx->SOIL_OPERATION()){
             operationDefinition = ctx->SOIL_OPERATION()->getText();
         }
@@ -531,8 +533,25 @@ public:
         return visit(ctx->expression());
     }
 
-    std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
+    //EXPRESSIONS
 
+    std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
+        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+    }
+
+    std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
+        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+    }
+
+    std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
+        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+    }
+
+    std::any visitLambdaExpr(USEParser::LambdaExprContext *ctx) override {
+        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+    }
+
+    std::any visitLetExpr(USEParser::LetExprContext *ctx) override {
         return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
     }
 
@@ -724,4 +743,7 @@ public:
     std::any visitMultiplicitySpec(USEParser::MultiplicitySpecContext *ctx) override{
         return ctx->STAR() ? MetaModel::MetaMultiplicityRange::MANY : std::stoi(ctx->INT()->getText());
     }
+
+    // EXPRESSION DEFINITION
+
 };

@@ -14,6 +14,7 @@ private:
     std::ofstream outFile;
     const std::map<std::string, std::shared_ptr<MetaModel::MetaClass>>* metaClasses;
     std::unordered_set<std::string> visitedClasses;
+    std::string globalConstraints;
 
 
 public:

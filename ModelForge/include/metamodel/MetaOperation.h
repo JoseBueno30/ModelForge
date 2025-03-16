@@ -77,6 +77,7 @@ public:
 
     bool isValidOverrideOf(const MetaOperation& operation) const;
 
+    std::string variablesToString() const;
     std::string toString() const;
 };
 
