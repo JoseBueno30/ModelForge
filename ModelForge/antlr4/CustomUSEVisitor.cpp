@@ -597,6 +597,12 @@ public:
             metaAssociationClass->addStateMachine(stateMachine);
         }
 
+        for(auto associationEndsCtx : ctx->associationEnd()){
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(associationEndsCtx));
+
+            metaAssociationClass->MetaAssociation::addAssociationEnd(associationEnd);
+        }
+
         return nullptr;
     }
 

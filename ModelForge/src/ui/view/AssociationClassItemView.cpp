@@ -1,3 +1,4 @@
+#include "ui/components/ThemeManager.h"
 #include <ui/view/AssociationClassItemView.h>
 
 AssociationClassItemView::AssociationClassItemView(std::shared_ptr<MetaModel::MetaAssociationClass> model, ClassItemView* class1, ClassItemView* class2)
@@ -34,7 +35,7 @@ void AssociationClassItemView::paint(QPainter *painter, const QStyleOptionGraphi
     // QPointF auxP2(center.x(), center.y() + 40); // TODO Find the nearest class edge and use its center
     QLineF line(center, p2);
 
-    painter->setPen(QPen(Qt::white, 1, Qt::DashLine));
+    painter->setPen(QPen(QColor(ThemeManager::getAssociationColor()), 1, Qt::DashLine));
     painter->drawLine(line);
 
     // painter->translate(this->classItem->pos());
