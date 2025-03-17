@@ -428,6 +428,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         resources.qrc
         include/ui/view/GeneralizationItemView.h
         src/ui/view/GeneralizationItemView.cpp
+        include/ui/components/ThemeManager.h
+        src/ui/components/ThemeManager.cpp
 
 
     )

@@ -12,10 +12,13 @@
 #include <antlr4/generated/USEParser.h>
 #include <antlr4/CustomUSEVisitor.cpp>
 #include <modelToText/VisitorUSE.h>
+#include <ui/components/ThemeManager.h>
 
-void toogleColorTheme(QString &theme){
+void toogleColorTheme(){
+    ThemeManager::toogleTheme();
+    QString theme = ThemeManager::getTheme() ? "light" : "dark";
     QFile file(":/styles/" + theme + ".qss");
-    qDebug() << "prueba: " << file.exists();
+    qDebug() << "Tema: " << theme;
     if(file.open(QFile::ReadOnly)){
         qDebug() << "entra";
         QString stylesheet = file.readAll();
@@ -39,12 +42,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->actionOpen_Model, &QAction::triggered, this, &MainWindow::openModelFile);
+    connect(ui->actionSwitch_mode, &QAction::triggered, this, &toogleColorTheme);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     modelGraphicsView->setScene(new QGraphicsScene(this));
 
-    toogleColorTheme(theme);
-
+    toogleColorTheme();
 
 
     ConsoleHandler::setConsole(this->ui->consoleTextEdit);

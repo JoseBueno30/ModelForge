@@ -1,0 +1,49 @@
+ModelGraphicsView{
+    background-color: #FFFFFF;
+    border: 1px solid black;
+}
+
+QTextEdit#consoleTextEdit{
+    background-color: #FFFFFF;
+    border: 1px solid black;
+}
+QMainWindow {
+    background-color: #FFFFFF;
+    color: black;
+}
+
+QGroupBox{
+    color: black;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+QMenuBar, QMenu {
+        background-color: white;
+        color: black;
+    }
+    QMenu::icon{
+        border: 1px solid black;
+    }
+    
+    QMenuBar::item:selected {
+        border-radius: 5px;
+        background-color: lightgray;
+    }
+    QMenu::item:selected{
+        border-radius: 5px;
+        background-color: lightgray;
+    }
+    
+    QToolBar {
+        background-color: white;
+    }
+    
+    QPushButton {
+        background-color: white;
+        border: 1px solid gray;
+    }
+    
+    QPushButton:hover {
+        background-color: lightgray;
+    }
