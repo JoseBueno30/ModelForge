@@ -30,6 +30,10 @@ void VisitorUSE::visit(MetaModel::MetaModel metaModel){
         metaClassPair.second->accept(*this);
     }
 
+    for(const auto &metaAssociationPair : metaModel.getAssociations()){
+        metaAssociationPair.second->accept(*this);
+    }
+
     if(globalConstraints != ""){
         outFile << "constraints\n";
         outFile << globalConstraints;

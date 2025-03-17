@@ -26,20 +26,19 @@ end
 -- Person [*] role employees
 -- end
 
-association Ownership between
-Person [1] role owner
+composition AccountOfBanks between
 Account [*] role accounts
+Bank [1] role bank
+end
+
+association Ownership between
+Account [*] role accounts
+Person [1] role owner
 end
 
 association Use between
-Person [*] role user
 Account [*] role usedAccounts
-end
-
-
-composition AccountOfBanks between
-Bank [1] role bank
-Account [*] role accounts
+Person [*] role user
 end
 
 constraints
