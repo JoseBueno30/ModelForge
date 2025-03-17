@@ -9,13 +9,13 @@ class ConsoleHandler{
 public:
     ConsoleHandler();
 
-    void setConsole(QTextEdit* console);
-    void appendErrorLog(QString errorLog);
-    void appendSuccessfulLog(QString successfulLog);
-    void clear();
+    static void setConsole(QTextEdit* console);
+    static void appendErrorLog(QString errorLog);
+    static void appendSuccessfulLog(QString successfulLog);
+    static void clear();
 
-private:
-    QTextEdit* console;
+protected:
+    static QTextEdit* console;
 };
 
 #endif // CONSOLEHANDLER_H

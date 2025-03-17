@@ -1,5 +1,7 @@
 #include <ui/view/AssociationItemView.h>
 
+#include <ui/components/ThemeManager.h>
+
 void applyOffsetToSharedAssociations(std::vector<AssociationItemView *>& associationsShared){
     int cont = 1;
     for(auto association : associationsShared){
@@ -95,7 +97,7 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     if (!class1 || !class2) return;
 
-    painter->setPen(QPen(Qt::white, 1, Qt::SolidLine,Qt::FlatCap));
+    painter->setPen(QPen(QColor(ThemeManager::getAssociationColor()), 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p1, this->p2);
     //qDebug() << line;
     // Arrow metrics:

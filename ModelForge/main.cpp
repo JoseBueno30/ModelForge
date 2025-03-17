@@ -8,6 +8,7 @@
 #include <QLocale>
 #include <QTranslator>
 #include <antlr4-runtime.h>
+#include <QStyleFactory>
 
 void test_grammar(){
     std::string expTest = "self.children->isUnique( name )";
