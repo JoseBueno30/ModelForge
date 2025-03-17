@@ -185,7 +185,57 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
 }
 
 void VisitorUSE::visit(MetaModel::MetaAssociation metaAssociation){
+    std::string metaAssociationString = "";
 
+    if(metaAssociation.getType() == MetaModel::MetaAssociation::AGGREGATION){
+        metaAssociationString += "aggregation ";
+    }else if(metaAssociation.getType() == MetaModel::MetaAssociation::COMPOSITION){
+        metaAssociationString += "composition ";
+    }else{
+        metaAssociationString += "association ";
+    }
+
+    metaAssociationString += metaAssociation.getName() + " between\n";
+
+    for(auto &assocEndPair : metaAssociation.getAssociationEnds()){
+        auto assocEnd = assocEndPair.second;
+
+        metaAssociationString += assocEnd->getClass().getName();
+
+        metaAssociationString += " [" + assocEnd->getMultiplicity().toString() + "] ";
+
+        metaAssociationString += "role " + assocEnd->getRole();
+
+        if(assocEnd->getIsOrdered()){
+            metaAssociationString += " ordered";
+        }
+
+        if(assocEnd->getIsUnion()){
+            metaAssociationString += " union";
+        }
+
+        for(auto &subsettedEndPair : assocEnd->getSubsettedEnds()){
+            auto subsettedEnd = subsettedEndPair.second;
+
+            metaAssociationString += " subsets " + subsettedEnd->getClass().getName();
+        }
+
+        for(auto &redefinedEndPair : assocEnd->getRedefinedEnds()){
+            auto redefinedEnd = redefinedEndPair.second;
+
+            metaAssociationString += " redefines " + redefinedEnd->getClass().getName();
+        }
+
+        //derive Expression and qualifiers ignored for now
+
+        metaAssociationString += "\n";
+    }
+
+
+
+    metaAssociationString += "end\n\n";
+
+    outFile << metaAssociationString;
 }
 
 void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){

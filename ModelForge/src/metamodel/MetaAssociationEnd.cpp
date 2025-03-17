@@ -6,6 +6,12 @@ namespace MetaModel{
 
 MetaMultiplicityRange::MetaMultiplicityRange(int lowerBound, int upperBound)
     : lowerBound(lowerBound), upperBound(upperBound){
+    if(lowerBound < 0 && lowerBound != -1 || upperBound < 0 && upperBound != -1){
+        throw std::invalid_argument("Bounds can't be lower than 0.");
+    }
+    if(lowerBound > upperBound && upperBound != -1){
+        throw std::invalid_argument("LowerBound can't be greater than upperBound. " + std::to_string(lowerBound) + " > " + std::to_string(upperBound));
+    }
 }
 
 int MetaMultiplicityRange::getLowerBound() const{
@@ -23,6 +29,19 @@ void MetaMultiplicityRange::setUpperBound(int upperBound){
     this->upperBound = upperBound;
 }
 
+std::string MetaMultiplicityRange::toString() const{
+    std::string range = "";
+
+    if(lowerBound < 0 && upperBound < 0){
+        range = "*";
+    }else if(lowerBound==upperBound){
+        range = std::to_string(lowerBound);
+    }else{
+        range = std::to_string(lowerBound) + ".." + std::to_string(upperBound);
+    }
+
+    return range;
+}
 
 
 MetaMultiplicity::MetaMultiplicity(int lowerBound, int upperBound){
@@ -34,6 +53,10 @@ const std::vector<std::shared_ptr<MetaMultiplicityRange>>& MetaMultiplicity::get
 }
 
 void MetaMultiplicity::addRange(int lowerBound, int upperBound){
+    if(lowerBound < 0 && upperBound > -1){
+        throw std::invalid_argument("Multiplicity many to <number> not allowed");
+    }
+
     if(lowerBound < 0 && lowerBound != -1 || upperBound < 0 && upperBound != -1){
         throw std::invalid_argument("Bounds can't be lower than 0.");
     }
@@ -52,6 +75,22 @@ void MetaMultiplicity::deleteRange(int pos){
             ranges.shrink_to_fit();
         }
     }
+}
+
+std::string MetaMultiplicity::toString() const{
+    std::string multiplicity = "";
+
+    auto rangeIterator = ranges.begin();
+
+    multiplicity += (*rangeIterator)->toString();
+
+    rangeIterator++;
+
+    for(; rangeIterator != ranges.end(); rangeIterator++){
+        multiplicity += ", " + (*rangeIterator)->toString();
+    }
+
+    return multiplicity;
 }
 
 

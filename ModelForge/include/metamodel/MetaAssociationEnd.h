@@ -30,6 +30,8 @@ public:
 
     int getUpperBound() const;
     void setUpperBound(int upperBound);
+
+    std::string toString() const;
 };
 
 class MetaMultiplicity{
@@ -43,6 +45,7 @@ public:
     void addRange(int lowerBound, int upperBound);
     void deleteRange(int pos);
 
+    std::string toString() const;
 };
 
 class MetaAssociationEnd{
