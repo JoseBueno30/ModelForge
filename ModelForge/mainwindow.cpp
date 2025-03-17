@@ -35,8 +35,7 @@ std::shared_ptr<MetaModel::MetaModel> MainWindow::getModel(){
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-    theme("dark"),
-    consoleHandler(new ConsoleHandler())
+    theme("dark")
 {
     ui->setupUi(this);
     connect(ui->actionOpen_Model, &QAction::triggered, this, &MainWindow::openModelFile);
@@ -48,9 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    consoleHandler->setConsole(this->ui->consoleTextEdit);
-    consoleHandler->appendErrorLog("Esto es un error");
-    consoleHandler->appendSuccessfulLog("Esto es un mensaje gucci");
+    ConsoleHandler::setConsole(this->ui->consoleTextEdit);
 }
 
 MainWindow::~MainWindow()
@@ -143,39 +140,44 @@ void MainWindow::on_actionSwitch_mode_triggered()
 }
 
 void MainWindow::openModelFile(){
-    QString path = QFileDialog::getOpenFileName(this, "Select file", "", "USE files (*.use);;All files (*.*)");
-    if (path.isEmpty()) {
-        throw std::runtime_error("No se seleccionó ningún archivo");
+    try{
+        QString path = QFileDialog::getOpenFileName(this, "Select file", "", "USE files (*.use);;All files (*.*)");
+        if (path.isEmpty()) {
+            throw std::runtime_error("No se seleccionó ningún archivo");
+        }
+
+        std::ifstream file(path.toStdString());
+
+        if (!file) {
+            throw std::runtime_error("No se pudo abrir el archivo");
+        }
+
+        std::ostringstream buffer;
+        buffer << file.rdbuf();
+        antlr4::ANTLRInputStream input(buffer.str());
+
+        USELexer lexer(&input);
+        antlr4::CommonTokenStream tokens(&lexer);
+        USEParser parser(&tokens);
+
+        USEParser::ModelContext* tree = parser.model();
+
+        // Crea el visitor y visita el árbol
+        CustomUSEVisitor visitor;
+        visitor.visit(tree);
+
+        // Verifica que el MetaModel se haya creado correctamente
+        auto model = visitor.model;
+        this->setupModelGraphicsView(model);
+
+        QFileInfo fileInfo(path);
+        QString directory = fileInfo.absolutePath();
+        ModelToText::VisitorUSE visitorUSE((directory + "/TEST.use").toStdString());
+
+        model->accept(visitorUSE);
+    }catch(std::runtime_error error){
+        ConsoleHandler::appendErrorLog(error.what());
     }
 
-    std::ifstream file(path.toStdString());
-
-    if (!file) {
-        throw std::runtime_error("No se pudo abrir el archivo");
-    }
-
-    std::ostringstream buffer;
-    buffer << file.rdbuf();
-    antlr4::ANTLRInputStream input(buffer.str());
-
-    USELexer lexer(&input);
-    antlr4::CommonTokenStream tokens(&lexer);
-    USEParser parser(&tokens);
-
-    USEParser::ModelContext* tree = parser.model();
-
-    // Crea el visitor y visita el árbol
-    CustomUSEVisitor visitor;
-    visitor.visit(tree);
-
-    // Verifica que el MetaModel se haya creado correctamente
-    auto model = visitor.model;
-    this->setupModelGraphicsView(model);
-
-    QFileInfo fileInfo(path);
-    QString directory = fileInfo.absolutePath();
-    ModelToText::VisitorUSE visitorUSE((directory + "/TEST.use").toStdString());
-
-    model->accept(visitorUSE);
 }
 
