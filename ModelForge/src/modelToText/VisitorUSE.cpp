@@ -34,6 +34,10 @@ void VisitorUSE::visit(MetaModel::MetaModel metaModel){
         metaAssociationPair.second->accept(*this);
     }
 
+    for(const auto &metaAssociationClassPair : metaModel.getAssociationClasses()){
+        metaAssociationClassPair.second->accept(*this);
+    }
+
     if(globalConstraints != ""){
         outFile << "constraints\n";
         outFile << globalConstraints;
@@ -64,7 +68,13 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
         return;
     }
 
-    std::string metaClassString = "class " + metaClass.getName();
+    std::string metaClassString = "";
+
+    if(metaClass.getIsAbstract()){
+        metaClassString += "abstract ";
+    }
+
+    metaClassString += "class " + metaClass.getName();
 
     //Generalization
     auto superClasses = metaClass.getSuperClasses();
@@ -126,7 +136,7 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
 
             for(const auto &postConditionPair : operation->getPostConditions()){
                 auto postCondition = postConditionPair.second;
-                metaClassString += "psot " + postCondition->getName() + ": " + postCondition->getExpression().getExpression();
+                metaClassString += "post " + postCondition->getName() + ": " + postCondition->getExpression().getExpression();
             }
         }
     }
@@ -243,7 +253,182 @@ void VisitorUSE::visit(MetaModel::MetaAssociation metaAssociation){
 }
 
 void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
+    //If association class has already been visited, do nothing
+    if(visitedClasses.find(metaAssociationClass.getName()) != visitedClasses.end()){
+        return;
+    }
 
+    std::string metaAssociationClassString = "";
+
+    if(metaAssociationClass.getIsAbstract()){
+        metaAssociationClassString += "abstract ";
+    }
+
+    metaAssociationClassString += "associationclass " + metaAssociationClass.getName();
+
+    //Generalization
+    auto superAssociationClasses = metaAssociationClass.getSuperClasses();
+
+    if(superAssociationClasses.size() > 0){
+
+
+        auto superAssociationClassesIterator = superAssociationClasses.begin();
+        auto& superAssociationClass = superAssociationClassesIterator->second;
+
+        if(visitedClasses.find(superAssociationClass->getName()) == visitedClasses.end()){
+            superAssociationClass->accept(*this);
+        }
+
+        metaAssociationClassString += " < " + superAssociationClass->getName();
+
+        superAssociationClassesIterator++;
+
+        for(; superAssociationClassesIterator != superAssociationClasses.end(); superAssociationClassesIterator++){
+            superAssociationClass = superAssociationClassesIterator->second;
+            if(visitedClasses.find(superAssociationClass->getName()) == visitedClasses.end()){
+                superAssociationClass->accept(*this);
+            }
+
+            metaAssociationClassString += ", " + superAssociationClass->getName();
+        }
+
+    }
+
+    //AssociationEnds
+    metaAssociationClassString += " between\n";
+
+    for(auto &assocEndPair : metaAssociationClass.MetaAssociation::getAssociationEnds()){
+        auto assocEnd = assocEndPair.second;
+
+        metaAssociationClassString += assocEnd->getClass().getName();
+
+        metaAssociationClassString += " [" + assocEnd->getMultiplicity().toString() + "] ";
+
+        metaAssociationClassString += "role " + assocEnd->getRole();
+
+        if(assocEnd->getIsOrdered()){
+            metaAssociationClassString += " ordered";
+        }
+
+        if(assocEnd->getIsUnion()){
+            metaAssociationClassString += " union";
+        }
+
+        for(auto &subsettedEndPair : assocEnd->getSubsettedEnds()){
+            auto subsettedEnd = subsettedEndPair.second;
+
+            metaAssociationClassString += " subsets " + subsettedEnd->getClass().getName();
+        }
+
+        for(auto &redefinedEndPair : assocEnd->getRedefinedEnds()){
+            auto redefinedEnd = redefinedEndPair.second;
+
+            metaAssociationClassString += " redefines " + redefinedEnd->getClass().getName();
+        }
+
+        //derive Expression and qualifiers ignored for now
+
+        metaAssociationClassString += "\n";
+    }
+
+
+
+    //Attributes
+    auto attributes = metaAssociationClass.getAttributes();
+
+    if(attributes.size() > 0){
+        metaAssociationClassString += "attributes\n";
+
+        for(const auto &attributePair : attributes){
+            auto attribute = attributePair.second;
+            metaAssociationClassString += attribute->toString() + "\n";
+        }
+    }
+
+    //Operations
+    auto operations = metaAssociationClass.getOperations();
+
+    if(operations.size() > 0){
+        metaAssociationClassString += "operations\n";
+
+        for(const auto &operationPair : operations){
+            auto operation = operationPair.second;
+            metaAssociationClassString += operation->toString();
+            metaAssociationClassString += " " + operation->getOperationDefinition() + "\n";
+
+            for(const auto &preConditionPair : operation->getPreConditions()){
+                auto preCondition = preConditionPair.second;
+                metaAssociationClassString += "pre " + preCondition->getName() + ": " + preCondition->getExpression().getExpression();
+            }
+
+            for(const auto &postConditionPair : operation->getPostConditions()){
+                auto postCondition = postConditionPair.second;
+                metaAssociationClassString += "post " + postCondition->getName() + ": " + postCondition->getExpression().getExpression();
+            }
+        }
+    }
+
+    //Constraints
+    auto constraints = metaAssociationClass.getConstraints();
+
+    if(constraints.size() > 0){
+        metaAssociationClassString += "constraints\n";
+
+        for(const auto &constraintPair : constraints){
+            auto constraint = constraintPair.second;
+
+            if(constraint->getVariables().size() > 1){
+                globalConstraints += "context ";
+
+                auto variablesIterator = constraint->getVariables().begin();
+                auto variable = variablesIterator->second;
+
+                globalConstraints += variable->getName();
+
+                variablesIterator++;
+
+                for(; variablesIterator != constraint->getVariables().end(); variablesIterator++){
+                    variable = variablesIterator->second;
+
+                    globalConstraints += ", " + variable->getName();
+                }
+
+
+                globalConstraints += ": " + constraint->getClass().getName() + " inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n\n";
+            }else{
+                if(constraint->getIsExistential()){
+                    metaAssociationClassString += "existential inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n";
+                }else{
+                    metaAssociationClassString += "inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n";
+                }
+            }
+        }
+    }
+
+    //StateMachines
+    auto stateMachines = metaAssociationClass.getStateMachines();
+
+    if(stateMachines.size() > 0){
+        metaAssociationClassString += "statemachines\n";
+
+        for(const auto &stateMachinePair : stateMachines){
+            auto stateMachine = stateMachinePair.second;
+            metaAssociationClassString += stateMachine->getStateMachineDefinition() + "\n";
+        }
+    }
+
+    //Association type
+    if(metaAssociationClass.getType() == MetaModel::MetaAssociation::AGGREGATION){
+        metaAssociationClassString += "aggregation\n";
+    }else if(metaAssociationClass.getType() == MetaModel::MetaAssociation::COMPOSITION){
+        metaAssociationClassString += "composition\n";
+    }
+
+    visitedClasses.insert(metaAssociationClass.getName());
+
+    metaAssociationClassString += "end\n\n";
+
+    outFile << metaAssociationClassString;
 }
 
 void VisitorUSE::save() {

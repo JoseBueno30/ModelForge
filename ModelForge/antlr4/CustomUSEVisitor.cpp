@@ -536,23 +536,23 @@ public:
     //EXPRESSIONS
 
     std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+        return std::make_shared<MetaModel::OCLExpr>(ctx->expression()->getText());
     }
 
     std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+        return std::make_shared<MetaModel::OCLExpr>(ctx->logicalExpression()->getText());
     }
 
     std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+        return std::make_shared<MetaModel::OCLExpr>(ctx->conditionalExpression()->getText());
     }
 
     std::any visitLambdaExpr(USEParser::LambdaExprContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+        return std::make_shared<MetaModel::OCLExpr>(ctx->lambdaExpression()->getText());
     }
 
     std::any visitLetExpr(USEParser::LetExprContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->getText());
+        return std::make_shared<MetaModel::OCLExpr>(ctx->letExpression()->getText());
     }
 
     // ASSOCIAITON CLASS DEFINITION

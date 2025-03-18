@@ -25,17 +25,22 @@ end
 
 composition AccountOfBanks between
 Account [*] role accounts
-Bank [1] role bank
+Bank [1..*-1] role bank
 end
 
 association Ownership between
 Account [*] role accounts
-Person [1] role owner
+Person [1..4] role owner
 end
 
 association Use between
 Account [*] role usedAccounts
 Person [*] role user
+end
+
+associationclass Employees between
+Bank [1..*-1] role bank
+Person [*] role employees
 end
 
 constraints

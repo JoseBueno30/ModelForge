@@ -393,7 +393,7 @@ add_library(MetaModelLib SHARED
 
     include/modelToText/VisitorInterface.h
     include/modelToText/VisitorUSE.h
-    src/modelTotText/VisitorUSE.cpp
+    src/modelToText/VisitorUSE.cpp
 )
 
 

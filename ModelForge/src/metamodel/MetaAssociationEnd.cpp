@@ -36,6 +36,8 @@ std::string MetaMultiplicityRange::toString() const{
         range = "*";
     }else if(lowerBound==upperBound){
         range = std::to_string(lowerBound);
+    }else if(upperBound < 0){
+        range = std::to_string(lowerBound) + "..*";
     }else{
         range = std::to_string(lowerBound) + ".." + std::to_string(upperBound);
     }
