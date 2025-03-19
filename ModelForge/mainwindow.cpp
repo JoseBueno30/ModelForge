@@ -19,10 +19,20 @@ void toogleColorTheme(){
     QString theme = ThemeManager::getTheme() ? "light" : "dark";
     QFile file(":/styles/" + theme + ".qss");
     qDebug() << "Tema: " << theme;
+    qApp->setPalette(theme == "light" ? ThemeManager::lightPalette : ThemeManager::darkPalette);
+
+    QPalette defaultPalette = QApplication::palette();
+
+    qDebug() << "Color de fondo:" << defaultPalette.color(QPalette::Window);
+    qDebug() << "Color de texto:" << defaultPalette.color(QPalette::WindowText);
+    qDebug() << "Color de fondo del botón:" << defaultPalette.color(QPalette::Button);
+    qDebug() << "Color de texto del botón:" << defaultPalette.color(QPalette::ButtonText);
+
     if(file.open(QFile::ReadOnly)){
         qDebug() << "entra";
         QString stylesheet = file.readAll();
         qApp->setStyleSheet(stylesheet);
+
         file.close();
     }
 }
@@ -41,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent)
     theme("dark")
 {
     ui->setupUi(this);
+    qApp->setPalette(ui->centralwidget->palette());
     connect(ui->actionOpen_Model, &QAction::triggered, this, &MainWindow::openModelFile);
     connect(ui->actionSwitch_mode, &QAction::triggered, this, &toogleColorTheme);
 

@@ -1,6 +1,6 @@
 #include <ui/components/ThemeManager.h>
 
-bool ThemeManager::theme = false;
+bool ThemeManager::theme = true;
 
 void ThemeManager::toogleTheme(){
     theme = !theme;
@@ -25,3 +25,7 @@ int ThemeManager::getTextColor(){
 int ThemeManager::getWidgetBackgroundColor(){
     return theme ? LIGHT_WIDGET_BG : DARK_WIDGET_BG;
 }
+
+const QPalette ThemeManager::darkPalette = QPalette(QColor(0x21252A));
+
+const QPalette ThemeManager::lightPalette = QPalette(QColor(0xffffff));

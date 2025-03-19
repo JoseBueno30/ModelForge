@@ -11,3 +11,7 @@ QMainWindow {
     background-color: #21252A;
     color:  white;
 }
+QMenuBar{
+    padding: 2px;
+    border-bottom: 1px solid white;
+}

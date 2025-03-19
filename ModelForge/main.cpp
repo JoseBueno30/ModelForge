@@ -82,6 +82,13 @@ int main(int argc, char *argv[])
         }
     }
 
+    QPalette defaultPalette = QApplication::palette();
+
+    qDebug() << "Color de fondo:" << defaultPalette.color(QPalette::Window);
+    qDebug() << "Color de texto:" << defaultPalette.color(QPalette::WindowText);
+    qDebug() << "Color de fondo del botón:" << defaultPalette.color(QPalette::Button);
+    qDebug() << "Color de texto del botón:" << defaultPalette.color(QPalette::ButtonText);
+
     //auto model = test_visitor();
 
     MainWindow w;

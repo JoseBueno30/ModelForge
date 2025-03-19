@@ -136,9 +136,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen_Model">
-   <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::FolderOpen"/>
-   </property>
    <property name="text">
     <string>Open Model</string>
    </property>
@@ -169,9 +166,6 @@
    </property>
   </action>
   <action name="actionSwitch_mode">
-   <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::WeatherClear"/>
-   </property>
    <property name="text">
     <string>Toogle Theme</string>
    </property>

@@ -1,6 +1,7 @@
 #ifndef THEMEMANAGER_H
 #define THEMEMANAGER_H
 
+#include <QPalette>
 #define DARK_SECTION_BG     0x21252A
 #define DARK_WIDGET_BG      0x292C34
 #define DARK_TEXT           0xffffff
@@ -23,6 +24,9 @@ public:
     static int getWidgetBackgroundColor();
     static int getTextColor();
     static int getAssociationColor();
+
+    const static QPalette darkPalette;
+    const static QPalette lightPalette;
 
 };
 

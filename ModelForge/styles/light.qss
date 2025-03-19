@@ -12,18 +12,18 @@ QMainWindow {
     color: black;
 }
 
-QGroupBox{
-    color: black;
-    border: 2px solid black;
-    border-radius: 5px;
+QMenuBar{
+    padding: 2px;
+    background-color: white;
+    border-bottom: 1px solid black;
 }
 
 QMenuBar, QMenu {
-        background-color: white;
         color: black;
     }
-    QMenu::icon{
-        border: 1px solid black;
+    QMenu{
+        background-color: rgb(242, 242, 242);
+        border-radius: 5px;
     }
     
     QMenuBar::item:selected {
@@ -36,7 +36,7 @@ QMenuBar, QMenu {
     }
     
     QToolBar {
-        background-color: white;
+        background-color: rgba(193, 193, 193, 0);
     }
     
     QPushButton {
@@ -45,5 +45,7 @@ QMenuBar, QMenu {
     }
     
     QPushButton:hover {
+        font-size: 20px;
         background-color: lightgray;
     }
+*/
