@@ -15,18 +15,24 @@
 class ThemeManager{
 private:
     static bool theme;
+    static QPalette darkPalette;
+    static QPalette lightPalette;
 
 public:
     static void toogleTheme();
     static bool getTheme();
+
+    const static QPalette& getLightPalette();
+    const static QPalette& getDarkPalette();
 
     static int getSectionBackgroundColor();
     static int getWidgetBackgroundColor();
     static int getTextColor();
     static int getAssociationColor();
 
-    const static QPalette darkPalette;
-    const static QPalette lightPalette;
+    static void createPalettes(const QPalette& systemPalette);
+
+
 
 };
 

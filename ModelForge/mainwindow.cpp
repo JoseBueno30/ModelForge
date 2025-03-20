@@ -13,13 +13,14 @@
 #include <antlr4/CustomUSEVisitor.cpp>
 #include <modelToText/VisitorUSE.h>
 #include <ui/components/ThemeManager.h>
+#include <QStyleFactory>
 
 void toogleColorTheme(){
     ThemeManager::toogleTheme();
     QString theme = ThemeManager::getTheme() ? "light" : "dark";
     QFile file(":/styles/" + theme + ".qss");
     qDebug() << "Tema: " << theme;
-    qApp->setPalette(theme == "light" ? ThemeManager::lightPalette : ThemeManager::darkPalette);
+    qApp->setPalette(theme == "light" ? ThemeManager::getLightPalette() : ThemeManager::getDarkPalette());
 
     QPalette defaultPalette = QApplication::palette();
 
@@ -51,14 +52,18 @@ MainWindow::MainWindow(QWidget *parent)
     theme("dark")
 {
     ui->setupUi(this);
-    qApp->setPalette(ui->centralwidget->palette());
+    qDebug() << "Palette: " << qApp->palette().window();
+    ThemeManager::createPalettes(qApp->palette());
+    qApp->setStyle(QStyleFactory::create("fusion"));
+
+    //qApp->setPalette(ui->centralwidget->palette());
     connect(ui->actionOpen_Model, &QAction::triggered, this, &MainWindow::openModelFile);
     connect(ui->actionSwitch_mode, &QAction::triggered, this, &toogleColorTheme);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     modelGraphicsView->setScene(new QGraphicsScene(this));
 
-    toogleColorTheme();
+    //toogleColorTheme();
 
 
     ConsoleHandler::setConsole(this->ui->consoleTextEdit);

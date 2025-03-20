@@ -43,27 +43,9 @@
      <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
     </property>
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="3,10">
+     <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="10">
       <item>
-       <layout class="QVBoxLayout" name="leftVerticalLayout">
-        <item>
-         <widget class="QGroupBox" name="modelTreeGroupBox">
-          <property name="title">
-           <string>ModelName</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="elementsGroupBox">
-          <property name="title">
-           <string>GroupBox</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="rightVerticalLayout" stretch="10,4">
+       <layout class="QVBoxLayout" name="rightVerticalLayout" stretch="10,0">
         <item>
          <widget class="ModelGraphicsView" name="modelGraphicsView">
           <property name="autoFillBackground">
@@ -81,11 +63,60 @@
          </widget>
         </item>
         <item>
-         <widget class="QTextEdit" name="consoleTextEdit">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,20">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>ToolBox</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_2">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_3">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_4">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_5">
+              <property name="text">
+               <string>PushButton</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTextEdit" name="consoleTextEdit"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
