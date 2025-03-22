@@ -1,4 +1,6 @@
+#include "ui/components/ThemeManager.h"
 #include<ui/components/ConsoleHandler.h>
+#include <string>
 
 QTextEdit* ConsoleHandler::console = nullptr;
 
@@ -22,6 +24,11 @@ void ConsoleHandler::appendErrorLog(QString errorLog){
 void ConsoleHandler::appendSuccessfulLog(QString successfulLog){
     QString successfulContent = ConsoleHandler::console->toHtml() + "<span style='color:#30A456;font-size:17px;'>" + getCurrentTime() + "\t" + successfulLog + "</span>";
     ConsoleHandler::console->setHtml(successfulContent);
+}
+
+void ConsoleHandler::appendStandardLog(QString log){
+    QString content = ConsoleHandler::console->toHtml() + "<span style='color:#2AA1DC;font-size:17px;'>" + getCurrentTime() + "\t" + log + "</span>";
+    ConsoleHandler::console->setHtml(content);
 }
 
 void ConsoleHandler::clear(){

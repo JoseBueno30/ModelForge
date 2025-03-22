@@ -12,6 +12,7 @@ public:
     static void setConsole(QTextEdit* console);
     static void appendErrorLog(QString errorLog);
     static void appendSuccessfulLog(QString successfulLog);
+    static void appendStandardLog(QString log);
     static void clear();
 
 protected:

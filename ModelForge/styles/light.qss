@@ -1,14 +1,16 @@
 ModelGraphicsView{
     background-color: #FFFFFF;
     border: 1px solid black;
+    border-radius: 5px;
 }
 
 QTextEdit#consoleTextEdit{
     background-color: #FFFFFF;
     border: 1px solid black;
+    border-radius: 5px;
 }
 QMainWindow {
-    background-color: #FFFFFF;
+    background-color:rgba(241, 241, 241, 0.95);
     color: black;
 }
 
@@ -30,6 +32,12 @@ QMenuBar, QMenu {
         border-radius: 5px;
         background-color: lightgray;
     }
+
+    QMenu::item{
+        padding: 5px;
+        width: 100%;
+    }
+
     QMenu::item:selected{
         border-radius: 5px;
         background-color: lightgray;
@@ -38,14 +46,3 @@ QMenuBar, QMenu {
     QToolBar {
         background-color: rgba(193, 193, 193, 0);
     }
-    
-    QPushButton {
-        background-color: white;
-        border: 1px solid gray;
-    }
-    
-    QPushButton:hover {
-
-        background-color: lightgray;
-    }
-*/

@@ -160,19 +160,24 @@ void MainWindow::on_actionSwitch_mode_triggered()
 
 }
 
+std::string base_name(std::string const & path)
+{
+    return path.substr(path.find_last_of("/\\") + 1);
+}
+
 void MainWindow::openModelFile(){
     try{
         QString path = QFileDialog::getOpenFileName(this, "Select file", "", "USE files (*.use);;All files (*.*)");
         if (path.isEmpty()) {
-            throw std::runtime_error("No se seleccionó ningún archivo");
+            return;
         }
 
         std::ifstream file(path.toStdString());
 
         if (!file) {
-            throw std::runtime_error("No se pudo abrir el archivo");
+            throw std::runtime_error("(0/)ModelForge didn't find the file.");
         }
-
+        ConsoleHandler::appendStandardLog(QString::fromStdString("Loading '" + base_name(path.toStdString()) + "'"));
         std::ostringstream buffer;
         buffer << file.rdbuf();
         antlr4::ANTLRInputStream input(buffer.str());
@@ -190,6 +195,7 @@ void MainWindow::openModelFile(){
         // Verifica que el MetaModel se haya creado correctamente
         auto model = visitor.model;
         this->setupModelGraphicsView(model);
+        ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
 
         QFileInfo fileInfo(path);
         QString directory = fileInfo.absolutePath();

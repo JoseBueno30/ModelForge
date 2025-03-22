@@ -1,6 +1,7 @@
 ModelGraphicsView{
     background-color: #292C34;
     border: 1px solid white;
+    border-radius: 5px;
 }
 
 QTextEdit#consoleTextEdit{
@@ -11,7 +12,36 @@ QMainWindow {
     background-color: #21252A;
     color:  white;
 }
+
 QMenuBar{
     padding: 2px;
+    background-color:rgb(32, 34, 41);
     border-bottom: 1px solid white;
 }
+
+QMenuBar, QMenu {
+        color: white;
+    }
+    QMenu{
+        border-radius: 5px;
+    }
+    
+    QMenuBar::item:selected {
+        border-radius: 5px;
+        background-color: #292C34;
+    }
+
+    QMenu::item{
+        padding: 5px;
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    QMenu::item:selected{
+        border-radius: 5px;
+        background-color: #292C34;
+    }
+    
+    QToolBar {
+        background-color: rgba(193, 193, 193, 0);
+    }

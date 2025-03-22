@@ -19,7 +19,7 @@ QRectF AssociationClassItemView::boundingRect() const {
     QRectF auxRect = this->classItem->sceneBoundingRect();
     QLineF auxLine(center, auxRect.center());
     QPointF p2 = this->associationItem->getNearestEdgeIntersection(auxRect, auxLine, p2);
-    return QRectF(center, p2).normalized().adjusted(-10, -10, 10, 10);;
+    return QRectF(center, p2).normalized().adjusted(-100, -100, 100, 100);;
 }
 void AssociationClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     // painter->save();
