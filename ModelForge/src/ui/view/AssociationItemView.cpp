@@ -35,7 +35,7 @@ ClassesOrientation AssociationItemView::checkOrientation(QRectF& class1Rect, QRe
 }
 
 void AssociationItemView::updatePosition(){
-    qDebug() << "Offset: " << offset;
+    //qDebug() << "Offset: " << offset;
 
     if(!class1 || !class2) throw std::runtime_error("ERROR: No hay clases en la asociacion.");
 
@@ -68,7 +68,7 @@ void AssociationItemView::updatePosition(){
     setP1(p1);
     setP2(p2);
     update();
-    qDebug() << "P1: " << this->p1 << "\tP2:" << this->p2;
+    //qDebug() << "P1: " << this->p1 << "\tP2:" << this->p2;
 }
 
 QPointF AssociationItemView::getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last){

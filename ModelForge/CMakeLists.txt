@@ -430,6 +430,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/view/GeneralizationItemView.cpp
         include/ui/components/ThemeManager.h
         src/ui/components/ThemeManager.cpp
+        include/utils/Commands.h
+        src/utils/Commands.cpp
+        src/ui/components/ModelGraphicsScene.cpp
+        include/ui/components/ModelGraphicsScene.h
 
 
     )

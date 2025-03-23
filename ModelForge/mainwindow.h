@@ -5,8 +5,10 @@
 #include <QMainWindow>
 #include <QApplication>
 #include <ui/view/ClassItemView.h>
+#include <ui/components/ModelGraphicsScene.h>
 #include <ui/components/ModelGraphicsView.h>
 #include <QFile>
+#include <QUndoStack>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,6 +36,7 @@ public Q_SLOTS:
     void removeModelItemView(const std::string& key);
 
     void openModelFile();
+    void itemMoved();
 
 private:
     Ui::MainWindow *ui;
@@ -41,6 +44,10 @@ private:
     QString theme;
     ConsoleHandler* consoleHandler;
     std::map<std::string, QGraphicsItem*> modelItemViewElementsMap;
+    ModelGraphicsScene *scene;
 
+    QUndoStack *undoStack;
+    QAction *undoAction = nullptr;
+    QAction *redoAction = nullptr;
 };
 #endif // MAINWINDOW_H

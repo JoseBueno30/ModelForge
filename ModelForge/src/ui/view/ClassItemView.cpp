@@ -3,6 +3,8 @@
 #include <ui/view/AssociationItemView.h>
 #include <ui/view/AssociationClassItemView.h>
 #include <ui/view/GeneralizationItemView.h>
+
+#include <ui/components/ModelGraphicsScene.h>
 #define PADDING 20
 #define TEST_NAME "ClassLongTextAdriduty"
 
@@ -156,6 +158,7 @@ void ClassItemView::mousePressEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ClosedHandCursor);
     setZValue(ModelGraphicsView::highestZIndex);
     ModelGraphicsView::highestZIndex++;
+    oldPos = pos();
     QGraphicsItem::mousePressEvent(event);
 }
 
@@ -176,6 +179,10 @@ void ClassItemView::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
 
 void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ArrowCursor);
+    ModelGraphicsScene* scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
+    qDebug() << "casteado y pos: " << oldPos;
+    scene->emitSignal(this, oldPos);
+    qDebug() << "movido";
     QGraphicsItem::mouseReleaseEvent(event);
 }
 

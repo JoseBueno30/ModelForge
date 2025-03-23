@@ -35,6 +35,9 @@ public:
 
     virtual ~BoxItemView() = default;
 
+protected:
+    QPointF oldPos;
+
 private:
     qreal x,y, width, height, minWidth, minHeight;
 };

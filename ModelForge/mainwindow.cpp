@@ -14,6 +14,7 @@
 #include <modelToText/VisitorUSE.h>
 #include <ui/components/ThemeManager.h>
 #include <QStyleFactory>
+#include <utils/Commands.h>
 
 void toogleColorTheme(){
     ThemeManager::toogleTheme();
@@ -51,6 +52,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow),
     theme("dark")
 {
+    undoStack = new QUndoStack(this);
+    undoAction = undoStack->createUndoAction(this, tr("Undo"));
+    undoAction->setShortcut(QKeySequence::Undo);
+    redoAction = undoStack->createRedoAction(this, tr("Redo"));
+    redoAction->setShortcut(QKeySequence::Redo);
+
     ui->setupUi(this);
     qDebug() << "Palette: " << qApp->palette().window();
     ThemeManager::createPalettes(qApp->palette());
@@ -61,7 +68,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionSwitch_mode, &QAction::triggered, this, &toogleColorTheme);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
-    modelGraphicsView->setScene(new QGraphicsScene(this));
+    scene = new ModelGraphicsScene();
+    bool succes = connect(scene, &ModelGraphicsScene::itemMoved, this, &MainWindow::itemMoved);
+    qDebug() << "Connect = " << succes;
+    modelGraphicsView->setScene(scene);
 
     //toogleColorTheme();
 
@@ -205,6 +215,11 @@ void MainWindow::openModelFile(){
     }catch(std::runtime_error error){
         ConsoleHandler::appendErrorLog(error.what());
     }
+}
 
+void MainWindow::itemMoved()
+{
+    qDebug() << "MoveCommand: ";// << oldPosition;
+    //undoStack->push(new MoveCommand(movedItem, oldPosition));
 }
 
