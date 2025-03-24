@@ -153,6 +153,18 @@ std::vector<AssociationItemView *> ClassItemView::associationsShared(ClassItemVi
     return associationsShared;
 }
 
+void ClassItemView::updateConnectionPositions(){
+    for(auto association: this->associations){
+        association->updatePosition();
+    }
+    for(auto associationClass : associationClasses){
+        associationClass->update();
+    }
+    for(auto generalization : generalizations){
+        generalization->updatePosition();
+    }
+}
+
 
 void ClassItemView::mousePressEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ClosedHandCursor);
@@ -166,15 +178,7 @@ void ClassItemView::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
     //this->setPosition(event->pos() - this->ClassItemView::boundingRect().center());
     //this->scene()->update();
     QGraphicsItem::mouseMoveEvent(event);
-    for(auto association: this->associations){
-        association->updatePosition();
-    }
-    for(auto associationClass : associationClasses){
-        associationClass->update();
-    }
-    for(auto generalization : generalizations){
-        generalization->updatePosition();
-    }
+    updateConnectionPositions();
 }
 
 void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){

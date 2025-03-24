@@ -14,7 +14,7 @@ public:
     void emitSignal(QGraphicsItem * item, const QPointF& pos);
 
 Q_SIGNALS:
-    void itemMoved();
+    void itemMoved(QGraphicsItem * item, const QPointF& pos);
 
 };
 #endif // MODELGRAPHICSSCENE_H

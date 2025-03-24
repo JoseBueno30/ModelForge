@@ -25,7 +25,7 @@ end
 
 composition AccountOfBanks between
 Account [*] role accounts
-Bank [1..*-1] role bank
+Bank [1..*] role bank
 end
 
 association Ownership between
@@ -39,7 +39,7 @@ Person [*] role user
 end
 
 associationclass Employees between
-Bank [1..*-1] role bank
+Bank [1..*] role bank
 Person [*] role employees
 end
 

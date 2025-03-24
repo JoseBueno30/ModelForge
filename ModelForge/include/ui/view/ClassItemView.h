@@ -23,6 +23,8 @@ public:
 
     QRectF classNameRect();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void updateConnectionPositions();
+
     void addAssociation(AssociationItemView* association);
     void deleteAssociation(AssociationItemView* association);
 

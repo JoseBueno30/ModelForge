@@ -14,6 +14,6 @@ void ModelGraphicsScene::emitSignal(QGraphicsItem * item,const QPointF& pos){
 
     qDebug() << "Emitiendo señal con item:" << item << " posición: " << pos;
     if(pos != item->pos()){
-        Q_EMIT itemMoved();
+        Q_EMIT itemMoved(item, pos);
     }
 }

@@ -47,6 +47,10 @@ std::shared_ptr<MetaModel::MetaModel> MainWindow::getModel(){
     return this->model;
 }
 
+void checkTrigger(){
+    qDebug() << "Ctrl + z";
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
@@ -55,8 +59,11 @@ MainWindow::MainWindow(QWidget *parent)
     undoStack = new QUndoStack(this);
     undoAction = undoStack->createUndoAction(this, tr("Undo"));
     undoAction->setShortcut(QKeySequence::Undo);
+    this->addAction(undoAction);
     redoAction = undoStack->createRedoAction(this, tr("Redo"));
     redoAction->setShortcut(QKeySequence::Redo);
+    this->addAction(redoAction);
+
 
     ui->setupUi(this);
     qDebug() << "Palette: " << qApp->palette().window();
@@ -66,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent)
     //qApp->setPalette(ui->centralwidget->palette());
     connect(ui->actionOpen_Model, &QAction::triggered, this, &MainWindow::openModelFile);
     connect(ui->actionSwitch_mode, &QAction::triggered, this, &toogleColorTheme);
+    connect(undoAction, &QAction::triggered, this, &checkTrigger);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     scene = new ModelGraphicsScene();
@@ -78,6 +86,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ConsoleHandler::setConsole(this->ui->consoleTextEdit);
 }
+
+
 
 MainWindow::~MainWindow()
 {
@@ -93,7 +103,6 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
     int height = 150;
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
-    modelGraphicsView->setScene(new QGraphicsScene(this));
 
     QGraphicsScene *scene = modelGraphicsView->scene();
 
@@ -217,9 +226,9 @@ void MainWindow::openModelFile(){
     }
 }
 
-void MainWindow::itemMoved()
+void MainWindow::itemMoved(QGraphicsItem * movedItem, const QPointF& oldPos)
 {
-    qDebug() << "MoveCommand: ";// << oldPosition;
-    //undoStack->push(new MoveCommand(movedItem, oldPosition));
+    qDebug() << "MoveCommand: " << oldPos;
+    undoStack->push(new MoveCommand(movedItem, oldPos));
 }
 
