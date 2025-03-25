@@ -183,11 +183,15 @@ void ClassItemView::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
 
 void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ArrowCursor);
+    qDebug() << "Scene:" << this->scene();
     ModelGraphicsScene* scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
-    qDebug() << "casteado y pos: " << oldPos;
-    scene->emitSignal(this, oldPos);
-    qDebug() << "movido";
-    QGraphicsItem::mouseReleaseEvent(event);
+    qDebug() << "Scene:" << scene;
+    if(this->scene()!=nullptr){
+        qDebug() << "casteado y pos: " << oldPos;
+        scene->emitSignal(this, oldPos);
+        qDebug() << "movido";
+        QGraphicsItem::mouseReleaseEvent(event);
+    }
 }
 
 ClassItemView::~ClassItemView(){}

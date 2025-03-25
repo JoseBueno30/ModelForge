@@ -1,0 +1,5 @@
+model TestModel
+
+
+associationclass testAssoccClass < NonExistingSuperClass
+end

@@ -1,0 +1,17 @@
+model TestModel
+
+class TestClass
+attributes
+    testInteger : Integer
+    testBoolean : Boolean
+operations
+    testOperation(testParameter : Integer)
+        begin
+           --OperationDefinition
+        end
+end
+
+constraints
+    context TestClass :: testOperation(testParameter: Boolean)
+        pre testPreCondition: self.testInteger > 0
+        post testPostCondition: self.testBoolean = false

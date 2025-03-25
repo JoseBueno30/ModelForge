@@ -16,6 +16,8 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets LinguistTool
 
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+include_directories(${PROJECT_SOURCE_DIR}/antlr4)
+include_directories(${PROJECT_SOURCE_DIR}/antlr4/generated)
 include_directories(${PROJECT_SOURCE_DIR}/antlr4/src)
 include_directories(${PROJECT_SOURCE_DIR}/antlr4/src/atn)
 include_directories(${PROJECT_SOURCE_DIR}/antlr4/src/dfa)
@@ -355,7 +357,7 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.h")
 set(TS_FILES ModelForge_en_150.ts)
 
-add_library(antlr4Lib SHARED
+add_library(Antlr4Lib SHARED
     ${ANTLR_GENERATED_SOURCES}
     ${ANTLR4_CPP_RUNTIME}
     antlr4/CustomUSEVisitor.cpp
@@ -462,7 +464,7 @@ endif()
 
 target_link_libraries(ModelForge PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(ModelForge PRIVATE MetaModelLib)
-target_link_libraries(ModelForge PRIVATE antlr4Lib)
+target_link_libraries(ModelForge PRIVATE Antlr4Lib)
 
 
 add_subdirectory(tests)

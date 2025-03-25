@@ -101,12 +101,11 @@ public:
             addAssociationClassConstraints(associationClassElem->associationClassDefinition());
         }
 
-
         // Generate global constraints. All class interfaces are known and association features are available for expressions
         // Generate pre-/postconditions
 
         for (auto constraint: constraintElements){
-            visit(constraint);
+            visit(constraint);        
         }
 
 
@@ -147,7 +146,7 @@ public:
             for(auto superClassElem : ctx->idList()->ID()){
                 auto superClass = model->getClass(superClassElem->getText());
                 if(!superClass){
-                    throw std::runtime_error("Undefined Super Class: " + superClassElem->getText() + ". Declare Super Classes before Child Classes");
+                    throw std::invalid_argument("Undefined Super Class: " + superClassElem->getText() + ". Declare Super Classes before Child Classes");
                 }
 
                 metaClass->addSuperClass(superClass);
@@ -345,6 +344,9 @@ public:
     std::any visitPrePost(USEParser::PrePostContext *ctx) override {
         // Check that the class in the context exists
         std::string className = ctx->ID()[0]->getText();
+
+        std::cout << className << std::endl;
+
         std::shared_ptr<MetaModel::MetaClass> scopeClass = model->getClass(className);
 
         if(!scopeClass){
@@ -381,22 +383,22 @@ public:
             std::shared_ptr<MetaModel::MetaVariable> variable = std::any_cast<std::shared_ptr<MetaModel::MetaVariable>>(visit(variableDeclaration));
 
             if (variables.find(variable->getName()) != variables.end()) {
-                throw std::runtime_error("Redefinition of variable: '" + variable->getName() + "' in global constraint declaration.");
+                throw std::invalid_argument("Redefinition of variable: '" + variable->getName() + "' in global constraint declaration.");
             }
 
             variables[variable->getName()] = variable;
         }
 
         if(variables.size() != opVariables.size()){
-            throw std::runtime_error("This signature of operation: '" + opName + "' does not match its previous declaration in class: '" + className + "'.");
+            throw std::invalid_argument("This signature of operation: '" + opName + "' does not match its previous declaration in class: '" + className + "'.");
         }
 
         auto it1 = variables.begin();
         auto it2 = opVariables.begin();
 
         for (; it1 != variables.end(); ++it1, ++it2) {
-            if (!(it1->second->getName() != it2->second->getName()) || !(it1->second->getType().equals(it2->second->getType()))){
-                throw std::runtime_error("This signature of operation: '" + opName + "' does not match its previous declaration in class: '" + className + "'.");
+            if (it1->second->getName() != it2->second->getName() || !(it1->second->getType().equals(it2->second->getType()))){
+                throw std::invalid_argument("This signature of operation: '" + opName + "' does not match its previous declaration in class: '" + className + "'.");
             };
         }
 
@@ -569,7 +571,7 @@ public:
             for(auto superClassElem : ctx->idList()->ID()){
                 auto superClass = model->getAssociationClass(superClassElem->getText());
                 if(!superClass){
-                    throw std::runtime_error("Undefined Super Class: " + superClassElem->getText() + ". Declare Super Classes before Child Classes");
+                    throw std::invalid_argument("Undefined Super Class: " + superClassElem->getText() + ". Declare Super Classes before Child Classes");
                 }
 
                 metaAssociationClass->addSuperClass(superClass);
@@ -681,7 +683,7 @@ public:
         for(auto redefinition : redefinitions){
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEndToRedefine = metaAssociationEnd->getClassSharedPtr()->getAssociationEnd(redefinition->ID()->getText());
             if(!associationEndToRedefine){
-                throw std::runtime_error("AssociationEnd '" + redefinition->ID()->getText() + "' doesn't exist.");
+                throw std::invalid_argument("AssociationEnd '" + redefinition->ID()->getText() + "' doesn't exist.");
             }
             metaAssociationEnd->addRedefinedEnd(associationEndToRedefine);
         }
@@ -691,7 +693,7 @@ public:
         for(auto subset : subsets){
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEndSubsetted = metaAssociationEnd->getClassSharedPtr()->getAssociationEnd(subset->ID()->getText());
             if(!associationEndSubsetted){
-                throw std::runtime_error("AssociationEnd'" + subset->ID()->getText() + "' doesn't exist.");
+                throw std::invalid_argument("AssociationEnd'" + subset->ID()->getText() + "' doesn't exist.");
             }
             metaAssociationEnd->addSubsettedEnd(associationEndSubsetted);
         }
@@ -700,7 +702,7 @@ public:
     std::any visitAssociationEnd(USEParser::AssociationEndContext *ctx) override{
         std::shared_ptr<MetaModel::MetaClass> endClass = model->getClass(ctx->ID()->getText());
         if(endClass == nullptr){
-            throw std::runtime_error("Class '"+ ctx->ID()->getText() +"' is not defined.");
+            throw std::invalid_argument("Class '"+ ctx->ID()->getText() +"' is not defined.");
         }
 
         std::shared_ptr<MetaModel::MetaMultiplicity> multiplicity = std::any_cast<std::shared_ptr<MetaModel::MetaMultiplicity>>(visit(ctx->multiplicity()));

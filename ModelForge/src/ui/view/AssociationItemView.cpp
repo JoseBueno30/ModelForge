@@ -113,7 +113,7 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
     // TODO paint multiplicity and name
 }
 
-QRectF AssociationItemView::boundingRect() const {return QRectF(p1, p2).normalized().adjusted(-10, -10, 10, 10);}
+QRectF AssociationItemView::boundingRect() const {return QRectF(p1, p2).normalized().adjusted(-100, -100, 100, 100);}
 QRectF AssociationItemView::associationNameRect(){return QRectF();}
 
 

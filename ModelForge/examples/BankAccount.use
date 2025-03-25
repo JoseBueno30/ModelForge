@@ -2,10 +2,13 @@ model BankAccount
 
 enum AccountType {Savings, Investments}
 
+abstract class SuperAccount
+end
+
 class Bank
 end
 
-class Account
+class Account < SuperAccount
 attributes
 type : AccountType
 balance : Integer
@@ -33,7 +36,7 @@ end
 
 association Ownership between
 Account [*] role accounts
-Person [1..4] role owner
+Person [1,3..4] role owner
 end
 
 association Use between

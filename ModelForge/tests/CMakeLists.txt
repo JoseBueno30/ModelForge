@@ -12,10 +12,14 @@ function(SETUP_TESTS)
        foreach(_testname ${ARGN})
            add_executable(${_testname} ${_testname}Test.cpp )
            add_test(NAME ${_testname} COMMAND ${_testname})
-           target_link_libraries(${_testname} PRIVATE MetaModelLib antlr4Lib Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Core)
+           target_link_libraries(${_testname} PRIVATE MetaModelLib Antlr4Lib Qt${QT_VERSION_MAJOR}::Test Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Core)
        endforeach()
 endfunction()
 
 SETUP_TESTS(
    MetaEnum MetaAttribute MetaVariable MetaStateMachine MetaOperation MetaType MetaClass MetaAssociation MetaAssociationClass MetaAssociationEnd MetaModel MetaConstraint
+
+   ANTLRVisitor
 )
+
+add_subdirectory(ANTLRVisitorUSETestFiles)

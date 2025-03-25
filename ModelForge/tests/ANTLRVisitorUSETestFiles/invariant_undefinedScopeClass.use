@@ -1,0 +1,5 @@
+model TestModel
+
+constraints
+context Person inv Positive_Age:
+    self.age > 0

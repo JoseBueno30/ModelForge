@@ -1,0 +1,6 @@
+model TestModel
+
+class testClass
+attributes
+testAttribute: NotAType
+end

@@ -1,0 +1,12 @@
+model TestModel
+
+class TestClass1
+end
+
+class TestClass2
+end
+
+association TestAssociation between
+TestClass1[0..1] role class1 redefines UndefinedAssocEnd
+TestClass2[0..*] role class2
+end
