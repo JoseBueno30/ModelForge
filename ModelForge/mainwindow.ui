@@ -139,6 +139,8 @@
     </property>
     <addaction name="actionOpen_Model"/>
     <addaction name="actionClose_Model"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionExport_as"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -176,11 +178,17 @@
    </property>
   </action>
   <action name="actionClose_Model">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditClear"/>
+   </property>
    <property name="text">
     <string>Close Model</string>
    </property>
   </action>
   <action name="actionCopy">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditCopy"/>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
@@ -189,6 +197,9 @@
    </property>
   </action>
   <action name="actionCut">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditCut"/>
+   </property>
    <property name="text">
     <string>Cut</string>
    </property>
@@ -197,6 +208,9 @@
    </property>
   </action>
   <action name="actionPaste">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditPaste"/>
+   </property>
    <property name="text">
     <string>Paste</string>
    </property>
@@ -205,13 +219,35 @@
    </property>
   </action>
   <action name="actionSet_Brush">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
+   </property>
    <property name="text">
     <string>Set Brush</string>
    </property>
   </action>
   <action name="actionSwitch_mode">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::WeatherClear"/>
+   </property>
    <property name="text">
     <string>Toogle Theme</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentSave"/>
+   </property>
+   <property name="text">
+    <string>Save Model</string>
+   </property>
+  </action>
+  <action name="actionExport_as">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentPrint"/>
+   </property>
+   <property name="text">
+    <string>Export to Java</string>
    </property>
   </action>
  </widget>
