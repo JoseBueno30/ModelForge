@@ -130,7 +130,7 @@
      <x>0</x>
      <y>0</y>
      <width>1399</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -140,15 +140,16 @@
     <addaction name="actionOpen_Model"/>
     <addaction name="actionClose_Model"/>
    </widget>
-   <widget class="QMenu" name="menuView">
+   <widget class="QMenu" name="menuEdit">
     <property name="title">
      <string>Edit</string>
     </property>
     <addaction name="actionCopy"/>
     <addaction name="actionCut"/>
     <addaction name="actionPaste"/>
+    <addaction name="separator"/>
    </widget>
-   <widget class="QMenu" name="menuView_2">
+   <widget class="QMenu" name="menuView">
     <property name="title">
      <string>View</string>
     </property>
@@ -161,12 +162,15 @@
     </property>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuView"/>
-   <addaction name="menuView_2"/>
    <addaction name="menuTools"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen_Model">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::FolderOpen"/>
+   </property>
    <property name="text">
     <string>Open Model</string>
    </property>
@@ -180,15 +184,24 @@
    <property name="text">
     <string>Copy</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionCut">
    <property name="text">
     <string>Cut</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="actionPaste">
    <property name="text">
     <string>Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
    </property>
   </action>
   <action name="actionSet_Brush">

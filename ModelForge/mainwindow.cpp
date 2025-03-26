@@ -16,8 +16,10 @@
 #include <QStyleFactory>
 #include <utils/Commands.h>
 
-void toogleColorTheme(){
-    ThemeManager::toogleTheme();
+void openColorTheme(bool toogle = true){
+    if(toogle) ThemeManager::toogleTheme();
+    else qDebug() << "no toogle" << toogle;
+
     QString theme = ThemeManager::getTheme() ? "light" : "dark";
     QFile file(":/styles/" + theme + ".qss");
     qDebug() << "Tema: " << theme;
@@ -39,6 +41,8 @@ void toogleColorTheme(){
     }
 }
 
+
+
 void MainWindow::setModel(std::shared_ptr<MetaModel::MetaModel> model){
     this->model = model;
 }
@@ -50,29 +54,26 @@ std::shared_ptr<MetaModel::MetaModel> MainWindow::getModel(){
 void checkTrigger(){
     qDebug() << "Ctrl + z";
 }
+void openColorThemeAux(){
+    openColorTheme();
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
     theme("dark")
 {
-    undoStack = new QUndoStack(this);
-    undoAction = undoStack->createUndoAction(this, tr("Undo"));
-    undoAction->setShortcut(QKeySequence::Undo);
-    this->addAction(undoAction);
-    redoAction = undoStack->createRedoAction(this, tr("Redo"));
-    redoAction->setShortcut(QKeySequence::Redo);
-    this->addAction(redoAction);
-
-
     ui->setupUi(this);
-    qDebug() << "Palette: " << qApp->palette().window();
+    //qDebug() << ui->actionOpen_Model->icon().name() << "\t" << ui->actionOpen_Model->icon().themeName();
+    setupActions();
+
+    //qDebug() << "Palette: " << qApp->palette().window();
     ThemeManager::createPalettes(qApp->palette());
     qApp->setStyle(QStyleFactory::create("fusion"));
 
     //qApp->setPalette(ui->centralwidget->palette());
     connect(ui->actionOpen_Model, &QAction::triggered, this, &MainWindow::openModelFile);
-    connect(ui->actionSwitch_mode, &QAction::triggered, this, &toogleColorTheme);
+    connect(ui->actionSwitch_mode, &QAction::triggered, this, &openColorThemeAux);
     connect(undoAction, &QAction::triggered, this, &checkTrigger);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
@@ -81,12 +82,25 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << "Connect = " << succes;
     modelGraphicsView->setScene(scene);
 
-    //toogleColorTheme();
+    ThemeManager::getInitialTheme();
+    openColorTheme(false);
 
 
     ConsoleHandler::setConsole(this->ui->consoleTextEdit);
 }
 
+void MainWindow::setupActions(){
+    undoStack = new QUndoStack(this);
+    undoAction = undoStack->createUndoAction(this, tr("Undo"));
+    undoAction->setShortcut(QKeySequence::Undo);
+    undoAction->setIcon(QIcon::fromTheme("edit-undo"));
+    ui->menuEdit->addAction(undoAction);
+
+    redoAction = undoStack->createRedoAction(this, tr("Redo"));
+    redoAction->setShortcut(QKeySequence::Redo);
+    redoAction->setIcon(QIcon::fromTheme("edit-redo"));
+    ui->menuEdit->addAction(redoAction);
+}
 
 
 MainWindow::~MainWindow()

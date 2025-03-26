@@ -21,6 +21,7 @@ private:
 public:
     static void toogleTheme();
     static bool getTheme();
+    static void getInitialTheme();
 
     const static QPalette& getLightPalette();
     const static QPalette& getDarkPalette();

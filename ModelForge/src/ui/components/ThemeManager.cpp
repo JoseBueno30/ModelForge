@@ -1,5 +1,7 @@
 #include <ui/components/ThemeManager.h>
 
+#include <QApplication>
+
 bool ThemeManager::theme = false;
 
 void ThemeManager::toogleTheme(){
@@ -24,6 +26,15 @@ int ThemeManager::getTextColor(){
 
 int ThemeManager::getWidgetBackgroundColor(){
     return theme ? LIGHT_WIDGET_BG : DARK_WIDGET_BG;
+}
+
+/**
+ * @brief getInitialTheme
+ */
+void ThemeManager::getInitialTheme(){
+    QPalette palette = QApplication::palette();
+    QColor bgColor = palette.color(QPalette::Window);
+    theme = bgColor.lightness() > 128;
 }
 
 QPalette ThemeManager::darkPalette = QPalette();//QColor(0x21252A));

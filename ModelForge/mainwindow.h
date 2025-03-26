@@ -49,5 +49,6 @@ private:
     QUndoStack *undoStack;
     QAction *undoAction = nullptr;
     QAction *redoAction = nullptr;
+    void setupActions();
 };
 #endif // MAINWINDOW_H
