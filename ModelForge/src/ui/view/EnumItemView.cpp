@@ -1,5 +1,7 @@
 #include<ui/view/EnumItemView.h>
 
+#include <ui/components/ModelGraphicsScene.h>
+
 void EnumItemView::calculateMinimumSize(){
     QFontMetrics fm(QFont("Arial", 13, QFont::Bold));
     int minHeight = fm.height() + NAME_PADDING + ATTS_PADDING;
@@ -62,6 +64,7 @@ void EnumItemView::mousePressEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ClosedHandCursor);
     setZValue(ModelGraphicsView::highestZIndex);
     ModelGraphicsView::highestZIndex++;
+    oldPos = pos();
     QGraphicsItem::mousePressEvent(event);
 }
 
@@ -71,6 +74,12 @@ void EnumItemView::mouseMoveEvent(QGraphicsSceneMouseEvent* event){
 
 void EnumItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
     setCursor(Qt::ArrowCursor);
+
+    ModelGraphicsScene* scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
+    if(this->scene()!=nullptr){
+        scene->emitSignal(this, oldPos);
+    }
+
     QGraphicsItem::mouseReleaseEvent(event);
 }
 
