@@ -5,6 +5,8 @@
 #include <ui/view/GeneralizationItemView.h>
 
 #include <ui/components/ModelGraphicsScene.h>
+
+#include <ui/classEditDialog.h>
 #define PADDING 20
 #define TEST_NAME "ClassLongTextAdriduty"
 
@@ -189,6 +191,13 @@ void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
         scene->emitSignal(this, oldPos);    
     }    
     QGraphicsItem::mouseReleaseEvent(event);
+}
+
+void ClassItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+    Q_UNUSED(event);
+
+    ClassEditDialog *classEdit = new ClassEditDialog(this->scene()->views().first(), this->getClassModel());
+    classEdit->exec();
 }
 
 ClassItemView::~ClassItemView(){}
