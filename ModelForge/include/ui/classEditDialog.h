@@ -21,6 +21,7 @@ private Q_SLOTS:
     void addAttribute();
     void removeAttribute();
     void saveChanges();
+    void cellDoubleClicked(int row, int column);
 
 private:
     Ui::ClassEditDialog *ui;

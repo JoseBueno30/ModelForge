@@ -1,7 +1,9 @@
 #include "classEditDialog.h"
-#include "ui_classEditDialog.h"
 
+#include <ui_classEditDialog.h>
 #include <QComboBox>
+#include <QLabel>
+#include <AttributeEditDialog.h>
 
 ClassEditDialog::ClassEditDialog(QWidget *parent, std::shared_ptr<MetaModel::MetaClass> metaClass) :
     QDialog(parent), metaClass(metaClass),
@@ -10,7 +12,6 @@ ClassEditDialog::ClassEditDialog(QWidget *parent, std::shared_ptr<MetaModel::Met
     ui->setupUi(this);
     ui->classNameEdit->setText(QString::fromStdString(metaClass->getName()));
 
-
     ui->attributeTableWidget->horizontalHeader()->setStretchLastSection(true);
 
     loadAttributes();
@@ -18,6 +19,7 @@ ClassEditDialog::ClassEditDialog(QWidget *parent, std::shared_ptr<MetaModel::Met
     connect(ui->addAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::addAttribute);
     connect(ui->removeAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::removeAttribute);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
+    connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::cellDoubleClicked);
 }
 
 ClassEditDialog::~ClassEditDialog()
@@ -33,18 +35,31 @@ void ClassEditDialog::loadAttributes() {
         ui->attributeTableWidget->insertRow(row);
 
         // Nombre del atributo (QLineEdit)
-        QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
-        ui->attributeTableWidget->setCellWidget(row, 0, nameEdit);
+        //QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
+        QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
+        ui->attributeTableWidget->setCellWidget(row, 0, nameLabel);
 
         // Tipo del atributo (QComboBox)
-        QComboBox *typeCombo = new QComboBox();
-        typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
-        typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
-        ui->attributeTableWidget->setCellWidget(row, 1, typeCombo);
+        // QComboBox *typeCombo = new QComboBox();
+        // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
+        // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
+        QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getType().toString()));
+        ui->attributeTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;
     }
 }
+
+void ClassEditDialog::cellDoubleClicked(int row, int column){
+    //qDebug()<< "r: "<< row << " c:" << column;
+    QLabel * item = dynamic_cast<QLabel*>(ui->attributeTableWidget->cellWidget(row, column/2)); //get the attribute name cell
+    //qDebug() << "crea el item";
+    qDebug() << "Editar atributo: " << item->text();
+    std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = metaClass->getAttribute(item->text().toStdString());
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, this);
+    attrEditDialog->exec();
+}
+
 
 void ClassEditDialog::addAttribute() {
     int row = ui->attributeTableWidget->rowCount();

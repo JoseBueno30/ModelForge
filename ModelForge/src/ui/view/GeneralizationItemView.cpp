@@ -1,5 +1,7 @@
 #include <ui/view/GeneralizationItemView.h>
 
+#include <ui/components/ThemeManager.h>
+
 GeneralizationItemView::GeneralizationItemView(ClassItemView* superClass, ClassItemView* subClass) : superClass(superClass), subClass(subClass){
     superClass->addGeneralization(this);
     subClass->addGeneralization(this);
@@ -60,7 +62,7 @@ void GeneralizationItemView::paint(QPainter *painter, const QStyleOptionGraphics
 
     if (!superClass || !subClass) return;
 
-    painter->setPen(QPen(Qt::white, 1, Qt::SolidLine,Qt::FlatCap));
+    painter->setPen(QPen(QColor(ThemeManager::getAssociationColor()), 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p2, this->p1);
     //qDebug() << line;
     // Arrow metrics:
