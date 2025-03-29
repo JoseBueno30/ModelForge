@@ -436,7 +436,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/utils/Commands.cpp
         src/ui/components/ModelGraphicsScene.cpp
         include/ui/components/ModelGraphicsScene.h
-
+        include/ui/classEditDialog.h include/ui/classEditDialog.cpp include/ui/classEditDialog.ui
 
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
