@@ -56,23 +56,24 @@ void ClassEditDialog::cellDoubleClicked(int row, int column){
     //qDebug() << "crea el item";
     qDebug() << "Editar atributo: " << item->text();
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = metaClass->getAttribute(item->text().toStdString());
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, this);
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, true, this);
     attrEditDialog->exec();
 }
 
 
 void ClassEditDialog::addAttribute() {
-    int row = ui->attributeTableWidget->rowCount();
-    ui->attributeTableWidget->insertRow(row);
+    std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = std::make_shared<MetaModel::MetaAttribute>("attribute", MetaModel::Integer::instance());
 
-    // Nuevo nombre de atributo
-    QLineEdit *nameEdit = new QLineEdit();
-    ui->attributeTableWidget->setCellWidget(row, 0, nameEdit);
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, false, this);
 
-    // Tipo de atributo (desplegable)
-    QComboBox *typeCombo = new QComboBox();
-    typeCombo->addItems({"int", "float", "string", "bool"});
-    ui->attributeTableWidget->setCellWidget(row, 1, typeCombo);
+    int attrEditDialogReturnCode = attrEditDialog->exec();
+
+    // Add attribute to metaClass (as an action in UndoStack)
+    if(attrEditDialogReturnCode == 1){
+        metaClass->addAttribute(metaAttribute);
+        this->loadAttributes();
+    }
+
 }
 
 void ClassEditDialog::removeAttribute() {

@@ -91,6 +91,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::setupActions(){
     undoStack = new QUndoStack(this);
+    undoStack->setUndoLimit(20);
+
     undoAction = undoStack->createUndoAction(this, tr("Undo"));
     undoAction->setShortcut(QKeySequence::Undo);
     undoAction->setIcon(QIcon::fromTheme("edit-undo"));

@@ -27,6 +27,8 @@ private:
     Ui::ClassEditDialog *ui;
     std::shared_ptr<MetaModel::MetaClass> metaClass;
 
+    int attributeCounter = 1;
+
     void loadAttributes();
 };
 

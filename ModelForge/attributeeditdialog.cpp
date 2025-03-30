@@ -1,10 +1,11 @@
 #include "attributeeditdialog.h"
 #include "ui_attributeeditdialog.h"
 
-AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, QWidget *parent) :
+AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, bool isEdit, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AttributeEditDialog),
-    metaAttribute(metaAttribute)
+    metaAttribute(metaAttribute),
+    isEdit(isEdit)
 {
     ui->setupUi(this);
     ui->nameLineEdit->setText(QString::fromStdString(metaAttribute->getName()));
