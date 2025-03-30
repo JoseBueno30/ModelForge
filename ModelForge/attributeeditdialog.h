@@ -18,6 +18,8 @@ public:
     ~AttributeEditDialog();
 
 private:
+    void saveChanges();
+
     Ui::AttributeEditDialog *ui;
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute;
     bool isEdit;
