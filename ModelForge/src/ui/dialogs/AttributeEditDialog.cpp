@@ -1,7 +1,8 @@
-#include "attributeeditdialog.h"
-#include "ui_attributeeditdialog.h"
+#include <ui/dialogs/AttributeEditDialog.h>
 
 #include <QPushButton>
+
+#include <src/ui/dialogs/ui_AttributeEditDialog.h>
 
 AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, bool isEdit, QWidget *parent) :
     QDialog(parent),

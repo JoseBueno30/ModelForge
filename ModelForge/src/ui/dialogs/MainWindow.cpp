@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include <ui/dialogs/MainWindow.h>
+#include "ui_MainWindow.h"
 
 
 #include <ui/view/AssociationClassItemView.h>

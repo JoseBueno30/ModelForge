@@ -398,20 +398,26 @@ add_library(MetaModelLib SHARED
     src/modelToText/VisitorUSE.cpp
 )
 
+set(DIALOGS
+
+    include/ui/dialogs/MainWindow.h src/ui/dialogs/MainWindow.cpp src/ui/dialogs/MainWindow.ui
+    include/ui/dialogs/ClassEditDialog.h src/ui/dialogs/ClassEditDialog.cpp src/ui/dialogs/ClassEditDialog.ui
+    include/ui/dialogs/AttributeEditDialog.h src/ui/dialogs/AttributeEditDialog.cpp src/ui/dialogs/AttributeEditDialog.ui
+
+)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        ${TS_FILES}
 
+        ${TS_FILES}
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ModelForge
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+
+        ${DIALOGS}
 
         include/ui/components/ModelGraphicsView.h
         src/ui/components//ModelGraphicsView.cpp
@@ -436,9 +442,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/utils/Commands.cpp
         src/ui/components/ModelGraphicsScene.cpp
         include/ui/components/ModelGraphicsScene.h
-        include/ui/classEditDialog.h include/ui/classEditDialog.cpp include/ui/classEditDialog.ui
-        attributeeditdialog.h attributeeditdialog.cpp attributeeditdialog.ui
-
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:

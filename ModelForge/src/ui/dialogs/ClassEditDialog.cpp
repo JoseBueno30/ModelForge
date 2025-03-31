@@ -1,9 +1,10 @@
-#include "classEditDialog.h"
+#include <ui/dialogs/ClassEditDialog.h>
+#include <src/ui/dialogs/ui_ClassEditDialog.h>
 
-#include <ui_classEditDialog.h>
+#include <ui/dialogs/AttributeEditDialog.h>
+
 #include <QComboBox>
 #include <QLabel>
-#include <AttributeEditDialog.h>
 
 ClassEditDialog::ClassEditDialog(QWidget *parent, std::shared_ptr<MetaModel::MetaClass> metaClass) :
     QDialog(parent), metaClass(metaClass),

@@ -1,6 +1,6 @@
 #include "antlr4/generated/USELexer.h"
 #include "antlr4/generated/USEParser.h"
-#include "mainwindow.h"
+#include "include/ui/dialogs/MainWindow.h"
 #include "antlr4/CustomUSEVisitor.cpp"
 
 #include <QApplication>

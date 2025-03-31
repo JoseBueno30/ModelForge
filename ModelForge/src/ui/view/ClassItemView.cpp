@@ -6,7 +6,8 @@
 
 #include <ui/components/ModelGraphicsScene.h>
 
-#include <ui/classEditDialog.h>
+#include <ui/dialogs/ClassEditDialog.h>
+
 #define PADDING 20
 #define TEST_NAME "ClassLongTextAdriduty"
 
