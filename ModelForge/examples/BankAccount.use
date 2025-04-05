@@ -12,6 +12,7 @@ class Account < SuperAccount
 attributes
 type : AccountType
 balance : Integer
+test: Person
 operations
 transfer(variable : Integer) : Integer
     begin

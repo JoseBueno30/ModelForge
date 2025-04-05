@@ -24,6 +24,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    static QUndoStack *undoStack;
+
 public Q_SLOTS:
     void on_actionSwitch_mode_triggered();
 
@@ -39,7 +41,6 @@ public Q_SLOTS:
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
 
 
-    static QUndoStack *undoStack;
 
 private:
     Ui::MainWindow *ui;

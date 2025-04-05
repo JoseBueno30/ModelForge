@@ -1,7 +1,7 @@
 #ifndef COMMANDS_H
 #define COMMANDS_H
 
-#include "metamodel/MetaElement.h"
+#include "metamodel/MetaClass.h"
 #include <QGraphicsItem>
 #include <QUndoCommand>
 
@@ -22,18 +22,18 @@ private:
     QPointF newPos;
 };
 
-class EditMetaElementCommand : public QUndoCommand{
+class EditMetaClassCommand : public QUndoCommand{
 public:
-    EditMetaElementCommand(std::shared_ptr<MetaModel::MetaElement> modelElement, std::shared_ptr<MetaModel::MetaElement> newElement);
+    EditMetaClassCommand(std::shared_ptr<MetaModel::MetaClass> modelElement, std::shared_ptr<MetaModel::MetaClass> newElement, QGraphicsScene* scene);
 
     void undo() override;
     void redo() override;
 
 private:
-
-    std::shared_ptr<MetaModel::MetaElement> modelMetaElement;
-    std::shared_ptr<MetaModel::MetaElement> oldMetaElement;
-    std::shared_ptr<MetaModel::MetaElement> newMetaElement;
+    QGraphicsScene* scene;
+    std::shared_ptr<MetaModel::MetaClass> modelMetaElement;
+    std::shared_ptr<MetaModel::MetaClass> oldMetaElement;
+    std::shared_ptr<MetaModel::MetaClass> newMetaElement;
 };
 
 

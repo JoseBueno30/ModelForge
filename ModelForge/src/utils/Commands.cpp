@@ -24,15 +24,19 @@ void MoveCommand::redo(){
 }
 
 
-EditMetaElementCommand::EditMetaElementCommand(
-    std::shared_ptr<MetaModel::MetaElement> modelMetaElement, std::shared_ptr<MetaModel::MetaElement> newMetaElement)
-    : modelMetaElement(modelMetaElement), oldMetaElement(modelMetaElement), newMetaElement(newMetaElement){}
-
-void EditMetaElementCommand::undo(){
-    *modelMetaElement = *oldMetaElement;
+EditMetaClassCommand::EditMetaClassCommand(
+    std::shared_ptr<MetaModel::MetaClass> modelMetaElement, std::shared_ptr<MetaModel::MetaClass> newMetaElement, QGraphicsScene* scene)
+    : modelMetaElement(modelMetaElement), newMetaElement(newMetaElement), scene(scene){
+    this->oldMetaElement = std::make_shared<MetaModel::MetaClass>(*modelMetaElement);
 }
 
-void EditMetaElementCommand::redo(){
+void EditMetaClassCommand::undo(){
+    *modelMetaElement = *oldMetaElement;
+    scene->update();
+}
+
+void EditMetaClassCommand::redo(){
     *modelMetaElement = *newMetaElement;
+    scene->update();
 }
 

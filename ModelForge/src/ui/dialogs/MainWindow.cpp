@@ -124,6 +124,8 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
 
     QGraphicsScene *scene = modelGraphicsView->scene();
 
+    qDebug() <<"SCENE: "<< scene;
+
     for(const auto& modelEnum : model->getEnums()){
         EnumItemView * item = new EnumItemView(modelEnum.second, xOffset, yOffset, width, height);
         this->addModelItemView(modelEnum.second->getName(), item);

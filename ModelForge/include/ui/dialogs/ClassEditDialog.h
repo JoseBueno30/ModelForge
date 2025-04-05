@@ -28,6 +28,7 @@ private:
     Ui::ClassEditDialog *ui;
 
     std::shared_ptr<MetaModel::MetaClass> metaClass;
+    std::shared_ptr<MetaModel::MetaClass> editedClass;
     QGraphicsScene* scene;
 
     int attributeCounter = 1;

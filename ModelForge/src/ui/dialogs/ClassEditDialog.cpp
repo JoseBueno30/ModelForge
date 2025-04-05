@@ -15,6 +15,8 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     ui->setupUi(this);
     ui->classNameEdit->setText(QString::fromStdString(metaClass->getName()));
 
+    this->editedClass = std::make_shared<MetaModel::MetaClass>(*metaClass);
+
     ui->attributeTableWidget->horizontalHeader()->setStretchLastSection(true);
 
     loadAttributes();
@@ -65,7 +67,7 @@ void ClassEditDialog::cellDoubleClicked(int row, int column){
 
 
 void ClassEditDialog::addAttribute() {
-    std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = std::make_shared<MetaModel::MetaAttribute>("attribute", MetaModel::Integer::instance());
+    std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = std::make_shared<MetaModel::MetaAttribute>("attribute" , MetaModel::Integer::instance());
 
     AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, false, this);
 
@@ -99,9 +101,12 @@ void ClassEditDialog::saveChanges() {
     }
 
     std::shared_ptr<MetaModel::MetaClass> newClass = std::make_shared<MetaModel::MetaClass>("", false);
-    newClass->setName(ui->classNameEdit->text().toStdString());
+    this->editedClass->setName(ui->classNameEdit->text().toStdString());
 
-    MainWindow::undoStack->push(new EditMetaElementCommand(this->metaClass, newClass));
+    MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, this->scene));
+
+    qDebug() << "Nombre: " << this->metaClass->getName();
+
     this->scene->update();
 
     accept();  // Cierra el diálogo y guarda cambios
