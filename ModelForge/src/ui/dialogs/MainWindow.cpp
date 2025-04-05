@@ -16,6 +16,8 @@
 #include <QStyleFactory>
 #include <utils/Commands.h>
 
+QUndoStack* MainWindow::undoStack = new QUndoStack();
+
 void openColorTheme(bool toogle = true){
     if(toogle) ThemeManager::toogleTheme();
     else qDebug() << "no toogle" << toogle;

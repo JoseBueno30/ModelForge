@@ -22,3 +22,17 @@ void MoveCommand::redo(){
     }
     item->scene()->update();
 }
+
+
+EditMetaElementCommand::EditMetaElementCommand(
+    std::shared_ptr<MetaModel::MetaElement> modelMetaElement, std::shared_ptr<MetaModel::MetaElement> newMetaElement)
+    : modelMetaElement(modelMetaElement), oldMetaElement(modelMetaElement), newMetaElement(newMetaElement){}
+
+void EditMetaElementCommand::undo(){
+    *modelMetaElement = *oldMetaElement;
+}
+
+void EditMetaElementCommand::redo(){
+    *modelMetaElement = *newMetaElement;
+}
+

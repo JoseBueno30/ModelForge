@@ -38,6 +38,9 @@ public Q_SLOTS:
     void openModelFile();
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
 
+
+    static QUndoStack *undoStack;
+
 private:
     Ui::MainWindow *ui;
     std::shared_ptr<MetaModel::MetaModel> model;
@@ -46,7 +49,6 @@ private:
     std::map<std::string, QGraphicsItem*> modelItemViewElementsMap;
     ModelGraphicsScene *scene;
 
-    QUndoStack *undoStack;
     QAction *undoAction = nullptr;
     QAction *redoAction = nullptr;
     void setupActions();

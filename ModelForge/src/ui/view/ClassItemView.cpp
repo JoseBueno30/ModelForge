@@ -8,6 +8,8 @@
 
 #include <ui/dialogs/ClassEditDialog.h>
 
+#include <utils/Commands.h>
+
 #define PADDING 20
 #define TEST_NAME "ClassLongTextAdriduty"
 
@@ -197,7 +199,7 @@ void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
 void ClassItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
 
-    ClassEditDialog *classEdit = new ClassEditDialog(this->scene()->views().first(), this->getClassModel());
+    ClassEditDialog *classEdit = new ClassEditDialog(this->getClassModel(), this->scene(), this->scene()->views().first());
     classEdit->exec();
 }
 

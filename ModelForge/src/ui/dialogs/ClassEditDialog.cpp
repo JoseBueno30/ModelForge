@@ -1,14 +1,16 @@
 #include <ui/dialogs/ClassEditDialog.h>
 #include <src/ui/dialogs/ui_ClassEditDialog.h>
+#include <utils/Commands.h>
 
 #include <ui/dialogs/AttributeEditDialog.h>
+#include <ui/dialogs/MainWindow.h>
 
 #include <QComboBox>
 #include <QLabel>
 
-ClassEditDialog::ClassEditDialog(QWidget *parent, std::shared_ptr<MetaModel::MetaClass> metaClass) :
+ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, QGraphicsScene* scene, QWidget *parent) :
     QDialog(parent), metaClass(metaClass),
-    ui(new Ui::ClassEditDialog)
+    ui(new Ui::ClassEditDialog), scene(scene)
 {
     ui->setupUi(this);
     ui->classNameEdit->setText(QString::fromStdString(metaClass->getName()));
@@ -95,6 +97,12 @@ void ClassEditDialog::saveChanges() {
             newAttributes[nameEdit->text().toStdString()] = typeCombo->currentText().toStdString();
         }
     }
+
+    std::shared_ptr<MetaModel::MetaClass> newClass = std::make_shared<MetaModel::MetaClass>("", false);
+    newClass->setName(ui->classNameEdit->text().toStdString());
+
+    MainWindow::undoStack->push(new EditMetaElementCommand(this->metaClass, newClass));
+    this->scene->update();
 
     accept();  // Cierra el diálogo y guarda cambios
 }
