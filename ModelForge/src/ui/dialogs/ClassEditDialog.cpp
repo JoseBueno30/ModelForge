@@ -8,8 +8,8 @@
 #include <QComboBox>
 #include <QLabel>
 
-ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, QGraphicsScene* scene, QWidget *parent) :
-    QDialog(parent), metaClass(metaClass),
+ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model, QWidget *parent) :
+    QDialog(parent), metaClass(metaClass), model(model),
     ui(new Ui::ClassEditDialog), scene(scene)
 {
     ui->setupUi(this);
@@ -113,12 +113,18 @@ void ClassEditDialog::saveChanges() {
         }
     }
 
-    std::shared_ptr<MetaModel::MetaClass> newClass = std::make_shared<MetaModel::MetaClass>("", false);
-    this->editedClass->setName(ui->classNameEdit->text().toStdString());
+    if(model == nullptr){
+        std::shared_ptr<MetaModel::MetaClass> newClass = std::make_shared<MetaModel::MetaClass>("", false);
+        this->editedClass->setName(ui->classNameEdit->text().toStdString());
 
-    MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, this->scene));
+        MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, this->scene));
+    }else{
+        ClassItemView *newClassView = new ClassItemView(this->metaClass);
 
-    qDebug() << "Nombre: " << this->metaClass->getName();
+        MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->metaClass, newClassView, this->scene));
+    }
+
+    //qDebug() << "Nombre: " << this->metaClass->getName();
 
     this->scene->update();
 

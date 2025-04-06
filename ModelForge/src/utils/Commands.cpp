@@ -40,3 +40,18 @@ void EditMetaClassCommand::redo(){
     scene->update();
 }
 
+AddMetaClassCommand::AddMetaClassCommand(std::shared_ptr<MetaModel::MetaModel> model, std::shared_ptr<MetaModel::MetaClass> newClass, ClassItemView* newClassView, QGraphicsScene* scene)
+    : model(model), newClass(newClass), newClassView(newClassView), scene(scene){}
+
+void AddMetaClassCommand::undo(){
+    this->model->removeClass(this->newClass->getName());
+    scene->removeItem(newClassView);
+    scene->update();
+}
+
+void AddMetaClassCommand::redo(){
+    this->model->addClass(newClass);
+    this->scene->addItem(newClassView);
+    this->scene->update();
+}
+

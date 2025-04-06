@@ -38,6 +38,7 @@ public Q_SLOTS:
     void removeModelItemView(const std::string& key);
 
     void openModelFile();
+    void openNewClassDialog();
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
 
 

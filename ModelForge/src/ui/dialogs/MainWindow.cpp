@@ -15,6 +15,7 @@
 #include <ui/components/ThemeManager.h>
 #include <QStyleFactory>
 #include <utils/Commands.h>
+#include <ui/dialogs/ClassEditDialog.h>
 
 QUndoStack* MainWindow::undoStack = new QUndoStack();
 
@@ -77,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionOpen_Model, &QAction::triggered, this, &MainWindow::openModelFile);
     connect(ui->actionSwitch_mode, &QAction::triggered, this, &openColorThemeAux);
     connect(undoAction, &QAction::triggered, this, &checkTrigger);
+    connect(ui->addClassButton, &QPushButton::clicked, this, &MainWindow::openNewClassDialog);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     scene = new ModelGraphicsScene();
@@ -204,6 +206,24 @@ std::string base_name(std::string const & path)
     return path.substr(path.find_last_of("/\\") + 1);
 }
 
+void MainWindow::openNewClassDialog(){
+    qDebug() << "lol";
+    if(this->model != nullptr){
+        std::string defaultName = "NewClass";
+        int defaultNameCont = 0;
+        for(auto metaClassPair : this->model->getClasses()){
+            if(metaClassPair.first == defaultName){
+                defaultNameCont++;
+                defaultName = "NewClass" + std::to_string(defaultNameCont);
+            }
+        }
+        std::shared_ptr<MetaModel::MetaClass> newMetaClass = std::make_shared<MetaModel::MetaClass>(defaultName, false);
+        ClassEditDialog *classEdit = new ClassEditDialog(newMetaClass, this->scene, this->model, this);
+        classEdit->exec();
+    }
+}
+
+
 void MainWindow::openModelFile(){
     try{
         QString path = QFileDialog::getOpenFileName(this, "Select file", "", "USE files (*.use);;All files (*.*)");
@@ -232,7 +252,7 @@ void MainWindow::openModelFile(){
         visitor.visit(tree);
 
         // Verifica que el MetaModel se haya creado correctamente
-        auto model = visitor.model;
+        model = visitor.model;
         this->setupModelGraphicsView(model);
         ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
 
