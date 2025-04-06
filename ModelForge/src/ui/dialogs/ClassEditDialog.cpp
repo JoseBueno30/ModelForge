@@ -14,8 +14,12 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
 {
     ui->setupUi(this);
     ui->classNameEdit->setText(QString::fromStdString(metaClass->getName()));
+    ui->attributeTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->attributeTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     this->editedClass = std::make_shared<MetaModel::MetaClass>(*metaClass);
+
+    this->attributeCounter = metaClass->getAttributes().size() + 1;
 
     ui->attributeTableWidget->horizontalHeader()->setStretchLastSection(true);
 
@@ -25,6 +29,7 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     connect(ui->removeAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::removeAttribute);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
     connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::cellDoubleClicked);
+
 }
 
 ClassEditDialog::~ClassEditDialog()
@@ -36,7 +41,7 @@ void ClassEditDialog::loadAttributes() {
     ui->attributeTableWidget->setRowCount(0);  // Limpiar tabla antes de cargar
     int row = 0;
 
-    for (const auto &pair : metaClass->getAttributes()) {  // Asumiendo que `getAttributes()` devuelve `std::map<std::string, std::string>`
+    for (const auto &pair : this->editedClass->getAttributes()) {  // Asumiendo que `getAttributes()` devuelve `std::map<std::string, std::string>`
         ui->attributeTableWidget->insertRow(row);
 
         // Nombre del atributo (QLineEdit)
@@ -57,35 +62,43 @@ void ClassEditDialog::loadAttributes() {
 
 void ClassEditDialog::cellDoubleClicked(int row, int column){
     //qDebug()<< "r: "<< row << " c:" << column;
-    QLabel * item = dynamic_cast<QLabel*>(ui->attributeTableWidget->cellWidget(row, column/2)); //get the attribute name cell
+    QLabel * item = dynamic_cast<QLabel*>(ui->attributeTableWidget->cellWidget(row, column)); //get the attribute name cell
     //qDebug() << "crea el item";
     qDebug() << "Editar atributo: " << item->text();
-    std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = metaClass->getAttribute(item->text().toStdString());
+    std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = this->editedClass->getAttribute(item->text().toStdString());
     AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, true, this);
     attrEditDialog->exec();
 }
 
 
 void ClassEditDialog::addAttribute() {
-    std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = std::make_shared<MetaModel::MetaAttribute>("attribute" , MetaModel::Integer::instance());
+    std::string attributeName = "attribute" + std::to_string(this->attributeCounter);
+
+    while(this->editedClass->getAttribute(attributeName) != nullptr){
+        this->attributeCounter++;
+        attributeName = "attribute" + std::to_string(this->attributeCounter);
+    }
+
+    auto metaAttribute = std::make_shared<MetaModel::MetaAttribute>(attributeName , MetaModel::Integer::instance());
 
     AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, false, this);
 
     int attrEditDialogReturnCode = attrEditDialog->exec();
 
-    // Add attribute to metaClass (as an action in UndoStack)
+    // Add attribute to editedClass (as an action in UndoStack)
     if(attrEditDialogReturnCode == 1){
-        metaClass->addAttribute(metaAttribute);
+        this->editedClass->addAttribute(metaAttribute);
         this->loadAttributes();
     }
 
 }
 
 void ClassEditDialog::removeAttribute() {
-    int row = ui->attributeTableWidget->currentRow();
-    if (row >= 0) {
-        ui->attributeTableWidget->removeRow(row);
-    }
+    auto *attributeLabel = dynamic_cast<QLabel*>(this->ui->attributeTableWidget->cellWidget(this->ui->attributeTableWidget->currentRow(), 0));
+    auto attributeName = attributeLabel->text().toStdString();
+
+    this->editedClass->removeAttribute(attributeName);
+    this->loadAttributes();
 }
 
 void ClassEditDialog::saveChanges() {

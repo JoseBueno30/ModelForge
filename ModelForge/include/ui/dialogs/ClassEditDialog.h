@@ -31,7 +31,7 @@ private:
     std::shared_ptr<MetaModel::MetaClass> editedClass;
     QGraphicsScene* scene;
 
-    int attributeCounter = 1;
+    int attributeCounter;
 
     void loadAttributes();
 };
