@@ -24,6 +24,7 @@ private slots:
     void addClass_nullArgument_throwsException();
     void addClass_validArgument_addsClass();
     void addClass_existingEnum_throwsException();
+    // void removeClass_classInAssociation_removes_association();
 
     void addAssociationClass_nullArgument_throwsException();
     void addAssociationClass_validArgument_addsAssociationClass();

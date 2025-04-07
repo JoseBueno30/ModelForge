@@ -19,9 +19,12 @@ public:
     static const int AGGREGATION = 1;
     static const int COMPOSITION = 2;
 
+
     MetaAssociation(const std::string& name, int type);
 
     MetaAssociation(const std::string& name, int type, std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds);
+
+    ~MetaAssociation();
 
     std::string getName() const;
     void setName(const std::string& name);

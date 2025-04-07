@@ -69,6 +69,25 @@ void MetaModel::addClass(std::shared_ptr<MetaClass> modelClass){
 }
 
 void MetaModel::removeClass(const std::string& key){
+    auto metaClass = this->getClass(key);
+    for(const auto &assocEndPair : metaClass->getAssociationEnds()){
+        auto association = assocEndPair.second->getAssociationSharedPtr();
+
+        if(std::dynamic_pointer_cast<MetaAssociationClass>(association)){
+            this->removeAssociationClass(association->getName());
+        }else{
+            this->removeAssociation(association->getName());
+        }
+    }
+
+    for(const auto &superClassPair: metaClass->getSuperClasses()){
+        superClassPair.second->removeChildrenClass(key);
+    }
+
+    for(const auto &childrenClassPair: metaClass->getChildrenClasses()){
+        childrenClassPair.second->removeSuperClass(key);
+    }
+
     classes.erase(key);
 }
 
@@ -97,6 +116,13 @@ void MetaModel::addAssociation(std::shared_ptr<MetaAssociation> modelAssociation
 }
 
 void MetaModel::removeAssociation(const std::string& key){
+    auto association = this->getAssociation(key);
+
+    for(const auto &associationEndPair : association->getAssociationEnds()){
+        // remove associationEnd from class
+        associationEndPair.second->getClassSharedPtr()->removeAssociationEnd(associationEndPair.first);
+    }
+
     associations.erase(key);
 }
 
@@ -125,6 +151,13 @@ void MetaModel::addAssociationClass(std::shared_ptr<MetaAssociationClass> modelA
 }
 
 void MetaModel::removeAssociationClass(const std::string& key){
+    auto associationClass = this->getAssociation(key);
+
+    for(const auto &associationEndPair : associationClass->getAssociationEnds()){
+        // remove associationEnd from class
+        associationEndPair.second->getClassSharedPtr()->removeAssociationEnd(associationEndPair.first);
+    }
+
     associationClasses.erase(key);
 }
 

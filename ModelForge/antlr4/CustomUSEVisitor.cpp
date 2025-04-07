@@ -600,7 +600,7 @@ public:
         }
 
         for(auto associationEndsCtx : ctx->associationEnd()){
-            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(associationEndsCtx));
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(createAssociationEnd(associationEndsCtx, metaAssociationClass));
 
             metaAssociationClass->MetaAssociation::addAssociationEnd(associationEnd);
         }
@@ -654,7 +654,7 @@ public:
     void addAssociationToModel(const std::string& id, const std::vector<USEParser::AssociationEndContext *>& associationEnds, int type){
         std::shared_ptr<MetaModel::MetaAssociation> association = std::make_shared<MetaModel::MetaAssociation>(id, type);
         for(auto endCtx : associationEnds){
-            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(visit(endCtx));
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(createAssociationEnd(endCtx, association));
             association->addAssociationEnd(associationEnd);
         }
         model->addAssociation(association);
@@ -699,7 +699,7 @@ public:
         }
     }
 
-    std::any visitAssociationEnd(USEParser::AssociationEndContext *ctx) override{
+    std::any createAssociationEnd(USEParser::AssociationEndContext *ctx, std::shared_ptr<MetaModel::MetaAssociation> association) {
         std::shared_ptr<MetaModel::MetaClass> endClass = model->getClass(ctx->ID()->getText());
         if(endClass == nullptr){
             throw std::invalid_argument("Class '"+ ctx->ID()->getText() +"' is not defined.");
@@ -713,7 +713,7 @@ public:
         bool isUnion = !ctx->UNION().empty();
 
         //TODO Check IsUnique and ¿type?
-        std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(endClass, role, 0, true, isOrdered, false, isUnion, multiplicity);
+        std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(endClass, association, role, 0, true, isOrdered, false, isUnion, multiplicity);
         return associationEnd;
     }
 

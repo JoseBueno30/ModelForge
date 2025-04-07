@@ -10,7 +10,7 @@ class MetaAssociationTest : public QObject{
 
 private:
     shared_ptr<MetaModel::MetaClass> classAux;
-    MetaModel::MetaAssociation *association;
+    shared_ptr<MetaModel::MetaAssociation> association;
 
 
 private slots:
@@ -25,18 +25,18 @@ private slots:
 
 void MetaAssociationTest::init(){
     this->classAux = std::make_shared<MetaModel::MetaClass>("Tests", false);
-    this->association = new MetaModel::MetaAssociation("associationTest", 0);
+    this->association = std::make_shared<MetaModel::MetaAssociation>("associationTest", 0);
 }
 
 void MetaAssociationTest::addAssociationEnd_nullArgument_throwsException(){
     QVERIFY_THROWS_EXCEPTION(std::invalid_argument, this->association->addAssociationEnd(nullptr));
 }
 void MetaAssociationTest::addAssociationEnd_validArgument_addsTheArgument(){
-    shared_ptr<MetaModel::MetaAssociationEnd> end = std::make_shared<MetaModel::MetaAssociationEnd>(this->classAux, "test", 0, false, false, false, false, nullptr);
+    shared_ptr<MetaModel::MetaAssociationEnd> end = std::make_shared<MetaModel::MetaAssociationEnd>(this->classAux, this->association, "test", 0, false, false, false, false, nullptr);
     QVERIFY_THROWS_NO_EXCEPTION(this->association->addAssociationEnd(end));
 }
 void MetaAssociationTest::addAssociationEnd_argumentAlreadyExists_throwsException(){
-    shared_ptr<MetaModel::MetaAssociationEnd> end = std::make_shared<MetaModel::MetaAssociationEnd>(this->classAux, "test", 0, false, false, false, false, nullptr);
+    shared_ptr<MetaModel::MetaAssociationEnd> end = std::make_shared<MetaModel::MetaAssociationEnd>(this->classAux, this->association, "test", 0, false, false, false, false, nullptr);
 
     this->association->addAssociationEnd(end);
 

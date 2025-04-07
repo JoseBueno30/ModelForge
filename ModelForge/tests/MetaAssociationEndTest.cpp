@@ -45,8 +45,8 @@ private slots:
 void  MetaAssociationEndTest::init(){
     this->multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(1,-1);
     std::shared_ptr<MetaModel::MetaClass> auxClass = std::make_shared<MetaModel::MetaClass>("aux", false);
-    this->aEnd = new MetaModel::MetaAssociationEnd(auxClass, "testRole", 0, false, false, false, false, this->multiplicity);
-    this->auxEnd = std::make_shared<MetaModel::MetaAssociationEnd>(auxClass, "testAuxRole", 0, false, false, false, false, this->multiplicity);
+    this->aEnd = new MetaModel::MetaAssociationEnd(auxClass, nullptr, "testRole", 0, false, false, false, false, this->multiplicity);
+    this->auxEnd = std::make_shared<MetaModel::MetaAssociationEnd>(auxClass, nullptr, "testAuxRole", 0, false, false, false, false, this->multiplicity);
     this->auxVar = std::make_shared<MetaModel::MetaVariable>("test", MetaModel::Integer::instance());
 }
 

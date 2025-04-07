@@ -97,8 +97,8 @@ std::string MetaMultiplicity::toString() const{
 
 
 
-MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity)
-    : endClass(endClass), role(role), type(type), isNavigable(isNavigable), isOrdered(isOrdered), isUnique(isUnique), isUnion(isUnion), multiplicity(multiplicity){}
+MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity)
+    : endClass(endClass), association(association), role(role), type(type), isNavigable(isNavigable), isOrdered(isOrdered), isUnique(isUnique), isUnion(isUnion), multiplicity(multiplicity){}
 
 const MetaClass& MetaAssociationEnd::getClass() const{
     return *endClass;
@@ -111,6 +111,19 @@ std::shared_ptr<MetaClass> MetaAssociationEnd::getClassSharedPtr() const{
 void MetaAssociationEnd::setClass(const std::shared_ptr<MetaClass>& endClass){
     this->endClass = endClass;
 }
+
+const MetaAssociation& MetaAssociationEnd::getAssociation() const{
+    return *association;
+}
+
+std::shared_ptr<MetaAssociation> MetaAssociationEnd::getAssociationSharedPtr() const{
+    return this->association;
+}
+
+void MetaAssociationEnd::setAssociation(const std::shared_ptr<MetaAssociation>& association){
+    this->association = association;
+}
+
 
 std::string MetaAssociationEnd::getRole() const{
     return role;

@@ -2,7 +2,6 @@
 #define METAASSOCIATIONEND_H
 
 
-
 #include "MetaVariable.h"
 #include "OCLExpression.h"
 
@@ -10,7 +9,9 @@
 #include <string>
 #include <vector>
 
-
+namespace MetaModel {
+class MetaAssociation;  // Forward declaration
+}
 
 namespace MetaModel{
 class MetaClass;
@@ -51,6 +52,7 @@ public:
 class MetaAssociationEnd{
 private:
     std::shared_ptr<MetaClass> endClass;
+    std::shared_ptr<MetaAssociation> association;
     std::string role;
     int type;
     bool isNavigable;
@@ -64,11 +66,15 @@ private:
     std::shared_ptr<OCLExpr> deriveExpr;
 
 public:
-    MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity);
+    MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity);
 
     const MetaClass& getClass() const;
     std::shared_ptr<MetaClass> getClassSharedPtr() const;
     void setClass(const std::shared_ptr<MetaClass>& endClass);
+
+    const MetaAssociation& getAssociation() const;
+    std::shared_ptr<MetaAssociation> getAssociationSharedPtr() const;
+    void setAssociation(const std::shared_ptr<MetaAssociation>& association);
 
     std::string getRole() const;
     void setRole(const std::string& role);

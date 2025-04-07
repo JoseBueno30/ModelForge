@@ -604,7 +604,7 @@ void MetaClassTest::metaClass_removeStateMachine_nonExistingKey_doesNothing(){
 void MetaClassTest::metaClass_getAssociationEnds_returnsCorrectMap(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0, 1);
-    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, "rolename", 0, false, false, false, false, multiplicity);
+    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, nullptr, "rolename", 0, false, false, false, false, multiplicity);
 
     testClass->addAssociationEnd(associationEnd);
     auto associationEnds = testClass->getAssociationEnds();
@@ -618,8 +618,8 @@ void MetaClassTest::metaClass_getAllAssociationEnds_returnsMapWithClassAndSuperC
     auto superClass = std::make_shared<MetaModel::MetaClass>("TestSuperClass", false);
 
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0, 1);
-    auto associationEnd1 = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, "rolename1", 0, false, false, false, false, multiplicity);
-    auto associationEnd2 = std::make_shared<MetaModel::MetaAssociationEnd>(superClass, "rolename2", 0, false, false, false, false, multiplicity);
+    auto associationEnd1 = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, nullptr, "rolename1", 0, false, false, false, false, multiplicity);
+    auto associationEnd2 = std::make_shared<MetaModel::MetaAssociationEnd>(superClass, nullptr, "rolename2", 0, false, false, false, false, multiplicity);
 
     superClass->addAssociationEnd(associationEnd2);
 
@@ -636,7 +636,7 @@ void MetaClassTest::metaClass_getAllAssociationEnds_returnsMapWithClassAndSuperC
 void MetaClassTest::metaClass_getAssociationEnd_existingAssociationEnd_returnsCorrectAssociationEnd(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0, 1);
-    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, "rolename", 0, false, false, false, false, multiplicity);
+    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, nullptr, "rolename", 0, false, false, false, false, multiplicity);
 
     testClass->addAssociationEnd(associationEnd);
 
@@ -652,7 +652,7 @@ void MetaClassTest::metaClass_addAssociationEnd_validAssociationEnd_updatesAssoc
 
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0, 1);
-    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, "rolename", 0, false, false, false, false, multiplicity);
+    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, nullptr, "rolename", 0, false, false, false, false, multiplicity);
 
     testClass->addAssociationEnd(associationEnd);
 
@@ -667,7 +667,7 @@ void MetaClassTest::metaClass_addAssociationEnd_nullAssociationEnd_throwsInvalid
 void MetaClassTest::metaClass_addAssociationEnd_repeatedAssociationEnd_throwsInvalidArgumentException(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0, 1);
-    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, "rolename", 0, false, false, false, false, multiplicity);
+    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, nullptr, "rolename", 0, false, false, false, false, multiplicity);
 
     testClass->addAssociationEnd(associationEnd);
 
@@ -679,8 +679,8 @@ void MetaClassTest::metaClass_addAssociationEnd_associationEndAlreadyDefinedInSu
     auto superClass = std::make_shared<MetaModel::MetaClass>("TestSuperClass", false);
 
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0, 1);
-    auto associationEnd1 = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, "rolename", 0, false, false, false, false, multiplicity);
-    auto associationEnd2 = std::make_shared<MetaModel::MetaAssociationEnd>(superClass, "rolename", 0, false, false, false, false, multiplicity);
+    auto associationEnd1 = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, nullptr, "rolename", 0, false, false, false, false, multiplicity);
+    auto associationEnd2 = std::make_shared<MetaModel::MetaAssociationEnd>(superClass, nullptr, "rolename", 0, false, false, false, false, multiplicity);
 
     superClass->addAssociationEnd(associationEnd2);
 
@@ -692,7 +692,7 @@ void MetaClassTest::metaClass_addAssociationEnd_associationEndAlreadyDefinedInSu
 void MetaClassTest::metaClass_removeAssociationEnd_existingKey_updatesAssociationEndsMap(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0, 1);
-    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, "rolename", 0, false, false, false, false, multiplicity);
+    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, nullptr, "rolename", 0, false, false, false, false, multiplicity);
 
     testClass->addAssociationEnd(associationEnd);
 
@@ -708,7 +708,7 @@ void MetaClassTest::metaClass_removeAssociationEnd_existingKey_updatesAssociatio
 void MetaClassTest::metaClass_removeAssociationEnd_nonExistingKey_doesNothing(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0, 1);
-    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, "rolename", 0, false, false, false, false, multiplicity);
+    auto associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(testClass, nullptr, "rolename", 0, false, false, false, false, multiplicity);
 
     testClass->addAssociationEnd(associationEnd);
 

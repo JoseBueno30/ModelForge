@@ -13,6 +13,12 @@ MetaAssociation::MetaAssociation(const std::string& name, int type)
 MetaAssociation::MetaAssociation(const std::string& name, int type, std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds)
     : name(name), type(type), associationEnds(std::move(associationEnds)){}
 
+MetaAssociation::~MetaAssociation(){
+    for(const auto &associationEndPair : this->getAssociationEnds()){
+        associationEndPair.second->setAssociation(nullptr);
+    }
+}
+
 std::string MetaAssociation::getName() const{
     return name;
 }
