@@ -199,7 +199,7 @@ void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
 void ClassItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
 
-    ClassEditDialog *classEdit = new ClassEditDialog(this->getClassModel(), this->scene(), nullptr, this->scene()->views().first());
+    ClassEditDialog *classEdit = new ClassEditDialog(this->getClassModel(), this->scene(), this, nullptr, this->scene()->views().first());
     classEdit->exec();
 }
 

@@ -218,7 +218,7 @@ void MainWindow::openNewClassDialog(){
             }
         }
         std::shared_ptr<MetaModel::MetaClass> newMetaClass = std::make_shared<MetaModel::MetaClass>(defaultName, false);
-        ClassEditDialog *classEdit = new ClassEditDialog(newMetaClass, this->scene, this->model, this);
+        ClassEditDialog *classEdit = new ClassEditDialog(newMetaClass, this->scene, nullptr, this->model, this);
         classEdit->exec();
     }
 }

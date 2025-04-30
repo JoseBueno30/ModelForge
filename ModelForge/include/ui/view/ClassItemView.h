@@ -36,6 +36,8 @@ public:
 
     std::vector<AssociationItemView *> associationsShared(ClassItemView *class2);
 
+    void calculateMinimumSize();
+
     ~ClassItemView();
 
 protected:
@@ -50,8 +52,6 @@ private:
     std::vector<AssociationItemView *> associations;
     std::vector<GeneralizationItemView *> generalizations;
     std::vector<AssociationClassItemView *> associationClasses;
-
-    void calculateMinimumSize();
 
 };
 

@@ -26,13 +26,14 @@ private:
 
 class EditMetaClassCommand : public QUndoCommand{
 public:
-    EditMetaClassCommand(std::shared_ptr<MetaModel::MetaClass> modelElement, std::shared_ptr<MetaModel::MetaClass> newElement, QGraphicsScene* scene);
+    EditMetaClassCommand(std::shared_ptr<MetaModel::MetaClass> modelElement, std::shared_ptr<MetaModel::MetaClass> newElement, ClassItemView* classView, QGraphicsScene* scene);
 
     void undo() override;
     void redo() override;
 
 private:
     QGraphicsScene* scene;
+    ClassItemView* classView;
     std::shared_ptr<MetaModel::MetaClass> modelMetaElement;
     std::shared_ptr<MetaModel::MetaClass> oldMetaElement;
     std::shared_ptr<MetaModel::MetaClass> newMetaElement;

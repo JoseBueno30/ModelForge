@@ -7,6 +7,8 @@
 #include <metamodel/MetaClass.h>
 #include <metamodel/MetaModel.h>
 
+#include <ui/view/ClassItemView.h>
+
 namespace Ui {
 class ClassEditDialog;
 }
@@ -16,7 +18,7 @@ class ClassEditDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model = nullptr, QWidget *parent = nullptr);
+    explicit ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, QGraphicsScene* scene, ClassItemView* classView = nullptr, std::shared_ptr<MetaModel::MetaModel> model = nullptr, QWidget *parent = nullptr);
     ~ClassEditDialog();
 
 private Q_SLOTS:
@@ -27,6 +29,7 @@ private Q_SLOTS:
 
 private:
     Ui::ClassEditDialog *ui;
+    ClassItemView* classView;
 
     std::shared_ptr<MetaModel::MetaModel> model;
     std::shared_ptr<MetaModel::MetaClass> metaClass;
