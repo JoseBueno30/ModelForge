@@ -214,7 +214,7 @@ constraintDefinition
 */
 invariant
     : 'context'
-    (ID (',' ID)* COLON )? // (',' ID)* ?? varios contextos?
+    (ID (',' ID)* COLON )?
     simpleType
     (invariantClause)*
     ;

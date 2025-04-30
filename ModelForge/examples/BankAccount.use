@@ -47,7 +47,7 @@ end
 
 constraints
 context Account inv Positive_Balance:
-    self.balance > 0
+    self.test.age > 0
 
 context x, y: Account inv Prueba:
-    y.balance > x.balance implies x.balance < y.balance
+    1 < 0
