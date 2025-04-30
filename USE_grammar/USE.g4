@@ -328,7 +328,6 @@ oclExpression
 expression
     : logicalExpression       #LogicalExpr
     | conditionalExpression   #ConditionalExpr
-    | lambdaExpression        #LambdaExpr
     | letExpression           #LetExpr
     ;
 
