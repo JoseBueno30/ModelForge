@@ -15,7 +15,9 @@
 #include <ui/components/ThemeManager.h>
 #include <QStyleFactory>
 #include <utils/Commands.h>
+#include <ui/dialogs/AssociationEditDialog.h>
 #include <ui/dialogs/ClassEditDialog.h>
+#include <metamodel/MetaAssociation.h>
 
 QUndoStack* MainWindow::undoStack = new QUndoStack();
 
@@ -79,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionSwitch_mode, &QAction::triggered, this, &openColorThemeAux);
     connect(undoAction, &QAction::triggered, this, &checkTrigger);
     connect(ui->addClassButton, &QPushButton::clicked, this, &MainWindow::openNewClassDialog);
+    connect(ui->addAssociationButton, &QPushButton::clicked, this, &MainWindow::openNewAssociationDialog);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     scene = new ModelGraphicsScene();
@@ -220,6 +223,22 @@ void MainWindow::openNewClassDialog(){
         std::shared_ptr<MetaModel::MetaClass> newMetaClass = std::make_shared<MetaModel::MetaClass>(defaultName, false);
         ClassEditDialog *classEdit = new ClassEditDialog(newMetaClass, this->scene, nullptr, this->model, this);
         classEdit->exec();
+    }
+}
+
+void MainWindow::openNewAssociationDialog(){
+    if(this->model != nullptr){
+        std::string defaultName = "NewAssociation";
+        int defaultNameCont = 0;
+        for(auto metaAssociationPair : this->model->getAssociations()){
+            if(metaAssociationPair.first == defaultName){
+                defaultNameCont++;
+                defaultName = "NewAssociation" + std::to_string(defaultNameCont);
+            }
+        }
+        std::shared_ptr<MetaModel::MetaAssociation> newAssociation = std::make_shared<MetaModel::MetaAssociation>(defaultName, 0);
+        AssociationEditDialog *associationEditDialog = new AssociationEditDialog(newAssociation, this->modelItemViewElementsMap, this->scene, this->model);
+        associationEditDialog->exec();
     }
 }
 

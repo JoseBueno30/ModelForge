@@ -39,6 +39,7 @@ public Q_SLOTS:
 
     void openModelFile();
     void openNewClassDialog();
+    void openNewAssociationDialog();
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
 
 
