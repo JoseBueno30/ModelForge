@@ -1,7 +1,7 @@
 #ifndef METAOPERATION_H
 #define METAOPERATION_H
 
-#include "OCLExpression.h"
+#include "OCL/OCLExpr.h"
 #include "MetaType.h"
 #include "MetaVariable.h"
 
@@ -16,18 +16,18 @@ class PrePostClause{
 
 private:
     std::string name;
-    std::shared_ptr<OCLExpr> expression;
+    std::shared_ptr<Expr> expression;
     bool isPre;
     bool isPost;
 
 public:
-    PrePostClause(const std::string& name, const std::shared_ptr<OCLExpr>& expression, bool isPre, bool isPost);
+    PrePostClause(const std::string& name, const std::shared_ptr<Expr>& expression, bool isPre, bool isPost);
 
     std::string getName() const;
     void setName(const std::string& name);
 
-    const OCLExpr& getExpression() const;
-    void setExpression(const std::shared_ptr<OCLExpr>& expression);
+    const Expr& getExpression() const;
+    void setExpression(const std::shared_ptr<Expr>& expression);
 
     bool getIsPre() const;
     void setIsPre(bool isPre);

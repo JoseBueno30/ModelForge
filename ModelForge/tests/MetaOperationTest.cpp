@@ -78,14 +78,14 @@ void MetaOperationTest::init() {
 }
 
 void MetaOperationTest::metaPrePostClause_getName_returnsCorrectName(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto prePostClause = new MetaModel::PrePostClause("TestPrePostClause", expression, true, false);
 
     QCOMPARE(prePostClause->getName(), "TestPrePostClause");
 }
 
 void MetaOperationTest::metaPrePostClause_setName_updatesName(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto prePostClause = new MetaModel::PrePostClause("TestPrePostClause", expression, true, false);
     std::string newName = "NewName";
 
@@ -96,17 +96,17 @@ void MetaOperationTest::metaPrePostClause_setName_updatesName(){
 }
 
 void MetaOperationTest::metaPrePostClause_getExpression_returnsCorrectOCLExpression(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto prePostClause = new MetaModel::PrePostClause("TestPrePostClause", expression, true, false);
 
     QCOMPARE(prePostClause->getExpression().getExpression(), "TestOCLExpression");
 }
 
 void MetaOperationTest::metaPrePostClause_setExpression_updatesExpression(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto prePostClause = new MetaModel::PrePostClause("TestPrePostClause", expression, true, false);
 
-    auto newExpression = std::make_shared<MetaModel::OCLExpr>("NewOCLExpression");
+    auto newExpression = std::make_shared<MetaModel::Expr>("NewOCLExpression");
 
     prePostClause->setExpression(newExpression);
 
@@ -115,7 +115,7 @@ void MetaOperationTest::metaPrePostClause_setExpression_updatesExpression(){
 }
 
 void MetaOperationTest::metaPrePostClause_getIsPre_returnsIsPre(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     bool isPre = true;
     bool isPost = false;
     auto prePostClause = new MetaModel::PrePostClause("TestPrePostClause", expression, isPre, isPost);
@@ -124,7 +124,7 @@ void MetaOperationTest::metaPrePostClause_getIsPre_returnsIsPre(){
 }
 
 void MetaOperationTest::metaPrePostClause_setIsPre_updatesIsPre(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     bool isPre = true;
     bool isPost = false;
     auto prePostClause = new MetaModel::PrePostClause("TestPrePostClause", expression, isPre, isPost);
@@ -137,7 +137,7 @@ void MetaOperationTest::metaPrePostClause_setIsPre_updatesIsPre(){
 }
 
 void MetaOperationTest::metaPrePostClause_getIsPost_returnsIsPost(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     bool isPre = true;
     bool isPost = false;
     auto prePostClause = new MetaModel::PrePostClause("TestPrePostClause", expression, isPre, isPost);
@@ -146,7 +146,7 @@ void MetaOperationTest::metaPrePostClause_getIsPost_returnsIsPost(){
 }
 
 void MetaOperationTest::metaPrePostClause_setIsPost_updatesIsPost(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     bool isPre = true;
     bool isPost = false;
     auto prePostClause = new MetaModel::PrePostClause("TestPrePostClause", expression, isPre, isPost);
@@ -268,7 +268,7 @@ void MetaOperationTest::metaOperation_removeVariable_nonExistingKey_doesNothing(
 }
 
 void MetaOperationTest::metaOperation_getPreConditions_returnsCorrectMap(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
     metaOperation->addPreCondition(preCondition);
     auto preConditions = metaOperation->getPreConditions();
@@ -278,7 +278,7 @@ void MetaOperationTest::metaOperation_getPreConditions_returnsCorrectMap(){
 }
 
 void MetaOperationTest::metaOperation_getPreCondition_existingPreCondition_returnsCorrectPreCondition(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
     metaOperation->addPreCondition(preCondition);
 
@@ -291,7 +291,7 @@ void MetaOperationTest::metaOperation_getPreCondition_nonExistingPreCondition_re
 
 void MetaOperationTest::metaOperation_addPreCondition_validPreCondition_updatesPreConditionsMap(){
     int originalPreConditionsSize = metaOperation->getPreConditions().size();
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
     metaOperation->addPreCondition(preCondition);
 
@@ -304,7 +304,7 @@ void MetaOperationTest::metaOperation_addPreCondition_nullPreCondition_throwsInv
 }
 
 void MetaOperationTest::metaOperation_addPreCondition_repeatedPreConditionName_throwsInvalidArgumentException(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
     metaOperation->addPreCondition(preCondition);
 
@@ -312,7 +312,7 @@ void MetaOperationTest::metaOperation_addPreCondition_repeatedPreConditionName_t
 }
 
 void MetaOperationTest::metaOperation_addPreCondition_repeatedPostConditionName_throwsInvalidArgumentException(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestCondition", expression, false, true);
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestCondition", expression, true, false);
     metaOperation->addPostCondition(postCondition);
@@ -321,7 +321,7 @@ void MetaOperationTest::metaOperation_addPreCondition_repeatedPostConditionName_
 }
 
 void MetaOperationTest::metaOperation_removePreCondition_existingKey_updatesPreConditionsMap(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
     metaOperation->addPreCondition(preCondition);
 
@@ -336,7 +336,7 @@ void MetaOperationTest::metaOperation_removePreCondition_existingKey_updatesPreC
 }
 
 void MetaOperationTest::metaOperation_removePreCondition_nonExistingKey_doesNothing(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
     metaOperation->addPreCondition(preCondition);
 
@@ -350,7 +350,7 @@ void MetaOperationTest::metaOperation_removePreCondition_nonExistingKey_doesNoth
 }
 
 void MetaOperationTest::metaOperation_getPostConditions_returnsCorrectMap(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestPostCondition", expression, false, true);
     metaOperation->addPostCondition(postCondition);
     auto postConditions = metaOperation->getPostConditions();
@@ -360,7 +360,7 @@ void MetaOperationTest::metaOperation_getPostConditions_returnsCorrectMap(){
 }
 
 void MetaOperationTest::metaOperation_getPostCondition_existingPostCondition_returnsCorrectPostCondition(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestPostCondition", expression, false, true);
     metaOperation->addPostCondition(postCondition);
 
@@ -373,7 +373,7 @@ void MetaOperationTest::metaOperation_getPostCondition_nonExistingPostCondition_
 
 void MetaOperationTest::metaOperation_addPostCondition_validPostCondition_updatesPostConditionsMap(){
     int originalPostConditionsSize = metaOperation->getPostConditions().size();
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestPostCondition", expression, false, true);
     metaOperation->addPostCondition(postCondition);
 
@@ -386,7 +386,7 @@ void MetaOperationTest::metaOperation_addPostCondition_nullPostCondition_throwsI
 }
 
 void MetaOperationTest::metaOperation_addPostCondition_repeatedPreConditionName_throwsInvalidArgumentException(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestCondition", expression, true, false);
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestCondition", expression, false, true);
     metaOperation->addPreCondition(preCondition);
@@ -395,7 +395,7 @@ void MetaOperationTest::metaOperation_addPostCondition_repeatedPreConditionName_
 }
 
 void MetaOperationTest::metaOperation_addPostCondition_repeatedPostConditionName_throwsInvalidArgumentException(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestCondition", expression, false, true);
     metaOperation->addPostCondition(postCondition);
 
@@ -403,7 +403,7 @@ void MetaOperationTest::metaOperation_addPostCondition_repeatedPostConditionName
 }
 
 void MetaOperationTest::metaOperation_removePostCondition_existingKey_updatesPostConditionsMap(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestPostCondition", expression, false, true);
     metaOperation->addPostCondition(postCondition);
 
@@ -418,7 +418,7 @@ void MetaOperationTest::metaOperation_removePostCondition_existingKey_updatesPos
 }
 
 void MetaOperationTest::metaOperation_removePostCondition_nonExistingKey_doesNothing(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestPostCondition", expression, false, true);
     metaOperation->addPostCondition(postCondition);
 
@@ -432,7 +432,7 @@ void MetaOperationTest::metaOperation_removePostCondition_nonExistingKey_doesNot
 }
 
 void MetaOperationTest::metaOperation_isPrePostConditionDefined_definedPreCondition_returnsTrue(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto preCondition = std::make_shared<MetaModel::PrePostClause>("TestPreCondition", expression, true, false);
     metaOperation->addPostCondition(preCondition);
 
@@ -440,7 +440,7 @@ void MetaOperationTest::metaOperation_isPrePostConditionDefined_definedPreCondit
 }
 
 void MetaOperationTest::metaOperation_isPrePostConditionDefined_definedPostCondition_returnsTrue(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
     auto postCondition = std::make_shared<MetaModel::PrePostClause>("TestPostCondition", expression, false, true);
     metaOperation->addPostCondition(postCondition);
 

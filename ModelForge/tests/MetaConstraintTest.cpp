@@ -10,7 +10,7 @@ class MetaConstraintTest: public QObject
 private:
     MetaModel::MetaConstraint* metaConstraint;
     std::shared_ptr<MetaModel::MetaClass> metaClass;
-    std::shared_ptr<MetaModel::OCLExpr> expression;
+    std::shared_ptr<MetaModel::Expr> expression;
 
 private slots:
     void init();
@@ -40,7 +40,7 @@ private slots:
 
 void MetaConstraintTest::init() {
     metaClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
-    expression = std::make_shared<MetaModel::OCLExpr>("OCLExpression");
+    expression = std::make_shared<MetaModel::Expr>("OCLExpression");
 
     metaConstraint = new MetaModel::MetaConstraint(metaClass, expression, "TestConstraint", false);
 }
@@ -86,7 +86,7 @@ void MetaConstraintTest::metaConstraint_getExpression_returnsCorrectExpression()
 }
 
 void MetaConstraintTest::metaConstraint_setExpression_updatesExpression(){
-    auto newExpression = std::make_shared<MetaModel::OCLExpr>("NewOCLExpression");
+    auto newExpression = std::make_shared<MetaModel::Expr>("NewOCLExpression");
 
     metaConstraint->setExpression(newExpression);
 

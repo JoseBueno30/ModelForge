@@ -369,8 +369,6 @@ add_library(MetaModelLib SHARED
     src/metamodel/MetaModel.cpp
     include/metamodel/MetaType.h
     src/metamodel/MetaType.cpp
-    include/metamodel/OCLExpression.h
-    src/metamodel/OCLExpression.cpp
     include/metamodel/MetaEnum.h
     src/metamodel/MetaEnum.cpp
     include/metamodel/MetaClass.h
@@ -393,9 +391,24 @@ add_library(MetaModelLib SHARED
     src/metamodel/MetaAssociationClass.cpp
     include/metamodel/MetaElement.h
 
+
+
     include/modelToText/VisitorInterface.h
     include/modelToText/VisitorUSE.h
     src/modelToText/VisitorUSE.cpp
+
+
+    include/OCL/OCLExpr.h
+    include/OCL/OCLExpr.cpp
+    include/OCL/BinaryExpr.h include/OCL/BinaryExpr.cpp
+    include/OCL/LogicalExpr.h include/OCL/LogicalExpr.cpp
+    include/OCL/RelationalExpr.h include/OCL/RelationalExpr.cpp
+    include/OCL/EqualityExpr.h include/OCL/EqualityExpr.cpp
+    include/OCL/FactorExpr.h include/OCL/FactorExpr.cpp
+    include/OCL/AdditiveExpr.h include/OCL/AdditiveExpr.cpp
+    include/OCL/UnaryExpr.h include/OCL/UnaryExpr.cpp
+    include/OCL/LetExpr.h include/OCL/LetExpr.cpp
+    include/OCL/ConditionalExpr.h include/OCL/ConditionalExpr.cpp
 )
 
 set(DIALOGS

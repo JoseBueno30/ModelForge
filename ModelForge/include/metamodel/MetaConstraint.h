@@ -3,7 +3,7 @@
 
 
 #include "MetaVariable.h"
-#include "OCLExpression.h"
+#include "OCL/OCLExpr.h"
 
 #include<string>
 #include<memory>
@@ -20,12 +20,12 @@ private:
     std::string name;
     bool isExistential;
     std::shared_ptr<MetaClass> metaClass;
-    std::shared_ptr<OCLExpr> expression;
+    std::shared_ptr<Expr> expression;
     std::map<std::string, std::shared_ptr<MetaVariable>> variables;
 
 public:
-    MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::shared_ptr<OCLExpr>& expression, const std::string& name="", bool isExistential=false);
-    MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::vector<std::string>& variableNames, const std::shared_ptr<OCLExpr>& expression, const std::string& name="", bool isExistential=false);
+    MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::shared_ptr<Expr>& expression, const std::string& name="", bool isExistential=false);
+    MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::vector<std::string>& variableNames, const std::shared_ptr<Expr>& expression, const std::string& name="", bool isExistential=false);
 
     std::string getName() const;
     void setName(const std::string& name);
@@ -36,8 +36,8 @@ public:
     bool getIsExistential() const;
     void setIsExistential(const bool isExistential);
 
-    const OCLExpr& getExpression() const;
-    void setExpression(const std::shared_ptr<OCLExpr>& expression);
+    const Expr& getExpression() const;
+    void setExpression(const std::shared_ptr<Expr>& expression);
 
     const std::map<std::string, std::shared_ptr<MetaVariable>>& getVariables() const;
     const MetaVariable* getVariable(const std::string& key) const;
