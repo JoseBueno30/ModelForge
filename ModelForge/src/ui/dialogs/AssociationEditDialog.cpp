@@ -66,4 +66,14 @@ void AssociationEditDialog::setupTypesComboBox(){
             QString::fromStdString(metaClassPair.second->getName())
         );
     }
+
+    for(auto metaAssocClassPair : model->getAssociationClasses()){
+        ui->typeAEnd1ComboBox->addItem(
+            QString::fromStdString(metaAssocClassPair.second->getName())
+            );
+
+        ui->typeAEnd2ComboBox->addItem(
+            QString::fromStdString(metaAssocClassPair.second->getName())
+            );
+    }
 }

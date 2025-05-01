@@ -178,6 +178,7 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
         ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(1)));
         AssociationClassItemView* item = new AssociationClassItemView(modelAssocClass.second, class1, class2);
         qDebug() << "AsocClass: " << modelAssocClass.second->getName();
+        this->addModelItemView(modelAssocClass.second->getName(), item);
         scene->addItem(item);
         item->addItemsToScene();
     }
