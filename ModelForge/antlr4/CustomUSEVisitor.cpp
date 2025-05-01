@@ -230,7 +230,7 @@ public:
             invariantCounter++;
         }
 
-        std::shared_ptr<MetaModel::OCLExpr> expression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->expression()));
+        std::shared_ptr<MetaModel::Expr> expression= std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()));
 
         bool isExistential = ctx->EXISTENTIAL()? true : false;
 
@@ -252,11 +252,11 @@ public:
         std::shared_ptr<MetaModel::MetaAttribute> attribute = std::make_shared<MetaModel::MetaAttribute>(name, type);
 
         if(ctx->initDefinition()){
-            std::shared_ptr<MetaModel::OCLExpr> initExpression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->initDefinition()));
+            std::shared_ptr<MetaModel::Expr> initExpression= std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->initDefinition()));
 
             attribute->setInitExpr(initExpression);
         }else if(ctx->derivedDefinition()){
-            std::shared_ptr<MetaModel::OCLExpr> deriveExpression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->derivedDefinition()));
+            std::shared_ptr<MetaModel::Expr> deriveExpression= std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->derivedDefinition()));
 
             attribute->setDeriveExpr(deriveExpression);
         }
@@ -316,7 +316,7 @@ public:
             preConditionCounter++;
         }
 
-        std::shared_ptr<MetaModel::OCLExpr> expression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->expression()));
+        std::shared_ptr<MetaModel::Expr> expression= std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()));
 
 
 
@@ -332,7 +332,7 @@ public:
             postConditionCounter++;
         }
 
-        std::shared_ptr<MetaModel::OCLExpr> expression= std::any_cast<std::shared_ptr<MetaModel::OCLExpr>>(visit(ctx->expression()));
+        std::shared_ptr<MetaModel::Expr> expression= std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()));
 
         return std::make_shared<MetaModel::PrePostClause>(name, expression, false, true);
     }
@@ -538,23 +538,23 @@ public:
     //EXPRESSIONS
 
     std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->expression()->getText());
+        return std::make_shared<MetaModel::Expr>(ctx->expression()->getText());
     }
 
     std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->logicalExpression()->getText());
+        return std::make_shared<MetaModel::Expr>(ctx->logicalExpression()->getText());
     }
 
     std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->conditionalExpression()->getText());
+        return std::make_shared<MetaModel::Expr>(ctx->conditionalExpression()->getText());
     }
 
     std::any visitLambdaExpr(USEParser::LambdaExprContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->lambdaExpression()->getText());
+        return std::make_shared<MetaModel::Expr>(ctx->lambdaExpression()->getText());
     }
 
     std::any visitLetExpr(USEParser::LetExprContext *ctx) override {
-        return std::make_shared<MetaModel::OCLExpr>(ctx->letExpression()->getText());
+        return std::make_shared<MetaModel::Expr>(ctx->letExpression()->getText());
     }
 
     // ASSOCIAITON CLASS DEFINITION

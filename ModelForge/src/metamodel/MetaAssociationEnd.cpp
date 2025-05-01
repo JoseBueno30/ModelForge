@@ -266,10 +266,10 @@ const MetaVariable* MetaAssociationEnd::getQualifier(const std::string& key) con
     return nullptr;
 }
 
-const OCLExpr* MetaAssociationEnd::getDeriveExpr() const{
+const Expr* MetaAssociationEnd::getDeriveExpr() const{
     return deriveExpr.get();
 }
-void MetaAssociationEnd::setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr){
+void MetaAssociationEnd::setDeriveExpr(const std::shared_ptr<Expr>& deriveExpr){
     this->deriveExpr = deriveExpr;
 }
 

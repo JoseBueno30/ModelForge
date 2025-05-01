@@ -3,7 +3,7 @@
 
 
 #include "MetaVariable.h"
-#include "OCLExpression.h"
+#include "OCL/OCLExpr.h"
 
 #include <memory>
 #include <string>
@@ -63,7 +63,7 @@ private:
     std::map<std::string, std::shared_ptr<MetaAssociationEnd>> redefinedEnds;
     std::map<std::string, std::shared_ptr<MetaAssociationEnd>> subsettedEnds;
     std::map<std::string, std::shared_ptr<MetaVariable>> qualifiers;
-    std::shared_ptr<OCLExpr> deriveExpr;
+    std::shared_ptr<Expr> deriveExpr;
 
 public:
     MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity);
@@ -112,8 +112,8 @@ public:
     void addQualifier(const std::shared_ptr<MetaVariable>& qualifier);
     void removeQualifier(const std::string& key);
 
-    const OCLExpr* getDeriveExpr() const;
-    void setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr);
+    const Expr* getDeriveExpr() const;
+    void setDeriveExpr(const std::shared_ptr<Expr>& deriveExpr);
 };
 
 }

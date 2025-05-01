@@ -7,14 +7,14 @@
 namespace MetaModel{
 
 
-MetaConstraint::MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::shared_ptr<OCLExpr>& expression, const std::string& name, bool isExistential)
+MetaConstraint::MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::shared_ptr<Expr>& expression, const std::string& name, bool isExistential)
     : metaClass(metaClass), expression(expression), name(name), isExistential(isExistential){
 
     this->addVariable("self");
 
 }
 
-MetaConstraint::MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::vector<std::string>& variableNames, const std::shared_ptr<OCLExpr>& expression, const std::string& name, bool isExistential)
+MetaConstraint::MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::vector<std::string>& variableNames, const std::shared_ptr<Expr>& expression, const std::string& name, bool isExistential)
     : metaClass(metaClass), expression(expression), name(name), isExistential(isExistential){
 
     for(const auto& variableName : variableNames){
@@ -45,10 +45,10 @@ void MetaConstraint::setIsExistential(const bool isExistential){
     this->isExistential = isExistential;
 }
 
-const OCLExpr& MetaConstraint::getExpression() const{
+const Expr& MetaConstraint::getExpression() const{
     return *expression;
 }
-void MetaConstraint::setExpression(const std::shared_ptr<OCLExpr>& expression){
+void MetaConstraint::setExpression(const std::shared_ptr<Expr>& expression){
     this->expression = expression;
 }
 

@@ -4,7 +4,7 @@
 
 
 #include "MetaType.h"
-#include "OCLExpression.h"
+#include "OCL/OCLExpr.h"
 
 #include<string>
 
@@ -14,8 +14,8 @@ class MetaAttribute{
 private:
     std::string name;
     std::shared_ptr<MetaType> type;
-    std::shared_ptr<OCLExpr> initExpr;
-    std::shared_ptr<OCLExpr> deriveExpr;
+    std::shared_ptr<Expr> initExpr;
+    std::shared_ptr<Expr> deriveExpr;
 
 public:
     MetaAttribute(const std::string& name, const std::shared_ptr<MetaType>& type);
@@ -26,11 +26,11 @@ public:
     const MetaType& getType() const;
     void setType(const std::shared_ptr<MetaType>& type);
 
-    const OCLExpr* getInitExpr() const;
-    void setInitExpr(const std::shared_ptr<OCLExpr>& initExpr);
+    const Expr* getInitExpr() const;
+    void setInitExpr(const std::shared_ptr<Expr>& initExpr);
 
-    const OCLExpr* getDeriveExpr() const;
-    void setDeriveExpr(const std::shared_ptr<OCLExpr>& deriveExpr);
+    const Expr* getDeriveExpr() const;
+    void setDeriveExpr(const std::shared_ptr<Expr>& deriveExpr);
 
     std::string toString() const;
 };

@@ -71,7 +71,7 @@ void MetaAttributeTest::metaAttribute_getInitExpr_returnsCorrectOCLExpression(){
 }
 
 void MetaAttributeTest::metaAttribute_setInitExpr_updatesInitExpr(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
 
     metaAttribute->setInitExpr(expression);
 
@@ -84,7 +84,7 @@ void MetaAttributeTest::metaAttribute_getDeriveExpr_returnsCorrectOCLExpression(
 }
 
 void MetaAttributeTest::metaAttribute_setDeriveExpr_updatesDeriveExpr(){
-    auto expression = std::make_shared<MetaModel::OCLExpr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
 
     metaAttribute->setDeriveExpr(expression);
 
