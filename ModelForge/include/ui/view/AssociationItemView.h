@@ -28,6 +28,7 @@ public:
     shared_ptr<MetaModel::MetaAssociation> getAssociationModel();
     QPointF getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last);
 
+    void applyOffsetToSharedAssociations();
     void setOffset(qreal newOffset){this->offset = newOffset;}
     qreal getOffset(){return this->offset;}
 

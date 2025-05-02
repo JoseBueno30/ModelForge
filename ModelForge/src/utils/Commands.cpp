@@ -69,6 +69,8 @@ void AddMetaAssociationCommand::undo(){
     this->associationView->getClass1()->deleteAssociation(this->associationView);
     this->associationView->getClass2()->deleteAssociation(this->associationView);
 
+    this->associationView->applyOffsetToSharedAssociations();
+
     this->scene->removeItem(this->associationView);
     this->scene->update();
 }
@@ -78,6 +80,8 @@ void AddMetaAssociationCommand::redo(){
 
     this->associationView->getClass1()->addAssociation(this->associationView);
     this->associationView->getClass2()->addAssociation(this->associationView);
+
+    this->associationView->applyOffsetToSharedAssociations();
 
     this->scene->addItem(this->associationView);
     this->scene->update();
