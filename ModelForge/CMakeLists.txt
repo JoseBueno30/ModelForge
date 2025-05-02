@@ -457,6 +457,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/utils/Commands.cpp
         src/ui/components/ModelGraphicsScene.cpp
         include/ui/components/ModelGraphicsScene.h
+        src/ui/dialogs/AssociationEditDialog.ui
+        include/ui/dialogs/AssociationEditDialog.h
+        src/ui/dialogs/AssociationEditDialog.cpp
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:

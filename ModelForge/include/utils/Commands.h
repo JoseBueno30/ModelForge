@@ -53,5 +53,35 @@ private:
     QGraphicsScene* scene;
 };
 
+class AddMetaAssociationCommand : public QUndoCommand{
+public:
+    AddMetaAssociationCommand(std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaModel> model
+                              , AssociationItemView *associationView, QGraphicsScene * scene);
+
+    void undo() override;
+    void redo() override;
+
+private:
+    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation;
+    std::shared_ptr<MetaModel::MetaModel> model;
+    AssociationItemView *associationView;
+    QGraphicsScene * scene;
+};
+
+/*class EditMetaAssociationCommand : public QUndoCommand{
+public:
+    EditMetaAssociationCommand(std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaModel> model
+                               , AssociationItemView *associationView, QGraphicsScene * scene);
+
+    void undo() override;
+    void redo() override;
+
+private:
+    std::shared_ptr<MetaModel::MetaAssociation> modelMetaAssociation;
+    std::shared_ptr<MetaModel::MetaAssociation> oldMetaAssociation;
+    std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation;
+    AssociationItemView *associationView;
+    QGraphicsScene * scene;
+};*/
 
 #endif // COMMANDS_H

@@ -2,7 +2,8 @@
 
 #include <ui/components/ThemeManager.h>
 
-void applyOffsetToSharedAssociations(std::vector<AssociationItemView *>& associationsShared){
+void AssociationItemView::applyOffsetToSharedAssociations(){
+    std::vector<AssociationItemView *> associationsShared = class1->associationsShared(class2);
     int cont = 1;
     for(auto association : associationsShared){
         qreal offset = (qreal) cont/(associationsShared.size() + 1);
@@ -21,8 +22,7 @@ AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> 
 
     setZValue(-1);
 
-    std::vector<AssociationItemView *> associationsShared = class1->associationsShared(class2);
-    applyOffsetToSharedAssociations(associationsShared);
+    applyOffsetToSharedAssociations();
 
     updatePosition();
 }

@@ -1,6 +1,7 @@
 #include <utils/Commands.h>
 #include <QGraphicsScene>
 #include <ui/view/ClassItemView.h>
+#include <ui/view/AssociationItemView.h>
 
 MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos, QUndoCommand *parent)
     : QUndoCommand(parent),item(diagramItem), oldPos(oldPos), newPos(diagramItem->pos()){}
@@ -54,6 +55,35 @@ void AddMetaClassCommand::undo(){
 void AddMetaClassCommand::redo(){
     this->model->addClass(newClass);
     this->scene->addItem(newClassView);
+    this->scene->update();
+}
+
+
+AddMetaAssociationCommand::AddMetaAssociationCommand(
+    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaModel> model, AssociationItemView *associationView, QGraphicsScene * scene)
+    : metaAssociation(metaAssociation), model(model), associationView(associationView), scene(scene) {}
+
+void AddMetaAssociationCommand::undo(){
+    this->model->removeAssociation(metaAssociation->getName());
+
+    this->associationView->getClass1()->deleteAssociation(this->associationView);
+    this->associationView->getClass2()->deleteAssociation(this->associationView);
+
+    this->associationView->applyOffsetToSharedAssociations();
+
+    this->scene->removeItem(this->associationView);
+    this->scene->update();
+}
+
+void AddMetaAssociationCommand::redo(){
+    this->model->addAssociation(this->metaAssociation);
+
+    this->associationView->getClass1()->addAssociation(this->associationView);
+    this->associationView->getClass2()->addAssociation(this->associationView);
+
+    this->associationView->applyOffsetToSharedAssociations();
+
+    this->scene->addItem(this->associationView);
     this->scene->update();
 }
 

@@ -123,7 +123,9 @@ shared_ptr<MetaModel::MetaClass>& ClassItemView::getClassModel(){
 }
 
 void ClassItemView::addAssociation(AssociationItemView* association){
-    this->associations.push_back(association);
+    if (std::find(this->associations.begin(), this->associations.end(), association) == this->associations.end()) {
+        this->associations.push_back(association);
+    }
 }
 
 void ClassItemView::deleteAssociation(AssociationItemView* association){
@@ -155,10 +157,12 @@ std::vector<AssociationItemView *> ClassItemView::associationsShared(ClassItemVi
             associationsShared.push_back(association);
         }
     }
+    //qDebug() << "nAssociations: " << associationsShared.size();
     return associationsShared;
 }
 
 void ClassItemView::updateConnectionPositions(){
+    qDebug() << "nAssociations: " << this->associations.size();
     for(auto association: this->associations){
         association->updatePosition();
     }

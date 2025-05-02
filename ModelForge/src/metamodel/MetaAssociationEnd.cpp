@@ -1,6 +1,24 @@
+#include <iostream>
 #include <metamodel/MetaAssociationEnd.h>
 
 #include <stdexcept>
+
+std::vector<std::string> split(const std::string& str, const std::string& delimiter) {
+    std::vector<std::string> resultado;
+    size_t inicio = 0;
+    size_t fin = str.find(delimiter);
+
+    while (fin != std::string::npos) {
+        resultado.push_back(str.substr(inicio, fin - inicio));
+        inicio = fin + delimiter.length();
+        fin = str.find(delimiter, inicio);
+    }
+
+    // Agrega la última parte
+    resultado.push_back(str.substr(inicio));
+
+    return resultado;
+}
 
 namespace MetaModel{
 
@@ -43,6 +61,14 @@ std::string MetaMultiplicityRange::toString() const{
     }
 
     return range;
+}
+
+int getMultiplicityValueFromString(std::string stringValue){
+    if(stringValue == "*"){
+        return -1;
+    }else{
+        return std::stoi(stringValue);
+    }
 }
 
 
@@ -95,7 +121,30 @@ std::string MetaMultiplicity::toString() const{
     return multiplicity;
 }
 
+void MetaMultiplicity::setMultiplicictyFromString(std::string multiplicityString){
+    auto rangesStrings = split(multiplicityString, ", ");
+    this->ranges = std::vector<std::shared_ptr<MetaMultiplicityRange>>();
+    for(auto rangeString : rangesStrings){
+         std::cout << "x";
+        auto bounds = split(rangeString, "..");
+         std::cout << "x";
+        if(bounds.size() == 1){
+            int value = getMultiplicityValueFromString(bounds[0]);
+             std::cout << "xx";
+            this->addRange(value, value);
+        }else{
+            int lowerValue = getMultiplicityValueFromString(bounds[0]);
+            int upperValue = getMultiplicityValueFromString(bounds[1]);
+             std::cout << "xxx";
+            this->addRange(lowerValue, upperValue);
+        }
+    }
+}
 
+
+
+MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaAssociation>& association, int type)
+    : association(association), type(type), role(""), isNavigable(false), isOrdered(false), isUnique(false), isUnion(false){}
 
 MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity)
     : endClass(endClass), association(association), role(role), type(type), isNavigable(isNavigable), isOrdered(isOrdered), isUnique(isUnique), isUnion(isUnion), multiplicity(multiplicity){}
