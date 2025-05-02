@@ -22,6 +22,9 @@ public:
         std::shared_ptr<MetaModel::MetaModel> model = nullptr
         );
 
+public Q_SLOTS:
+    void saveChanges();
+
 private:
     Ui::AssociationEditDialog *ui;
 
@@ -34,6 +37,9 @@ private:
 
     void setupAssociationEnd1(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd);
     void setupAssociationEnd2(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd);
+
+    void setAssociationEnd1(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd);
+    void setAssociationEnd2(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd);
 };
 
 #endif // ASSOCIATIONEDITDIALOG_H

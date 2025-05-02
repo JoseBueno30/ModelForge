@@ -46,6 +46,8 @@ public:
     void addRange(int lowerBound, int upperBound);
     void deleteRange(int pos);
 
+    void setMultiplicictyFromString(std::string multiplicityString);
+
     std::string toString() const;
 };
 
@@ -66,6 +68,7 @@ private:
     std::shared_ptr<Expr> deriveExpr;
 
 public:
+    MetaAssociationEnd(const std::shared_ptr<MetaAssociation>& association, int type);
     MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity);
 
     const MetaClass& getClass() const;
