@@ -6,7 +6,7 @@
 
 ModelGraphicsScene::ModelGraphicsScene(QObject* parent) : QGraphicsScene(parent){}
 
-void ModelGraphicsScene::emitSignal(QGraphicsItem * item,const QPointF& pos){
+void ModelGraphicsScene::emitMoveSignal(QGraphicsItem * item,const QPointF& pos){
     if (!item) {
         qDebug() << "Error: item es nullptr en emitSignal";
         return;
@@ -16,4 +16,8 @@ void ModelGraphicsScene::emitSignal(QGraphicsItem * item,const QPointF& pos){
     if(pos != item->pos()){
         Q_EMIT itemMoved(item, pos);
     }
+}
+
+void ModelGraphicsScene::emitEditAssociationSignal(AssociationItemView * association){
+    Q_EMIT editAssociation(association);
 }

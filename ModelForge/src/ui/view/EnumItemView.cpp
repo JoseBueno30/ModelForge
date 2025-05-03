@@ -77,7 +77,7 @@ void EnumItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
 
     ModelGraphicsScene* scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
     if(this->scene()!=nullptr){
-        scene->emitSignal(this, oldPos);
+        scene->emitMoveSignal(this, oldPos);
     }
 
     QGraphicsItem::mouseReleaseEvent(event);

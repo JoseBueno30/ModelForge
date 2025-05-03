@@ -86,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent)
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     scene = new ModelGraphicsScene();
     bool succes = connect(scene, &ModelGraphicsScene::itemMoved, this, &MainWindow::itemMoved);
+    connect(scene, &ModelGraphicsScene::editAssociation, this, &MainWindow::openEditAssociationDialog);
     qDebug() << "Connect = " << succes;
     modelGraphicsView->setScene(scene);
 
@@ -238,9 +239,14 @@ void MainWindow::openNewAssociationDialog(){
             }
         }
         std::shared_ptr<MetaModel::MetaAssociation> newAssociation = std::make_shared<MetaModel::MetaAssociation>(defaultName, 0);
-        AssociationEditDialog *associationEditDialog = new AssociationEditDialog(newAssociation, this->modelItemViewElementsMap, this->scene, this->model);
+        AssociationEditDialog *associationEditDialog = new AssociationEditDialog(newAssociation, this->modelItemViewElementsMap, this->scene, nullptr, this->model);
         associationEditDialog->exec();
     }
+}
+
+void MainWindow::openEditAssociationDialog(AssociationItemView* association){
+    AssociationEditDialog *associationEditDialog = new AssociationEditDialog(association->getAssociationModel(), this->modelItemViewElementsMap, this->scene, association, this->model);
+    associationEditDialog->exec();
 }
 
 
