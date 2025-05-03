@@ -466,18 +466,6 @@ public class USEBaseListener implements USEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLambdaExpr(USEParser.LambdaExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitLambdaExpr(USEParser.LambdaExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterLetExpr(USEParser.LetExprContext ctx) { }
 	/**
 	 * {@inheritDoc}

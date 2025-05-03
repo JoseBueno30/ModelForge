@@ -47,7 +47,7 @@ end
 
 constraints
 context Account inv Positive_Balance:
-    self.test.age > 0
+    balance > 1
 
 context x, y: Account inv Prueba:
     1 < 0

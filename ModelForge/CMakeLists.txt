@@ -410,7 +410,9 @@ add_library(MetaModelLib SHARED
     include/OCL/LetExpr.h include/OCL/LetExpr.cpp
     include/OCL/ConditionalExpr.h include/OCL/ConditionalExpr.cpp
     include/OCL/PrimaryExpr.h include/OCL/PrimaryExpr.cpp
-    include/OCL/PropertyCall.h include/OCL/PropertyCall.cpp
+    include/OCL/PropertyCallExpr.h include/OCL/PropertyCallExpr.cpp
+    include/OCL/TypeExpr.h include/OCL/TypeExpr.cpp
+    include/OCL/QueryExpr.h include/OCL/QueryExpr.cpp
 )
 
 set(DIALOGS

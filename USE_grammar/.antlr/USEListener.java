@@ -411,18 +411,6 @@ public interface USEListener extends ParseTreeListener {
 	 */
 	void exitConditionalExpr(USEParser.ConditionalExprContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code LambdaExpr}
-	 * labeled alternative in {@link USEParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterLambdaExpr(USEParser.LambdaExprContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code LambdaExpr}
-	 * labeled alternative in {@link USEParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitLambdaExpr(USEParser.LambdaExprContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code LetExpr}
 	 * labeled alternative in {@link USEParser#expression}.
 	 * @param ctx the parse tree

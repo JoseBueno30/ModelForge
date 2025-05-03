@@ -3,6 +3,8 @@
 
 #include "OCLExpr.h"
 
+#include <any>
+
 namespace MetaModel {
 class PrimaryExpr : public Expr{
 public:
@@ -24,6 +26,8 @@ public:
 };
 
 class LiteralExpr : public PrimaryExpr{
+protected:
+    std::any value;
 public:
     LiteralExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type);
 };
