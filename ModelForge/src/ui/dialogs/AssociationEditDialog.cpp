@@ -14,11 +14,12 @@ AssociationEditDialog::AssociationEditDialog(
     std::shared_ptr<MetaModel::MetaAssociation> associationModel,
     std::map<std::string, QGraphicsItem*> itemViewsMap,
     QGraphicsScene* scene,
+    AssociationItemView * associationItemView,
     std::shared_ptr<MetaModel::MetaModel> model
     )
     :
     associationModel(associationModel), itemViewsMap(itemViewsMap), scene(scene), model(model),
-    ui(new Ui::AssociationEditDialog)
+    associationItemView(associationItemView), ui(new Ui::AssociationEditDialog)
 {
     ui->setupUi(this);
     setupTypesComboBox();
@@ -100,13 +101,16 @@ void AssociationEditDialog::setupTypesComboBox(){
 }
 
 void AssociationEditDialog::saveChanges(){
-    associationModel->setName(ui->associationNameEdit->text().toStdString());
 
-    associationModel->setType(ui->associationTypeComboBox->currentIndex());
 
     if(associationModel->getAssociationEnds().empty()){ //Creating new association
         //Check if fields have been completed and create associationEnds
         if(true){
+
+            associationModel->setName(ui->associationNameEdit->text().toStdString());
+
+            associationModel->setType(ui->associationTypeComboBox->currentIndex());
+
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd1 = std::make_shared<MetaModel::MetaAssociationEnd>(associationModel, 0);
             associationEnd1->setMultiplicity(std::make_shared<MetaModel::MetaMultiplicity>(0,0));
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd2 = std::make_shared<MetaModel::MetaAssociationEnd>(associationModel, ui->associationTypeComboBox->currentIndex());
@@ -135,28 +139,47 @@ void AssociationEditDialog::saveChanges(){
     else{ //Updating an existing association
 
         // Check if fields have been changed and update existing associationEnds
+        if(true){
+            std::shared_ptr<MetaModel::MetaAssociation> newAssociation = std::make_shared<MetaModel::MetaAssociation>(*this->associationModel);
 
+            newAssociation->setName(ui->associationNameEdit->text().toStdString());
+
+            newAssociation->setType(ui->associationTypeComboBox->currentIndex());
+
+            auto aEndsIt = newAssociation->getAssociationEnds().begin();
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd1 = aEndsIt->second;
+            aEndsIt++;
+            std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd2 = aEndsIt->second;
+
+            setAssociationEnd1(associationEnd1);
+            setAssociationEnd2(associationEnd2);
+
+            EditMetaAssociationCommand *editCommand = new EditMetaAssociationCommand(this->associationModel, newAssociation, this->associationItemView, this->itemViewsMap, this->scene);
+            MainWindow::undoStack->push(editCommand);
+        }
     }
 
 
 }
 
 void AssociationEditDialog::setAssociationEnd1(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd){
-    qDebug()<< "aa";
     associationEnd->setRole(ui->roleAEnd1LineEdit->text().toStdString());
-    qDebug()<< "ab";
-    auto multiplicity = associationEnd->getMultiplicity();
-    multiplicity.setMultiplicictyFromString(ui->multiplicityAEnd1LineEdit->text().toStdString());
-    qDebug()<< "ac";
+
+    auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0,0);
+    multiplicity->setMultiplicictyFromString(ui->multiplicityAEnd1LineEdit->text().toStdString());
+    associationEnd->setMultiplicity(multiplicity);
+
     auto newClass = this->model->getClass(ui->typeAEnd1ComboBox->currentText().toStdString());
     associationEnd->setClass(newClass);
-    qDebug()<< "ad";
 }
 
 void AssociationEditDialog::setAssociationEnd2(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd){
     associationEnd->setRole(ui->roleAEnd2LineEdit->text().toStdString());
-    auto multiplicity = associationEnd->getMultiplicity();
-    multiplicity.setMultiplicictyFromString(ui->multiplicityAEnd2LineEdit->text().toStdString());
+
+    auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0,0);
+    multiplicity->setMultiplicictyFromString(ui->multiplicityAEnd2LineEdit->text().toStdString());
+
+    associationEnd->setMultiplicity(multiplicity);
 
     auto newClass = this->model->getClass(ui->typeAEnd2ComboBox->currentText().toStdString());
     associationEnd->setClass(newClass);

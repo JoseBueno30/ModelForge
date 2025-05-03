@@ -9,7 +9,7 @@ using std::shared_ptr;
 
 enum ClassesOrientation {VERTICAL,HORIZONTAL};
 
-class AssociationItemView : virtual public QGraphicsItem{
+class AssociationItemView : public QGraphicsItem{
 public:
     AssociationItemView(shared_ptr<MetaModel::MetaAssociation> model,
                         ClassItemView* class1,
@@ -17,6 +17,8 @@ public:
 
     QRectF associationNameRect();
     QRectF boundingRect() const override;
+    QPainterPath shape() const override;
+
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     void updatePosition();
@@ -25,12 +27,19 @@ public:
     QPointF getP2() const;
     ClassItemView* getClass1() const;
     ClassItemView* getClass2() const;
+
+    void setClass1(ClassItemView* newClass);
+    void setClass2(ClassItemView* newClass);
+
     shared_ptr<MetaModel::MetaAssociation> getAssociationModel();
     QPointF getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last);
 
     void applyOffsetToSharedAssociations();
     void setOffset(qreal newOffset){this->offset = newOffset;}
     qreal getOffset(){return this->offset;}
+
+protected:
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     shared_ptr<MetaModel::MetaAssociation> model;

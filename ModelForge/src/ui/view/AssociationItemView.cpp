@@ -1,5 +1,6 @@
 #include <ui/view/AssociationItemView.h>
 
+#include <ui/components/ModelGraphicsScene.h>
 #include <ui/components/ThemeManager.h>
 
 void AssociationItemView::applyOffsetToSharedAssociations(){
@@ -115,6 +116,17 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
 QRectF AssociationItemView::boundingRect() const {return QRectF(p1, p2).normalized().adjusted(-100, -100, 100, 100);}
 QRectF AssociationItemView::associationNameRect(){return QRectF();}
+QPainterPath AssociationItemView::shape() const{
+    QPainterPath path;
+    QPen pen(Qt::black, 2); // ancho real del trazo que se dibuja
+    path.moveTo(this->getP1());
+    path.lineTo(this->getP2());
+
+    // Aumentamos artificialmente el ancho del área sensible
+    QPainterPathStroker stroker;
+    stroker.setWidth(pen.widthF() + 6); // área de "tolerancia" al clic
+    return stroker.createStroke(path);
+}
 
 
 QPointF AssociationItemView::drawDiamond(QLineF &line, QPainter *painter, bool filled){
@@ -149,6 +161,23 @@ ClassItemView* AssociationItemView::getClass1() const{
 ClassItemView* AssociationItemView::getClass2() const{
     return this->class2;
 }
+
+void AssociationItemView::setClass1(ClassItemView* newClass){
+    this->class1 = newClass;
+}
+void AssociationItemView::setClass2(ClassItemView* newClass){
+    this->class2 = newClass;
+}
+
 shared_ptr<MetaModel::MetaAssociation> AssociationItemView::getAssociationModel(){
     return this->model;
 }
+
+
+void AssociationItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
+    if (shape().contains(event->pos())) {
+        ModelGraphicsScene* scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
+        scene->emitEditAssociationSignal(this);
+    }
+}
+

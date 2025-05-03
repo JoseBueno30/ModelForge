@@ -6,6 +6,7 @@
 #include <metamodel/MetaModel.h>
 #include <any>
 #include <qgraphicsitem.h>
+#include <ui/view/AssociationItemView.h>
 
 namespace Ui{
 class AssociationEditDialog;
@@ -19,6 +20,7 @@ public:
         std::shared_ptr<MetaModel::MetaAssociation> associationModel,
         std::map<std::string, QGraphicsItem*> itemViewsMap,
         QGraphicsScene* scene,
+        AssociationItemView * associationItemView = nullptr,
         std::shared_ptr<MetaModel::MetaModel> model = nullptr
         );
 
@@ -31,6 +33,7 @@ private:
     std::shared_ptr<MetaModel::MetaAssociation> associationModel;
     std::map<std::string, QGraphicsItem*> itemViewsMap;
     QGraphicsScene* scene;
+    AssociationItemView * associationItemView;
     std::shared_ptr<MetaModel::MetaModel> model;
 
     void setupTypesComboBox();

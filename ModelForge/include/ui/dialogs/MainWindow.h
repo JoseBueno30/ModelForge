@@ -40,6 +40,7 @@ public Q_SLOTS:
     void openModelFile();
     void openNewClassDialog();
     void openNewAssociationDialog();
+    void openEditAssociationDialog(AssociationItemView* association);
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
 
 

@@ -60,7 +60,7 @@ void AddMetaClassCommand::redo(){
 
 
 AddMetaAssociationCommand::AddMetaAssociationCommand(
-    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaModel> model, AssociationItemView *associationView, QGraphicsScene * scene)
+    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation,std::shared_ptr<MetaModel::MetaModel> model, AssociationItemView *associationView, QGraphicsScene * scene)
     : metaAssociation(metaAssociation), model(model), associationView(associationView), scene(scene) {}
 
 void AddMetaAssociationCommand::undo(){
@@ -86,4 +86,43 @@ void AddMetaAssociationCommand::redo(){
     this->scene->addItem(this->associationView);
     this->scene->update();
 }
+
+
+EditMetaAssociationCommand::EditMetaAssociationCommand(
+    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation
+    , AssociationItemView *associationView, std::map<std::string, QGraphicsItem *> itemViewsMap, QGraphicsScene * scene) :
+    modelMetaAssociation(metaAssociation), newMetaAssociation(newMetaAssociation), scene(scene), sceneAssociationView(associationView), itemViewsMap(itemViewsMap){
+    this->oldMetaAssociation = std::make_shared<MetaModel::MetaAssociation>(*metaAssociation);
+}
+
+void EditMetaAssociationCommand::updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association){
+    auto aEndsIt = association->getAssociationEnds().begin();
+    ClassItemView* class1 = dynamic_cast<ClassItemView*>(itemViewsMap.find(aEndsIt->second->getClass().getName())->second);
+    aEndsIt++;
+    ClassItemView* class2 = dynamic_cast<ClassItemView*>(itemViewsMap.find(aEndsIt->second->getClass().getName())->second);
+
+    this->sceneAssociationView->setClass1(class1);
+    class1->addAssociation(this->sceneAssociationView);
+    this->sceneAssociationView->setClass2(class2);
+    class2->addAssociation(this->sceneAssociationView);
+
+    this->sceneAssociationView->applyOffsetToSharedAssociations();
+    this->sceneAssociationView->updatePosition();
+}
+
+void EditMetaAssociationCommand::undo(){
+    *modelMetaAssociation = *oldMetaAssociation;
+
+    updateItemView(oldMetaAssociation);
+    scene->update();
+}
+
+void EditMetaAssociationCommand::redo(){
+    *modelMetaAssociation = *newMetaAssociation;
+
+    updateItemView(newMetaAssociation);
+    scene->update();
+}
+
+
 
