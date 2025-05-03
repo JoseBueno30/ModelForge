@@ -2,6 +2,8 @@
 
 #include <ui/components/ModelGraphicsScene.h>
 
+#include <ui/dialogs/EnumEditDialog.h>
+
 void EnumItemView::calculateMinimumSize(){
     QFontMetrics fm(QFont("Arial", 13, QFont::Bold));
     int minHeight = fm.height() + NAME_PADDING + ATTS_PADDING;
@@ -82,5 +84,11 @@ void EnumItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
 
     QGraphicsItem::mouseReleaseEvent(event);
 }
+
+void EnumItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event){
+    EnumEditDialog* editDialog = new EnumEditDialog(this->model, this->scene());
+    editDialog->exec();
+}
+
 
 EnumItemView::~EnumItemView(){}
