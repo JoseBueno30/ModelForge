@@ -86,7 +86,7 @@ void EnumItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
 }
 
 void EnumItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event){
-    EnumEditDialog* editDialog = new EnumEditDialog(this->model, this->scene());
+    EnumEditDialog* editDialog = new EnumEditDialog(this->model, this->scene(), nullptr, this, nullptr);
     editDialog->exec();
 }
 

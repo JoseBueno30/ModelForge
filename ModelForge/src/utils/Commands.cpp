@@ -125,4 +125,42 @@ void EditMetaAssociationCommand::redo(){
 }
 
 
+AddMetaEnumCommand::AddMetaEnumCommand(std::shared_ptr<MetaModel::MetaEnum> metaEnum, std::shared_ptr<MetaModel::MetaModel> model, EnumItemView* enumItemView, QGraphicsScene* scene)
+    : metaEnum(metaEnum), model(model), enumItemView(enumItemView), scene(scene){}
+
+void AddMetaEnumCommand::undo(){
+    model->removeEnum(metaEnum->getName());
+    scene->removeItem(enumItemView);
+
+    scene->update();
+}
+
+void AddMetaEnumCommand::redo(){
+    model->addEnum(metaEnum);
+    scene->addItem(enumItemView);
+
+    scene->update();
+}
+
+
+EditMetaEnumCommand::EditMetaEnumCommand(std::shared_ptr<MetaModel::MetaEnum> modelMetaEnum, std::shared_ptr<MetaModel::MetaEnum> newMetaEnum, EnumItemView* enumItemView, QGraphicsScene* scene)
+    : modelMetaEnum(modelMetaEnum), newMetaEnum(newMetaEnum), enumItemView(enumItemView), scene(scene){
+    this->oldMetaEnum = std::make_shared<MetaModel::MetaEnum>(*modelMetaEnum);
+}
+
+void EditMetaEnumCommand::undo(){
+    *this->modelMetaEnum = *this->oldMetaEnum;
+
+    this->enumItemView->calculateMinimumSize();
+    this->scene->update();
+}
+
+void EditMetaEnumCommand::redo(){
+    *this->modelMetaEnum = *this->newMetaEnum;
+
+    this->enumItemView->calculateMinimumSize();
+    this->scene->update();
+}
+
+
 

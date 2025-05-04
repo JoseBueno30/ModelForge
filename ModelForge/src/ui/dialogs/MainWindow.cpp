@@ -1,4 +1,5 @@
 #include <ui/dialogs/MainWindow.h>
+#include "ui/dialogs/EnumEditDialog.h"
 #include "ui_MainWindow.h"
 
 
@@ -82,6 +83,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(undoAction, &QAction::triggered, this, &checkTrigger);
     connect(ui->addClassButton, &QPushButton::clicked, this, &MainWindow::openNewClassDialog);
     connect(ui->addAssociationButton, &QPushButton::clicked, this, &MainWindow::openNewAssociationDialog);
+    connect(ui->addEnumButton, &QPushButton::clicked, this, &MainWindow::openNewEnumDialog);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     scene = new ModelGraphicsScene();
@@ -247,6 +249,22 @@ void MainWindow::openNewAssociationDialog(){
 void MainWindow::openEditAssociationDialog(AssociationItemView* association){
     AssociationEditDialog *associationEditDialog = new AssociationEditDialog(association->getAssociationModel(), this->modelItemViewElementsMap, this->scene, association, this->model);
     associationEditDialog->exec();
+}
+
+void MainWindow::openNewEnumDialog(){
+    if(this->model != nullptr){
+        std::string defaultName = "NewEnum";
+        int defaultNameCont = 0;
+        for(auto metaEnumPair : this->model->getEnums()){
+            if(metaEnumPair.first == defaultName){
+                defaultNameCont++;
+                defaultName = "NewEnum" + std::to_string(defaultNameCont);
+            }
+        }
+        std::shared_ptr<MetaModel::MetaEnum> newEnum= std::make_shared<MetaModel::MetaEnum>(defaultName);
+        EnumEditDialog *enumEditDialog = new EnumEditDialog(newEnum, this->scene, this->model, nullptr, this);
+        enumEditDialog->exec();
+    }
 }
 
 

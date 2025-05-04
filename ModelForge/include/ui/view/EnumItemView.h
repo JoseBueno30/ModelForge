@@ -20,6 +20,8 @@ public:
     QRectF enumNameRect();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
+    void calculateMinimumSize();
+
     ~EnumItemView();
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -30,7 +32,7 @@ protected:
 private:
     shared_ptr<MetaModel::MetaEnum> model;
 
-    void calculateMinimumSize();
+
 };
 
 #endif // ENUMITEMVIEW_H

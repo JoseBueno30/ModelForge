@@ -26,7 +26,7 @@ private:
     std::string name;
     std::map<std::string, std::shared_ptr<MetaEnumElement>> elements;
 public:
-    MetaEnum(const std::string& name, std::shared_ptr<MetaEnumElement> element);
+    MetaEnum(const std::string& name, std::shared_ptr<MetaEnumElement> element=nullptr);
 
     std::string getName() const;
     void setName(const std::string& name);

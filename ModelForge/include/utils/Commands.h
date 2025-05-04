@@ -3,6 +3,7 @@
 
 #include "metamodel/MetaClass.h"
 #include "ui/view/ClassItemView.h"
+#include "ui/view/EnumItemView.h"
 #include <QGraphicsItem>
 #include <QUndoCommand>
 
@@ -86,6 +87,36 @@ private:
     QGraphicsScene * scene;
 
     void updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association);
+};
+
+
+class AddMetaEnumCommand : public QUndoCommand{
+public:
+    AddMetaEnumCommand(std::shared_ptr<MetaModel::MetaEnum> metaEnum, std::shared_ptr<MetaModel::MetaModel> model, EnumItemView* enumItemView, QGraphicsScene* scene);
+
+    void undo() override;
+    void redo() override;
+
+private:
+    std::shared_ptr<MetaModel::MetaEnum> metaEnum;
+    std::shared_ptr<MetaModel::MetaModel> model;
+    EnumItemView* enumItemView;
+    QGraphicsScene* scene;
+};
+
+class EditMetaEnumCommand : public QUndoCommand{
+public:
+    EditMetaEnumCommand(std::shared_ptr<MetaModel::MetaEnum> modelMetaEnum, std::shared_ptr<MetaModel::MetaEnum> newMetaEnum, EnumItemView* enumItemView, QGraphicsScene* scene);
+
+    void undo() override;
+    void redo() override;
+
+private:
+    std::shared_ptr<MetaModel::MetaEnum> modelMetaEnum;
+    std::shared_ptr<MetaModel::MetaEnum> newMetaEnum;
+    std::shared_ptr<MetaModel::MetaEnum> oldMetaEnum;
+    EnumItemView* enumItemView;
+    QGraphicsScene* scene;
 };
 
 #endif // COMMANDS_H
