@@ -6,6 +6,7 @@
 #include <OCL/FactorExpr.h>
 #include <OCL/LogicalExpr.h>
 #include <OCL/RelationalExpr.h>
+#include <OCL/UnaryExpr.h>
 
 class CustomUSEVisitor : public USEBaseVisitor{
 public:
@@ -749,7 +750,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::AndExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::AndExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitOrExpr(USEParser::OrExprContext *ctx) override {
@@ -758,7 +759,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::OrExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::OrExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitImpliesExpr(USEParser::ImpliesExprContext *ctx) override {
@@ -767,7 +768,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::ImpliesExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::ImpliesExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitXorExpr(USEParser::XorExprContext *ctx) override {
@@ -776,7 +777,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::XOrExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::XOrExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitEqualityExpr(USEParser::EqualityExprContext *ctx) override {
@@ -789,7 +790,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::EqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::EqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitNotEqualExpr(USEParser::NotEqualExprContext *ctx) override {
@@ -798,11 +799,13 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::NotEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::NotEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitRelationalExpr(USEParser::RelationalExprContext *ctx) override {
-        return visit(ctx->relationalExpression());
+        std::shared_ptr<MetaModel::Expr> expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
+
+        return expr;
     }
 
     std::any visitLessThanExpr(USEParser::LessThanExprContext *ctx) override {
@@ -811,7 +814,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::LessThanExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::LessThanExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitGreaterThanExpr(USEParser::GreaterThanExprContext *ctx) override {
@@ -820,7 +823,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::GreaterThanExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::GreaterThanExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitLessThanOrEqualExpr(USEParser::LessThanOrEqualExprContext *ctx) override {
@@ -829,7 +832,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::LessThanOrEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::LessThanOrEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitGreaterThanOrEqualExpr(USEParser::GreaterThanOrEqualExprContext *ctx) override {
@@ -838,7 +841,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::GreaterThanOrEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::GreaterThanOrEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitAdditiveExpr(USEParser::AdditiveExprContext *ctx) override {
@@ -851,7 +854,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::AdditionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::AdditionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitSubtractionExpr(USEParser::SubtractionExprContext *ctx) override {
@@ -860,7 +863,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::SubtractionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::SubtractionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitFactorExpr(USEParser::FactorExprContext *ctx) override {
@@ -873,7 +876,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::MultiplicationExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::MultiplicationExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     std::any visitDivisionExpr(USEParser::DivisionExprContext *ctx) override {
@@ -882,14 +885,19 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::make_shared<MetaModel::DivisionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::DivisionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
 
     //UNARY EXPRESSIONS
 
     std::any visitUnaryExpr(USEParser::UnaryExprContext *ctx) override {
-        // return visit(ctx->unaryExpression());
-        return std::make_shared<MetaModel::Expr>(ctx->getText(), true, MetaModel::Boolean::instance());
+        return visit(ctx->unaryExpression());
+    }
+
+    std::any visitPostfixExpr(USEParser::PostfixExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr = std::make_shared<MetaModel::Expr>(ctx->getText(), true, MetaModel::Boolean::instance());
+
+        return expr;
     }
 
     std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {

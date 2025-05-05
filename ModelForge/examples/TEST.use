@@ -1,23 +1,49 @@
-model test
+model BankAccount
 
-class class1
+enum AccountType {Investments, Savings}
+
+abstract class SuperAccount
 end
 
-class class2
+class Account < SuperAccount
+attributes
+balance : Integer
+test : Person
+type : AccountType
+operations
+transfer(variable : Integer) : Integer begin
+        self.balance := self.balance + 1;
+    end
+constraints
+inv Positive_Balance:
+	balance+1>1
 end
 
-association a1 between
-class1 [0..1] role role1
-class2 [0..1] role role2
+class Bank
 end
 
-association a2 between
-class1 [0..1] role role1
-class2 [0..1] role role2
+class Person
+attributes
+age : Integer
 end
 
-association a3 between
-class1 [0..1] role role1
-class2 [0..1] role role2
+composition AccountOfBanks between
+Account [*] role accounts
+Bank [1..*] role bank
+end
+
+association Ownership between
+Account [*] role accounts
+Person [1, 3..4] role owner
+end
+
+association Use between
+Account [*] role usedAccounts
+Person [*] role user
+end
+
+associationclass Employees between
+Bank [1..*] role bank
+Person [*] role employees
 end
 

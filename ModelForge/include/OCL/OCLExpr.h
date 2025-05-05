@@ -21,6 +21,8 @@ public:
     void setExpression(const std::string& expression);
 
     bool isComplexExpr();
+
+    virtual ~Expr() = default;
 };
 
 }

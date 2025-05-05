@@ -47,7 +47,4 @@ end
 
 constraints
 context Account inv Positive_Balance:
-    balance > 1
-
-context x, y: Account inv Prueba:
-    1 < 0
+    balance + 1 > 1
