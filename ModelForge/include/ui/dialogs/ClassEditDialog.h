@@ -39,6 +39,7 @@ private:
     int attributeCounter;
 
     void loadAttributes();
+    void loadOperations();
 };
 
 #endif // CLASSEDITDIALOG_H
