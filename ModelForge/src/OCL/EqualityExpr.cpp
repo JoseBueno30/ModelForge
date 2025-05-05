@@ -1,4 +1,4 @@
-#include "EqualityExpr.h"
+#include <OCL/EqualityExpr.h>
 
 namespace MetaModel{
 

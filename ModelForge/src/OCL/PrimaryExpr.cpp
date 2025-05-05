@@ -1,4 +1,4 @@
-#include "PrimaryExpr.h"
+#include <OCL/PrimaryExpr.h>
 
 namespace MetaModel {
 PrimaryExpr::PrimaryExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type)

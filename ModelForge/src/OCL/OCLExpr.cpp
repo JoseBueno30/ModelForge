@@ -1,4 +1,4 @@
-#include "OCLExpr.h"
+#include <OCL/OCLExpr.h>
 
 namespace MetaModel{
 
@@ -16,6 +16,10 @@ std::string Expr::getExpression() const{
 
 void Expr::setExpression(const std::string& expression){
     this->expression = expression;
+}
+
+bool Expr::isComplexExpr(){
+    return this->isComplex;
 }
 
 }

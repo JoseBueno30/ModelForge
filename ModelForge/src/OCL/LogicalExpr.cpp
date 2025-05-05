@@ -1,4 +1,4 @@
-#include "LogicalExpr.h"
+#include <OCL/LogicalExpr.h>
 
 namespace MetaModel{
 

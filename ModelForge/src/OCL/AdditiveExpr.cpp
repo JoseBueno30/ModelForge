@@ -1,4 +1,4 @@
-#include "AdditiveExpr.h"
+#include <OCL/AdditiveExpr.h>
 
 namespace MetaModel{
 
@@ -10,7 +10,7 @@ AdditionExpr::AdditionExpr(const std::string& expression, const bool isComplex, 
     this->operation = "+";
 }
 
-SubstractionExpr::SubstractionExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2)
+SubtractionExpr::SubtractionExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2)
     : AdditiveExpr(expression, isComplex, type, expr1, expr2){
     this->operation = "-";
 }

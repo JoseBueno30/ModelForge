@@ -1,4 +1,4 @@
-#include "BinaryExpr.h"
+#include <OCL/BinaryExpr.h>
 
 namespace MetaModel {
 BinaryExpr::BinaryExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2)

@@ -1,4 +1,4 @@
-#include "QueryExpr.h"
+#include <OCL/QueryExpr.h>
 
 namespace MetaModel {
 QueryExpr::QueryExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const bool arrow, const std::shared_ptr<Expr>& source)

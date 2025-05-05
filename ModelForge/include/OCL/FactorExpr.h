@@ -12,10 +12,12 @@ public:
 };
 
 class MultiplicationExpr : public FactorExpr{
+public:
     MultiplicationExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2);
 };
 
 class DivisionExpr : public FactorExpr{
+public:
     DivisionExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2);
 };
 

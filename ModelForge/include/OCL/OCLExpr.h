@@ -19,24 +19,9 @@ public:
 
     std::string getExpression() const;
     void setExpression(const std::string& expression);
+
+    bool isComplexExpr();
 };
-
-
-
-// Factor Expresions
-
-// Additive Expressions
-
-// Unary Expressions
-
-// OCL evaluation oriented expressions
-class PostFixExpr : Expr{};
-
-// Let declarations
-
-
-// If-then-else structure
-
 
 }
 

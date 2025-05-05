@@ -11,10 +11,12 @@ public:
 };
 
 class EqualExpr : public EqualityExpr{
+public:
     EqualExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2);
 };
 
 class NotEqualExpr : public EqualityExpr{
+public:
     NotEqualExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2);
 };
 

@@ -1,5 +1,4 @@
-#include "VariableExpr.h"
-
+#include <OCL/VariableExpr.h>
 
 namespace MetaModel {
 

@@ -1,4 +1,4 @@
-#include "NavigationExpr.h"
+#include <OCL/NavigationExpr.h>
 
 namespace MetaModel {
 

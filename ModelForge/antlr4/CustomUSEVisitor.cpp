@@ -1,6 +1,11 @@
 #include "generated/USEBaseVisitor.h"
 #include "metamodel/MetaModel.h"
 #include <any>
+#include <OCL/AdditiveExpr.h>
+#include <OCL/EqualityExpr.h>
+#include <OCL/FactorExpr.h>
+#include <OCL/LogicalExpr.h>
+#include <OCL/RelationalExpr.h>
 
 class CustomUSEVisitor : public USEBaseVisitor{
 public:
@@ -535,28 +540,6 @@ public:
         return visit(ctx->expression());
     }
 
-    //EXPRESSIONS
-
-    std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
-        return std::make_shared<MetaModel::Expr>(ctx->expression()->getText());
-    }
-
-    std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
-        return std::make_shared<MetaModel::Expr>(ctx->logicalExpression()->getText());
-    }
-
-    std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
-        return std::make_shared<MetaModel::Expr>(ctx->conditionalExpression()->getText());
-    }
-
-    std::any visitLambdaExpr(USEParser::LambdaExprContext *ctx) override {
-        return std::make_shared<MetaModel::Expr>(ctx->lambdaExpression()->getText());
-    }
-
-    std::any visitLetExpr(USEParser::LetExprContext *ctx) override {
-        return std::make_shared<MetaModel::Expr>(ctx->letExpression()->getText());
-    }
-
     // ASSOCIAITON CLASS DEFINITION
 
     std::any visitAssociationClass(USEParser::AssociationClassContext *ctx) override {
@@ -752,6 +735,169 @@ public:
         return ctx->STAR() ? MetaModel::MetaMultiplicityRange::MANY : std::stoi(ctx->INT()->getText());
     }
 
-    // EXPRESSION DEFINITION
+    //EXPRESSIONS
+
+    //BINARY EXPRESSIONS
+
+    std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
+        return visit(ctx->logicalExpression());
+    }
+
+    std::any visitAndExpr(USEParser::AndExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[0]));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[1]));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::AndExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitOrExpr(USEParser::OrExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[0]));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[1]));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::OrExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitImpliesExpr(USEParser::ImpliesExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[0]));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[1]));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::ImpliesExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitXorExpr(USEParser::XorExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[0]));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[1]));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::XOrExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitEqualityExpr(USEParser::EqualityExprContext *ctx) override {
+        return visit(ctx->equalityExpression());
+    }
+
+    std::any visitEqualExpr(USEParser::EqualExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->equalityExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::EqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitNotEqualExpr(USEParser::NotEqualExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->equalityExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::NotEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitRelationalExpr(USEParser::RelationalExprContext *ctx) override {
+        return visit(ctx->relationalExpression());
+    }
+
+    std::any visitLessThanExpr(USEParser::LessThanExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->additiveExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::LessThanExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitGreaterThanExpr(USEParser::GreaterThanExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->additiveExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::GreaterThanExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitLessThanOrEqualExpr(USEParser::LessThanOrEqualExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->additiveExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::LessThanOrEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitGreaterThanOrEqualExpr(USEParser::GreaterThanOrEqualExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->additiveExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::GreaterThanOrEqualExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitAdditiveExpr(USEParser::AdditiveExprContext *ctx) override {
+        return visit(ctx->additiveExpression());
+    }
+
+    std::any visitAdditionExpr(USEParser::AdditionExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->additiveExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->factorExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::AdditionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitSubtractionExpr(USEParser::SubtractionExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->additiveExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->factorExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::SubtractionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitFactorExpr(USEParser::FactorExprContext *ctx) override {
+        return visit(ctx->factorExpression());
+    }
+
+    std::any visitMultiplicationExpr(USEParser::MultiplicationExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->factorExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->unaryExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::MultiplicationExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    std::any visitDivisionExpr(USEParser::DivisionExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->factorExpression()));
+        std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->unaryExpression()));
+
+        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+
+        return std::make_shared<MetaModel::DivisionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2);
+    }
+
+    //UNARY EXPRESSIONS
+
+    std::any visitUnaryExpr(USEParser::UnaryExprContext *ctx) override {
+        // return visit(ctx->unaryExpression());
+        return std::make_shared<MetaModel::Expr>(ctx->getText(), true, MetaModel::Boolean::instance());
+    }
+
+    std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
+        return std::make_shared<MetaModel::Expr>(ctx->conditionalExpression()->getText());
+    }
+
+    std::any visitLetExpr(USEParser::LetExprContext *ctx) override {
+        return std::make_shared<MetaModel::Expr>(ctx->letExpression()->getText());
+    }
 
 };
