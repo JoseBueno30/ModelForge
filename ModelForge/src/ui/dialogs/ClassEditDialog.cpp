@@ -16,14 +16,20 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     ui->classNameEdit->setText(QString::fromStdString(metaClass->getName()));
     ui->attributeTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->attributeTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->operationTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->operationTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     this->editedClass = std::make_shared<MetaModel::MetaClass>(*metaClass);
 
     this->attributeCounter = metaClass->getAttributes().size() + 1;
 
     ui->attributeTableWidget->horizontalHeader()->setStretchLastSection(true);
+    ui->operationTableWidget->horizontalHeader()->setStretchLastSection(true);
+
+    ui->isAbstractCheckBox->setChecked(this->metaClass->getIsAbstract());
 
     loadAttributes();
+    loadOperations();
 
     connect(ui->addAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::addAttribute);
     connect(ui->removeAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::removeAttribute);
@@ -55,6 +61,29 @@ void ClassEditDialog::loadAttributes() {
         // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
         QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getType().toString()));
         ui->attributeTableWidget->setCellWidget(row, 1, typeLabel);
+
+        row++;
+    }
+}
+
+void ClassEditDialog::loadOperations(){
+    ui->operationTableWidget->setRowCount(0);  // Limpiar tabla antes de cargar
+    int row = 0;
+
+    for (const auto &pair : this->editedClass->getOperations()) {  // Asumiendo que `getOperations()` devuelve `std::map<std::string, std::string>`
+        ui->operationTableWidget->insertRow(row);
+
+        // Nombre del atributo (QLineEdit)
+        //QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
+        QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
+        ui->operationTableWidget->setCellWidget(row, 0, nameLabel);
+
+        // Tipo del atributo (QComboBox)
+        // QComboBox *typeCombo = new QComboBox();
+        // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
+        // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
+        QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getReturnType().toString()));
+        ui->operationTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;
     }
@@ -113,15 +142,14 @@ void ClassEditDialog::saveChanges() {
         }
     }
 
-    if(model == nullptr){
-        std::shared_ptr<MetaModel::MetaClass> newClass = std::make_shared<MetaModel::MetaClass>("", false);
-        this->editedClass->setName(ui->classNameEdit->text().toStdString());
+    this->editedClass->setIsAbstract(ui->isAbstractCheckBox->isChecked());
+    this->editedClass->setName(ui->classNameEdit->text().toStdString());
 
+    if(model == nullptr){
         MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
     }else{
-        classView = new ClassItemView(this->metaClass);
-
-        MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->metaClass, classView, this->scene));
+        classView = new ClassItemView(this->editedClass);
+        MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
     }
 
     //qDebug() << "Nombre: " << this->metaClass->getName();
