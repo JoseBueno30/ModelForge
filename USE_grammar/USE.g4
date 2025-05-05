@@ -316,28 +316,16 @@ transitionDefinition
 expressionOnly
     : expression EOF
     ;
-
-oclExpression
-    : expression
-    ;
  
 /* ------------------------------------
   expression ::= 
-    logicalExpression | conditionalExpresion | lambdaExpression
+    logicalExpression | conditionalExpresion | letExpression
 */
 expression
     : logicalExpression       #LogicalExpr
     | conditionalExpression   #ConditionalExpr
     | letExpression           #LetExpr
     ;
-
-/* ------------------------------------
-  lambdaExpression ::= 
-    "lambda" id ":" type "in" expression
-*/
-lambdaExpression
-  : 'lambda' ID COLON type 'in' expression
-  ;
 
 /* ------------------------------------
   letExpression ::= 

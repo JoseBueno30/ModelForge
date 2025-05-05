@@ -5,7 +5,7 @@
 
 
 
-// Generated from c:/Users/Victor/Documents/ModelForge/USE_grammar/USE.g4 by ANTLR 4.13.1
+// Generated from USE.g4 by ANTLR 4.13.2
 
 #pragma once
 
@@ -59,6 +59,12 @@ public:
 
     virtual std::any visitAssociationEnd(USEParser::AssociationEndContext *context) = 0;
 
+    virtual std::any visitRole(USEParser::RoleContext *context) = 0;
+
+    virtual std::any visitRedefines(USEParser::RedefinesContext *context) = 0;
+
+    virtual std::any visitSubsets(USEParser::SubsetsContext *context) = 0;
+
     virtual std::any visitMultiplicity(USEParser::MultiplicityContext *context) = 0;
 
     virtual std::any visitMultiplicityRange(USEParser::MultiplicityRangeContext *context) = 0;
@@ -87,17 +93,11 @@ public:
 
     virtual std::any visitExpressionOnly(USEParser::ExpressionOnlyContext *context) = 0;
 
-    virtual std::any visitOclExpression(USEParser::OclExpressionContext *context) = 0;
-
     virtual std::any visitLogicalExpr(USEParser::LogicalExprContext *context) = 0;
 
     virtual std::any visitConditionalExpr(USEParser::ConditionalExprContext *context) = 0;
 
-    virtual std::any visitLambdaExpr(USEParser::LambdaExprContext *context) = 0;
-
     virtual std::any visitLetExpr(USEParser::LetExprContext *context) = 0;
-
-    virtual std::any visitLambdaExpression(USEParser::LambdaExpressionContext *context) = 0;
 
     virtual std::any visitLetExpression(USEParser::LetExpressionContext *context) = 0;
 
@@ -284,12 +284,6 @@ public:
     virtual std::any visitTupleType(USEParser::TupleTypeContext *context) = 0;
 
     virtual std::any visitTuplePart(USEParser::TuplePartContext *context) = 0;
-
-    virtual std::any visitRole(USEParser::RoleContext *context) = 0;
-
-    virtual std::any visitRedefines(USEParser::RedefinesContext *context) = 0;
-
-    virtual std::any visitSubsets(USEParser::SubsetsContext *context) = 0;
 
 
 };

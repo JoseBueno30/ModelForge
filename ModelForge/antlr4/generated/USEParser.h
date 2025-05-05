@@ -5,7 +5,7 @@
 
 
 
-// Generated from c:/Users/Victor/Documents/ModelForge/USE_grammar/USE.g4 by ANTLR 4.13.1
+// Generated from USE.g4 by ANTLR 4.13.2
 
 #pragma once
 
@@ -28,38 +28,37 @@ public:
     T__44 = 45, T__45 = 46, T__46 = 47, T__47 = 48, T__48 = 49, T__49 = 50, 
     T__50 = 51, T__51 = 52, T__52 = 53, T__53 = 54, T__54 = 55, T__55 = 56, 
     T__56 = 57, T__57 = 58, T__58 = 59, T__59 = 60, T__60 = 61, T__61 = 62, 
-    T__62 = 63, T__63 = 64, T__64 = 65, T__65 = 66, T__66 = 67, T__67 = 68, 
-    WS = 69, SL_COMMENT = 70, ML_COMMENT = 71, ARROW = 72, AT = 73, BAR = 74, 
-    COLON = 75, COLON_COLON = 76, COLON_EQUAL = 77, COMMA = 78, DOT = 79, 
-    DOTDOT = 80, EQUAL = 81, GREATER = 82, GREATER_EQUAL = 83, HASH = 84, 
-    LBRACE = 85, LBRACK = 86, LESS = 87, LESS_EQUAL = 88, LPAREN = 89, MINUS = 90, 
-    NOT_EQUAL = 91, PLUS = 92, RBRACE = 93, RBRACK = 94, RPAREN = 95, SEMI = 96, 
-    SLASH = 97, STAR = 98, ABSTRACT = 99, EXISTENTIAL = 100, AGGREGATION = 101, 
-    COMPOSITION = 102, ORDERED = 103, UNION = 104, INT = 105, REAL = 106, 
-    SOIL_OPERATION = 107, STRING = 108, NON_OCL_STRING = 109, ID = 110
+    T__62 = 63, T__63 = 64, T__64 = 65, T__65 = 66, T__66 = 67, WS = 68, 
+    SL_COMMENT = 69, ML_COMMENT = 70, ARROW = 71, AT = 72, BAR = 73, COLON = 74, 
+    COLON_COLON = 75, COLON_EQUAL = 76, COMMA = 77, DOT = 78, DOTDOT = 79, 
+    EQUAL = 80, GREATER = 81, GREATER_EQUAL = 82, HASH = 83, LBRACE = 84, 
+    LBRACK = 85, LESS = 86, LESS_EQUAL = 87, LPAREN = 88, MINUS = 89, NOT_EQUAL = 90, 
+    PLUS = 91, RBRACE = 92, RBRACK = 93, RPAREN = 94, SEMI = 95, SLASH = 96, 
+    STAR = 97, ABSTRACT = 98, EXISTENTIAL = 99, AGGREGATION = 100, COMPOSITION = 101, 
+    ORDERED = 102, UNION = 103, INT = 104, REAL = 105, SOIL_OPERATION = 106, 
+    STRING = 107, NON_OCL_STRING = 108, ID = 109
   };
 
   enum {
     RuleModel = 0, RuleModelElement = 1, RuleEnumTypeDefinition = 2, RuleClassDefinition = 3, 
     RuleAssociationClassDefinition = 4, RuleAttributeDefinition = 5, RuleInitDefinition = 6, 
     RuleDerivedDefinition = 7, RuleOperationDefinition = 8, RuleAssociationDefinition = 9, 
-    RuleAssociationEnd = 10, RuleMultiplicity = 11, RuleMultiplicityRange = 12, 
-    RuleMultiplicitySpec = 13, RuleConstraintDefinition = 14, RuleInvariant = 15, 
-    RuleInvariantClause = 16, RulePrePost = 17, RulePrePostClause = 18, 
-    RuleStateMachine = 19, RuleStateDefinition = 20, RuleTransitionDefinition = 21, 
-    RuleExpressionOnly = 22, RuleOclExpression = 23, RuleExpression = 24, 
-    RuleLambdaExpression = 25, RuleLetExpression = 26, RuleLogicalExpression = 27, 
-    RuleParamList = 28, RuleIdList = 29, RuleVariableDeclaration = 30, RuleEqualityExpression = 31, 
-    RuleRelationalExpression = 32, RuleAdditiveExpression = 33, RuleFactorExpression = 34, 
-    RuleUnaryExpression = 35, RulePostfixExpression = 36, RulePrimaryExpression = 37, 
-    RuleObjectReference = 38, RulePropertyCall = 39, RuleQueryExpression = 40, 
-    RuleIterateExpression = 41, RuleOperationExpression = 42, RuleInStateExpression = 43, 
-    RuleTypeExpression = 44, RuleElemVarsDeclaration = 45, RuleVariableInitialization = 46, 
-    RuleConditionalExpression = 47, RuleLiteral = 48, RuleCollectionLiteral = 49, 
-    RuleCollectionItem = 50, RuleEmptyCollectionLiteral = 51, RuleUndefinedLiteral = 52, 
-    RuleTupleLiteral = 53, RuleTupleItem = 54, RuleType = 55, RuleTypeOnly = 56, 
-    RuleSimpleType = 57, RuleCollectionType = 58, RuleTupleType = 59, RuleTuplePart = 60, 
-    RuleRole = 61, RuleRedefines = 62, RuleSubsets = 63
+    RuleAssociationEnd = 10, RuleRole = 11, RuleRedefines = 12, RuleSubsets = 13, 
+    RuleMultiplicity = 14, RuleMultiplicityRange = 15, RuleMultiplicitySpec = 16, 
+    RuleConstraintDefinition = 17, RuleInvariant = 18, RuleInvariantClause = 19, 
+    RulePrePost = 20, RulePrePostClause = 21, RuleStateMachine = 22, RuleStateDefinition = 23, 
+    RuleTransitionDefinition = 24, RuleExpressionOnly = 25, RuleExpression = 26, 
+    RuleLetExpression = 27, RuleLogicalExpression = 28, RuleParamList = 29, 
+    RuleIdList = 30, RuleVariableDeclaration = 31, RuleEqualityExpression = 32, 
+    RuleRelationalExpression = 33, RuleAdditiveExpression = 34, RuleFactorExpression = 35, 
+    RuleUnaryExpression = 36, RulePostfixExpression = 37, RulePrimaryExpression = 38, 
+    RuleObjectReference = 39, RulePropertyCall = 40, RuleQueryExpression = 41, 
+    RuleIterateExpression = 42, RuleOperationExpression = 43, RuleInStateExpression = 44, 
+    RuleTypeExpression = 45, RuleElemVarsDeclaration = 46, RuleVariableInitialization = 47, 
+    RuleConditionalExpression = 48, RuleLiteral = 49, RuleCollectionLiteral = 50, 
+    RuleCollectionItem = 51, RuleEmptyCollectionLiteral = 52, RuleUndefinedLiteral = 53, 
+    RuleTupleLiteral = 54, RuleTupleItem = 55, RuleType = 56, RuleTypeOnly = 57, 
+    RuleSimpleType = 58, RuleCollectionType = 59, RuleTupleType = 60, RuleTuplePart = 61
   };
 
   explicit USEParser(antlr4::TokenStream *input);
@@ -90,6 +89,9 @@ public:
   class OperationDefinitionContext;
   class AssociationDefinitionContext;
   class AssociationEndContext;
+  class RoleContext;
+  class RedefinesContext;
+  class SubsetsContext;
   class MultiplicityContext;
   class MultiplicityRangeContext;
   class MultiplicitySpecContext;
@@ -102,9 +104,7 @@ public:
   class StateDefinitionContext;
   class TransitionDefinitionContext;
   class ExpressionOnlyContext;
-  class OclExpressionContext;
   class ExpressionContext;
-  class LambdaExpressionContext;
   class LetExpressionContext;
   class LogicalExpressionContext;
   class ParamListContext;
@@ -139,10 +139,7 @@ public:
   class SimpleTypeContext;
   class CollectionTypeContext;
   class TupleTypeContext;
-  class TuplePartContext;
-  class RoleContext;
-  class RedefinesContext;
-  class SubsetsContext; 
+  class TuplePartContext; 
 
   class  ModelContext : public antlr4::ParserRuleContext {
   public:
@@ -448,6 +445,45 @@ public:
 
   AssociationEndContext* associationEnd();
 
+  class  RoleContext : public antlr4::ParserRuleContext {
+  public:
+    RoleContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ID();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  RoleContext* role();
+
+  class  RedefinesContext : public antlr4::ParserRuleContext {
+  public:
+    RedefinesContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ID();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  RedefinesContext* redefines();
+
+  class  SubsetsContext : public antlr4::ParserRuleContext {
+  public:
+    SubsetsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ID();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  SubsetsContext* subsets();
+
   class  MultiplicityContext : public antlr4::ParserRuleContext {
   public:
     MultiplicityContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -694,19 +730,6 @@ public:
 
   ExpressionOnlyContext* expressionOnly();
 
-  class  OclExpressionContext : public antlr4::ParserRuleContext {
-  public:
-    OclExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    ExpressionContext *expression();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  OclExpressionContext* oclExpression();
-
   class  ExpressionContext : public antlr4::ParserRuleContext {
   public:
     ExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -725,15 +748,6 @@ public:
     LetExprContext(ExpressionContext *ctx);
 
     LetExpressionContext *letExpression();
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  LambdaExprContext : public ExpressionContext {
-  public:
-    LambdaExprContext(ExpressionContext *ctx);
-
-    LambdaExpressionContext *lambdaExpression();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -757,22 +771,6 @@ public:
   };
 
   ExpressionContext* expression();
-
-  class  LambdaExpressionContext : public antlr4::ParserRuleContext {
-  public:
-    LambdaExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ID();
-    antlr4::tree::TerminalNode *COLON();
-    TypeContext *type();
-    ExpressionContext *expression();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  LambdaExpressionContext* lambdaExpression();
 
   class  LetExpressionContext : public antlr4::ParserRuleContext {
   public:
@@ -2113,45 +2111,6 @@ public:
   };
 
   TuplePartContext* tuplePart();
-
-  class  RoleContext : public antlr4::ParserRuleContext {
-  public:
-    RoleContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ID();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  RoleContext* role();
-
-  class  RedefinesContext : public antlr4::ParserRuleContext {
-  public:
-    RedefinesContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ID();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  RedefinesContext* redefines();
-
-  class  SubsetsContext : public antlr4::ParserRuleContext {
-  public:
-    SubsetsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *ID();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  SubsetsContext* subsets();
 
 
   bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;

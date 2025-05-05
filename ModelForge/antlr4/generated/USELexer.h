@@ -5,7 +5,7 @@
 
 
 
-// Generated from c:/Users/Victor/Documents/ModelForge/USE_grammar/USE.g4 by ANTLR 4.13.1
+// Generated from USE.g4 by ANTLR 4.13.2
 
 #pragma once
 
@@ -28,15 +28,15 @@ public:
     T__44 = 45, T__45 = 46, T__46 = 47, T__47 = 48, T__48 = 49, T__49 = 50, 
     T__50 = 51, T__51 = 52, T__52 = 53, T__53 = 54, T__54 = 55, T__55 = 56, 
     T__56 = 57, T__57 = 58, T__58 = 59, T__59 = 60, T__60 = 61, T__61 = 62, 
-    T__62 = 63, T__63 = 64, T__64 = 65, T__65 = 66, T__66 = 67, T__67 = 68, 
-    WS = 69, SL_COMMENT = 70, ML_COMMENT = 71, ARROW = 72, AT = 73, BAR = 74, 
-    COLON = 75, COLON_COLON = 76, COLON_EQUAL = 77, COMMA = 78, DOT = 79, 
-    DOTDOT = 80, EQUAL = 81, GREATER = 82, GREATER_EQUAL = 83, HASH = 84, 
-    LBRACE = 85, LBRACK = 86, LESS = 87, LESS_EQUAL = 88, LPAREN = 89, MINUS = 90, 
-    NOT_EQUAL = 91, PLUS = 92, RBRACE = 93, RBRACK = 94, RPAREN = 95, SEMI = 96, 
-    SLASH = 97, STAR = 98, ABSTRACT = 99, EXISTENTIAL = 100, AGGREGATION = 101, 
-    COMPOSITION = 102, ORDERED = 103, UNION = 104, INT = 105, REAL = 106, 
-    SOIL_OPERATION = 107, STRING = 108, NON_OCL_STRING = 109, ID = 110
+    T__62 = 63, T__63 = 64, T__64 = 65, T__65 = 66, T__66 = 67, WS = 68, 
+    SL_COMMENT = 69, ML_COMMENT = 70, ARROW = 71, AT = 72, BAR = 73, COLON = 74, 
+    COLON_COLON = 75, COLON_EQUAL = 76, COMMA = 77, DOT = 78, DOTDOT = 79, 
+    EQUAL = 80, GREATER = 81, GREATER_EQUAL = 82, HASH = 83, LBRACE = 84, 
+    LBRACK = 85, LESS = 86, LESS_EQUAL = 87, LPAREN = 88, MINUS = 89, NOT_EQUAL = 90, 
+    PLUS = 91, RBRACE = 92, RBRACK = 93, RPAREN = 94, SEMI = 95, SLASH = 96, 
+    STAR = 97, ABSTRACT = 98, EXISTENTIAL = 99, AGGREGATION = 100, COMPOSITION = 101, 
+    ORDERED = 102, UNION = 103, INT = 104, REAL = 105, SOIL_OPERATION = 106, 
+    STRING = 107, NON_OCL_STRING = 108, ID = 109
   };
 
   explicit USELexer(antlr4::CharStream *input);

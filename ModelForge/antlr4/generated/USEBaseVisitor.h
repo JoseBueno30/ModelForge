@@ -5,7 +5,7 @@
 
 
 
-// Generated from c:/Users/Victor/Documents/ModelForge/USE_grammar/USE.g4 by ANTLR 4.13.1
+// Generated from USE.g4 by ANTLR 4.13.2
 
 #pragma once
 
@@ -89,6 +89,18 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitRole(USEParser::RoleContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitRedefines(USEParser::RedefinesContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitSubsets(USEParser::SubsetsContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitMultiplicity(USEParser::MultiplicityContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -145,10 +157,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitOclExpression(USEParser::OclExpressionContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -157,15 +165,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitLambdaExpr(USEParser::LambdaExprContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitLetExpr(USEParser::LetExprContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitLambdaExpression(USEParser::LambdaExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -538,18 +538,6 @@ public:
   }
 
   virtual std::any visitTuplePart(USEParser::TuplePartContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitRole(USEParser::RoleContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitRedefines(USEParser::RedefinesContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitSubsets(USEParser::SubsetsContext *ctx) override {
     return visitChildren(ctx);
   }
 
