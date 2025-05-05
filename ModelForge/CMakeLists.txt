@@ -399,20 +399,43 @@ add_library(MetaModelLib SHARED
 
 
     include/OCL/OCLExpr.h
-    include/OCL/OCLExpr.cpp
-    include/OCL/BinaryExpr.h include/OCL/BinaryExpr.cpp
-    include/OCL/LogicalExpr.h include/OCL/LogicalExpr.cpp
-    include/OCL/RelationalExpr.h include/OCL/RelationalExpr.cpp
-    include/OCL/EqualityExpr.h include/OCL/EqualityExpr.cpp
-    include/OCL/FactorExpr.h include/OCL/FactorExpr.cpp
-    include/OCL/AdditiveExpr.h include/OCL/AdditiveExpr.cpp
-    include/OCL/UnaryExpr.h include/OCL/UnaryExpr.cpp
-    include/OCL/LetExpr.h include/OCL/LetExpr.cpp
-    include/OCL/ConditionalExpr.h include/OCL/ConditionalExpr.cpp
-    include/OCL/PrimaryExpr.h include/OCL/PrimaryExpr.cpp
-    include/OCL/PropertyCallExpr.h include/OCL/PropertyCallExpr.cpp
-    include/OCL/TypeExpr.h include/OCL/TypeExpr.cpp
-    include/OCL/QueryExpr.h include/OCL/QueryExpr.cpp
+    src/OCL/OCLExpr.cpp
+    include/OCL/BinaryExpr.h
+    src/OCL/BinaryExpr.cpp
+    include/OCL/LogicalExpr.h
+    src/OCL/LogicalExpr.cpp
+    include/OCL/RelationalExpr.h
+    src/OCL/RelationalExpr.cpp
+    include/OCL/EqualityExpr.h
+    src/OCL/EqualityExpr.cpp
+    include/OCL/FactorExpr.h
+    src/OCL/FactorExpr.cpp
+    include/OCL/AdditiveExpr.h
+    src/OCL/AdditiveExpr.cpp
+    include/OCL/UnaryExpr.h
+    src/OCL/UnaryExpr.cpp
+    include/OCL/LetExpr.h
+    src/OCL/LetExpr.cpp
+    include/OCL/ConditionalExpr.h
+    src/OCL/ConditionalExpr.cpp
+    include/OCL/PrimaryExpr.h
+    src/OCL/PrimaryExpr.cpp
+    include/OCL/PropertyCallExpr.h
+    src/OCL/PropertyCallExpr.cpp
+    include/OCL/TypeExpr.h
+    src/OCL/TypeExpr.cpp
+    include/OCL/QueryExpr.h
+    src/OCL/QueryExpr.cpp
+    include/OCL/OperationExpr.h
+    src/OCL/OperationExpr.cpp
+    include/OCL/VariableExpr.h
+    src/OCL/VariableExpr.cpp
+    include/OCL/AttributeNavigationExpr.h
+    src/OCL/AttributeNavigationExpr.cpp
+    include/OCL/NavigationExpr.h
+    src/OCL/NavigationExpr.cpp
+    include/OCL/ObjectOperationExpr.h
+    src/OCL/ObjectOperationExpr.cpp
 )
 
 set(DIALOGS
