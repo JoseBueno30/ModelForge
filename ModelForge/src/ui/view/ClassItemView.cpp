@@ -87,9 +87,9 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     }else{
         painter->setBrush(QColor(0x8DD0FF));
     }
-
-    painter->setPen(QPen(Qt::black));
+    painter->setPen(QPen(this->borderColor, this->borderWidth));
     painter->drawRoundedRect(ClassItemView::boundingRect(),5,5);
+    painter->setPen(Qt::black);
 
     painter->setFont(QFont("Arial", 13, QFont::Bold));
     painter->drawText(classNameRect(), Qt::AlignCenter, QString::fromStdString(this->model->getName()));

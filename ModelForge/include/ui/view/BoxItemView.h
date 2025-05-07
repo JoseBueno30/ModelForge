@@ -37,6 +37,22 @@ public:
 
 protected:
     QPointF oldPos;
+    QColor borderColor = Qt::black;
+    qreal borderWidth = 1;
+
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override{
+        if (change == QGraphicsItem::ItemSelectedChange) {
+            if(value.toBool()){
+                borderColor = Qt::blue;
+                borderWidth = 2.5;
+            }else{
+                borderColor = Qt::black;
+                borderWidth = 1;
+            }
+        }
+        this->update();
+        return QGraphicsItem::itemChange(change, value);
+    }
 
 private:
     qreal x,y, width, height, minWidth, minHeight;

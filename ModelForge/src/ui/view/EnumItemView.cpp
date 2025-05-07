@@ -45,9 +45,12 @@ QRectF EnumItemView::enumNameRect(){
 }
 
 void EnumItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
-    painter->setPen(QPen(Qt::black));
+    painter->setPen(QPen(this->borderColor, this->borderWidth));
     painter->setBrush(QColor(0x8DD0FF));
+
+
     painter->drawRoundedRect(boundingRect(),10,10);
+    painter->setPen(Qt::black);
     painter->setFont(QFont("Arial", 13, QFont::Bold));
     painter->drawText(enumNameRect(), Qt::AlignCenter, QString::fromStdString(this->model->getName()));
 
