@@ -146,6 +146,10 @@ const MetaType& TuplePart::getType() const {
     return *type;
 }
 
+const std::shared_ptr<MetaType>& TuplePart::getTypePtr() const {
+    return type;
+}
+
 void TuplePart::setType(const std::shared_ptr<MetaType>& type) {
     this->type = type;
 }

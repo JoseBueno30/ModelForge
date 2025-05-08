@@ -16,10 +16,12 @@ transfer(variable : Integer) : Integer begin
     end
 constraints
 inv Positive_Balance:
-	balance+1>1
+	balance>0
 end
 
 class Bank
+attributes
+self : Integer
 end
 
 class Person

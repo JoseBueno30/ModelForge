@@ -60,6 +60,11 @@ void MetaOperation::setOperationDefinition(const std::string& operationDefinitio
 const MetaType& MetaOperation::getReturnType() const{
     return *returnType;
 }
+
+const std::shared_ptr<MetaType>& MetaOperation::getReturnTypePtr() const {
+    return returnType;
+}
+
 void MetaOperation::setReturnType(const std::shared_ptr<MetaType>& returnType){
     this->returnType = returnType;
 }

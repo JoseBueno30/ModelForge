@@ -2,11 +2,18 @@
 #include "metamodel/MetaModel.h"
 #include <any>
 #include <OCL/AdditiveExpr.h>
+#include <OCL/AttributeNavigationExpr.h>
 #include <OCL/EqualityExpr.h>
 #include <OCL/FactorExpr.h>
 #include <OCL/LogicalExpr.h>
+#include <OCL/NavigationExpr.h>
+#include <OCL/ObjectOperationExpr.h>
+#include <OCL/PrimaryExpr.h>
+#include <OCL/QueryExpr.h>
 #include <OCL/RelationalExpr.h>
+#include <OCL/TypeExpr.h>
 #include <OCL/UnaryExpr.h>
+#include <OCL/VariableExpr.h>
 
 class CustomUSEVisitor : public USEBaseVisitor{
 public:
@@ -14,6 +21,11 @@ public:
     int preConditionCounter = 0;
     int postConditionCounter = 0;
     int invariantCounter = 0;
+
+    std::shared_ptr<MetaModel::Expr> currentExprSource;
+    bool currentPropertyCallIsArrow;
+    std::shared_ptr<MetaModel::MetaConstraint> currentConstraintContext;
+    std::shared_ptr<MetaModel::MetaClass> currentClassContext;
 
     antlrcpp::Any visitModel(USEParser::ModelContext *ctx) override {
 
@@ -147,6 +159,7 @@ public:
     std::any visitClassDefinition(USEParser::ClassDefinitionContext *ctx) override {
         auto metaClass = model->getClass(ctx->ID()->getText());
 
+
         //Add super classes
         if(ctx->idList()){
             for(auto superClassElem : ctx->idList()->ID()){
@@ -166,6 +179,7 @@ public:
             metaClass->addAttribute(attribute);
         }
 
+        this->currentClassContext = metaClass;
         //Add operations
         for(auto operationDefinition : ctx->operationDefinition()){
             std::shared_ptr<MetaModel::MetaOperation> operation = std::any_cast<std::shared_ptr<MetaModel::MetaOperation>>(visit(operationDefinition));
@@ -236,15 +250,19 @@ public:
             invariantCounter++;
         }
 
-        std::shared_ptr<MetaModel::Expr> expression= std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()));
-
         bool isExistential = ctx->EXISTENTIAL()? true : false;
 
         if(variableNames.empty()){
-            constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, expression, name, isExistential);
+            constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, name, isExistential);
         }else{
-            constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, variableNames, expression, name, isExistential);
+            constraint = std::make_shared<MetaModel::MetaConstraint>(scopeClass, variableNames, name, isExistential);
         }
+
+        this->currentConstraintContext = constraint;
+
+        std::shared_ptr<MetaModel::Expr> expression= std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()));
+
+        constraint->setExpression(expression);
 
         scopeClass->addConstraint(constraint);
 
@@ -408,6 +426,8 @@ public:
             };
         }
 
+        this->currentClassContext = scopeClass;
+
         // Generate and add Pre and Post Conditions to the operation
         for(auto prePostClauseDefinition : ctx->prePostClause()){
             std::shared_ptr<MetaModel::PrePostClause> prePostClause = std::any_cast<std::shared_ptr<MetaModel::PrePostClause>>(visit(prePostClauseDefinition));
@@ -416,6 +436,7 @@ public:
                 scopeOperation->addPreCondition(prePostClause);
             }else if(prePostClause->getIsPost()){
                 scopeOperation->addPostCondition(prePostClause);
+
             }
         }
 
@@ -569,6 +590,7 @@ public:
             metaAssociationClass->addAttribute(attribute);
         }
 
+        this->currentClassContext = metaAssociationClass;
         //Add operations
         for(auto operationDefinition : ctx->operationDefinition()){
             std::shared_ptr<MetaModel::MetaOperation> operation = std::any_cast<std::shared_ptr<MetaModel::MetaOperation>>(visit(operationDefinition));
@@ -803,9 +825,9 @@ public:
     }
 
     std::any visitRelationalExpr(USEParser::RelationalExprContext *ctx) override {
-        std::shared_ptr<MetaModel::Expr> expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
+        // std::shared_ptr<MetaModel::Expr> expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->relationalExpression()));
 
-        return expr;
+        return visit(ctx->relationalExpression());
     }
 
     std::any visitLessThanExpr(USEParser::LessThanExprContext *ctx) override {
@@ -854,7 +876,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::AdditionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::AdditionExpr>(ctx->getText(), isComplex, MetaModel::Integer::instance(), expr1, expr2));
     }
 
     std::any visitSubtractionExpr(USEParser::SubtractionExprContext *ctx) override {
@@ -863,7 +885,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::SubtractionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::SubtractionExpr>(ctx->getText(), isComplex, MetaModel::Integer::instance(), expr1, expr2));
     }
 
     std::any visitFactorExpr(USEParser::FactorExprContext *ctx) override {
@@ -876,7 +898,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::MultiplicationExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::MultiplicationExpr>(ctx->getText(), isComplex, MetaModel::Integer::instance(), expr1, expr2));
     }
 
     std::any visitDivisionExpr(USEParser::DivisionExprContext *ctx) override {
@@ -885,7 +907,7 @@ public:
 
         bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
 
-        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::DivisionExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::DivisionExpr>(ctx->getText(), isComplex, MetaModel::Integer::instance(), expr1, expr2));
     }
 
     //UNARY EXPRESSIONS
@@ -894,11 +916,427 @@ public:
         return visit(ctx->unaryExpression());
     }
 
-    std::any visitPostfixExpr(USEParser::PostfixExprContext *ctx) override {
-        std::shared_ptr<MetaModel::Expr> expr = std::make_shared<MetaModel::Expr>(ctx->getText(), true, MetaModel::Boolean::instance());
+    std::any visitNotExpr(USEParser::NotExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->unaryExpression()));
 
-        return expr;
+        bool isComplex = expr->isComplexExpr();
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::NotExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr));
     }
+
+    std::any visitPlusExpr(USEParser::PlusExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->unaryExpression()));
+
+        bool isComplex = expr->isComplexExpr();
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::PlusExpr>(ctx->getText(), isComplex, MetaModel::Integer::instance(), expr));
+    }
+
+    std::any visitMinusExpr(USEParser::MinusExprContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->unaryExpression()));
+
+        bool isComplex = expr->isComplexExpr();
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::MinusExpr>(ctx->getText(), isComplex, MetaModel::Integer::instance(), expr));
+    }
+
+    //PROPERTY CALLS
+
+    std::any visitPostfixExpr(USEParser::PostfixExprContext *ctx) override {
+        // std::shared_ptr<MetaModel::Expr> expr = std::make_shared<MetaModel::Expr>(ctx->getText(), true, MetaModel::Boolean::instance());
+        
+        // return expr;
+
+        return visit(ctx->postfixExpression());
+    }
+
+    std::any visitPropertyCallExpr(USEParser::PropertyCallExprContext *ctx) override {
+        this->currentPropertyCallIsArrow = false;
+        this->currentExprSource = nullptr;
+
+        this->currentExprSource = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->primaryExpression()));
+
+        for(auto propertyChain : ctx->propertyChain()){
+            this->currentPropertyCallIsArrow = propertyChain->ARROW() != nullptr;
+
+            this->currentExprSource = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(propertyChain->propertyCall()));
+        }
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(this->currentExprSource);
+    }
+
+    //ITERATE EXPRESSION
+
+    std::any visitIterateExpr(USEParser::IterateExprContext *ctx) override {
+        return visit(ctx->iterateExpression());
+    }
+
+    std::any visitIterateExpression(USEParser::IterateExpressionContext *ctx) override {
+        //Iterate expressions type is the type of variableInitialization, we ignore it because its complex
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::IterateExpr>(ctx->getText(), true, MetaModel::Void::instance(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    //IN STATE EXPRESSION
+
+    std::any visitInStateExpr(USEParser::InStateExprContext *ctx) override {
+        return visit(ctx->inStateExpression());
+    }
+
+    std::any visitInStateExpression(USEParser::InStateExpressionContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::InStateExpr>(ctx->getText(), true, MetaModel::Boolean::instance(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    //QUERY EXPRESSIONS
+
+    std::any visitQueryExpr(USEParser::QueryExprContext *ctx) override {
+        return visit(ctx->queryExpression());
+    }
+
+    std::any visitCollectExpr(USEParser::CollectExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::CollectExpr>(ctx->getText(), true, this->currentExprSource->getType(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    std::any visitRejectExpr(USEParser::RejectExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::RejectExpr>(ctx->getText(), true, this->currentExprSource->getType(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    std::any visitSelectExpr(USEParser::SelectExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::SelectExpr>(ctx->getText(), true, this->currentExprSource->getType(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    std::any visitExistsExpr(USEParser::ExistsExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::ExistsExpr>(ctx->getText(), true, this->currentExprSource->getType(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    std::any visitForAllExpr(USEParser::ForAllExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::ForAllExpr>(ctx->getText(), true, this->currentExprSource->getType(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    std::any visitIsUniqueExpr(USEParser::IsUniqueExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::IsUniqueExpr>(ctx->getText(), true, this->currentExprSource->getType(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    std::any visitSortedByExpr(USEParser::SortedByExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::SortedByExpr>(ctx->getText(), true, this->currentExprSource->getType(), this->currentPropertyCallIsArrow, this->currentExprSource));
+    }
+
+    //TYPE EXPRESSIONS
+
+    std::any visitTypeExpr(USEParser::TypeExprContext *ctx) override {
+        return visit(ctx->typeExpression());
+    }
+
+    std::any visitOclIsTypeOfExpr(USEParser::OclIsTypeOfExprContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::OCLIsTypeOfExpr>(ctx->getText(), true, MetaModel::Void::instance(), this->currentPropertyCallIsArrow, this->currentExprSource, type));
+    }
+
+    std::any visitOclIsKindOfExpr(USEParser::OclIsKindOfExprContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::OCLIsKindOfExpr>(ctx->getText(), true, MetaModel::Void::instance(), this->currentPropertyCallIsArrow, this->currentExprSource, type));
+    }
+
+    std::any visitOclAsTypeExpr(USEParser::OclAsTypeExprContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::OCLAsTypeExpr>(ctx->getText(), true, MetaModel::Void::instance(), this->currentPropertyCallIsArrow, this->currentExprSource, type));
+    }
+
+    std::any visitSelectByTypeExpr(USEParser::SelectByTypeExprContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::SelectByTypeExpr>(ctx->getText(), true, MetaModel::Void::instance(), this->currentPropertyCallIsArrow, this->currentExprSource, type));
+    }
+
+    std::any visitSelectByKindExpr(USEParser::SelectByKindExprContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::SelectByKindExpr>(ctx->getText(), true, MetaModel::Void::instance(), this->currentPropertyCallIsArrow, this->currentExprSource, type));
+    }
+
+    //OPERATION EXPRESSIONS
+
+    std::any visitOperationExpr(USEParser::OperationExprContext *ctx) override {
+        return visit(ctx->operationExpression());
+    }
+
+    std::any visitOperationExpression(USEParser::OperationExpressionContext *ctx) override {
+        std::shared_ptr<MetaModel::Expr> resultExpression = nullptr;
+        // If no source expression is given, it is either a variable or a reference to expression determined by context.
+        // In the latter case we use the context as source expression and proceed as if it has been given explicitly.
+
+        if(this->currentExprSource){
+            // First we check if the source isComplex. If it is, we can create a generic operation expression, as the source may not be fully generated
+            if(this->currentExprSource->isComplexExpr()){
+                resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                    std::make_shared<MetaModel::OperationExpr>(
+                        ctx->getText(), true, nullptr,
+                        this->currentPropertyCallIsArrow, this->currentExprSource));
+
+            }else{
+
+                resultExpression = std::any_cast< std::shared_ptr<MetaModel::Expr>>(visitOperationExpressionWithSource(ctx));
+
+            }
+        } else {
+
+            if(!ctx->LPAREN()){
+                // Check if it's a variable given in the context (defined or implicit "self" in a constraint, implicit "self" in a pre/postCondition defined inside a class)
+                if(this->currentConstraintContext){
+
+                    if(auto variable = this->currentConstraintContext->getVariable(ctx->ID()->getText()); variable){
+                        resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                            std::make_shared<MetaModel::VariableExpr>(
+                                ctx->getText(), false, variable->getTypePtr(),
+                                this->currentPropertyCallIsArrow, this->currentExprSource, variable->getName()));
+                    }
+
+                }else if(this->currentClassContext){
+
+                    if(ctx->ID()->getText() == "self"){
+                        resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                            std::make_shared<MetaModel::VariableExpr>(
+                                ctx->getText(), false, std::dynamic_pointer_cast<MetaModel::MetaType>(this->currentClassContext),
+                                this->currentPropertyCallIsArrow, this->currentExprSource, "self"));
+                    }
+
+                }
+            }
+
+            if(!resultExpression){
+                // Check if the context is implicitly the source (e.g: context person inv Invariant: age > 0, here it refers to (implicit)self.age)
+                std::shared_ptr<MetaModel::MetaVariable> sourceVariable = nullptr;
+                if(this->currentConstraintContext){
+                    sourceVariable = this->currentConstraintContext->getVariables().begin()->second;
+
+                }else if(this->currentClassContext){
+                    sourceVariable = std::make_shared<MetaModel::MetaVariable>("self", std::dynamic_pointer_cast<MetaModel::MetaType>(this->currentClassContext));
+
+                }
+
+                if(sourceVariable){
+                    this->currentExprSource = std::dynamic_pointer_cast<MetaModel::Expr>(
+                        std::make_shared<MetaModel::VariableExpr>(
+                            ctx->getText(), false, sourceVariable->getTypePtr(),
+                            this->currentPropertyCallIsArrow, this->currentExprSource, sourceVariable->getName()));
+
+                    // Call function that generates a expression that has a source
+                    resultExpression = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visitOperationExpressionWithSource(ctx));
+                }else{
+                    throw std::invalid_argument("Undefined " + std::string(ctx->LPAREN() ? "operation" : "variable") + " with name: '" + ctx->ID()->getText() + "'");
+                }
+
+            }
+        }
+
+        return resultExpression;
+
+        //If its a variable defined in the context we create a VariableExpr (for example: self)
+        //If its not, maybe the source is a implicit variable of the context (e.g: context person inv Invariant: age > 0, here it refers to (implicit)self.age)
+
+
+        //If a source expression is given
+
+        //check if srcExpr type is nullptr and throw exception
+
+        //check if srcExpr type is a classifier, a collection, a tuple or a simple type
+
+        //We only care for simple attribute or navigation accesses, anything that has not a class as a src or has arrow or has Rolenames, args, etc is skipped
+    }
+
+    std::any visitOperationExpressionWithSource(USEParser::OperationExpressionContext *ctx) {
+        std::shared_ptr<MetaModel::Expr> resultExpression = nullptr;
+        std::shared_ptr<MetaModel::MetaType> srcType = this->currentExprSource->getType();
+
+        if(auto srcVoidType = std::dynamic_pointer_cast<MetaModel::Void>(srcType) || !srcType){
+
+            throw std::invalid_argument("'" + ctx->getText() +"' cannot be applied to source expression '"
+                                        + this->currentExprSource->getExpression() + "', since the latter doesn't evaluate to something with a type.");
+
+        } else if(auto srcMetaClassType = std::dynamic_pointer_cast<MetaModel::MetaClass>(srcType)){
+
+            if(!this->currentPropertyCallIsArrow){
+                // Either an AttributeNavigationExpr, a NavigationExpr, a ObjectOperationExpr a standard operation. As of now, we only care for AttributeNavigations
+                if(ctx->LPAREN()){
+                    // ObjectOperation expression
+
+                    std::shared_ptr<MetaModel::MetaOperation> metaOperation= srcMetaClassType->getOperation(ctx->ID()->getText());
+
+
+                    if(metaOperation){
+
+                        resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                            std::make_shared<MetaModel::ObjectOperationExpr>(
+                                ctx->getText(), true, metaOperation->getReturnTypePtr(),
+                                this->currentPropertyCallIsArrow, this->currentExprSource, srcMetaClassType));
+
+                    } else {
+
+                        // The type of standard operations depends on the operation, we ignore them so it can be null
+                        resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                            std::make_shared<MetaModel::StandardOperationExpr>(
+                                ctx->getText(), true, srcType,
+                                this->currentPropertyCallIsArrow, this->currentExprSource));
+
+                    }
+
+                } else {
+                    if(ctx->RBRACK().size() >= 1){
+                        // Navigation with explicit rolename
+                    } else {
+
+                        std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = srcMetaClassType->getAttribute(ctx->ID()->getText());
+
+                        if(metaAttribute){
+                            // AttributteNavigation expression
+
+                            resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                                std::make_shared<MetaModel::AttributeNavigationExpr>(
+                                    ctx->getText(), false, metaAttribute->getTypePtr(),
+                                    this->currentPropertyCallIsArrow, this->currentExprSource, metaAttribute));
+
+                        } else {
+
+                            std::shared_ptr<MetaModel::MetaAssociationEnd> dst = srcMetaClassType->getAssociationEnd(ctx->ID()->getText());
+
+                            if(dst){
+
+                                // For now we skip searching for the navigation src and destination and just use nullptr
+                                resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                                    std::make_shared<MetaModel::NavigationExpr>(
+                                        ctx->getText(), true, srcType,
+                                        this->currentPropertyCallIsArrow, this->currentExprSource, nullptr, nullptr));
+
+                            } else {
+                                // The type of standard operations depends on the operation, we ignore them so it can be null
+                                resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                                    std::make_shared<MetaModel::StandardOperationExpr>(
+                                        ctx->getText(), true, srcType,
+                                        this->currentPropertyCallIsArrow, this->currentExprSource));
+                            }
+                        }
+                    }
+                }
+
+            }else{
+                // Set operation on single object resulting from navigatiopn over associations with multiplicity 0 or 1
+                if(auto srcExprNavigation = std::dynamic_pointer_cast<MetaModel::NavigationExpr>(this->currentExprSource)){
+
+                    resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                        std::make_shared<MetaModel::ObjectAsSetExpr>(
+                            ctx->getText(), true, srcType,
+                            this->currentPropertyCallIsArrow, this->currentExprSource));
+
+                } else {
+                    throw std::invalid_argument("An arrow operation treating a single object as a set may only be applied, "
+                                                "if the object results from a navigation to an association end with multiplicity 0..1.");
+                }
+            }
+
+        } else if(auto srcSimpleType = std::dynamic_pointer_cast<MetaModel::SimpleType>(srcType)){
+
+            // The type of standard operations depends on the operation, we ignore them so it can be null
+            resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                std::make_shared<MetaModel::StandardOperationExpr>(
+                    ctx->getText(), true, srcType,
+                    this->currentPropertyCallIsArrow, this->currentExprSource));
+
+        } else if(auto srcCollectionType = std::dynamic_pointer_cast<MetaModel::MetaClass>(srcType)){
+            // Either a standard operation over a collection or a shorthand for collect
+            if(this->currentPropertyCallIsArrow){
+                // The type of standard operations depends on the operation, we ignore them so it can be null
+                resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                    std::make_shared<MetaModel::StandardOperationExpr>(
+                        ctx->getText(), true, nullptr,
+                        this->currentPropertyCallIsArrow, this->currentExprSource));
+
+            }else{
+                // Shorthand for collect, wich is ignored and generated as a collect expression
+                resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                    std::make_shared<MetaModel::CollectExpr>(
+                        ctx->getText(), true, nullptr,
+                        this->currentPropertyCallIsArrow, this->currentExprSource));
+            }
+
+        } else if(auto srcTupleType = std::dynamic_pointer_cast<MetaModel::TupleType>(srcType)){
+            if(this->currentPropertyCallIsArrow){
+                throw std::invalid_argument("Collection operation not applicable to tuple type.");
+            }else{
+                // Either a TupleType navigation or a standard operation over a TupleType
+                if(auto tuplePart = srcTupleType->getElement(ctx->ID()->getText())){
+                    resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                        std::make_shared<MetaModel::TupleSelectOperationExpr>(
+                            ctx->getText(), false, tuplePart->getTypePtr(),
+                            this->currentPropertyCallIsArrow, this->currentExprSource));
+                }else{
+                    // The type of standard operations depends on the operation, we ignore them so it can be null
+                    resultExpression = std::dynamic_pointer_cast<MetaModel::Expr>(
+                        std::make_shared<MetaModel::StandardOperationExpr>(
+                            ctx->getText(), true, nullptr,
+                            this->currentPropertyCallIsArrow, this->currentExprSource));
+                }
+            }
+        }
+
+        return resultExpression;
+    }
+
+    //PRIMARY EXPRESSIONS
+
+    std::any visitPrimaryExpr(USEParser::PrimaryExprContext *ctx) override {
+        return visit(ctx->primaryExpression());
+    }
+
+    std::any visitEmptyPropertyCallExpr(USEParser::EmptyPropertyCallExprContext *ctx) override {
+        return visit(ctx->propertyCall());
+    }
+
+    std::any visitParenthesizedExpr(USEParser::ParenthesizedExprContext *ctx) override {
+        return visit(ctx->expression());
+    }
+
+    std::any visitAllInstancesExpr(USEParser::AllInstancesExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::AllInstancesExpr>(
+                ctx->getText(), true, nullptr));
+    }
+
+    std::any visitByUseIdExpr(USEParser::ByUseIdExprContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::ByUseIdExpr>(
+                ctx->getText(), true, nullptr));
+    }
+
+    std::any visitObjectReference(USEParser::ObjectReferenceContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::ObjectReferenceExpr>(
+                ctx->getText(), true, nullptr, ctx->ID()->getText()));
+    }
+
+    // LITERAL EXPRESSIONS
+
+    std::any visitLiteralExpr(USEParser::LiteralExprContext *ctx) override {
+        return std::make_shared<MetaModel::Expr>(ctx->getText(), true, MetaModel::Boolean::instance());
+
+        return visit(ctx->literal());
+    }
+
 
     std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
         return std::make_shared<MetaModel::Expr>(ctx->conditionalExpression()->getText());

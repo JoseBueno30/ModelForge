@@ -24,8 +24,8 @@ private:
     std::map<std::string, std::shared_ptr<MetaVariable>> variables;
 
 public:
-    MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::shared_ptr<Expr>& expression, const std::string& name="", bool isExistential=false);
-    MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::vector<std::string>& variableNames, const std::shared_ptr<Expr>& expression, const std::string& name="", bool isExistential=false);
+    MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::string& name="", bool isExistential=false);
+    MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::vector<std::string>& variableNames, const std::string& name="", bool isExistential=false);
 
     std::string getName() const;
     void setName(const std::string& name);

@@ -44,7 +44,7 @@ private:
     std::shared_ptr<MetaType> returnType;
     std::map<std::string, std::shared_ptr<MetaVariable>> variables;
     std::map<std::string, std::shared_ptr<PrePostClause>> preConditions;
-    std::map<std::string, std::shared_ptr<PrePostClause>> postConditions;;
+    std::map<std::string, std::shared_ptr<PrePostClause>> postConditions;
 
 public:
     MetaOperation(const std::string& name, const std::string& operationDefinition, const std::shared_ptr<MetaType>& returnType);
@@ -56,6 +56,7 @@ public:
     void setOperationDefinition(const std::string& operationDefinition);
 
     const MetaType& getReturnType() const;
+    const std::shared_ptr<MetaType>& getReturnTypePtr() const;
     void setReturnType(const std::shared_ptr<MetaType>& returnType);
 
     const std::map<std::string, std::shared_ptr<MetaVariable>>& getVariables() const;

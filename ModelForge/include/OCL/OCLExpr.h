@@ -20,6 +20,8 @@ public:
     std::string getExpression() const;
     void setExpression(const std::string& expression);
 
+    const std::shared_ptr<MetaType> getType() const;
+
     bool isComplexExpr();
 
     virtual ~Expr() = default;

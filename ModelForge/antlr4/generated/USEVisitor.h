@@ -157,6 +157,8 @@ public:
 
     virtual std::any visitPropertyCallExpr(USEParser::PropertyCallExprContext *context) = 0;
 
+    virtual std::any visitPropertyChain(USEParser::PropertyChainContext *context) = 0;
+
     virtual std::any visitLiteralExpr(USEParser::LiteralExprContext *context) = 0;
 
     virtual std::any visitObjectReferenceExpr(USEParser::ObjectReferenceExprContext *context) = 0;

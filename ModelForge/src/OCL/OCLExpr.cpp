@@ -10,6 +10,10 @@ Expr::Expr(const std::string& expression)
 Expr::Expr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type)
     :expression(expression), isComplex(isComplex), type(type){}
 
+const std::shared_ptr<MetaType> Expr::getType() const{
+    return type;
+}
+
 std::string Expr::getExpression() const{
     return expression;
 }
