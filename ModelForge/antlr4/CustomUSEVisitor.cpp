@@ -3,8 +3,10 @@
 #include <any>
 #include <OCL/AdditiveExpr.h>
 #include <OCL/AttributeNavigationExpr.h>
+#include <OCL/ConditionalExpr.h>
 #include <OCL/EqualityExpr.h>
 #include <OCL/FactorExpr.h>
+#include <OCL/LetExpr.h>
 #include <OCL/LogicalExpr.h>
 #include <OCL/NavigationExpr.h>
 #include <OCL/ObjectOperationExpr.h>
@@ -1133,7 +1135,7 @@ public:
                 if(sourceVariable){
                     this->currentExprSource = std::dynamic_pointer_cast<MetaModel::Expr>(
                         std::make_shared<MetaModel::VariableExpr>(
-                            ctx->getText(), false, sourceVariable->getTypePtr(),
+                            sourceVariable->getName(), false, sourceVariable->getTypePtr(),
                             this->currentPropertyCallIsArrow, this->currentExprSource, sourceVariable->getName()));
 
                     // Call function that generates a expression that has a source
@@ -1308,7 +1310,11 @@ public:
     }
 
     std::any visitParenthesizedExpr(USEParser::ParenthesizedExprContext *ctx) override {
-        return visit(ctx->expression());
+        auto expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()));
+
+        expr->setHasParenthesis(true);
+
+        return expr;
     }
 
     std::any visitAllInstancesExpr(USEParser::AllInstancesExprContext *ctx) override {
@@ -1332,18 +1338,168 @@ public:
     // LITERAL EXPRESSIONS
 
     std::any visitLiteralExpr(USEParser::LiteralExprContext *ctx) override {
-        return std::make_shared<MetaModel::Expr>(ctx->getText(), true, MetaModel::Boolean::instance());
+        // return std::make_shared<MetaModel::Expr>(ctx->getText(), true, MetaModel::Boolean::instance());
 
         return visit(ctx->literal());
     }
 
-
-    std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
-        return std::make_shared<MetaModel::Expr>(ctx->conditionalExpression()->getText());
+    std::any visitLiteralBooleanTrue(USEParser::LiteralBooleanTrueContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), false, MetaModel::Boolean::instance(), true));
     }
 
+    std::any visitLiteralBooleanFalse(USEParser::LiteralBooleanFalseContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), false, MetaModel::Boolean::instance(), false));
+    }
+
+    std::any visitLiteralInteger(USEParser::LiteralIntegerContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), false, MetaModel::Integer::instance(), std::stoi(ctx->INT()->getText())));
+    }
+
+    std::any visitLiteralReal(USEParser::LiteralRealContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), false, MetaModel::Real::instance(), std::stod(ctx->REAL()->getText())));
+    }
+
+    std::any visitLiteralString(USEParser::LiteralStringContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), false, MetaModel::String::instance(), std::stoi(ctx->STRING()->getText())));
+    }
+
+    std::any visitLiteralEnum(USEParser::LiteralEnumContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaEnumElement> enumElement = nullptr;
+        std::shared_ptr<MetaModel::MetaEnum> modelEnum = nullptr;
+        auto modelEnumsIterator = model->getEnums().begin();
+
+        while(!enumElement && modelEnumsIterator != model->getEnums().end()){
+            modelEnum = modelEnumsIterator->second;
+            enumElement = modelEnum->getElement(ctx->ID()->getText());
+
+            modelEnumsIterator++;
+        }
+
+        if(!enumElement){
+            throw std::invalid_argument("Undefined enumeration literal '" + ctx->ID()->getText() + "'.");
+        }
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), false, modelEnum, enumElement));
+    }
+
+    std::any visitLiteralQualifiedEnum(USEParser::LiteralQualifiedEnumContext *ctx) override {
+        std::shared_ptr<MetaModel::MetaEnum> modelEnum = model->getEnum(ctx->ID()[0]->getText());
+
+        if(!modelEnum){
+            throw std::invalid_argument("Undefined enumeration '" + ctx->ID()[0]->getText() + "'.");
+        }
+
+        std::shared_ptr<MetaModel::MetaEnumElement> enumElement = modelEnum->getElement(ctx->ID()[1]->getText());
+
+        if(!enumElement){
+            throw std::invalid_argument("Undefined enumeration literal '" + ctx->ID()[1]->getText() + "'.");
+        }
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), false, modelEnum, enumElement));
+    }
+
+    std::any visitLiteralTuple(USEParser::LiteralTupleContext *ctx) override {
+        // Ignored for now
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), true, std::make_shared<MetaModel::TupleType>(nullptr), nullptr));
+    }
+
+    std::any visitLiteralUndefined(USEParser::LiteralUndefinedContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), true, nullptr, "undefined"));
+    }
+
+    std::any visitLiteralUnlimitedNatural(USEParser::LiteralUnlimitedNaturalContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), true, nullptr, "*"));
+    }
+
+    std::any visitLiteralEmptyCollection(USEParser::LiteralEmptyCollectionContext *ctx) override {
+        return visit(ctx->emptyCollectionLiteral());
+    }
+
+    std::any visitEmptyCollectionLiteral(USEParser::EmptyCollectionLiteralContext *ctx) override {
+        auto collectionType = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->collectionType()));
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), true, collectionType, nullptr));
+    }
+
+    // LITETAL COLLECTION EXPRESSIONS
+    // Ignored for now, we generate a dummy genereic collection LiteralExpr and dont visit the possible collectionLiterals
+
+    std::any visitLiteralCollection(USEParser::LiteralCollectionContext *ctx) override {
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LiteralExpr>(
+                ctx->getText(), true, std::make_shared<MetaModel::CollectionType>(true, true, 1, MetaModel::Integer::instance()), nullptr));
+    }
+
+
+    std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
+        return visit(ctx->conditionalExpression());
+    }
+
+    // CONDITIONAL EXPRESSION
+
+    std::any visitConditionalExpression(USEParser::ConditionalExpressionContext *ctx) override {
+        auto ifExpr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()[0]));
+        auto thenExpr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()[1]));
+        auto elseExpr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()[2]));
+
+        if(!thenExpr->getType()->equals(*elseExpr->getType())){
+            throw std::invalid_argument("Branches of ConditionalExpr have different types, found '" + thenExpr->getType()->toString() + "' and '" + elseExpr->getType()->toString() + "'.");
+        }
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::ConditionalExpr>(
+                ctx->getText(), true, thenExpr->getType(), ifExpr, thenExpr, elseExpr));
+    }
+
+    //LET EXPRESSION
+
     std::any visitLetExpr(USEParser::LetExprContext *ctx) override {
-        return std::make_shared<MetaModel::Expr>(ctx->letExpression()->getText());
+        return visit(ctx->letExpression());
+    }
+
+    std::any visitLetExpression(USEParser::LetExpressionContext *ctx) override {
+        // We return a dummy to ignore the visit of the inExpression, which requires to handle the LetExpr context for the variable
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LetExpr>(
+                ctx->getText(), true, nullptr, ctx->ID()->getText(), nullptr, nullptr, nullptr));
+
+        auto varExpr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()[0]));
+        auto inExpr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->expression()[1]));
+        std::shared_ptr<MetaModel::MetaType> varType = nullptr;
+
+        if(ctx->type()){
+            varType = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
+        }else{
+            varType = varExpr->getType();
+        }
+
+        // A check should be made to see if varExpr type conforms to declared varType
+
+        return std::dynamic_pointer_cast<MetaModel::Expr>(
+            std::make_shared<MetaModel::LetExpr>(
+                ctx->getText(), true, inExpr->getType(), ctx->ID()->getText(), varType, varExpr, inExpr));
     }
 
 };

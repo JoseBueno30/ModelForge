@@ -17,6 +17,12 @@ transfer(variable : Integer) : Integer begin
 constraints
 inv Positive_Balance:
 	balance>0
+inv Test:
+	(self.balance>1)or(trueandtrue)orself.type=AccountType::Savings
+inv Test2:
+	falseandtrueortrue
+inv Test3:
+	falseand(trueortrue)
 end
 
 class Bank

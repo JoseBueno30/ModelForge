@@ -10,8 +10,8 @@ ParenthesisExpr::ParenthesisExpr(const std::string& expression, const bool isCom
 ObjectReferenceExpr::ObjectReferenceExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::string& reference)
     :PrimaryExpr(expression, isComplex, type), reference(reference){}
 
-LiteralExpr::LiteralExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type)
-    :PrimaryExpr(expression, isComplex, type){}
+LiteralExpr::LiteralExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::any& value)
+    :PrimaryExpr(expression, isComplex, type), value(value){}
 
 AllInstancesExpr::AllInstancesExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type)
     :PrimaryExpr(expression, isComplex, type){}

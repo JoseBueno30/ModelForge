@@ -50,3 +50,12 @@ end
 constraints
 context Account inv Positive_Balance:
     balance > 0
+
+context Account inv Test:
+    (self.balance > 1) or (true and true) or self.type = AccountType::Savings
+
+context Account inv Test2:
+false and true or true
+
+context Account inv Test3:
+false and (true or true)

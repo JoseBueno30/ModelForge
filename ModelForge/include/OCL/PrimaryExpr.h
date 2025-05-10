@@ -29,7 +29,7 @@ class LiteralExpr : public PrimaryExpr{
 protected:
     std::any value;
 public:
-    LiteralExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type);
+    LiteralExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::any& value);
 };
 
 class AllInstancesExpr : public PrimaryExpr{
