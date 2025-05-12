@@ -20,7 +20,7 @@ inv Positive_Balance:
 inv Test:
 	(self.balance>1)or(trueandtrue)orself.type=AccountType::Savings
 inv Test2:
-	falseandtrueortrue
+	not1
 inv Test3:
 	falseand(trueortrue)
 end

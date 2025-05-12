@@ -55,7 +55,7 @@ context Account inv Test:
     (self.balance > 1) or (true and true) or self.type = AccountType::Savings
 
 context Account inv Test2:
-false and true or true
+not 1
 
 context Account inv Test3:
 false and (true or true)

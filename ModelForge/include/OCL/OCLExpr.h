@@ -1,7 +1,6 @@
 #ifndef OCLEXPR_H
 #define OCLEXPR_H
 #include <memory>
-#include <iostream>
 #include <string>
 
 #include <metamodel/MetaType.h>

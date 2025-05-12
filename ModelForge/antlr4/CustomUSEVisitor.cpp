@@ -765,7 +765,9 @@ public:
     //BINARY EXPRESSIONS
 
     std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
-        return visit(ctx->logicalExpression());
+        auto expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()));
+        std::cout << "EXPR: " << expr->toString() << std::endl;
+        return expr;
     }
 
     std::any visitAndExpr(USEParser::AndExprContext *ctx) override {

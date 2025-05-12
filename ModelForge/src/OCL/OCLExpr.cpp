@@ -12,7 +12,7 @@ Expr::Expr(const std::string& expression, const bool isComplex, const std::share
     :expression(expression), isComplex(isComplex), type(type){
 
     // DELETE THIS
-    std::cout<<"Expr: " << this->toString() << std::endl;
+    std::cout<<"Expr: " << this->expression << std::endl;
 }
 
 const std::shared_ptr<MetaType> Expr::getType() const{

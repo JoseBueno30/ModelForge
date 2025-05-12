@@ -8,11 +8,14 @@ class UnaryExpr : public Expr{
 protected:
     std::shared_ptr<Expr> expr;
     std::string symbol;
+    std::string buildExprString() const override;
 public:
     UnaryExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr> expr);
 };
 
 class NotExpr : public UnaryExpr{
+protected:
+    std::string buildExprString() const override;
 public:
     NotExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr> expr);
 };
