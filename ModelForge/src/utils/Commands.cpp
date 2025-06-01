@@ -170,21 +170,42 @@ RemoveMetaClassCommand::RemoveMetaClassCommand(ClassItemView* classItemView, QGr
 
 void RemoveMetaClassCommand::undo(){
     for(auto associationItemView : this->classItemView->getAssociations()){
+        qDebug() << "a";
         this->scene->addItem(associationItemView);
-        this->model->addAssociation(associationItemView->getAssociationModel());
+        if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(associationItemView->getAssociationModel())){
+            qDebug() << "added - " << associationItemView->getAssociationModel()->getName() + " association";
+            this->model->addAssociation(associationItemView->getAssociationModel());
+        }
     }
 
+
     for(auto associationClassesItemView : this->classItemView->getAssociationClasses()){
+        qDebug() << "a";
         this->scene->addItem(associationClassesItemView);
-        this->model->addAssociationClass(associationClassesItemView->getAssociationClassModel());
+        if(!classItemView->getClassModel()->equals(*associationClassesItemView->getAssociationClassItemView()->getClassModel())){
+            qDebug() << "a1";
+            this->scene->addItem(associationClassesItemView->getAssociationClassItemView());
+        }
+        qDebug() << "a";
+        this->scene->addItem(associationClassesItemView->getAssociationClassAssociationItemView());
+
+        if(!this->classItemView->getClassModel()->equals(*associationClassesItemView->getAssociationClassModel())){
+            this->model->addAssociationClass(associationClassesItemView->getAssociationClassModel());
+        }
     }
 
     for(auto generalizationItemView : this->classItemView->getGeneralizations()){
+        qDebug() << "a";
         this->scene->addItem(generalizationItemView);
     }
-
+    qDebug() << "a";
     this->scene->addItem(this->classItemView);
-    this->model->addClass(this->classItemView->getClassModel());
+    if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel())){
+        this->model->addClass(this->classItemView->getClassModel());
+    }else{
+        this->model->addAssociationClass(std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel()));
+    }
+
 }
 void RemoveMetaClassCommand::redo(){
     for(auto associationItemView : this->classItemView->getAssociations()){
@@ -207,9 +228,14 @@ void RemoveMetaClassCommand::redo(){
         }else{
              associationClassItemView->getClass1()->deleteAssociationClass(associationClassItemView);
         }*/
-
         this->scene->removeItem(associationClassItemView);
+        if(!classItemView->getClassModel()->equals(*associationClassItemView->getAssociationClassModel())){
+            this->scene->removeItem(associationClassItemView->getAssociationClassItemView());
+        }
+        this->scene->removeItem(associationClassItemView->getAssociationClassAssociationItemView());
+
         qDebug() << "aa - " << associationClassItemView->getAssociationClassModel()->getName() << this->model->modelContainsKey( associationClassItemView->getAssociationClassModel()->getName());
+        qDebug() << this->model->getAssociationClass(associationClassItemView->getAssociationClassModel()->getName())->getName();
         this->model->removeAssociationClass(associationClassItemView->getAssociationClassModel()->getName());
         qDebug() << "bb";
     }
@@ -222,9 +248,13 @@ void RemoveMetaClassCommand::redo(){
         }*/
         this->scene->removeItem(generalizationItemView);
     }
-
+    qDebug() << "cc";
     this->scene->removeItem(this->classItemView);
-    this->model->removeClass(this->classItemView->getClassModel()->getName());
+    qDebug() << "dd";
+    if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel())){
+        this->model->removeClass(this->classItemView->getClassModel()->getName());
+    }
+    qDebug() << "ee";
     this->scene->update();
 }
 

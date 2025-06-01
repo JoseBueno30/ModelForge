@@ -151,9 +151,9 @@ void MetaModel::addAssociationClass(std::shared_ptr<MetaAssociationClass> modelA
 }
 
 void MetaModel::removeAssociationClass(const std::string& key){
-    auto associationClass = this->getAssociation(key);
+    auto associationClass = this->getAssociationClass(key);
 
-    for(const auto &associationEndPair : associationClass->getAssociationEnds()){
+    for(const auto &associationEndPair : associationClass->MetaAssociation::getAssociationEnds()){
         // remove associationEnd from class
         associationEndPair.second->getClassSharedPtr()->removeAssociationEnd(associationEndPair.first);
     }

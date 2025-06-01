@@ -58,3 +58,11 @@ ClassItemView* AssociationClassItemView::getClass1(){
 ClassItemView* AssociationClassItemView::getClass2(){
     return this->associationItem->getClass2();
 }
+
+ClassItemView* AssociationClassItemView::getAssociationClassItemView(){
+    return this->classItem;
+}
+
+AssociationItemView* AssociationClassItemView::getAssociationClassAssociationItemView(){
+    return this->associationItem;
+}

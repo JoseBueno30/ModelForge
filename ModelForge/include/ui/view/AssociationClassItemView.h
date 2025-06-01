@@ -17,6 +17,9 @@ public:
 
     ClassItemView* getClass1();
     ClassItemView* getClass2();
+
+    ClassItemView* getAssociationClassItemView();
+    AssociationItemView* getAssociationClassAssociationItemView();
 private:
     std::shared_ptr<MetaModel::MetaAssociationClass> model;
     ClassItemView* classItem;

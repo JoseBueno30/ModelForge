@@ -43,7 +43,6 @@ void EnumEditDialog::setMetaEnum(std::shared_ptr<MetaModel::MetaEnum> metaEnumPo
     for(int row = 0; row < ui->enumElementsTable->rowCount(); row++){
         auto elementLineEdit = qobject_cast<QLineEdit *>(ui->enumElementsTable->cellWidget(row, 0));
         std::shared_ptr<MetaModel::MetaEnumElement> metaEnumElement = std::make_shared<MetaModel::MetaEnumElement>(elementLineEdit->text().toStdString());
-        qDebug() << metaEnumElement->getName();
         metaEnumPointer->addElement(metaEnumElement);
     }
 }
@@ -61,7 +60,6 @@ void EnumEditDialog::saveChanges(){
 
         std::shared_ptr<MetaModel::MetaEnum> newMetaEnum =std::make_shared<MetaModel::MetaEnum>("");
         setMetaEnum(newMetaEnum);
-        qDebug() << newMetaEnum->getName();
 
         EditMetaEnumCommand* editCommand = new EditMetaEnumCommand(this->metaEnum, newMetaEnum, itemView, this->scene);
         MainWindow::undoStack->push(editCommand);
