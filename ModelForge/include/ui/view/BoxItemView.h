@@ -8,7 +8,7 @@
 #include <QGraphicsItem>
 
 
-class BoxItemView : virtual public QGraphicsItem{
+class BoxItemView : public QGraphicsItem{
 public:
     virtual void setWidth(qreal width){this->width=width;};
     virtual void setHeight(qreal height){this->height=height;};

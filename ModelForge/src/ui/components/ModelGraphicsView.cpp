@@ -1,5 +1,11 @@
 #include<ui/components/ModelGraphicsView.h>
 
+#include <ui/view/ClassItemView.h>
+
+#include <utils/Commands.h>
+
+#include <ui/dialogs/MainWindow.h>
+
 int ModelGraphicsView::highestZIndex = 1;
 
 void ModelGraphicsView::setupGraphicsView(){
@@ -13,13 +19,13 @@ void ModelGraphicsView::setupGraphicsView(){
 
 }
 
-ModelGraphicsView::ModelGraphicsView(QWidget *parent, MetaModel::MetaModel *model)
+ModelGraphicsView::ModelGraphicsView(QWidget *parent, std::shared_ptr<MetaModel::MetaModel> model)
     : QGraphicsView(parent), model(model), minScale(0.25), maxScale(3.0), currentScale(1.0){
     setupGraphicsView();
     //this->setBackgroundBrush(QBrush(QColor(0x21252A)));
 }
 
-void ModelGraphicsView::setModel(MetaModel::MetaModel *model){
+void ModelGraphicsView::setModel(std::shared_ptr<MetaModel::MetaModel> model){
     this->model = model;
 }
 
@@ -58,6 +64,23 @@ void ModelGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
 
     } else {
         QGraphicsView::mouseReleaseEvent(event);
+    }
+}
+
+void ModelGraphicsView::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Delete) {
+        QList<QGraphicsItem *> selectedItems = scene()->selectedItems();
+        for (QGraphicsItem *item : selectedItems) {
+            if(auto classItemView = qgraphicsitem_cast<ClassItemView*>(item)){
+                //qDebug() << "borrando clase";
+                RemoveMetaClassCommand* removeClassAction = new RemoveMetaClassCommand(classItemView, this->scene(), this->model);
+                MainWindow::undoStack->push(removeClassAction);
+            }
+            //delete item;  // ¡Importante! Elimina el objeto de memoria
+        }
+    } else {
+        QGraphicsView::keyPressEvent(event); // Propaga el evento si no es Delete
     }
 }
 

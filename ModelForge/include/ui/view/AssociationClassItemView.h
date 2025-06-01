@@ -13,7 +13,12 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     void addItemsToScene();
+    std::shared_ptr<MetaModel::MetaAssociationClass> getAssociationClassModel();
+
+    ClassItemView* getClass1();
+    ClassItemView* getClass2();
 private:
+    std::shared_ptr<MetaModel::MetaAssociationClass> model;
     ClassItemView* classItem;
     AssociationItemView* associationItem;
 };

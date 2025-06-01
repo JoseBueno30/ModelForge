@@ -4,7 +4,9 @@
 
 #include <QGraphicsSceneMouseEvent>
 
-ModelGraphicsScene::ModelGraphicsScene(QObject* parent) : QGraphicsScene(parent){}
+ModelGraphicsScene::ModelGraphicsScene(QObject* parent) : QGraphicsScene(parent){
+
+}
 
 void ModelGraphicsScene::emitMoveSignal(QGraphicsItem * item,const QPointF& pos){
     if (!item) {

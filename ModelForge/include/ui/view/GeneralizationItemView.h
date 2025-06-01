@@ -27,6 +27,9 @@ public:
 
     void updatePosition();
     QPointF getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last);
+
+    ClassItemView* getSuperClass();
+    ClassItemView* getSubClass();
 };
 
 #endif // GENERALIZATIONITEMVIEW_H

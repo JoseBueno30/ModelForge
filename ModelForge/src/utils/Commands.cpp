@@ -2,6 +2,8 @@
 #include <QGraphicsScene>
 #include <ui/view/ClassItemView.h>
 #include <ui/view/AssociationItemView.h>
+#include <ui/view/AssociationClassItemView.h>
+#include <ui/view/GeneralizationItemView.h>
 
 MoveCommand::MoveCommand(QGraphicsItem *diagramItem, const QPointF &oldPos, QUndoCommand *parent)
     : QUndoCommand(parent),item(diagramItem), oldPos(oldPos), newPos(diagramItem->pos()){}
@@ -161,6 +163,71 @@ void EditMetaEnumCommand::redo(){
     this->enumItemView->calculateMinimumSize();
     this->scene->update();
 }
+
+
+RemoveMetaClassCommand::RemoveMetaClassCommand(ClassItemView* classItemView, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model)
+    : classItemView(classItemView), scene(scene), model(model){}
+
+void RemoveMetaClassCommand::undo(){
+    for(auto associationItemView : this->classItemView->getAssociations()){
+        this->scene->addItem(associationItemView);
+        this->model->addAssociation(associationItemView->getAssociationModel());
+    }
+
+    for(auto associationClassesItemView : this->classItemView->getAssociationClasses()){
+        this->scene->addItem(associationClassesItemView);
+        this->model->addAssociationClass(associationClassesItemView->getAssociationClassModel());
+    }
+
+    for(auto generalizationItemView : this->classItemView->getGeneralizations()){
+        this->scene->addItem(generalizationItemView);
+    }
+
+    this->scene->addItem(this->classItemView);
+    this->model->addClass(this->classItemView->getClassModel());
+}
+void RemoveMetaClassCommand::redo(){
+    for(auto associationItemView : this->classItemView->getAssociations()){
+        /*if(this->classItemView == associationItemView->getClass1()){
+            associationItemView->getClass2()->deleteAssociation(associationItemView);
+        }else{
+            associationItemView->getClass1()->deleteAssociation(associationItemView);
+        }*/
+        this->scene->removeItem(associationItemView);
+        qDebug() << "a";
+        if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(associationItemView->getAssociationModel())){
+            this->model->removeAssociation(associationItemView->getAssociationModel()->getName());
+        }
+        qDebug() << "b";
+    }
+
+    for(auto associationClassItemView : this->classItemView->getAssociationClasses()){
+        /*if(this->classItemView == associationClassItemView->getClass1()){
+            associationClassItemView->getClass2()->deleteAssociationClass(associationClassItemView);
+        }else{
+             associationClassItemView->getClass1()->deleteAssociationClass(associationClassItemView);
+        }*/
+
+        this->scene->removeItem(associationClassItemView);
+        qDebug() << "aa - " << associationClassItemView->getAssociationClassModel()->getName() << this->model->modelContainsKey( associationClassItemView->getAssociationClassModel()->getName());
+        this->model->removeAssociationClass(associationClassItemView->getAssociationClassModel()->getName());
+        qDebug() << "bb";
+    }
+
+    for(auto generalizationItemView : this->classItemView->getGeneralizations()){
+        /*if(this->classItemView == generalizationItemView->getSuperClass()){
+            generalizationItemView->getSubClass()->deleteGeneralization(generalizationItemView);
+        }else{
+            generalizationItemView->getSuperClass()->deleteGeneralization(generalizationItemView);
+        }*/
+        this->scene->removeItem(generalizationItemView);
+    }
+
+    this->scene->removeItem(this->classItemView);
+    this->model->removeClass(this->classItemView->getClassModel()->getName());
+    this->scene->update();
+}
+
 
 
 

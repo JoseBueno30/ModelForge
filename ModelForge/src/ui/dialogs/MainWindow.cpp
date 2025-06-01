@@ -128,6 +128,7 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
     int width = 150;
     int height = 150;
 
+    ui->modelGraphicsView->setModel(model);
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
 
     QGraphicsScene *scene = modelGraphicsView->scene();

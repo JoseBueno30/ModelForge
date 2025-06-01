@@ -2,7 +2,7 @@
 #include <ui/view/AssociationClassItemView.h>
 
 AssociationClassItemView::AssociationClassItemView(std::shared_ptr<MetaModel::MetaAssociationClass> model, ClassItemView* class1, ClassItemView* class2)
-    : classItem(new ClassItemView(model)), associationItem(new AssociationItemView(model, class1, class2)){
+    : model(model), classItem(new ClassItemView(model)), associationItem(new AssociationItemView(model, class1, class2)){
     QPointF center = (this->associationItem->getP1() + this->associationItem->getP2()) /2;
     class1->addAssociation(this->associationItem);
     class1->addAssociationClass(this);
@@ -45,4 +45,16 @@ void AssociationClassItemView::paint(QPainter *painter, const QStyleOptionGraphi
 void AssociationClassItemView::addItemsToScene(){
     this->scene()->addItem(this->classItem);
     this->scene()->addItem(this->associationItem);
+}
+
+std::shared_ptr<MetaModel::MetaAssociationClass> AssociationClassItemView::getAssociationClassModel(){
+    return this->model;
+}
+
+ClassItemView* AssociationClassItemView::getClass1(){
+    return this->associationItem->getClass1();
+}
+
+ClassItemView* AssociationClassItemView::getClass2(){
+    return this->associationItem->getClass2();
 }

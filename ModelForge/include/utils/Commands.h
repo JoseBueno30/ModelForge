@@ -119,4 +119,17 @@ private:
     QGraphicsScene* scene;
 };
 
+class RemoveMetaClassCommand : public QUndoCommand{
+public:
+    RemoveMetaClassCommand(ClassItemView* classItemView, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model);
+
+    void undo() override;
+    void redo() override;
+
+private:
+    ClassItemView* classItemView;
+    QGraphicsScene* scene;
+    std::shared_ptr<MetaModel::MetaModel> model;
+};
+
 #endif // COMMANDS_H

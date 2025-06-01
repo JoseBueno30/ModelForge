@@ -93,3 +93,11 @@ QPointF GeneralizationItemView::drawArrowHead(QLineF &line, QPainter *painter){
 
     return QPointF((arrowP1.x() + arrowP2.x()) / 2, (arrowP1.y() + arrowP2.y()) / 2);
 }
+
+ClassItemView* GeneralizationItemView::getSuperClass(){
+    return this->superClass;
+}
+
+ClassItemView* GeneralizationItemView::getSubClass(){
+    return this->subClass;
+}

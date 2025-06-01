@@ -131,11 +131,20 @@ void ClassItemView::addAssociation(AssociationItemView* association){
 void ClassItemView::deleteAssociation(AssociationItemView* association){
     this->associations.erase(std::remove(this->associations.begin(), this->associations.end(), association), this->associations.end());
 }
+
+std::vector<AssociationItemView *> ClassItemView::getAssociations(){
+    return this->associations;
+}
+
 void ClassItemView::addAssociationClass(AssociationClassItemView* associationClass){
     this->associationClasses.push_back(associationClass);
 }
 void ClassItemView::deleteAssociationClass(AssociationClassItemView* associationClass){
     this->associationClasses.erase(std::remove(this->associationClasses.begin(), this->associationClasses.end(), associationClass), this->associationClasses.end());
+}
+
+std::vector<AssociationClassItemView *> ClassItemView::getAssociationClasses(){
+    return this->associationClasses;
 }
 
 void ClassItemView::addGeneralization(GeneralizationItemView * generalization){
@@ -144,6 +153,10 @@ void ClassItemView::addGeneralization(GeneralizationItemView * generalization){
 
 void ClassItemView::deleteGeneralization(GeneralizationItemView * generalization){
     this->generalizations.erase(std::remove(this->generalizations.begin(), this->generalizations.end(), generalization), this->generalizations.end());
+}
+
+std::vector<GeneralizationItemView *> ClassItemView::getGeneralizations(){
+    return this->generalizations;
 }
 
 
