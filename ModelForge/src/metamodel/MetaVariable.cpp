@@ -18,6 +18,11 @@ void MetaVariable::setName(const std::string& name){
 const MetaType& MetaVariable::getType() const{
     return *type;
 }
+
+const std::shared_ptr<MetaType>& MetaVariable::getTypePtr() const{
+    return type;
+}
+
 void MetaVariable::setType(const std::shared_ptr<MetaType>& type){
     this->type = type;
 }

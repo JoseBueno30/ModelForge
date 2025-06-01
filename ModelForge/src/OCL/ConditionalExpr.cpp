@@ -6,4 +6,8 @@ ConditionalExpr::ConditionalExpr(const std::string& expression, const bool isCom
                                  const std::shared_ptr<Expr>& ifExpr, const std::shared_ptr<Expr>& thenExpr, const std::shared_ptr<Expr>& elseExpr)
     :Expr(expression, isComplex, type), ifExpr(ifExpr), thenExpr(thenExpr), elseExpr(elseExpr){}
 
+std::string ConditionalExpr::buildExprString() const {
+    return "if " + this->ifExpr->toString() + " then " + this->thenExpr->toString() + " else " + this->elseExpr->toString() + " endif";
+}
+
 }

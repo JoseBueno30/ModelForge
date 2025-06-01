@@ -7,15 +7,15 @@
 namespace MetaModel{
 
 
-MetaConstraint::MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::shared_ptr<Expr>& expression, const std::string& name, bool isExistential)
-    : metaClass(metaClass), expression(expression), name(name), isExistential(isExistential){
+MetaConstraint::MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::string& name, bool isExistential)
+    : metaClass(metaClass), name(name), isExistential(isExistential){
 
     this->addVariable("self");
 
 }
 
-MetaConstraint::MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::vector<std::string>& variableNames, const std::shared_ptr<Expr>& expression, const std::string& name, bool isExistential)
-    : metaClass(metaClass), expression(expression), name(name), isExistential(isExistential){
+MetaConstraint::MetaConstraint(const std::shared_ptr<MetaClass>& metaClass, const std::vector<std::string>& variableNames, const std::string& name, bool isExistential)
+    : metaClass(metaClass), name(name), isExistential(isExistential){
 
     for(const auto& variableName : variableNames){
         this->addVariable(variableName);

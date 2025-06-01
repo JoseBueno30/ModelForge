@@ -14,6 +14,7 @@ public:
 class ParenthesisExpr : public PrimaryExpr{
 protected:
     std::shared_ptr<Expr> expr;
+    std::string buildExprString() const override;
 public:
     ParenthesisExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr);
 };
@@ -28,8 +29,9 @@ public:
 class LiteralExpr : public PrimaryExpr{
 protected:
     std::any value;
+    std::string buildExprString() const override;
 public:
-    LiteralExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type);
+    LiteralExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::any& value);
 };
 
 class AllInstancesExpr : public PrimaryExpr{

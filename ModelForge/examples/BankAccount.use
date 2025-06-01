@@ -6,6 +6,8 @@ abstract class SuperAccount
 end
 
 class Bank
+attributes
+self : Integer
 end
 
 class Account < SuperAccount
@@ -47,4 +49,13 @@ end
 
 constraints
 context Account inv Positive_Balance:
-    balance + 1 > 1
+    balance > 0
+
+context Account inv Test:
+    (self.balance > 1) or (true and true) or self.type = AccountType::Savings
+
+context Account inv Test2:
+not 1
+
+context Account inv Test3:
+false and (true or true)

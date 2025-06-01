@@ -42,7 +42,8 @@ void MetaConstraintTest::init() {
     metaClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
     expression = std::make_shared<MetaModel::Expr>("OCLExpression");
 
-    metaConstraint = new MetaModel::MetaConstraint(metaClass, expression, "TestConstraint", false);
+    metaConstraint = new MetaModel::MetaConstraint(metaClass, "TestConstraint", false);
+    metaConstraint->setExpression(expression);
 }
 
 void MetaConstraintTest::metaConstraint_getName_returnsCorrectName(){

@@ -24,6 +24,7 @@ public:
     void setName(const std::string& name);
 
     const MetaType& getType() const;
+    const std::shared_ptr<MetaType>& getTypePtr() const;
     void setType(const std::shared_ptr<MetaType>& type);
 
     const Expr* getInitExpr() const;

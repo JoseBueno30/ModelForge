@@ -429,8 +429,16 @@ unaryExpression
       primaryExpression { ( "." | "->" ) propertyCall }
 */
 postfixExpression
-  : primaryExpression                               #PrimaryExpr
-  | primaryExpression ((DOT | ARROW) propertyCall)+   #PropertyCallExpr
+  : primaryExpression                  #PrimaryExpr
+  | primaryExpression propertyChain+   #PropertyCallExpr
+  ;
+
+/* ------------------------------------
+  propertyChain ::=
+    ( "." | "->" ) propertyCall
+ */
+propertyChain 
+  : (DOT | ARROW) propertyCall
   ;
 
 

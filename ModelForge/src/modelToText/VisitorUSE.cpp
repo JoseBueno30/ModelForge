@@ -131,12 +131,12 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
 
             for(const auto &preConditionPair : operation->getPreConditions()){
                 auto preCondition = preConditionPair.second;
-                metaClassString += "pre " + preCondition->getName() + ": " + preCondition->getExpression().getExpression();
+                metaClassString += "pre " + preCondition->getName() + ": " + preCondition->getExpression().toString();
             }
 
             for(const auto &postConditionPair : operation->getPostConditions()){
                 auto postCondition = postConditionPair.second;
-                metaClassString += "post " + postCondition->getName() + ": " + postCondition->getExpression().getExpression();
+                metaClassString += "post " + postCondition->getName() + ": " + postCondition->getExpression().toString();
             }
         }
     }
@@ -167,12 +167,12 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
                 }
 
 
-                globalConstraints += ": " + constraint->getClass().getName() + " inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n\n";
+                globalConstraints += ": " + constraint->getClass().getName() + " inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n\n";
             }else{
                 if(constraint->getIsExistential()){
-                    metaClassString += "existential inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n";
+                    metaClassString += "existential inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n";
                 }else{
-                    metaClassString += "inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n";
+                    metaClassString += "inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n";
                 }
             }
         }
@@ -358,12 +358,12 @@ void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
 
             for(const auto &preConditionPair : operation->getPreConditions()){
                 auto preCondition = preConditionPair.second;
-                metaAssociationClassString += "pre " + preCondition->getName() + ": " + preCondition->getExpression().getExpression();
+                metaAssociationClassString += "pre " + preCondition->getName() + ": " + preCondition->getExpression().toString();
             }
 
             for(const auto &postConditionPair : operation->getPostConditions()){
                 auto postCondition = postConditionPair.second;
-                metaAssociationClassString += "post " + postCondition->getName() + ": " + postCondition->getExpression().getExpression();
+                metaAssociationClassString += "post " + postCondition->getName() + ": " + postCondition->getExpression().toString();
             }
         }
     }
@@ -394,12 +394,12 @@ void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
                 }
 
 
-                globalConstraints += ": " + constraint->getClass().getName() + " inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n\n";
+                globalConstraints += ": " + constraint->getClass().getName() + " inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n\n";
             }else{
                 if(constraint->getIsExistential()){
-                    metaAssociationClassString += "existential inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n";
+                    metaAssociationClassString += "existential inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n";
                 }else{
-                    metaAssociationClassString += "inv " + constraint->getName() + ":\n\t" + constraint->getExpression().getExpression() + "\n";
+                    metaAssociationClassString += "inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n";
                 }
             }
         }

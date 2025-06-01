@@ -51,14 +51,15 @@ public:
     RuleLetExpression = 27, RuleLogicalExpression = 28, RuleParamList = 29, 
     RuleIdList = 30, RuleVariableDeclaration = 31, RuleEqualityExpression = 32, 
     RuleRelationalExpression = 33, RuleAdditiveExpression = 34, RuleFactorExpression = 35, 
-    RuleUnaryExpression = 36, RulePostfixExpression = 37, RulePrimaryExpression = 38, 
-    RuleObjectReference = 39, RulePropertyCall = 40, RuleQueryExpression = 41, 
-    RuleIterateExpression = 42, RuleOperationExpression = 43, RuleInStateExpression = 44, 
-    RuleTypeExpression = 45, RuleElemVarsDeclaration = 46, RuleVariableInitialization = 47, 
-    RuleConditionalExpression = 48, RuleLiteral = 49, RuleCollectionLiteral = 50, 
-    RuleCollectionItem = 51, RuleEmptyCollectionLiteral = 52, RuleUndefinedLiteral = 53, 
-    RuleTupleLiteral = 54, RuleTupleItem = 55, RuleType = 56, RuleTypeOnly = 57, 
-    RuleSimpleType = 58, RuleCollectionType = 59, RuleTupleType = 60, RuleTuplePart = 61
+    RuleUnaryExpression = 36, RulePostfixExpression = 37, RulePropertyChain = 38, 
+    RulePrimaryExpression = 39, RuleObjectReference = 40, RulePropertyCall = 41, 
+    RuleQueryExpression = 42, RuleIterateExpression = 43, RuleOperationExpression = 44, 
+    RuleInStateExpression = 45, RuleTypeExpression = 46, RuleElemVarsDeclaration = 47, 
+    RuleVariableInitialization = 48, RuleConditionalExpression = 49, RuleLiteral = 50, 
+    RuleCollectionLiteral = 51, RuleCollectionItem = 52, RuleEmptyCollectionLiteral = 53, 
+    RuleUndefinedLiteral = 54, RuleTupleLiteral = 55, RuleTupleItem = 56, 
+    RuleType = 57, RuleTypeOnly = 58, RuleSimpleType = 59, RuleCollectionType = 60, 
+    RuleTupleType = 61, RuleTuplePart = 62
   };
 
   explicit USEParser(antlr4::TokenStream *input);
@@ -116,6 +117,7 @@ public:
   class FactorExpressionContext;
   class UnaryExpressionContext;
   class PostfixExpressionContext;
+  class PropertyChainContext;
   class PrimaryExpressionContext;
   class ObjectReferenceContext;
   class PropertyCallContext;
@@ -1180,12 +1182,8 @@ public:
     PropertyCallExprContext(PostfixExpressionContext *ctx);
 
     PrimaryExpressionContext *primaryExpression();
-    std::vector<PropertyCallContext *> propertyCall();
-    PropertyCallContext* propertyCall(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> DOT();
-    antlr4::tree::TerminalNode* DOT(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> ARROW();
-    antlr4::tree::TerminalNode* ARROW(size_t i);
+    std::vector<PropertyChainContext *> propertyChain();
+    PropertyChainContext* propertyChain(size_t i);
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -1200,6 +1198,21 @@ public:
   };
 
   PostfixExpressionContext* postfixExpression();
+
+  class  PropertyChainContext : public antlr4::ParserRuleContext {
+  public:
+    PropertyChainContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    PropertyCallContext *propertyCall();
+    antlr4::tree::TerminalNode *DOT();
+    antlr4::tree::TerminalNode *ARROW();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  PropertyChainContext* propertyChain();
 
   class  PrimaryExpressionContext : public antlr4::ParserRuleContext {
   public:

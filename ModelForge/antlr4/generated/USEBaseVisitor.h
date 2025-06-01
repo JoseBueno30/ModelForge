@@ -285,6 +285,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitPropertyChain(USEParser::PropertyChainContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitLiteralExpr(USEParser::LiteralExprContext *ctx) override {
     return visitChildren(ctx);
   }

@@ -9,6 +9,7 @@ protected:
     std::shared_ptr<Expr> expr1;
     std::shared_ptr<Expr> expr2;
     std::string operation;
+    std::string buildExprString() const override;
 public:
     BinaryExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2);
 };
