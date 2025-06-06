@@ -132,4 +132,17 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
 };
 
+class RemoveMetaAssociationCommand : public QUndoCommand{
+public:
+    RemoveMetaAssociationCommand(AssociationItemView* associationItemView, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model);
+
+    void undo() override;
+    void redo() override;
+
+private:
+    AssociationItemView* associationItemView;
+    QGraphicsScene* scene;
+    std::shared_ptr<MetaModel::MetaModel> model;
+};
+
 #endif // COMMANDS_H

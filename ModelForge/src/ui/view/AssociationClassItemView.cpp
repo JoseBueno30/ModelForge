@@ -8,6 +8,9 @@ AssociationClassItemView::AssociationClassItemView(std::shared_ptr<MetaModel::Me
     class1->addAssociationClass(this);
     class2->addAssociation(this->associationItem);
     class2->addAssociationClass(this);
+
+    associationItem->setAssociationClassItem(this);
+
     this->classItem->addAssociationClass(this);
     this->classItem->setPos(center.x() - this->classItem->getDimensions().x() / 2, center.y() + 40);
     //this->setPos(this->boundingRect().center());

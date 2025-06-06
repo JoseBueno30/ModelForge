@@ -76,6 +76,9 @@ void ModelGraphicsView::keyPressEvent(QKeyEvent *event)
                 //qDebug() << "borrando clase";
                 RemoveMetaClassCommand* removeClassAction = new RemoveMetaClassCommand(classItemView, this->scene(), this->model);
                 MainWindow::undoStack->push(removeClassAction);
+            }else if(auto associationItemView = qgraphicsitem_cast<AssociationItemView*>(item)){
+                RemoveMetaAssociationCommand* removeAssociationAction = new RemoveMetaAssociationCommand(associationItemView, this->scene(), this->model);
+                MainWindow::undoStack->push(removeAssociationAction);
             }
             //delete item;  // ¡Importante! Elimina el objeto de memoria
         }

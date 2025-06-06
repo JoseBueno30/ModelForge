@@ -258,6 +258,45 @@ void RemoveMetaClassCommand::redo(){
     this->scene->update();
 }
 
+RemoveMetaAssociationCommand::RemoveMetaAssociationCommand(AssociationItemView* associationItemView, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model)
+    : associationItemView(associationItemView), scene(scene), model(model){}
 
+void RemoveMetaAssociationCommand::undo(){
+    if(auto associationClassItem = this->associationItemView->getAssociationClassItem()){
+        scene->addItem(associationClassItem);
+        scene->addItem(associationClassItem->getAssociationClassItemView());
+        this->associationItemView->getClass1()->addAssociationClass(associationClassItem);
+        this->associationItemView->getClass2()->addAssociationClass(associationClassItem);
+
+        model->addAssociationClass(associationClassItem->getAssociationClassModel());
+    }else{
+        model->addAssociation(this->associationItemView->getAssociationModel());
+    }
+
+    scene->addItem(this->associationItemView);
+    this->associationItemView->getClass1()->addAssociation(this->associationItemView);
+    this->associationItemView->getClass2()->addAssociation(this->associationItemView);
+
+    scene->update();
+}
+
+void RemoveMetaAssociationCommand::redo(){
+    if(auto associationClassItem = this->associationItemView->getAssociationClassItem()){
+        scene->removeItem(associationClassItem);
+        scene->removeItem(associationClassItem->getAssociationClassItemView());
+
+        this->associationItemView->getClass1()->deleteAssociationClass(associationClassItem);
+        this->associationItemView->getClass2()->deleteAssociationClass(associationClassItem);
+
+        model->removeAssociationClass(associationClassItem->getAssociationClassModel()->getName());
+    }else{
+        model->removeAssociation(this->associationItemView->getAssociationModel()->getName());
+    }
+
+    scene->removeItem(this->associationItemView);
+    this->associationItemView->getClass1()->deleteAssociation(this->associationItemView);
+    this->associationItemView->getClass2()->deleteAssociation(this->associationItemView);
+    scene->update();
+}
 
 

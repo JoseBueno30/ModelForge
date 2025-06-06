@@ -26,6 +26,7 @@ AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> 
     applyOffsetToSharedAssociations();
 
     updatePosition();
+    setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 ClassesOrientation AssociationItemView::checkOrientation(QRectF& class1Rect, QRectF& class2Rect){
@@ -97,8 +98,7 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
     Q_UNUSED(widget)
 
     if (!class1 || !class2) return;
-
-    painter->setPen(QPen(QColor(ThemeManager::getAssociationColor()), 1, Qt::SolidLine,Qt::FlatCap));
+    painter->setPen(QPen(lineColor, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p1, this->p2);
     //qDebug() << line;
     // Arrow metrics:
@@ -143,7 +143,7 @@ QPointF AssociationItemView::drawDiamond(QLineF &line, QPainter *painter, bool f
     QPolygonF diamondHead;
     diamondHead << head << diamondP1 << diamondP3 << diamondP2;
 
-    if(filled) painter->setBrush(Qt::white);
+    if(filled) painter->setBrush(lineColor);
 
     painter->drawPolygon(diamondHead);
     return diamondP3;
@@ -169,6 +169,13 @@ void AssociationItemView::setClass2(ClassItemView* newClass){
     this->class2 = newClass;
 }
 
+void AssociationItemView::setAssociationClassItem(AssociationClassItemView* associationClass){
+    this->associationClass = associationClass;
+}
+AssociationClassItemView* AssociationItemView::getAssociationClassItem() const{
+    return this->associationClass;
+}
+
 shared_ptr<MetaModel::MetaAssociation> AssociationItemView::getAssociationModel(){
     return this->model;
 }
@@ -178,6 +185,12 @@ void AssociationItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     if (shape().contains(event->pos())) {
         ModelGraphicsScene* scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
         scene->emitEditAssociationSignal(this);
+    }
+}
+
+void AssociationItemView::mousePressEvent(QGraphicsSceneMouseEvent *event){
+    if (shape().contains(event->pos())) {
+        setSelected(true);
     }
 }
 
