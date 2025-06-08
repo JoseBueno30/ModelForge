@@ -193,4 +193,3 @@ void AssociationItemView::mousePressEvent(QGraphicsSceneMouseEvent *event){
         setSelected(true);
     }
 }
-

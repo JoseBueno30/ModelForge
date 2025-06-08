@@ -299,4 +299,25 @@ void RemoveMetaAssociationCommand::redo(){
     scene->update();
 }
 
+RemoveMetaEnumCommand::RemoveMetaEnumCommand(EnumItemView* enumItemView, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model)
+    : enumItemView(enumItemView), scene(scene), model(model){}
+
+void RemoveMetaEnumCommand::undo(){
+    scene->addItem(enumItemView);
+    model->addEnum(enumItemView->getMetaEnumModel());
+
+    scene->update();
+}
+
+void RemoveMetaEnumCommand::redo(){
+    qDebug() << "enum";
+    scene->removeItem(enumItemView);
+    qDebug() << "enum";
+    model->removeEnum(enumItemView->getMetaEnumModel()->getName());
+    qDebug() << "enum";
+    scene->update();
+}
+
+
+
 

@@ -10,6 +10,9 @@ class AssociationClassItemView : public BoxItemView{
 public:
     AssociationClassItemView(std::shared_ptr<MetaModel::MetaAssociationClass> model, ClassItemView* class1, ClassItemView* class2);
 
+    enum { Type = UserType + 4 };
+    int type() const override { return Type; }
+
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     void addItemsToScene();

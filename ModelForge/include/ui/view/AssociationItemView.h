@@ -16,6 +16,9 @@ public:
                         ClassItemView* class1,
                         ClassItemView* class2);
 
+    enum { Type = UserType + 3 };
+    int type() const override { return Type; }
+
     QRectF associationNameRect();
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
@@ -41,6 +44,8 @@ public:
 
     void setAssociationClassItem(AssociationClassItemView* associationClass);
     AssociationClassItemView* getAssociationClassItem() const;
+
+    virtual ~AssociationItemView() = default;
 
 protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;

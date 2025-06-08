@@ -17,12 +17,17 @@ public:
     EnumItemView(shared_ptr<MetaModel::MetaEnum> model);
     EnumItemView(shared_ptr<MetaModel::MetaEnum> model, int x, int y, int width, int height);
 
+    enum { Type = UserType + 2 };
+    int type() const override { return Type; }
+
     QRectF enumNameRect();
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
     void calculateMinimumSize();
 
-    ~EnumItemView();
+    std::shared_ptr<MetaModel::MetaEnum> getMetaEnumModel();
+
+    virtual ~EnumItemView() = default;
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event) override;

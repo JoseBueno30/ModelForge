@@ -93,5 +93,6 @@ void EnumItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event){
     editDialog->exec();
 }
 
-
-EnumItemView::~EnumItemView(){}
+std::shared_ptr<MetaModel::MetaEnum> EnumItemView::getMetaEnumModel(){
+    return this->model;
+}

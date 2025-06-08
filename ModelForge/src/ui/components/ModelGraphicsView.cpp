@@ -71,16 +71,22 @@ void ModelGraphicsView::keyPressEvent(QKeyEvent *event)
 {
     if (event->key() == Qt::Key_Delete) {
         QList<QGraphicsItem *> selectedItems = scene()->selectedItems();
-        for (QGraphicsItem *item : selectedItems) {
-            if(auto classItemView = qgraphicsitem_cast<ClassItemView*>(item)){
-                //qDebug() << "borrando clase";
-                RemoveMetaClassCommand* removeClassAction = new RemoveMetaClassCommand(classItemView, this->scene(), this->model);
-                MainWindow::undoStack->push(removeClassAction);
-            }else if(auto associationItemView = qgraphicsitem_cast<AssociationItemView*>(item)){
-                RemoveMetaAssociationCommand* removeAssociationAction = new RemoveMetaAssociationCommand(associationItemView, this->scene(), this->model);
-                MainWindow::undoStack->push(removeAssociationAction);
+        try{
+            for (QGraphicsItem *item : selectedItems) {
+                if(auto classItemView = qgraphicsitem_cast<ClassItemView*>(item)){
+                    RemoveMetaClassCommand* removeClassCommand = new RemoveMetaClassCommand(classItemView, this->scene(), this->model);
+                    MainWindow::undoStack->push(removeClassCommand);
+                }else if(auto enumItemView = qgraphicsitem_cast<EnumItemView*>(item)){
+                    RemoveMetaEnumCommand* removeMetaEnumCommand = new RemoveMetaEnumCommand(enumItemView, this->scene(), this->model);
+                    MainWindow::undoStack->push(removeMetaEnumCommand);
+                }
+                else if(auto associationItemView = qgraphicsitem_cast<AssociationItemView*>(item)){
+                    RemoveMetaAssociationCommand* removeAssociationCommand = new RemoveMetaAssociationCommand(associationItemView, this->scene(), this->model);
+                    MainWindow::undoStack->push(removeAssociationCommand);
+                }
             }
-            //delete item;  // ¡Importante! Elimina el objeto de memoria
+        }catch(int err){
+            qDebug() <<"code " << err;
         }
     } else {
         QGraphicsView::keyPressEvent(event); // Propaga el evento si no es Delete

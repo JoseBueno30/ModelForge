@@ -145,4 +145,17 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
 };
 
+class RemoveMetaEnumCommand : public QUndoCommand{
+public:
+    RemoveMetaEnumCommand(EnumItemView* enumItemView, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model);
+
+    void undo() override;
+    void redo() override;
+
+private:
+    EnumItemView* enumItemView;
+    QGraphicsScene* scene;
+    std::shared_ptr<MetaModel::MetaModel> model;
+};
+
 #endif // COMMANDS_H
