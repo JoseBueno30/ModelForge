@@ -158,4 +158,17 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
 };
 
+class RemoveMetaGeneralizationCommand : public QUndoCommand{
+public:
+    RemoveMetaGeneralizationCommand(GeneralizationItemView* generalizationItemView, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model);
+
+    void undo() override;
+    void redo() override;
+
+private:
+    GeneralizationItemView* generalizationItemView;
+    QGraphicsScene* scene;
+    std::shared_ptr<MetaModel::MetaModel> model;
+};
+
 #endif // COMMANDS_H

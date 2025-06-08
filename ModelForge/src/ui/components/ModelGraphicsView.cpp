@@ -2,6 +2,8 @@
 
 #include <ui/view/ClassItemView.h>
 
+#include <ui/view/GeneralizationItemView.h>
+
 #include <utils/Commands.h>
 
 #include <ui/dialogs/MainWindow.h>
@@ -83,6 +85,10 @@ void ModelGraphicsView::keyPressEvent(QKeyEvent *event)
                 else if(auto associationItemView = qgraphicsitem_cast<AssociationItemView*>(item)){
                     RemoveMetaAssociationCommand* removeAssociationCommand = new RemoveMetaAssociationCommand(associationItemView, this->scene(), this->model);
                     MainWindow::undoStack->push(removeAssociationCommand);
+                }
+                else if(auto generalizationItemView = qgraphicsitem_cast<GeneralizationItemView*>(item)){
+                    RemoveMetaGeneralizationCommand* removeGeneralizationCommand = new RemoveMetaGeneralizationCommand(generalizationItemView, this->scene(), nullptr);
+                    MainWindow::undoStack->push(removeGeneralizationCommand);
                 }
             }
         }catch(int err){

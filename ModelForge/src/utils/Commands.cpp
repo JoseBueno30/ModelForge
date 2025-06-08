@@ -318,6 +318,39 @@ void RemoveMetaEnumCommand::redo(){
     scene->update();
 }
 
+RemoveMetaGeneralizationCommand::RemoveMetaGeneralizationCommand(GeneralizationItemView* generalizationItemView, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model)
+    : generalizationItemView(generalizationItemView), scene(scene), model(model){}
+
+void RemoveMetaGeneralizationCommand::undo(){
+    scene->addItem(generalizationItemView);
+
+    auto superClass = generalizationItemView->getSuperClass();
+    auto subClass = generalizationItemView->getSubClass();
+
+    subClass->addGeneralization(generalizationItemView);
+    superClass->addGeneralization(generalizationItemView);
+
+    superClass->getClassModel()->addChildrenClass(subClass->getClassModel());
+    subClass->getClassModel()->addSuperClass(superClass->getClassModel());
+
+    scene->update();
+}
+
+void RemoveMetaGeneralizationCommand::redo(){
+    scene->removeItem(generalizationItemView);
+
+    auto superClass = generalizationItemView->getSuperClass();
+    auto subClass = generalizationItemView->getSubClass();
+
+    subClass->deleteGeneralization(generalizationItemView);
+    superClass->deleteGeneralization(generalizationItemView);
+
+    superClass->getClassModel()->removeChildrenClass(subClass->getClassModel()->getName());
+    subClass->getClassModel()->removeSuperClass(superClass->getClassModel()->getName());
+
+    this->scene->update();
+}
+
 
 
 

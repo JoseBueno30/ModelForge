@@ -8,6 +8,8 @@ GeneralizationItemView::GeneralizationItemView(ClassItemView* superClass, ClassI
 
     setZValue(-1);
     updatePosition();
+
+    setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
 void GeneralizationItemView::updatePosition(){
@@ -62,7 +64,7 @@ void GeneralizationItemView::paint(QPainter *painter, const QStyleOptionGraphics
 
     if (!superClass || !subClass) return;
 
-    painter->setPen(QPen(QColor(ThemeManager::getAssociationColor()), 1, Qt::SolidLine,Qt::FlatCap));
+    painter->setPen(QPen(lineColor, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p2, this->p1);
     //qDebug() << line;
     // Arrow metrics:
@@ -94,10 +96,28 @@ QPointF GeneralizationItemView::drawArrowHead(QLineF &line, QPainter *painter){
     return QPointF((arrowP1.x() + arrowP2.x()) / 2, (arrowP1.y() + arrowP2.y()) / 2);
 }
 
+QPainterPath GeneralizationItemView::shape() const{
+    QPainterPath path;
+    QPen pen(Qt::black, 2); // ancho real del trazo que se dibuja
+    path.moveTo(this->getP1());
+    path.lineTo(this->getP2());
+
+    QPainterPathStroker stroker;
+    stroker.setWidth(pen.widthF() + 6); // área de "tolerancia" al clic
+    return stroker.createStroke(path);
+}
+
+
 ClassItemView* GeneralizationItemView::getSuperClass(){
     return this->superClass;
 }
 
 ClassItemView* GeneralizationItemView::getSubClass(){
     return this->subClass;
+}
+
+void GeneralizationItemView::mousePressEvent(QGraphicsSceneMouseEvent *event){
+    if (shape().contains(event->pos())) {
+        setSelected(true);
+    }
 }
