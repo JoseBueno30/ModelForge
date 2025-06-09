@@ -52,13 +52,13 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override{
-        if (change == QGraphicsItem::ItemSelectedChange) {
-            if(value.toBool()){
-                lineColor = Qt::blue;
-            }else{
-                lineColor = ThemeManager::getAssociationColor();
-            }
-        }
+        // if (change == QGraphicsItem::ItemSelectedChange) {
+        //     if(value.toBool()){
+        //         lineColor = Qt::blue;
+        //     }else{
+        //         lineColor = ThemeManager::getAssociationColor();
+        //     }
+        // }
         this->update();
         return QGraphicsItem::itemChange(change, value);
     }

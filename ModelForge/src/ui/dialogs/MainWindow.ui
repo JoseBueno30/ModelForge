@@ -130,7 +130,7 @@
      <x>0</x>
      <y>0</y>
      <width>1399</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -181,6 +181,9 @@
    </property>
   </action>
   <action name="actionClose_Model">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::EditClear"/>
    </property>
@@ -241,6 +244,9 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::DocumentSave"/>
    </property>

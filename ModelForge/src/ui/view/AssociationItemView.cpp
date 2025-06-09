@@ -98,6 +98,9 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
     Q_UNUSED(widget)
 
     if (!class1 || !class2) return;
+
+    lineColor = this->isSelected() ? QColor(Qt::blue) : ThemeManager::getAssociationColor();
+
     painter->setPen(QPen(lineColor, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p1, this->p2);
     //qDebug() << line;

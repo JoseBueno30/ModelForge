@@ -306,6 +306,9 @@ void MainWindow::openModelFile(){
         ModelToText::VisitorUSE visitorUSE((directory + "/TEST.use").toStdString());
 
         model->accept(visitorUSE);
+
+        ui->actionClose_Model->setEnabled(true);
+        ui->actionSave->setEnabled(true);
     }catch(std::runtime_error error){
         ConsoleHandler::appendErrorLog(error.what());
     }

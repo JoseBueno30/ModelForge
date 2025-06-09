@@ -64,6 +64,8 @@ void GeneralizationItemView::paint(QPainter *painter, const QStyleOptionGraphics
 
     if (!superClass || !subClass) return;
 
+    lineColor = this->isSelected() ? QColor(Qt::blue) : ThemeManager::getAssociationColor();
+
     painter->setPen(QPen(lineColor, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p2, this->p1);
     //qDebug() << line;
