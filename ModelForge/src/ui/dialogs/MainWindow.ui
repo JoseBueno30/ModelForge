@@ -137,6 +137,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew_Model"/>
     <addaction name="actionOpen_Model"/>
     <addaction name="actionClose_Model"/>
     <addaction name="actionSave"/>
@@ -266,6 +267,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+J</string>
+   </property>
+  </action>
+  <action name="actionNew_Model">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentNew"/>
+   </property>
+   <property name="text">
+    <string>New Model</string>
    </property>
   </action>
  </widget>

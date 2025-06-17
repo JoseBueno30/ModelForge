@@ -43,6 +43,10 @@ public Q_SLOTS:
     void openEditAssociationDialog(AssociationItemView* association);
     void openNewEnumDialog();
 
+    void saveModel();
+
+    void newModel();
+
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
 
 
@@ -54,6 +58,8 @@ private:
     ConsoleHandler* consoleHandler;
     std::map<std::string, QGraphicsItem*> modelItemViewElementsMap;
     ModelGraphicsScene *scene;
+
+    QString path;
 
     QAction *undoAction = nullptr;
     QAction *redoAction = nullptr;

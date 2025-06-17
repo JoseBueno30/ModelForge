@@ -195,7 +195,15 @@ void RemoveMetaClassCommand::undo(){
     }
 
     for(auto generalizationItemView : this->classItemView->getGeneralizations()){
-        qDebug() << "a";
+        auto superClass = generalizationItemView->getSuperClass();
+        auto subClass = generalizationItemView->getSubClass();
+
+        if(this->classItemView == superClass){
+            subClass->getClassModel()->addSuperClass(superClass->getClassModel());
+        }else{
+            superClass->getClassModel()->addChildrenClass(subClass->getClassModel());
+        }
+
         this->scene->addItem(generalizationItemView);
     }
     qDebug() << "a";
@@ -241,11 +249,14 @@ void RemoveMetaClassCommand::redo(){
     }
 
     for(auto generalizationItemView : this->classItemView->getGeneralizations()){
-        /*if(this->classItemView == generalizationItemView->getSuperClass()){
-            generalizationItemView->getSubClass()->deleteGeneralization(generalizationItemView);
+        auto superClass = generalizationItemView->getSuperClass();
+        auto subClass = generalizationItemView->getSubClass();
+
+        if(this->classItemView == superClass){
+            subClass->getClassModel()->removeSuperClass(superClass->getClassModel()->getName());
         }else{
-            generalizationItemView->getSuperClass()->deleteGeneralization(generalizationItemView);
-        }*/
+            superClass->getClassModel()->removeChildrenClass(subClass->getClassModel()->getName());
+        }
         this->scene->removeItem(generalizationItemView);
     }
     qDebug() << "cc";

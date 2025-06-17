@@ -19,6 +19,7 @@
 #include <ui/dialogs/AssociationEditDialog.h>
 #include <ui/dialogs/ClassEditDialog.h>
 #include <metamodel/MetaAssociation.h>
+#include <QMessageBox>
 
 QUndoStack* MainWindow::undoStack = new QUndoStack();
 
@@ -84,6 +85,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->addClassButton, &QPushButton::clicked, this, &MainWindow::openNewClassDialog);
     connect(ui->addAssociationButton, &QPushButton::clicked, this, &MainWindow::openNewAssociationDialog);
     connect(ui->addEnumButton, &QPushButton::clicked, this, &MainWindow::openNewEnumDialog);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveModel);
+    connect(ui->actionNew_Model, &QAction::triggered, this, &MainWindow::newModel);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
     scene = new ModelGraphicsScene();
@@ -271,7 +274,7 @@ void MainWindow::openNewEnumDialog(){
 
 void MainWindow::openModelFile(){
     try{
-        QString path = QFileDialog::getOpenFileName(this, "Select file", "", "USE files (*.use);;All files (*.*)");
+        path = QFileDialog::getOpenFileName(this, "Select file", "", "USE files (*.use);;All files (*.*)");
         if (path.isEmpty()) {
             return;
         }
@@ -301,17 +304,57 @@ void MainWindow::openModelFile(){
         this->setupModelGraphicsView(model);
         ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
 
-        QFileInfo fileInfo(path);
-        QString directory = fileInfo.absolutePath();
-        ModelToText::VisitorUSE visitorUSE((directory + "/TEST.use").toStdString());
-
-        model->accept(visitorUSE);
-
         ui->actionClose_Model->setEnabled(true);
         ui->actionSave->setEnabled(true);
     }catch(std::runtime_error error){
         ConsoleHandler::appendErrorLog(error.what());
     }
+}
+
+void MainWindow::saveModel(){
+    if(path == nullptr){
+        path = QFileDialog::getSaveFileName(
+            this,                         // QWidget padre
+            "Save file",              // Título del diálogo
+            "",                             // Ruta inicial (puedes poner una por defecto)
+            "USE files (*.use)" // Filtros
+            );
+
+        if (QFile::exists(path)) {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(nullptr, "Archivo ya existe",
+                                          "¿Deseas sobrescribir el archivo?",
+                                          QMessageBox::Yes | QMessageBox::No);
+
+            if (reply != QMessageBox::Yes) {
+                return; // No guardamos nada
+            }
+
+        }else{
+            QFile file(path);
+            file.open(QIODevice::WriteOnly);
+            file.close();
+        }
+    }
+
+    QFileInfo fileInfo(path);
+    qDebug() << "Archivo a guardar: " << path;
+    // QString directory = fileInfo.absolutePath();
+    ModelToText::VisitorUSE visitorUSE(path.toStdString());
+
+    model->accept(visitorUSE);
+
+    ConsoleHandler::appendSuccessfulLog("The file was succesfully saved.");
+}
+
+void MainWindow::newModel(){
+    model = std::make_shared<MetaModel::MetaModel>("NewModel");
+    this->setupModelGraphicsView(model);
+
+    ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
+
+    ui->actionClose_Model->setEnabled(true);
+    ui->actionSave->setEnabled(true);
 }
 
 void MainWindow::itemMoved(QGraphicsItem * movedItem, const QPointF& oldPos)

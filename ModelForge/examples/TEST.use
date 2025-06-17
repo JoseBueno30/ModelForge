@@ -2,10 +2,7 @@ model BankAccount
 
 enum AccountType {Investments, Savings}
 
-abstract class SuperAccount
-end
-
-class Account < SuperAccount
+class Account
 attributes
 balance : Integer
 test : Person
