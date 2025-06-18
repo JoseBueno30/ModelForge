@@ -10,6 +10,10 @@
 
 class BoxItemView : public QGraphicsItem{
 public:
+
+    enum { Type = UserType + 6 };
+    int type() const override { return Type; }
+
     virtual void setWidth(qreal width){this->width=width;};
     virtual void setHeight(qreal height){this->height=height;};
     virtual void setDimensions(qreal width, qreal height){setWidth(width);setHeight(height);};

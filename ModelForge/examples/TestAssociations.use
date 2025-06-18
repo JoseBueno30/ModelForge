@@ -6,6 +6,9 @@ end
 class class2
 end
 
+class class2Copy
+end
+
 association a1 between
 class1 [0..1] role role1
 class2 [0..1] role role2
@@ -20,3 +23,4 @@ association a3 between
 class1 [0..1] role role1
 class2 [0..1] role role2
 end
+

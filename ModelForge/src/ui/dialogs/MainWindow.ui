@@ -259,6 +259,9 @@
    </property>
   </action>
   <action name="actionExport_as">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::DocumentPrint"/>
    </property>

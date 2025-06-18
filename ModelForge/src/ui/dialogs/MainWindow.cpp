@@ -87,9 +87,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->addEnumButton, &QPushButton::clicked, this, &MainWindow::openNewEnumDialog);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveModel);
     connect(ui->actionNew_Model, &QAction::triggered, this, &MainWindow::newModel);
+    connect(ui->actionClose_Model, &QAction::triggered, this, &MainWindow::closeModel);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
+
     scene = new ModelGraphicsScene();
+    auto clipboard = new ItemViewClipboard(scene, model);
+    scene->setClipboard(clipboard);
+
+    connect(ui->actionCopy, &QAction::triggered, scene, &ModelGraphicsScene::copyItemView);
+    connect(ui->actionCut, &QAction::triggered, scene, &ModelGraphicsScene::cutItemView);
+    connect(ui->actionPaste, &QAction::triggered, scene, &ModelGraphicsScene::pasteItemView);
+
     bool succes = connect(scene, &ModelGraphicsScene::itemMoved, this, &MainWindow::itemMoved);
     connect(scene, &ModelGraphicsScene::editAssociation, this, &MainWindow::openEditAssociationDialog);
     qDebug() << "Connect = " << succes;
@@ -97,7 +106,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ThemeManager::getInitialTheme();
     openColorTheme(false);
-
 
     ConsoleHandler::setConsole(this->ui->consoleTextEdit);
 }
@@ -273,6 +281,8 @@ void MainWindow::openNewEnumDialog(){
 
 
 void MainWindow::openModelFile(){
+    closeModel();
+
     try{
         path = QFileDialog::getOpenFileName(this, "Select file", "", "USE files (*.use);;All files (*.*)");
         if (path.isEmpty()) {
@@ -348,6 +358,8 @@ void MainWindow::saveModel(){
 }
 
 void MainWindow::newModel(){
+    closeModel();
+
     model = std::make_shared<MetaModel::MetaModel>("NewModel");
     this->setupModelGraphicsView(model);
 
@@ -355,6 +367,15 @@ void MainWindow::newModel(){
 
     ui->actionClose_Model->setEnabled(true);
     ui->actionSave->setEnabled(true);
+}
+
+void MainWindow::closeModel(){
+    this->model = nullptr;
+    this->scene->clear();
+    this->scene->update();
+
+    ui->actionClose_Model->setEnabled(false);
+    ui->actionSave->setEnabled(false);
 }
 
 void MainWindow::itemMoved(QGraphicsItem * movedItem, const QPointF& oldPos)

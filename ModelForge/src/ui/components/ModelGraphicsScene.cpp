@@ -23,3 +23,34 @@ void ModelGraphicsScene::emitMoveSignal(QGraphicsItem * item,const QPointF& pos)
 void ModelGraphicsScene::emitEditAssociationSignal(AssociationItemView * association){
     Q_EMIT editAssociation(association);
 }
+
+void ModelGraphicsScene::copyItemView(){
+    for(auto item : this->selectedItems()){
+        if(auto boxItem = qgraphicsitem_cast<ClassItemView*>(item)){
+            qDebug() << "copiando";
+            clipboard->copy(boxItem);
+        }
+    }
+}
+
+void ModelGraphicsScene::cutItemView(){
+    for(auto item : this->selectedItems()){
+        if(auto boxItem = qgraphicsitem_cast<ClassItemView*>(item)){
+            qDebug() << "cortando";
+            clipboard->cut(boxItem);
+        }
+    }
+}
+
+void ModelGraphicsScene::pasteItemView(){
+    qDebug() << "pegando";
+    clipboard->paste();
+}
+
+void ModelGraphicsScene::setClipboard(ItemViewClipboard* clipboard){
+    this->clipboard = clipboard;
+}
+
+void ModelGraphicsScene::setClipboardModel(std::shared_ptr<MetaModel::MetaModel> model){
+    this->clipboard->setModel(model);
+}

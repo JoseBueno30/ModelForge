@@ -1,8 +1,28 @@
 model BankAccount
 
-enum AccountType {Savings, Investments}
+enum AccountType {Investments, Savings}
 
 abstract class SuperAccount
+end
+
+class Account < SuperAccount
+attributes
+balance : Integer
+test : Person
+type : AccountType
+operations
+transfer(variable : Integer) : Integer begin
+        self.balance := self.balance + 1;
+    end
+constraints
+inv Positive_Balance:
+	self.balance > 0
+inv Test:
+	(self.balance > 1) or (true and true) or self.type = AccountType::Savings
+inv Test2:
+	not 1
+inv Test3:
+	false and (true or true)
 end
 
 class Bank
@@ -10,26 +30,9 @@ attributes
 self : Integer
 end
 
-class Account < SuperAccount
-attributes
-type : AccountType
-balance : Integer
-test: Person
-operations
-transfer(variable : Integer) : Integer
-    begin
-        self.balance := self.balance + 1;
-    end
-end
-
 class Person
 attributes
 age : Integer
-end
-
-associationclass Employees between
-Bank [1..*] role bank
-Person [*] role employees
 end
 
 composition AccountOfBanks between
@@ -39,7 +42,7 @@ end
 
 association Ownership between
 Account [*] role accounts
-Person [1,3..4] role owner
+Person [1, 3..4] role owner
 end
 
 association Use between
@@ -47,15 +50,8 @@ Account [*] role usedAccounts
 Person [*] role user
 end
 
-constraints
-context Account inv Positive_Balance:
-    balance > 0
+associationclass Employees between
+Bank [1..*] role bank
+Person [*] role employees
+end
 
-context Account inv Test:
-    (self.balance > 1) or (true and true) or self.type = AccountType::Savings
-
-context Account inv Test2:
-not 1
-
-context Account inv Test3:
-false and (true or true)

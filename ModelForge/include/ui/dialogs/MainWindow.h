@@ -47,6 +47,8 @@ public Q_SLOTS:
 
     void newModel();
 
+    void closeModel();
+
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
 
 

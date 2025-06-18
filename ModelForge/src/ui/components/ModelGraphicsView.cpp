@@ -28,6 +28,10 @@ ModelGraphicsView::ModelGraphicsView(QWidget *parent, std::shared_ptr<MetaModel:
 }
 
 void ModelGraphicsView::setModel(std::shared_ptr<MetaModel::MetaModel> model){
+    auto scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
+    qDebug() << "Castea la escena";
+    scene->setClipboardModel(model);
+    qDebug() << "setea el model en clipboard";
     this->model = model;
 }
 
