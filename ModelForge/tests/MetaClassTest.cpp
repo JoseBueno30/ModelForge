@@ -454,7 +454,7 @@ void MetaClassTest::metaClass_removeOperation_nonExistingKey_doesNothing(){
 
 void MetaClassTest::metaClass_getConstraints_returnsCorrectMap(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
-    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression", false, MetaModel::Boolean::instance());
     auto constraint = std::make_shared<MetaModel::MetaConstraint>(testClass, "TestConstraint", false);
     constraint->setExpression(expression);
 
@@ -468,7 +468,7 @@ void MetaClassTest::metaClass_getConstraints_returnsCorrectMap(){
 
 void MetaClassTest::metaClass_getConstraint_existingConstraint_returnsCorrectConstraint(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
-    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression", false, MetaModel::Boolean::instance());
     auto constraint = std::make_shared<MetaModel::MetaConstraint>(testClass, "TestConstraint", false);
     constraint->setExpression(expression);
 
@@ -485,7 +485,7 @@ void MetaClassTest::metaClass_addConstraint_validConstraint_updatesConstraintsMa
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
     int originalConstraintsSize = testClass->getConstraints().size();
 
-    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression", false, MetaModel::Boolean::instance());
     auto constraint = std::make_shared<MetaModel::MetaConstraint>(testClass, "TestConstraint", false);
     constraint->setExpression(expression);
 
@@ -502,7 +502,7 @@ void MetaClassTest::metaClass_addConstraint_nullConstraint_throwsInvalidArgument
 
 void MetaClassTest::metaClass_addConstraint_repeatedConstraint_throwsInvalidArgumentException(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
-    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression", false, MetaModel::Boolean::instance());
     auto constraint = std::make_shared<MetaModel::MetaConstraint>(testClass, "TestConstraint", false);
     constraint->setExpression(expression);
 
@@ -513,7 +513,7 @@ void MetaClassTest::metaClass_addConstraint_repeatedConstraint_throwsInvalidArgu
 
 void MetaClassTest::metaClass_removeConstraint_existingKey_updatesConstraintsMap(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
-    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression", false, MetaModel::Boolean::instance());
     auto constraint = std::make_shared<MetaModel::MetaConstraint>(testClass, "TestConstraint", false);
     constraint->setExpression(expression);
 
@@ -530,7 +530,7 @@ void MetaClassTest::metaClass_removeConstraint_existingKey_updatesConstraintsMap
 
 void MetaClassTest::metaClass_removeConstraint_nonExistingKey_doesNothing(){
     auto testClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
-    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression");
+    auto expression = std::make_shared<MetaModel::Expr>("TestOCLExpression", false, MetaModel::Boolean::instance());
     auto constraint = std::make_shared<MetaModel::MetaConstraint>(testClass, "TestConstraint", false);
     constraint->setExpression(expression);
 

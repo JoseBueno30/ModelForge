@@ -25,7 +25,8 @@ private slots:
     void metaConstraint_setIsExistential_updatesIsExistential();
 
     void metaConstraint_getExpression_returnsCorrectExpression();
-    void metaConstraint_setExpression_updatesExpression();
+    void metaConstraint_setExpression_notBooleanExpression_throwsInvalidArgumentException();
+    void metaConstraint_setExpression_booleanExpression_updatesExpression();
 
     void metaConstraint_getVariables_returnsCorrectMap();
     void metaConstraint_getVariable_existingVariable_returnsCorrectVariable();
@@ -40,7 +41,7 @@ private slots:
 
 void MetaConstraintTest::init() {
     metaClass = std::make_shared<MetaModel::MetaClass>("TestClass", false);
-    expression = std::make_shared<MetaModel::Expr>("OCLExpression");
+    expression = std::make_shared<MetaModel::Expr>("OCLExpression", false, MetaModel::Boolean::instance());
 
     metaConstraint = new MetaModel::MetaConstraint(metaClass, "TestConstraint", false);
     metaConstraint->setExpression(expression);
@@ -86,8 +87,14 @@ void MetaConstraintTest::metaConstraint_getExpression_returnsCorrectExpression()
     QCOMPARE(metaConstraint->getExpression().getExpression(), "OCLExpression");
 }
 
-void MetaConstraintTest::metaConstraint_setExpression_updatesExpression(){
-    auto newExpression = std::make_shared<MetaModel::Expr>("NewOCLExpression");
+void MetaConstraintTest::metaConstraint_setExpression_notBooleanExpression_throwsInvalidArgumentException(){
+    auto newExpression = std::make_shared<MetaModel::Expr>("NewOCLExpression", false, MetaModel::Integer::instance());
+
+    QVERIFY_THROWS_EXCEPTION(std::invalid_argument, metaConstraint->setExpression(newExpression););
+}
+
+void MetaConstraintTest::metaConstraint_setExpression_booleanExpression_updatesExpression(){
+    auto newExpression = std::make_shared<MetaModel::Expr>("NewOCLExpression", false, MetaModel::Boolean::instance());
 
     metaConstraint->setExpression(newExpression);
 

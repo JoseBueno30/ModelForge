@@ -50,7 +50,7 @@ Account [*] role usedAccounts
 Person [*] role user
 end
 
-associationclass Employees between
+associationclass Employee between
 Bank [1..*] role bank
 Person [*] role employees
 end
