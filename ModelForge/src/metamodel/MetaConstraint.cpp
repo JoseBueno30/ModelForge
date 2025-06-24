@@ -49,6 +49,9 @@ const Expr& MetaConstraint::getExpression() const{
     return *expression;
 }
 void MetaConstraint::setExpression(const std::shared_ptr<Expr>& expression){
+    if(expression->getType() != MetaModel::Boolean::instance()){
+        throw std::invalid_argument("An invariant must be a Boolean expression");
+    }
     this->expression = expression;
 }
 

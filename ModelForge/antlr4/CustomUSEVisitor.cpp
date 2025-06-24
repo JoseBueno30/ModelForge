@@ -792,7 +792,7 @@ public:
         std::shared_ptr<MetaModel::Expr> expr1 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[0]));
         std::shared_ptr<MetaModel::Expr> expr2 = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()[1]));
 
-        bool isComplex = (expr1->isComplexExpr() || expr2->isComplexExpr());
+        bool isComplex = true;
 
         return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::ImpliesExpr>(ctx->getText(), isComplex, MetaModel::Boolean::instance(), expr1, expr2));
     }
@@ -933,7 +933,7 @@ public:
 
         bool isComplex = expr->isComplexExpr();
 
-        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::PlusExpr>(ctx->getText(), isComplex, MetaModel::Integer::instance(), expr));
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::PlusExpr>(ctx->getText(), isComplex, expr->getType(), expr));
     }
 
     std::any visitMinusExpr(USEParser::MinusExprContext *ctx) override {
@@ -941,7 +941,7 @@ public:
 
         bool isComplex = expr->isComplexExpr();
 
-        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::MinusExpr>(ctx->getText(), isComplex, MetaModel::Integer::instance(), expr));
+        return std::dynamic_pointer_cast<MetaModel::Expr>(std::make_shared<MetaModel::MinusExpr>(ctx->getText(), isComplex, expr->getType(), expr));
     }
 
     //PROPERTY CALLS
