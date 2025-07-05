@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     //qDebug() << ui->actionOpen_Model->icon().name() << "\t" << ui->actionOpen_Model->icon().themeName();
-    setupActions();
+    setupUndoStack();
 
     //qDebug() << "Palette: " << qApp->palette().window();
     ThemeManager::createPalettes(qApp->palette());
@@ -107,10 +107,12 @@ MainWindow::MainWindow(QWidget *parent)
     ThemeManager::getInitialTheme();
     openColorTheme(false);
 
+    disableModelActions();
+
     ConsoleHandler::setConsole(this->ui->consoleTextEdit);
 }
 
-void MainWindow::setupActions(){
+void MainWindow::setupUndoStack(){
     undoStack = new QUndoStack(this);
     undoStack->setUndoLimit(20);
 
@@ -314,8 +316,7 @@ void MainWindow::openModelFile(){
         this->setupModelGraphicsView(model);
         ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
 
-        ui->actionClose_Model->setEnabled(true);
-        ui->actionSave->setEnabled(true);
+        enableModelActions();
     }catch(std::runtime_error error){
         ConsoleHandler::appendErrorLog(error.what());
     }
@@ -365,14 +366,46 @@ void MainWindow::newModel(){
 
     ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
 
-    ui->actionClose_Model->setEnabled(true);
-    ui->actionSave->setEnabled(true);
+    enableModelActions();
 }
 
 void MainWindow::closeModel(){
     this->model = nullptr;
     this->scene->clear();
     this->scene->update();
+
+    MainWindow::undoStack->clear();
+
+    disableModelActions();
+}
+
+void MainWindow::enableModelActions(){
+    ui->actionCopy->setEnabled(true);
+    ui->actionCut->setEnabled(true);
+    ui->actionPaste->setEnabled(true);
+    redoAction->setEnabled(true);
+    undoAction->setEnabled(true);
+
+    ui->addAssociationButton->setEnabled(true);
+    ui->addClassButton->setEnabled(true);
+    ui->addAssociationClassButton->setEnabled(true);
+    ui->addEnumButton->setEnabled(true);
+
+    ui->actionClose_Model->setEnabled(true);
+    ui->actionSave->setEnabled(true);
+}
+
+void MainWindow::disableModelActions(){
+    ui->actionCopy->setEnabled(false);
+    ui->actionCut->setEnabled(false);
+    ui->actionPaste->setEnabled(false);
+    redoAction->setEnabled(false);
+    undoAction->setEnabled(false);
+
+    ui->addAssociationButton->setEnabled(false);
+    ui->addClassButton->setEnabled(false);
+    ui->addAssociationClassButton->setEnabled(false);
+    ui->addEnumButton->setEnabled(false);
 
     ui->actionClose_Model->setEnabled(false);
     ui->actionSave->setEnabled(false);

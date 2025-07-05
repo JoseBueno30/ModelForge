@@ -65,6 +65,8 @@ private:
 
     QAction *undoAction = nullptr;
     QAction *redoAction = nullptr;
-    void setupActions();
+    void setupUndoStack();
+    void enableModelActions();
+    void disableModelActions();
 };
 #endif // MAINWINDOW_H
