@@ -3,6 +3,7 @@
 #include <QPushButton>
 
 #include <src/ui/dialogs/ui_AttributeEditDialog.h>
+#include <metamodel/MetaType.h>
 
 AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, bool isEdit, QWidget *parent) :
     QDialog(parent),
@@ -14,6 +15,7 @@ AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribut
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &AttributeEditDialog::saveChanges);
 
     ui->nameLineEdit->setText(QString::fromStdString(metaAttribute->getName()));
+    ui->typeComboBox->addItems({"Integer", "Real", "String", "Boolean"});
 }
 
 AttributeEditDialog::~AttributeEditDialog()
@@ -22,21 +24,27 @@ AttributeEditDialog::~AttributeEditDialog()
 }
 
 std::shared_ptr<MetaModel::MetaType> getTypefromComboBox(QString type){
-    //TODO - Pasar mapa con los tipos?
-    return nullptr;
+    if (type == "Integer"){
+        return MetaModel::Integer::instance();
+    }else if(type == "Real"){
+        return MetaModel::Real::instance();
+    }else if(type == "String"){
+        return MetaModel::String::instance();
+    }else{
+        return MetaModel::Boolean::instance();
+    }
 }
 
 void AttributeEditDialog::saveChanges(){
-    //TODO - crear accion y añadir a la cola
 
-    /*
     metaAttribute->setName(ui->nameLineEdit->text().toStdString());
     metaAttribute->setType(getTypefromComboBox(ui->typeComboBox->currentText()));
 
-    std::shared_ptr<MetaModel::OCLExpr> derivedExpr = std::make_shared<MetaModel::OCLExpr>(ui->derivedExprTextEdit->toPlainText());
+    std::shared_ptr<MetaModel::Expr> derivedExpr = std::make_shared<MetaModel::Expr>(ui->derivedExprTextEdit->toPlainText().toStdString());
     metaAttribute->setDeriveExpr(derivedExpr);
 
-    std::shared_ptr<MetaModel::OCLExpr> initExpr = std::make_shared<MetaModel::OCLExpr>(ui->initExprTextEdit->toPlainText());
-    metaAttribute->setInitExpr(initExpr);*/
+    std::shared_ptr<MetaModel::Expr> initExpr = std::make_shared<MetaModel::Expr>(ui->initExprTextEdit->toPlainText().toStdString());
+    metaAttribute->setInitExpr(initExpr);
+
     accept();
 }
