@@ -2,8 +2,10 @@
 #define METAOPERATION_H
 
 #include "OCL/OCLExpr.h"
+#include "MetaElement.h"
 #include "MetaType.h"
 #include "MetaVariable.h"
+#include "Visibility.h"
 
 #include <memory>
 #include <string>
@@ -36,21 +38,26 @@ public:
     void setIsPost(bool isPost);
 };
 
-class MetaOperation{
+class MetaOperation: public MetaElement{
 
 private:
     std::string name;
     std::string operationDefinition;
     std::shared_ptr<MetaType> returnType;
+    MetaModel::Visibility visibility;
     std::map<std::string, std::shared_ptr<MetaVariable>> variables;
     std::map<std::string, std::shared_ptr<PrePostClause>> preConditions;
     std::map<std::string, std::shared_ptr<PrePostClause>> postConditions;
 
 public:
-    MetaOperation(const std::string& name, const std::string& operationDefinition, const std::shared_ptr<MetaType>& returnType);
+    MetaOperation(const std::string& name, const std::string& operationDefinition,
+                  const std::shared_ptr<MetaType>& returnType, Visibility visibility = Visibility::Public);
 
     std::string getName() const;
     void setName(const std::string& name);
+
+    Visibility getVisibility() const;
+    void setVisibility(Visibility vis);
 
     std::string getOperationDefinition() const;
     void setOperationDefinition(const std::string& operationDefinition);
@@ -80,6 +87,8 @@ public:
 
     std::string variablesToString() const;
     std::string toString() const;
+
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

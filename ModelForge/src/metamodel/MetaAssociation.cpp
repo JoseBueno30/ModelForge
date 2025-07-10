@@ -71,8 +71,8 @@ std::vector<std::string> MetaAssociation::getAssociationEndsClassesNames(){
     return names;
 }
 
-void MetaAssociation::accept(ModelToText::VisitorInterface& visitor) const{
-    visitor.visit(*this);
+std::any MetaAssociation::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
 }
 
 }

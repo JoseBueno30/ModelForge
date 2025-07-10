@@ -271,11 +271,30 @@ public:
         return nullptr;
     }
 
+    std::any visitVisibilty(USEParser::VisibiltyContext *ctx) override {
+        if(ctx->PUBLIC()){
+            return MetaModel::Visibility::Public;
+        }else if(ctx->PRIVATE()){
+            return MetaModel::Visibility::Private;
+        }else if(ctx->PROTECTED()){
+            return MetaModel::Visibility::Protected;
+        }else if(ctx->PACKAGE()){
+            return MetaModel::Visibility::Package;
+        }else{
+            return nullptr;
+        }
+    }
+
     std::any visitAttributeDefinition(USEParser::AttributeDefinitionContext *ctx) override {
         std::string name = ctx->ID()->getText();
         std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
 
-        std::shared_ptr<MetaModel::MetaAttribute> attribute = std::make_shared<MetaModel::MetaAttribute>(name, type);
+        MetaModel::Visibility visibility = MetaModel::Visibility::Public;
+        if(ctx->visibilty()){
+            visibility = std::any_cast<MetaModel::Visibility>(visit(ctx->visibilty()));
+        }
+
+        std::shared_ptr<MetaModel::MetaAttribute> attribute = std::make_shared<MetaModel::MetaAttribute>(name, type, visibility);
 
         if(ctx->initDefinition()){
             std::shared_ptr<MetaModel::Expr> initExpression= std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->initDefinition()));
@@ -298,6 +317,11 @@ public:
             returnType = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
         }
 
+        MetaModel::Visibility visibility = MetaModel::Visibility::Public;
+        if(ctx->visibilty()){
+            visibility = std::any_cast<MetaModel::Visibility>(visit(ctx->visibilty()));
+        }
+
         std::string operationDefinition = "";
         if(ctx->expression()){
             operationDefinition = "= " + ctx->expression()->getText();
@@ -305,7 +329,7 @@ public:
             operationDefinition = ctx->SOIL_OPERATION()->getText();
         }
 
-        std::shared_ptr<MetaModel::MetaOperation> operation = std::make_shared<MetaModel::MetaOperation>(name, operationDefinition, returnType);
+        std::shared_ptr<MetaModel::MetaOperation> operation = std::make_shared<MetaModel::MetaOperation>(name, operationDefinition, returnType, visibility);
 
         for(auto variableDeclaration : ctx->paramList()->variableDeclaration()){
             std::shared_ptr<MetaModel::MetaVariable> variable = std::any_cast<std::shared_ptr<MetaModel::MetaVariable>>(visit(variableDeclaration));
@@ -471,7 +495,7 @@ public:
             return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::String::instance());
         }else if(typeName == "Boolean"){
             return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Boolean::instance());
-        }else if(typeName == "Void"){
+        }else if(typeName == "Void" || typeName == "OclVoid"){
             return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Void::instance());
         }
 
@@ -716,12 +740,21 @@ public:
         std::shared_ptr<MetaModel::MetaMultiplicity> multiplicity = std::any_cast<std::shared_ptr<MetaModel::MetaMultiplicity>>(visit(ctx->multiplicity()));
         std::string role = checkRole(ctx);
 
+        MetaModel::Visibility visibility = MetaModel::Visibility::Public;
+        if(ctx->visibilty()){
+            visibility = std::any_cast<MetaModel::Visibility>(visit(ctx->visibilty()));
+        }
+
+        bool isNavigable = !ctx->NO_NAVIGABLE();
+
         // check Ordered and union
         bool isOrdered = !ctx->ORDERED().empty();
         bool isUnion = !ctx->UNION().empty();
 
         //TODO Check IsUnique and ¿type?
-        std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(endClass, association, role, 0, true, isOrdered, false, isUnion, multiplicity);
+        std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(endClass, association, role,
+                                                                                                                        0, isNavigable, isOrdered, false,
+                                                                                                                        isUnion, multiplicity, visibility);
         return associationEnd;
     }
 

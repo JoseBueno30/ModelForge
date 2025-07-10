@@ -39,7 +39,7 @@ public:
 
     std::vector<std::string> getAssociationEndsClassesNames();
 
-    void accept(ModelToText::VisitorInterface& visitor) const override;
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 }
 

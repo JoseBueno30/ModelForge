@@ -22,12 +22,12 @@ OrExpr::OrExpr(const std::string& expression, const bool isComplex, const std::s
 
 ImpliesExpr::ImpliesExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2)
     : LogicalExpr(expression, isComplex, type, expr1, expr2){
-    this->operation = "xor";
+    this->operation = "implies";
 }
 
 XOrExpr::XOrExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2)
     : LogicalExpr(expression, isComplex, type, expr1, expr2){
-    this->operation = "implies";
+    this->operation = "xor";
 }
 
 }

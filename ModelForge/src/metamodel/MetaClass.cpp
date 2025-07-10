@@ -384,8 +384,8 @@ std::string MetaClass::toString() const{
     return this->getName();
 }
 
-void MetaClass::accept(ModelToText::VisitorInterface& visitor) const{
-    visitor.visit(*this);
+std::any MetaClass::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
 }
 
 }

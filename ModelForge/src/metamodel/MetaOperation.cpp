@@ -1,3 +1,4 @@
+#include <modelToText/VisitorInterface.h>
 #include <metamodel/MetaOperation.h>
 
 #include <stdexcept>
@@ -38,8 +39,9 @@ void PrePostClause::setIsPost(bool isPost){
 }
 
 
-MetaOperation::MetaOperation(const std::string& name, const std::string& operationDefinition, const std::shared_ptr<MetaType>& returnType)
-    : name(name), operationDefinition(operationDefinition), returnType(returnType){}
+MetaOperation::MetaOperation(const std::string& name, const std::string& operationDefinition,
+                             const std::shared_ptr<MetaType>& returnType, Visibility visibility)
+    : name(name), operationDefinition(operationDefinition), returnType(returnType), visibility(visibility){}
 
 std::string MetaOperation::getName() const{
     return name;
@@ -47,6 +49,13 @@ std::string MetaOperation::getName() const{
 
 void MetaOperation::setName(const std::string& name){
     this->name = name;
+}
+
+Visibility MetaOperation::getVisibility() const {
+    return visibility;
+}
+void MetaOperation::setVisibility(Visibility vis) {
+    visibility = vis;
 }
 
 std::string MetaOperation::getOperationDefinition() const{
@@ -200,6 +209,10 @@ std::string MetaOperation::variablesToString() const{
 std::string MetaOperation::toString() const{
 
     return this->getName() + this->variablesToString() + " : " + this->getReturnType().toString();
+}
+
+std::any MetaOperation::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
 }
 
 }

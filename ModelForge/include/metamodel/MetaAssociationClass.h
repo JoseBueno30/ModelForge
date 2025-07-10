@@ -19,7 +19,7 @@ public:
 
     void addSuperClass(std::shared_ptr<MetaClass> metaClass) override;
 
-    void accept(ModelToText::VisitorInterface& visitor) const override;
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

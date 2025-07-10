@@ -72,8 +72,8 @@ std::string MetaEnum::toString() const{
     return this->getName();
 }
 
-void MetaEnum::accept(ModelToText::VisitorInterface& visitor) const{
-    visitor.visit(*this);
+std::any MetaEnum::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
 }
 
 }

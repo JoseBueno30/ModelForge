@@ -1,4 +1,5 @@
 #include <iostream>
+#include <modelToText/VisitorInterface.h>
 #include <metamodel/MetaAssociationEnd.h>
 
 #include <stdexcept>
@@ -143,11 +144,14 @@ void MetaMultiplicity::setMultiplicictyFromString(std::string multiplicityString
 
 
 
-MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaAssociation>& association, int type)
-    : association(association), type(type), role(""), isNavigable(false), isOrdered(false), isUnique(false), isUnion(false){}
+MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaAssociation>& association, int type, Visibility visibility)
+    : association(association), type(type), role(""), isNavigable(false), isOrdered(false), isUnique(false), isUnion(false), visibility(visibility){}
 
-MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity)
-    : endClass(endClass), association(association), role(role), type(type), isNavigable(isNavigable), isOrdered(isOrdered), isUnique(isUnique), isUnion(isUnion), multiplicity(multiplicity){}
+MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association,
+                                       const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion,
+                                       const std::shared_ptr<MetaMultiplicity>& multiplicity, Visibility visibility)
+    : endClass(endClass), association(association), role(role), type(type), isNavigable(isNavigable), isOrdered(isOrdered),
+    isUnique(isUnique), isUnion(isUnion), multiplicity(multiplicity), visibility(visibility){}
 
 const MetaClass& MetaAssociationEnd::getClass() const{
     return *endClass;
@@ -188,6 +192,13 @@ int MetaAssociationEnd::getType() const{
 
 void MetaAssociationEnd::setType(int type){
     this->type = type;
+}
+
+Visibility MetaAssociationEnd::getVisibility() const {
+    return visibility;
+}
+void MetaAssociationEnd::setVisibility(Visibility vis) {
+    visibility = vis;
 }
 
 bool MetaAssociationEnd::getIsNavigable() const{
@@ -322,5 +333,8 @@ void MetaAssociationEnd::setDeriveExpr(const std::shared_ptr<Expr>& deriveExpr){
     this->deriveExpr = deriveExpr;
 }
 
+std::any MetaAssociationEnd::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
+}
 
 }

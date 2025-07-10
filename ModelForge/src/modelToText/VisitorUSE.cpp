@@ -1,8 +1,17 @@
-#include <iostream>
 #include <modelToText/VisitorUSE.h>
 #include <stdexcept>
 
 namespace ModelToText {
+
+std::string visibilityToString(MetaModel::Visibility vis) {
+    switch (vis) {
+    case MetaModel::Visibility::Public:    return "--+";
+    case MetaModel::Visibility::Private:   return "--—";
+    case MetaModel::Visibility::Protected: return "--#";
+    case MetaModel::Visibility::Package:   return "--~";
+    }
+    return "";
+}
 
 VisitorUSE::VisitorUSE(const std::string& filename) {
     outFile.open(filename);
@@ -17,17 +26,15 @@ VisitorUSE::~VisitorUSE() {
     }
 }
 
-void VisitorUSE::visit(MetaModel::MetaModel metaModel){
+std::any VisitorUSE::visit(MetaModel::MetaModel metaModel){
     outFile << "model " << metaModel.getName() <<"\n\n";
 
     for(const auto &metaEnumPair : metaModel.getEnums()){
         metaEnumPair.second->accept(*this);
     }
 
-    metaClasses = &metaModel.getClasses();
-
     for(const auto &metaClassPair : metaModel.getClasses()){
-        metaClassPair.second->accept(*this);
+       metaClassPair.second->accept(*this);
     }
 
     for(const auto &metaAssociationPair : metaModel.getAssociations()){
@@ -35,37 +42,152 @@ void VisitorUSE::visit(MetaModel::MetaModel metaModel){
     }
 
     for(const auto &metaAssociationClassPair : metaModel.getAssociationClasses()){
-        metaAssociationClassPair.second->accept(*this);
+       metaAssociationClassPair.second->accept(*this);
     }
 
     if(globalConstraints != ""){
         outFile << "constraints\n";
         outFile << globalConstraints;
     }
+
+    return nullptr;
 }
 
-void VisitorUSE::visit(MetaModel::MetaEnum metaEnum){
-    outFile << "enum " << metaEnum.getName() << " {";
+std::any VisitorUSE::visit(MetaModel::MetaAttribute metaAttribute){
+    std::string metaAttributeString = "";
+    metaAttributeString += metaAttribute.toString() + " " + visibilityToString(metaAttribute.getVisibility()) + "\n";
+
+    if (metaAttribute.getInitExpr()) {
+        metaAttributeString += " init = " + metaAttribute.getInitExpr()->toString();
+    } else if (metaAttribute.getDeriveExpr()) {
+        metaAttributeString += " derive = " + metaAttribute.getDeriveExpr()->toString();
+    }
+
+    if(metaAttributeString.back() != '\n'){
+        metaAttributeString += "\n";
+    }
+    return metaAttributeString;
+}
+
+std::any VisitorUSE::visit(MetaModel::MetaOperation metaOperation){
+    std::string metaOperationString = "";
+    metaOperationString += metaOperation.toString() + " " + visibilityToString(metaOperation.getVisibility()) + "\n\t";
+
+    metaOperationString += metaOperation.getOperationDefinition() + "\n";
+
+    for(const auto &preConditionPair : metaOperation.getPreConditions()){
+        auto preCondition = preConditionPair.second;
+        metaOperationString += "pre " + preCondition->getName() + ": " + preCondition->getExpression().toString() + "\n";
+    }
+
+    for(const auto &postConditionPair : metaOperation.getPostConditions()){
+        auto postCondition = postConditionPair.second;
+        metaOperationString += "post " + postCondition->getName() + ": " + postCondition->getExpression().toString() + "\n";
+    }
+    return metaOperationString;
+}
+
+std::any VisitorUSE::visit(MetaModel::MetaConstraint metaConstraint){
+    std::string metaConstraintString = "";
+    if(metaConstraint.getVariables().size() > 1){
+        metaConstraintString += "context ";
+
+        auto variablesIterator = metaConstraint.getVariables().begin();
+        auto variable = variablesIterator->second;
+
+        metaConstraintString += variable->getName();
+
+        variablesIterator++;
+
+        for(; variablesIterator != metaConstraint.getVariables().end(); variablesIterator++){
+            variable = variablesIterator->second;
+
+            metaConstraintString += ", " + variable->getName();
+        }
+
+        metaConstraintString += ": " + metaConstraint.getClass().getName() + " inv " + metaConstraint.getName() + ":\n\t" + metaConstraint.getExpression().toString();
+
+        globalConstraints += metaConstraintString + "\n\n";
+
+        return 0;
+    }else{
+        if(metaConstraint.getIsExistential()){
+            metaConstraintString += "existential inv " + metaConstraint.getName() + ":\n\t" + metaConstraint.getExpression().toString() + "\n";
+        }else{
+            metaConstraintString += "inv " + metaConstraint.getName() + ":\n\t" + metaConstraint.getExpression().toString() + "\n";
+        }
+    }
+    return metaConstraintString;
+}
+
+std::any VisitorUSE::visit(MetaModel::MetaAssociationEnd metaAssociationEnd){
+    std::string metaAssociationEndString = "";
+    metaAssociationEndString += metaAssociationEnd.getClass().getName();
+
+    metaAssociationEndString += " [" + metaAssociationEnd.getMultiplicity().toString() + "] ";
+
+    metaAssociationEndString += "role " + metaAssociationEnd.getRole();
+
+    if(!metaAssociationEnd.getIsNavigable()){
+        metaAssociationEndString += " --X";
+    }
+
+    metaAssociationEndString += " " + visibilityToString(metaAssociationEnd.getVisibility()) + "\n";
+
+    if(metaAssociationEnd.getIsOrdered()){
+        metaAssociationEndString += " ordered";
+    }
+
+    if(metaAssociationEnd.getIsUnion()){
+        metaAssociationEndString += " union";
+    }
+
+    for(auto &subsettedEndPair : metaAssociationEnd.getSubsettedEnds()){
+        auto subsettedEnd = subsettedEndPair.second;
+
+        metaAssociationEndString += " subsets " + subsettedEnd->getClass().getName();
+    }
+
+    for(auto &redefinedEndPair : metaAssociationEnd.getRedefinedEnds()){
+        auto redefinedEnd = redefinedEndPair.second;
+
+        metaAssociationEndString += " redefines " + redefinedEnd->getClass().getName();
+    }
+
+    //derive Expression and qualifiers ignored for now
+
+    if(metaAssociationEndString.back() != '\n'){
+        metaAssociationEndString += "\n";
+    }
+
+    return metaAssociationEndString;
+}
+
+std::any VisitorUSE::visit(MetaModel::MetaEnum metaEnum){
+    std::string metaEnumString = "enum " + metaEnum.getName() + " {";
 
     auto metaEnumElements = metaEnum.getElements();
     auto elementsIterator = metaEnumElements.begin();
 
-    outFile << elementsIterator->second->getName();
+    metaEnumString += elementsIterator->second->getName();
 
     elementsIterator++;
 
     for(; elementsIterator != metaEnumElements.end(); elementsIterator++){
-        outFile << ", " << elementsIterator->second->getName();
+        metaEnumString += ", " + elementsIterator->second->getName();
     }
 
-    outFile <<"}" << "\n\n";
+    metaEnumString += "}";
 
+    outFile << metaEnumString << "\n\n";
+
+    return 0;
 }
 
-void VisitorUSE::visit(MetaModel::MetaClass metaClass){
+std::any VisitorUSE::visit(MetaModel::MetaClass metaClass){
     //If class has already been visited, do nothing
     if(visitedClasses.find(metaClass.getName()) != visitedClasses.end()){
-        return;
+        return 0;
     }
 
     std::string metaClassString = "";
@@ -80,8 +202,6 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
     auto superClasses = metaClass.getSuperClasses();
 
     if(superClasses.size() > 0){
-
-
         auto superClassesIterator = superClasses.begin();
         auto& superClass = superClassesIterator->second;
 
@@ -113,8 +233,7 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
         metaClassString += "attributes\n";
 
         for(const auto &attributePair : attributes){
-            auto attribute = attributePair.second;
-            metaClassString += attribute->toString() + "\n";
+            metaClassString += std::any_cast<std::string>(attributePair.second->accept(*this));
         }
     }
 
@@ -125,19 +244,7 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
         metaClassString += "operations\n";
 
         for(const auto &operationPair : operations){
-            auto operation = operationPair.second;
-            metaClassString += operation->toString();
-            metaClassString += " " + operation->getOperationDefinition() + "\n";
-
-            for(const auto &preConditionPair : operation->getPreConditions()){
-                auto preCondition = preConditionPair.second;
-                metaClassString += "pre " + preCondition->getName() + ": " + preCondition->getExpression().toString();
-            }
-
-            for(const auto &postConditionPair : operation->getPostConditions()){
-                auto postCondition = postConditionPair.second;
-                metaClassString += "post " + postCondition->getName() + ": " + postCondition->getExpression().toString();
-            }
+            metaClassString += std::any_cast<std::string>(operationPair.second->accept(*this));
         }
     }
 
@@ -148,32 +255,9 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
         metaClassString += "constraints\n";
 
         for(const auto &constraintPair : constraints){
-            auto constraint = constraintPair.second;
-
-            if(constraint->getVariables().size() > 1){
-                globalConstraints += "context ";
-
-                auto variablesIterator = constraint->getVariables().begin();
-                auto variable = variablesIterator->second;
-
-                globalConstraints += variable->getName();
-
-                variablesIterator++;
-
-                for(; variablesIterator != constraint->getVariables().end(); variablesIterator++){
-                    variable = variablesIterator->second;
-
-                    globalConstraints += ", " + variable->getName();
-                }
-
-
-                globalConstraints += ": " + constraint->getClass().getName() + " inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n\n";
-            }else{
-                if(constraint->getIsExistential()){
-                    metaClassString += "existential inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n";
-                }else{
-                    metaClassString += "inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n";
-                }
+            std::any constraintResult = constraintPair.second->accept(*this);
+            if(auto contraintStringPtr = std::any_cast<std::string>(&constraintResult)){
+                metaClassString += *contraintStringPtr;
             }
         }
     }
@@ -196,9 +280,10 @@ void VisitorUSE::visit(MetaModel::MetaClass metaClass){
 
     outFile << metaClassString;
 
+    return 0;
 }
 
-void VisitorUSE::visit(MetaModel::MetaAssociation metaAssociation){
+std::any VisitorUSE::visit(MetaModel::MetaAssociation metaAssociation){
     std::string metaAssociationString = "";
 
     if(metaAssociation.getType() == MetaModel::MetaAssociation::AGGREGATION){
@@ -212,50 +297,20 @@ void VisitorUSE::visit(MetaModel::MetaAssociation metaAssociation){
     metaAssociationString += metaAssociation.getName() + " between\n";
 
     for(auto &assocEndPair : metaAssociation.getAssociationEnds()){
-        auto assocEnd = assocEndPair.second;
-
-        metaAssociationString += assocEnd->getClass().getName();
-
-        metaAssociationString += " [" + assocEnd->getMultiplicity().toString() + "] ";
-
-        metaAssociationString += "role " + assocEnd->getRole();
-
-        if(assocEnd->getIsOrdered()){
-            metaAssociationString += " ordered";
-        }
-
-        if(assocEnd->getIsUnion()){
-            metaAssociationString += " union";
-        }
-
-        for(auto &subsettedEndPair : assocEnd->getSubsettedEnds()){
-            auto subsettedEnd = subsettedEndPair.second;
-
-            metaAssociationString += " subsets " + subsettedEnd->getClass().getName();
-        }
-
-        for(auto &redefinedEndPair : assocEnd->getRedefinedEnds()){
-            auto redefinedEnd = redefinedEndPair.second;
-
-            metaAssociationString += " redefines " + redefinedEnd->getClass().getName();
-        }
-
-        //derive Expression and qualifiers ignored for now
-
-        metaAssociationString += "\n";
+        metaAssociationString += std::any_cast<std::string>(assocEndPair.second->accept(*this));
     }
-
-
 
     metaAssociationString += "end\n\n";
 
     outFile << metaAssociationString;
+
+    return 0;
 }
 
-void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
+std::any VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
     //If association class has already been visited, do nothing
     if(visitedClasses.find(metaAssociationClass.getName()) != visitedClasses.end()){
-        return;
+        return 0;
     }
 
     std::string metaAssociationClassString = "";
@@ -298,40 +353,8 @@ void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
     metaAssociationClassString += " between\n";
 
     for(auto &assocEndPair : metaAssociationClass.MetaAssociation::getAssociationEnds()){
-        auto assocEnd = assocEndPair.second;
-
-        metaAssociationClassString += assocEnd->getClass().getName();
-
-        metaAssociationClassString += " [" + assocEnd->getMultiplicity().toString() + "] ";
-
-        metaAssociationClassString += "role " + assocEnd->getRole();
-
-        if(assocEnd->getIsOrdered()){
-            metaAssociationClassString += " ordered";
-        }
-
-        if(assocEnd->getIsUnion()){
-            metaAssociationClassString += " union";
-        }
-
-        for(auto &subsettedEndPair : assocEnd->getSubsettedEnds()){
-            auto subsettedEnd = subsettedEndPair.second;
-
-            metaAssociationClassString += " subsets " + subsettedEnd->getClass().getName();
-        }
-
-        for(auto &redefinedEndPair : assocEnd->getRedefinedEnds()){
-            auto redefinedEnd = redefinedEndPair.second;
-
-            metaAssociationClassString += " redefines " + redefinedEnd->getClass().getName();
-        }
-
-        //derive Expression and qualifiers ignored for now
-
-        metaAssociationClassString += "\n";
+        metaAssociationClassString += std::any_cast<std::string>(assocEndPair.second->accept(*this));
     }
-
-
 
     //Attributes
     auto attributes = metaAssociationClass.getAttributes();
@@ -340,8 +363,7 @@ void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
         metaAssociationClassString += "attributes\n";
 
         for(const auto &attributePair : attributes){
-            auto attribute = attributePair.second;
-            metaAssociationClassString += attribute->toString() + "\n";
+            metaAssociationClassString += std::any_cast<std::string>(attributePair.second->accept(*this));
         }
     }
 
@@ -350,21 +372,8 @@ void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
 
     if(operations.size() > 0){
         metaAssociationClassString += "operations\n";
-
         for(const auto &operationPair : operations){
-            auto operation = operationPair.second;
-            metaAssociationClassString += operation->toString();
-            metaAssociationClassString += " " + operation->getOperationDefinition() + "\n";
-
-            for(const auto &preConditionPair : operation->getPreConditions()){
-                auto preCondition = preConditionPair.second;
-                metaAssociationClassString += "pre " + preCondition->getName() + ": " + preCondition->getExpression().toString();
-            }
-
-            for(const auto &postConditionPair : operation->getPostConditions()){
-                auto postCondition = postConditionPair.second;
-                metaAssociationClassString += "post " + postCondition->getName() + ": " + postCondition->getExpression().toString();
-            }
+            metaAssociationClassString += std::any_cast<std::string>(operationPair.second->accept(*this));
         }
     }
 
@@ -375,32 +384,9 @@ void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
         metaAssociationClassString += "constraints\n";
 
         for(const auto &constraintPair : constraints){
-            auto constraint = constraintPair.second;
-
-            if(constraint->getVariables().size() > 1){
-                globalConstraints += "context ";
-
-                auto variablesIterator = constraint->getVariables().begin();
-                auto variable = variablesIterator->second;
-
-                globalConstraints += variable->getName();
-
-                variablesIterator++;
-
-                for(; variablesIterator != constraint->getVariables().end(); variablesIterator++){
-                    variable = variablesIterator->second;
-
-                    globalConstraints += ", " + variable->getName();
-                }
-
-
-                globalConstraints += ": " + constraint->getClass().getName() + " inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n\n";
-            }else{
-                if(constraint->getIsExistential()){
-                    metaAssociationClassString += "existential inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n";
-                }else{
-                    metaAssociationClassString += "inv " + constraint->getName() + ":\n\t" + constraint->getExpression().toString() + "\n";
-                }
+            std::any constraintResult = constraintPair.second->accept(*this);
+            if(auto contraintStringPtr = std::any_cast<std::string>(&constraintResult)){
+                metaAssociationClassString += *contraintStringPtr;
             }
         }
     }
@@ -429,6 +415,8 @@ void VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
     metaAssociationClassString += "end\n\n";
 
     outFile << metaAssociationClassString;
+
+    return 0;
 }
 
 void VisitorUSE::save() {

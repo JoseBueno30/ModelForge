@@ -28,8 +28,8 @@ void MetaAssociationClass::addSuperClass(std::shared_ptr<MetaClass> metaClass){
     MetaClass::addSuperClass(metaClass);
 }
 
-void MetaAssociationClass::accept(ModelToText::VisitorInterface& visitor) const{
-    visitor.visit(*this);
+std::any MetaAssociationClass::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
 }
 
 }

@@ -49,7 +49,7 @@ bool String::equals(const MetaType& type) const{
 }
 
 std::string Void::toString() const{
-    return "Void";
+    return "OclVoid";
 }
 
 bool Void::equals(const MetaType& type) const{

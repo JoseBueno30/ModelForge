@@ -393,6 +393,7 @@ add_library(MetaModelLib SHARED
 
 
 
+
     include/modelToText/VisitorInterface.h
     include/modelToText/VisitorUSE.h
     src/modelToText/VisitorUSE.cpp
@@ -436,6 +437,7 @@ add_library(MetaModelLib SHARED
     src/OCL/NavigationExpr.cpp
     include/OCL/ObjectOperationExpr.h
     src/OCL/ObjectOperationExpr.cpp
+    include/metamodel/Visibility.h
 )
 
 set(DIALOGS

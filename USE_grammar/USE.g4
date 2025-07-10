@@ -105,7 +105,7 @@ associationClassDefinition
     derivedDefinition ::= ("derive" | "derived") (":" | "=") expression
 */
 attributeDefinition
-    : ID COLON type (initDefinition | derivedDefinition)? SEMI?
+    : ID COLON type visibilty? (initDefinition | derivedDefinition)? SEMI?
     ;
 
 initDefinition
@@ -116,13 +116,20 @@ derivedDefinition
     : ('derive'|'derived') (COLON|EQUAL) expression
     ;
 
+visibilty
+    : PUBLIC
+    | PRIVATE
+    | PROTECTED
+    | PACKAGE
+    ;
+
 /* ------------------------------------
   operationDefinition ::= 
     id paramList ":" type [ "=" expression ] 
     { prePostClause } [ ";" ]
 */
 operationDefinition
-    : ID paramList (COLON type)? 
+    : ID paramList (COLON type)? visibilty?
     ( ( EQUAL expression ) | SOIL_OPERATION)? //USE can have SOIL operations but we dont care about them
     prePostClause*
     ( SEMI )?
@@ -149,13 +156,15 @@ associationDefinition
 associationEnd
     : ID LBRACK multiplicity RBRACK
     ( role)?
+    (NO_NAVIGABLE)?
+    visibilty?
     (
           ORDERED
-        | subsets                                                               //SHOULD DELETE?
-        | UNION                                                                      //SHOULD DELETE?
-        | redefines                                                             //SHOULD DELETE?
-        | ('derived'|'derive') ( LPAREN elemVarsDeclaration RPAREN)? EQUAL expression   //SHOULD DELETE?
-        | 'qualifier' paramList                                                         //SHOULD DELETE?
+        | subsets
+        | UNION
+        | redefines
+        | ('derived'|'derive') ( LPAREN elemVarsDeclaration RPAREN)? EQUAL expression
+        | 'qualifier' paramList
     )*
     (SEMI)?
     ;
@@ -782,6 +791,13 @@ AGGREGATION   : 'aggregation';
 COMPOSITION   : 'composition';
 ORDERED       : 'ordered';
 UNION         : 'union';
+NO_NAVIGABLE  : '--X';
+PUBLIC        : '--+';
+PRIVATE       : '--—';
+PROTECTED     : '--#';
+PACKAGE       : '--~';
+
+
   
 INT:
     [0-9]+

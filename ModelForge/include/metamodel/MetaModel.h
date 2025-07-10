@@ -49,7 +49,7 @@ public:
 
     bool modelContainsKey(const std::string& key);
 
-    void accept(ModelToText::VisitorInterface& visitor) const override;
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

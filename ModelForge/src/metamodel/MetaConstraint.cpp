@@ -1,5 +1,6 @@
 #include <metamodel/MetaConstraint.h>
 #include "metamodel/MetaClass.h"
+#include <modelToText/VisitorInterface.h>
 
 #include <stdexcept>
 
@@ -49,7 +50,7 @@ const Expr& MetaConstraint::getExpression() const{
     return *expression;
 }
 void MetaConstraint::setExpression(const std::shared_ptr<Expr>& expression){
-    if(!std::dynamic_pointer_cast<MetaModel::Boolean>(expression->getType())){
+    if(!std::dynamic_pointer_cast<Boolean>(expression->getType())){
         throw std::invalid_argument("An invariant must be a Boolean expression");
     }
     this->expression = expression;
@@ -84,5 +85,8 @@ void MetaConstraint::removeVariable(const std::string& key){
     variables.erase(key);
 }
 
+std::any MetaConstraint::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
+}
 
 }

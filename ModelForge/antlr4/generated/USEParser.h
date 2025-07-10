@@ -35,31 +35,32 @@ public:
     LBRACK = 85, LESS = 86, LESS_EQUAL = 87, LPAREN = 88, MINUS = 89, NOT_EQUAL = 90, 
     PLUS = 91, RBRACE = 92, RBRACK = 93, RPAREN = 94, SEMI = 95, SLASH = 96, 
     STAR = 97, ABSTRACT = 98, EXISTENTIAL = 99, AGGREGATION = 100, COMPOSITION = 101, 
-    ORDERED = 102, UNION = 103, INT = 104, REAL = 105, SOIL_OPERATION = 106, 
-    STRING = 107, NON_OCL_STRING = 108, ID = 109
+    ORDERED = 102, UNION = 103, NO_NAVIGABLE = 104, PUBLIC = 105, PRIVATE = 106, 
+    PROTECTED = 107, PACKAGE = 108, INT = 109, REAL = 110, SOIL_OPERATION = 111, 
+    STRING = 112, NON_OCL_STRING = 113, ID = 114
   };
 
   enum {
     RuleModel = 0, RuleModelElement = 1, RuleEnumTypeDefinition = 2, RuleClassDefinition = 3, 
     RuleAssociationClassDefinition = 4, RuleAttributeDefinition = 5, RuleInitDefinition = 6, 
-    RuleDerivedDefinition = 7, RuleOperationDefinition = 8, RuleAssociationDefinition = 9, 
-    RuleAssociationEnd = 10, RuleRole = 11, RuleRedefines = 12, RuleSubsets = 13, 
-    RuleMultiplicity = 14, RuleMultiplicityRange = 15, RuleMultiplicitySpec = 16, 
-    RuleConstraintDefinition = 17, RuleInvariant = 18, RuleInvariantClause = 19, 
-    RulePrePost = 20, RulePrePostClause = 21, RuleStateMachine = 22, RuleStateDefinition = 23, 
-    RuleTransitionDefinition = 24, RuleExpressionOnly = 25, RuleExpression = 26, 
-    RuleLetExpression = 27, RuleLogicalExpression = 28, RuleParamList = 29, 
-    RuleIdList = 30, RuleVariableDeclaration = 31, RuleEqualityExpression = 32, 
-    RuleRelationalExpression = 33, RuleAdditiveExpression = 34, RuleFactorExpression = 35, 
-    RuleUnaryExpression = 36, RulePostfixExpression = 37, RulePropertyChain = 38, 
-    RulePrimaryExpression = 39, RuleObjectReference = 40, RulePropertyCall = 41, 
-    RuleQueryExpression = 42, RuleIterateExpression = 43, RuleOperationExpression = 44, 
-    RuleInStateExpression = 45, RuleTypeExpression = 46, RuleElemVarsDeclaration = 47, 
-    RuleVariableInitialization = 48, RuleConditionalExpression = 49, RuleLiteral = 50, 
-    RuleCollectionLiteral = 51, RuleCollectionItem = 52, RuleEmptyCollectionLiteral = 53, 
-    RuleUndefinedLiteral = 54, RuleTupleLiteral = 55, RuleTupleItem = 56, 
-    RuleType = 57, RuleTypeOnly = 58, RuleSimpleType = 59, RuleCollectionType = 60, 
-    RuleTupleType = 61, RuleTuplePart = 62
+    RuleDerivedDefinition = 7, RuleVisibilty = 8, RuleOperationDefinition = 9, 
+    RuleAssociationDefinition = 10, RuleAssociationEnd = 11, RuleRole = 12, 
+    RuleRedefines = 13, RuleSubsets = 14, RuleMultiplicity = 15, RuleMultiplicityRange = 16, 
+    RuleMultiplicitySpec = 17, RuleConstraintDefinition = 18, RuleInvariant = 19, 
+    RuleInvariantClause = 20, RulePrePost = 21, RulePrePostClause = 22, 
+    RuleStateMachine = 23, RuleStateDefinition = 24, RuleTransitionDefinition = 25, 
+    RuleExpressionOnly = 26, RuleExpression = 27, RuleLetExpression = 28, 
+    RuleLogicalExpression = 29, RuleParamList = 30, RuleIdList = 31, RuleVariableDeclaration = 32, 
+    RuleEqualityExpression = 33, RuleRelationalExpression = 34, RuleAdditiveExpression = 35, 
+    RuleFactorExpression = 36, RuleUnaryExpression = 37, RulePostfixExpression = 38, 
+    RulePropertyChain = 39, RulePrimaryExpression = 40, RuleObjectReference = 41, 
+    RulePropertyCall = 42, RuleQueryExpression = 43, RuleIterateExpression = 44, 
+    RuleOperationExpression = 45, RuleInStateExpression = 46, RuleTypeExpression = 47, 
+    RuleElemVarsDeclaration = 48, RuleVariableInitialization = 49, RuleConditionalExpression = 50, 
+    RuleLiteral = 51, RuleCollectionLiteral = 52, RuleCollectionItem = 53, 
+    RuleEmptyCollectionLiteral = 54, RuleUndefinedLiteral = 55, RuleTupleLiteral = 56, 
+    RuleTupleItem = 57, RuleType = 58, RuleTypeOnly = 59, RuleSimpleType = 60, 
+    RuleCollectionType = 61, RuleTupleType = 62, RuleTuplePart = 63
   };
 
   explicit USEParser(antlr4::TokenStream *input);
@@ -87,6 +88,7 @@ public:
   class AttributeDefinitionContext;
   class InitDefinitionContext;
   class DerivedDefinitionContext;
+  class VisibiltyContext;
   class OperationDefinitionContext;
   class AssociationDefinitionContext;
   class AssociationEndContext;
@@ -296,6 +298,7 @@ public:
     antlr4::tree::TerminalNode *ID();
     antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
+    VisibiltyContext *visibilty();
     InitDefinitionContext *initDefinition();
     DerivedDefinitionContext *derivedDefinition();
     antlr4::tree::TerminalNode *SEMI();
@@ -337,6 +340,22 @@ public:
 
   DerivedDefinitionContext* derivedDefinition();
 
+  class  VisibiltyContext : public antlr4::ParserRuleContext {
+  public:
+    VisibiltyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *PUBLIC();
+    antlr4::tree::TerminalNode *PRIVATE();
+    antlr4::tree::TerminalNode *PROTECTED();
+    antlr4::tree::TerminalNode *PACKAGE();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  VisibiltyContext* visibilty();
+
   class  OperationDefinitionContext : public antlr4::ParserRuleContext {
   public:
     OperationDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -345,6 +364,7 @@ public:
     ParamListContext *paramList();
     antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
+    VisibiltyContext *visibilty();
     antlr4::tree::TerminalNode *SOIL_OPERATION();
     std::vector<PrePostClauseContext *> prePostClause();
     PrePostClauseContext* prePostClause(size_t i);
@@ -418,6 +438,8 @@ public:
     MultiplicityContext *multiplicity();
     antlr4::tree::TerminalNode *RBRACK();
     RoleContext *role();
+    antlr4::tree::TerminalNode *NO_NAVIGABLE();
+    VisibiltyContext *visibilty();
     std::vector<antlr4::tree::TerminalNode *> ORDERED();
     antlr4::tree::TerminalNode* ORDERED(size_t i);
     std::vector<SubsetsContext *> subsets();

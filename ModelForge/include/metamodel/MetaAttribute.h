@@ -3,22 +3,25 @@
 
 
 
+#include "MetaElement.h"
 #include "MetaType.h"
+#include "Visibility.h"
 #include "OCL/OCLExpr.h"
 
 #include<string>
 
 namespace MetaModel{
 
-class MetaAttribute{
+class MetaAttribute: public MetaElement{
 private:
     std::string name;
     std::shared_ptr<MetaType> type;
+    MetaModel::Visibility visibility;
     std::shared_ptr<Expr> initExpr;
     std::shared_ptr<Expr> deriveExpr;
 
 public:
-    MetaAttribute(const std::string& name, const std::shared_ptr<MetaType>& type);
+    MetaAttribute(const std::string& name, const std::shared_ptr<MetaType>& type, Visibility visibility = Visibility::Public);
 
     std::string getName() const;
     void setName(const std::string& name);
@@ -33,7 +36,12 @@ public:
     const Expr* getDeriveExpr() const;
     void setDeriveExpr(const std::shared_ptr<Expr>& deriveExpr);
 
+    Visibility getVisibility() const;
+    void setVisibility(Visibility vis);
+
     std::string toString() const;
+
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

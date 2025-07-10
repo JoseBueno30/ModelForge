@@ -49,6 +49,8 @@ public:
 
     virtual std::any visitDerivedDefinition(USEParser::DerivedDefinitionContext *context) = 0;
 
+    virtual std::any visitVisibilty(USEParser::VisibiltyContext *context) = 0;
+
     virtual std::any visitOperationDefinition(USEParser::OperationDefinitionContext *context) = 0;
 
     virtual std::any visitSimpleAssociation(USEParser::SimpleAssociationContext *context) = 0;

@@ -40,7 +40,7 @@ public:
 
     std::string toString() const override;
 
-    void accept(ModelToText::VisitorInterface& visitor) const override;
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

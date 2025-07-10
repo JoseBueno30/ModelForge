@@ -69,6 +69,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitVisibilty(USEParser::VisibiltyContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitOperationDefinition(USEParser::OperationDefinitionContext *ctx) override {
     return visitChildren(ctx);
   }

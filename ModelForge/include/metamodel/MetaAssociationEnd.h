@@ -4,6 +4,8 @@
 
 #include "MetaVariable.h"
 #include "OCL/OCLExpr.h"
+#include "MetaElement.h"
+#include "Visibility.h"
 
 #include <memory>
 #include <string>
@@ -51,11 +53,12 @@ public:
     std::string toString() const;
 };
 
-class MetaAssociationEnd{
+class MetaAssociationEnd : public MetaElement{
 private:
     std::shared_ptr<MetaClass> endClass;
     std::shared_ptr<MetaAssociation> association;
     std::string role;
+    MetaModel::Visibility visibility;
     int type;
     bool isNavigable;
     bool isOrdered;
@@ -68,8 +71,10 @@ private:
     std::shared_ptr<Expr> deriveExpr;
 
 public:
-    MetaAssociationEnd(const std::shared_ptr<MetaAssociation>& association, int type);
-    MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association, const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion, const std::shared_ptr<MetaMultiplicity>& multiplicity);
+    MetaAssociationEnd(const std::shared_ptr<MetaAssociation>& association, int type, Visibility visibility = Visibility::Public);
+    MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association,
+                       const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion,
+                       const std::shared_ptr<MetaMultiplicity>& multiplicity, Visibility visibility = Visibility::Public);
 
     const MetaClass& getClass() const;
     std::shared_ptr<MetaClass> getClassSharedPtr() const;
@@ -81,6 +86,9 @@ public:
 
     std::string getRole() const;
     void setRole(const std::string& role);
+
+    Visibility getVisibility() const;
+    void setVisibility(Visibility vis);
 
     int getType() const;
     void setType(int type);
@@ -117,6 +125,8 @@ public:
 
     const Expr* getDeriveExpr() const;
     void setDeriveExpr(const std::shared_ptr<Expr>& deriveExpr);
+
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

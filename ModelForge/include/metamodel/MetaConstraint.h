@@ -2,6 +2,7 @@
 #define METACONSTRAINT_H
 
 
+#include "MetaElement.h"
 #include "MetaVariable.h"
 #include "OCL/OCLExpr.h"
 
@@ -14,7 +15,7 @@ namespace MetaModel{
 
 class MetaClass;
 
-class MetaConstraint{
+class MetaConstraint: public MetaElement{
 
 private:
     std::string name;
@@ -43,6 +44,8 @@ public:
     const MetaVariable* getVariable(const std::string& key) const;
     void addVariable(const std::string& variableName);
     void removeVariable(const std::string& key);
+
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }
