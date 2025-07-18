@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>685</width>
-    <height>553</height>
+    <height>681</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>330</x>
-     <y>510</y>
+     <y>640</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -48,7 +48,7 @@
      <x>40</x>
      <y>120</y>
      <width>521</width>
-     <height>181</height>
+     <height>241</height>
     </rect>
    </property>
    <property name="title">
@@ -123,6 +123,83 @@
      </rect>
     </property>
    </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>180</y>
+      <width>63</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Visibility:</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="publicAEnd1RAdioButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>200</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Public</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">visibilityAEnd1ButtonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="privateAEnd1RadioButton">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>200</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Private</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">visibilityAEnd1ButtonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="protecetedAEnd1RadioButton">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>200</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Protected</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">visibilityAEnd1ButtonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="packageAEnd1RadioButton">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>200</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Package</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">visibilityAEnd1ButtonGroup</string>
+    </attribute>
+   </widget>
   </widget>
   <widget class="QLineEdit" name="associationNameEdit">
    <property name="geometry">
@@ -138,9 +215,9 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>310</y>
+     <y>370</y>
      <width>521</width>
-     <height>181</height>
+     <height>251</height>
     </rect>
    </property>
    <property name="title">
@@ -215,6 +292,83 @@
      </rect>
     </property>
    </widget>
+   <widget class="QRadioButton" name="packageAEnd2RadioButton">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>210</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Package</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">visibilityAEnd2ButtonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>190</y>
+      <width>63</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Visibility:</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="privateAEnd2RadioButton">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>210</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Private</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">visibilityAEnd2ButtonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="publicAEnd2RadioButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>210</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Public</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">visibilityAEnd2ButtonGroup</string>
+    </attribute>
+   </widget>
+   <widget class="QRadioButton" name="protectedAEnd2RadioButton">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>210</y>
+      <width>91</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Protected</string>
+    </property>
+    <attribute name="buttonGroup">
+     <string notr="true">visibilityAEnd2ButtonGroup</string>
+    </attribute>
+   </widget>
   </widget>
   <widget class="QLabel" name="label_8">
    <property name="geometry">
@@ -275,4 +429,8 @@
    </hints>
   </connection>
  </connections>
+ <buttongroups>
+  <buttongroup name="visibilityAEnd2ButtonGroup"/>
+  <buttongroup name="visibilityAEnd1ButtonGroup"/>
+ </buttongroups>
 </ui>
