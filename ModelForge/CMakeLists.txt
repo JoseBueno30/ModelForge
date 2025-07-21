@@ -397,6 +397,8 @@ add_library(MetaModelLib SHARED
     include/modelToText/VisitorInterface.h
     include/modelToText/VisitorUSE.h
     src/modelToText/VisitorUSE.cpp
+    include/modelToText/VisitorJava.h
+    src/modelToText/VisitorJava.cpp
 
 
     include/OCL/OCLExpr.h

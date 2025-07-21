@@ -45,6 +45,8 @@ public Q_SLOTS:
 
     void saveModel();
 
+    void exportToJava();
+
     void newModel();
 
     void closeModel();

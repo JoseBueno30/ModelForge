@@ -12,6 +12,7 @@
 #include <antlr4/generated/USELexer.h>
 #include <antlr4/generated/USEParser.h>
 #include <antlr4/CustomUSEVisitor.cpp>
+#include <modelToText/VisitorJava.h>
 #include <modelToText/VisitorUSE.h>
 #include <ui/components/ThemeManager.h>
 #include <QStyleFactory>
@@ -88,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveModel);
     connect(ui->actionNew_Model, &QAction::triggered, this, &MainWindow::newModel);
     connect(ui->actionClose_Model, &QAction::triggered, this, &MainWindow::closeModel);
+    connect(ui->actionExportJava, &QAction::triggered, this, &MainWindow::exportToJava);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
 
@@ -358,6 +360,30 @@ void MainWindow::saveModel(){
     ConsoleHandler::appendSuccessfulLog("The file was succesfully saved.");
 }
 
+void MainWindow::exportToJava(){
+    if(path == nullptr){
+        QString  path = QFileDialog::getSaveFileName(
+            this,                         // QWidget padre
+            "Save file",              // Título del diálogo
+            "",                             // Ruta inicial (puedes poner una por defecto)
+            "USE files (*.use)" // Filtros
+            );
+        }
+
+    if (!path.isEmpty()) {
+        QFileInfo fileInfo(path);
+        QString directoryPath = fileInfo.absolutePath();
+        qDebug() << "Directory path:" << directoryPath;
+
+        ModelToText::VisitorJava visitorJava(directoryPath.toStdString());
+
+        model->accept(visitorJava);
+
+        ConsoleHandler::appendSuccessfulLog("Java code succesfully generated.");
+    }
+
+}
+
 void MainWindow::newModel(){
     closeModel();
 
@@ -393,6 +419,7 @@ void MainWindow::enableModelActions(){
 
     ui->actionClose_Model->setEnabled(true);
     ui->actionSave->setEnabled(true);
+    ui->actionExportJava->setEnabled(true);
 }
 
 void MainWindow::disableModelActions(){
@@ -409,6 +436,7 @@ void MainWindow::disableModelActions(){
 
     ui->actionClose_Model->setEnabled(false);
     ui->actionSave->setEnabled(false);
+    ui->actionExportJava->setEnabled(false);
 }
 
 void MainWindow::itemMoved(QGraphicsItem * movedItem, const QPointF& oldPos)
