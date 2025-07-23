@@ -123,7 +123,9 @@ shared_ptr<MetaModel::MetaClass>& ClassItemView::getClassModel(){
 }
 
 void ClassItemView::addAssociation(AssociationItemView* association){
+    qDebug() << "pushing asoc";
     if (std::find(this->associations.begin(), this->associations.end(), association) == this->associations.end()) {
+        qDebug() <<"añade asoc";
         this->associations.push_back(association);
     }
 }
@@ -215,8 +217,8 @@ void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
 
 void ClassItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
-
-    ClassEditDialog *classEdit = new ClassEditDialog(this->getClassModel(), this->scene(), this, nullptr, this->scene()->views().first());
+    auto scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
+    ClassEditDialog *classEdit = new ClassEditDialog(this->getClassModel(), scene, this, nullptr, this->scene()->views().first());
     classEdit->exec();
 }
 

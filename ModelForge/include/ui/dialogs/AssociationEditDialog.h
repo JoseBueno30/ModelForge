@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <metamodel/MetaModel.h>
 #include <any>
+#include <ui/components/ModelGraphicsScene.h>
 #include <qgraphicsitem.h>
 #include <ui/view/AssociationItemView.h>
 
@@ -18,8 +19,7 @@ class AssociationEditDialog : public QDialog{
 public:
     explicit AssociationEditDialog(
         std::shared_ptr<MetaModel::MetaAssociation> associationModel,
-        std::map<std::string, QGraphicsItem*> itemViewsMap,
-        QGraphicsScene* scene,
+        ModelGraphicsScene* scene,
         AssociationItemView * associationItemView = nullptr,
         std::shared_ptr<MetaModel::MetaModel> model = nullptr
         );
@@ -31,8 +31,7 @@ private:
     Ui::AssociationEditDialog *ui;
 
     std::shared_ptr<MetaModel::MetaAssociation> associationModel;
-    std::map<std::string, QGraphicsItem*> itemViewsMap;
-    QGraphicsScene* scene;
+    ModelGraphicsScene* scene;
     AssociationItemView * associationItemView;
     std::shared_ptr<MetaModel::MetaModel> model;
 

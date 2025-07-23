@@ -8,7 +8,7 @@
 #include <QComboBox>
 #include <QLabel>
 
-ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, QGraphicsScene* scene, ClassItemView* classView, std::shared_ptr<MetaModel::MetaModel> model, QWidget *parent) :
+ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, ModelGraphicsScene* scene, ClassItemView* classView, std::shared_ptr<MetaModel::MetaModel> model, QWidget *parent) :
     QDialog(parent), metaClass(metaClass), model(model), classView(classView),
     ui(new Ui::ClassEditDialog), scene(scene)
 {
@@ -145,6 +145,8 @@ void ClassEditDialog::saveChanges() {
     this->editedClass->setIsAbstract(ui->isAbstractCheckBox->isChecked());
     this->editedClass->setName(ui->classNameEdit->text().toStdString());
 
+
+    //ACTUALIZAR MAPA DE MAINWINDOW EN LOS COMANDOS
     if(model == nullptr){
         MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
     }else{

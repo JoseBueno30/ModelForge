@@ -12,13 +12,12 @@
 
 AssociationEditDialog::AssociationEditDialog(
     std::shared_ptr<MetaModel::MetaAssociation> associationModel,
-    std::map<std::string, QGraphicsItem*> itemViewsMap,
-    QGraphicsScene* scene,
+    ModelGraphicsScene* scene,
     AssociationItemView * associationItemView,
     std::shared_ptr<MetaModel::MetaModel> model
     )
     :
-    associationModel(associationModel), itemViewsMap(itemViewsMap), scene(scene), model(model),
+    associationModel(associationModel), scene(scene), model(model),
     associationItemView(associationItemView), ui(new Ui::AssociationEditDialog)
 {
     ui->setupUi(this);
@@ -126,8 +125,8 @@ void AssociationEditDialog::saveChanges(){
             associationModel->addAssociationEnd(associationEnd2);
 
             qDebug()<< "c";
-            ClassItemView* class1 = dynamic_cast<ClassItemView*>(itemViewsMap.find(ui->typeAEnd1ComboBox->currentText().toStdString())->second);
-            ClassItemView* class2 = dynamic_cast<ClassItemView*>(itemViewsMap.find(ui->typeAEnd2ComboBox->currentText().toStdString())->second);
+            ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(ui->typeAEnd1ComboBox->currentText().toStdString()));
+            ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(ui->typeAEnd2ComboBox->currentText().toStdString()));
 
             qDebug()<< "d";
             AssociationItemView * newAssociation = new AssociationItemView(associationModel, class1, class2);
@@ -154,7 +153,7 @@ void AssociationEditDialog::saveChanges(){
             setAssociationEnd1(associationEnd1);
             setAssociationEnd2(associationEnd2);
 
-            EditMetaAssociationCommand *editCommand = new EditMetaAssociationCommand(this->associationModel, newAssociation, this->associationItemView, this->itemViewsMap, this->scene);
+            EditMetaAssociationCommand *editCommand = new EditMetaAssociationCommand(this->associationModel, newAssociation, this->associationItemView, this->scene);
             MainWindow::undoStack->push(editCommand);
         }
     }

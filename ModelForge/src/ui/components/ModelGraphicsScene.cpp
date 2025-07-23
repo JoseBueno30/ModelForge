@@ -54,3 +54,19 @@ void ModelGraphicsScene::setClipboard(ItemViewClipboard* clipboard){
 void ModelGraphicsScene::setClipboardModel(std::shared_ptr<MetaModel::MetaModel> model){
     this->clipboard->setModel(model);
 }
+
+QGraphicsItem* ModelGraphicsScene::getModelItemView(const std::string& key){
+    auto iterator = this->modelItemViewElementsMap.find(key);
+    if(iterator != this->modelItemViewElementsMap.end()){
+        return (iterator->second);
+    }
+    return nullptr;
+}
+
+void ModelGraphicsScene::addModelItemView(const std::string& key, QGraphicsItem *item){
+    this->modelItemViewElementsMap[key] = item;
+}
+
+void ModelGraphicsScene::removeModelItemView(const std::string& key){
+    this->modelItemViewElementsMap.erase(key);
+}

@@ -33,10 +33,6 @@ public Q_SLOTS:
     std::shared_ptr<MetaModel::MetaModel> getModel();
     void setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> model);
 
-    QGraphicsItem* getModelItemView(const std::string& key);
-    void addModelItemView(const std::string& key, QGraphicsItem *item);
-    void removeModelItemView(const std::string& key);
-
     void openModelFile();
     void openNewClassDialog();
     void openNewAssociationDialog();
@@ -58,7 +54,6 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
     QString theme;
     ConsoleHandler* consoleHandler;
-    std::map<std::string, QGraphicsItem*> modelItemViewElementsMap;
     ModelGraphicsScene *scene;
 
     QString path;

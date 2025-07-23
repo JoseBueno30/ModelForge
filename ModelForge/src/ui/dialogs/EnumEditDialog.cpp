@@ -7,7 +7,7 @@
 
 #include <utils/Commands.h>
 
-EnumEditDialog::EnumEditDialog(std::shared_ptr<MetaModel::MetaEnum> metaEnum, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model, EnumItemView * itemView, QWidget* parent)
+EnumEditDialog::EnumEditDialog(std::shared_ptr<MetaModel::MetaEnum> metaEnum, ModelGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model, EnumItemView * itemView, QWidget* parent)
     : metaEnum(metaEnum), scene(scene), model(model), ui(new Ui::EnumEditDialog), itemView(itemView),QDialog(parent)
 {
     ui->setupUi(this);
