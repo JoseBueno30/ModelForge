@@ -20,6 +20,7 @@
 #include <ui/dialogs/ClassEditDialog.h>
 #include <metamodel/MetaAssociation.h>
 #include <QMessageBox>
+#include <QInputDialog>
 
 QUndoStack* MainWindow::undoStack = new QUndoStack();
 
@@ -307,48 +308,68 @@ void MainWindow::openModelFile(){
 }
 
 void MainWindow::saveModel(){
-    if(path == nullptr){
-        path = QFileDialog::getSaveFileName(
-            this,                         // QWidget padre
-            "Save file",              // Título del diálogo
-            "",                             // Ruta inicial (puedes poner una por defecto)
-            "USE files (*.use)" // Filtros
-            );
+    try{
+        if(path == nullptr){
+            path = QFileDialog::getSaveFileName(
+                this,                         // QWidget padre
+                "Save file",              // Título del diálogo
+                "",                             // Ruta inicial (puedes poner una por defecto)
+                "USE files (*.use)" // Filtros
+                );
 
-        if (QFile::exists(path)) {
-            QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Archivo ya existe",
-                                          "¿Deseas sobrescribir el archivo?",
-                                          QMessageBox::Yes | QMessageBox::No);
+            if (QFile::exists(path)) {
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(nullptr, "The file already exists",
+                                              "Do you want to overwrite it?",
+                                              QMessageBox::Yes | QMessageBox::No);
 
-            if (reply != QMessageBox::Yes) {
-                return; // No guardamos nada
+                if (reply != QMessageBox::Yes) {
+                    return; // No guardamos nada
+                }
+
+            }else{
+                QFile file(path);
+                file.open(QIODevice::WriteOnly);
+                file.close();
             }
-
-        }else{
-            QFile file(path);
-            file.open(QIODevice::WriteOnly);
-            file.close();
         }
+
+        QFileInfo fileInfo(path);
+        qDebug() << "Archivo a guardar: " << path;
+        // QString directory = fileInfo.absolutePath();
+        ModelToText::VisitorUSE visitorUSE(path.toStdString());
+
+        model->accept(visitorUSE);
+
+        ConsoleHandler::appendSuccessfulLog("The file was succesfully saved.");
+    }
+    catch(std::runtime_error){
+        ConsoleHandler::appendErrorLog("The file couldn't be saved.");
     }
 
-    QFileInfo fileInfo(path);
-    qDebug() << "Archivo a guardar: " << path;
-    // QString directory = fileInfo.absolutePath();
-    ModelToText::VisitorUSE visitorUSE(path.toStdString());
-
-    model->accept(visitorUSE);
-
-    ConsoleHandler::appendSuccessfulLog("The file was succesfully saved.");
 }
 
 void MainWindow::newModel(){
     closeModel();
 
-    model = std::make_shared<MetaModel::MetaModel>("NewModel");
+    bool ok;
+    QString modelName = QInputDialog::getText(
+        this,                   // QWidget* parent
+        "Create model",               // Título de la ventana
+        "Insert the model name:", // Texto del mensaje
+        QLineEdit::Normal,      // Tipo de entrada
+        "",                     // Texto por defecto
+        &ok                     // Si se pulsó OK o Cancelar
+        );
+
+    if (!ok || modelName.isEmpty()) {
+        modelName = "NewModel";
+    }
+
+    model = std::make_shared<MetaModel::MetaModel>(modelName.toStdString());
     this->setupModelGraphicsView(model);
 
-    ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
+    ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully created."));
 
     enableModelActions();
 }
@@ -357,6 +378,7 @@ void MainWindow::closeModel(){
     this->model = nullptr;
     this->scene->clear();
     this->scene->update();
+    this->path = "";
 
     MainWindow::undoStack->clear();
 
