@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include <modelToText/VisitorInterface.h>
+
 namespace MetaModel {
 
 std::string MetaType::toString() const{
@@ -10,6 +12,10 @@ std::string MetaType::toString() const{
 
 std::string SimpleType::toString() const{
     return "SimpleType";
+}
+
+std::any SimpleType::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
 }
 
 std::string Real::toString() const{
@@ -128,6 +134,10 @@ bool CollectionType::equals(const MetaType& type) const{
            (this->type->equals(collectionType->getType()));
 }
 
+std::any CollectionType::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
+}
+
 
 TuplePart::TuplePart(const std::string& name, const std::shared_ptr<MetaType>& type)
     : name(name), type(type)
@@ -226,6 +236,10 @@ bool TupleType::equals(const MetaType& type) const {
     }
 
     return true;
+}
+
+std::any TupleType::accept(ModelToText::VisitorInterface& visitor) const{
+    return visitor.visit(*this);
 }
 
 }

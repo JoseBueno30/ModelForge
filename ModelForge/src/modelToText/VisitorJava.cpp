@@ -1,12 +1,48 @@
 #include <filesystem>
+#include <iostream>
 #include <modelToText/VisitorJava.h>
 
 
 
 namespace ModelToText {
 
+std::string VisitorJava::visibilityToString(MetaModel::Visibility vis) {
+    switch (vis) {
+    case MetaModel::Visibility::Public:    return "public";
+    case MetaModel::Visibility::Private:   return "private";
+    case MetaModel::Visibility::Protected: return "protected";
+    case MetaModel::Visibility::Package:   return "package";
+    }
+    return "";
+}
+
+std::string VisitorJava::simpleTypeToJavaString(const MetaModel::SimpleType& type) {
+    if (dynamic_cast<const MetaModel::String*>(&type)) {
+        return "string";
+    } else if (dynamic_cast<const MetaModel::Integer*>(&type)) {
+        return "int";
+    } else if (dynamic_cast<const MetaModel::Real*>(&type)){
+        return "double";
+    } else if (dynamic_cast<const MetaModel::Boolean*>(&type)) {
+        return "boolean";
+    } else if (dynamic_cast<const MetaModel::Void*>(&type)) {
+        return "void";
+    } else {
+        return "null";
+    }
+}
+
 VisitorJava::VisitorJava(const std::string& directoryPath) {
-    this->directoryPath = directoryPath + "/java";
+    this->directoryPath = directoryPath;
+}
+
+VisitorJava::~VisitorJava() {}
+
+std::any VisitorJava::visit(const MetaModel::MetaModel& metaModel) {
+    packageName = metaModel.getName();
+    std::transform(packageName.begin(), packageName.end(), packageName.begin(), ::tolower);
+
+    this->directoryPath = this->directoryPath + "/java/" + packageName;
 
     std::filesystem::path javaDir(this->directoryPath);
 
@@ -16,11 +52,7 @@ VisitorJava::VisitorJava(const std::string& directoryPath) {
             throw std::runtime_error("Failed to create directory: " + javaDir.string() + ", error: " + ec.message());
         }
     }
-}
 
-VisitorJava::~VisitorJava() {}
-
-std::any VisitorJava::visit(MetaModel::MetaModel metaModel) {
     this->metaClasses = &metaModel.getClasses();
 
     // Visit enums
@@ -46,51 +78,148 @@ std::any VisitorJava::visit(MetaModel::MetaModel metaModel) {
     return 0;
 }
 
-std::any VisitorJava::visit(MetaModel::MetaEnum metaEnum) {
+std::any VisitorJava::visit(const MetaModel::MetaEnum& metaEnum) {
     std::string filePath = this->directoryPath + "/" + metaEnum.getName() + ".java";
-    std::ofstream file(filePath);
+    std::ofstream outFile(filePath);
 
-    file << "public enum " << metaEnum.getName() << " {\n";
+    outFile << "package " << packageName << ";\n";
+
+    outFile << "public enum " << metaEnum.getName() << " {\n";
     for(const auto &metaEnumPair: metaEnum.getElements()){
-        file << "\t" << metaEnumPair.second->getName() << ",\n";
+        outFile << "\t" << metaEnumPair.second->getName() << ",\n";
     }
-    file << "}\n";
-    file.close();
+    outFile << "}\n";
+    outFile.close();
 
     return 0;
 }
 
 
-std::any VisitorJava::visit(MetaModel::MetaClass metaClass) {
+std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
+    std::string filePath = this->directoryPath + "/" + metaClass.getName() + ".java";
+    outFile.open(filePath);
+
+    outFile << "package " << packageName << ";\n";
+
+    outFile << "public" << (metaClass.getIsAbstract() ? " abstract " : " ") << "class " << metaClass.getName();
+
+    currentClassImports.clear();
+
+    // TODO: improve inheritance, check before generating if is a java valid model, check if class has no attributes to be an interface else an extension
+    auto superClasses = metaClass.getSuperClasses();
+    if (!superClasses.empty()) {
+        outFile << " extends ";
+        bool first = true;
+        for (const auto &superClassPair : superClasses) {
+            if (!first) outFile << ", ";
+            outFile << superClassPair.second->getName();
+            first = false;
+            break; // only support single inheritance in Java
+        }
+    }
+
+    outFile << "{\n\n";
+
+    //attributes
+    for(const auto &attributePair : metaClass.getAttributes()){
+        attributePair.second->accept(*this);
+    }
+
+
+    outFile << "}\n";
+    outFile.close();
+
     return 0;
 }
 
-std::any VisitorJava::visit(MetaModel::MetaAssociation metaAssociation) {
+void VisitorJava::manageTypeImport(const std::shared_ptr<MetaModel::MetaType>& metaType) {
+
+
+}
+
+std::any VisitorJava::visit(const MetaModel::SimpleType& simpleType) {
+
+    if (const MetaModel::MetaClass* metaClassPtr = dynamic_cast<const MetaModel::MetaClass*>(&simpleType)) {
+        return metaClassPtr->getName();
+    }
+
+    if (const MetaModel::MetaEnum* metaEnumPtr = dynamic_cast<const MetaModel::MetaEnum*>(&simpleType)) {
+        return metaEnumPtr->getName();
+    }
+
+    return simpleTypeToJavaString(simpleType);
+}
+
+std::any VisitorJava::visit(const MetaModel::CollectionType& collectionType) {
+    std::string collectionTypeStr = "";
+
+    std::string elementType = std::any_cast<std::string>(collectionType.getType().accept(*this));
+
+    if (collectionType.getIsOrdered() && !collectionType.getIsUnique()) {
+        currentClassImports.insert("java.util.List");
+        currentClassImports.insert("java.util.ArrayList");
+        collectionTypeStr = "List<" + elementType + ">";
+    } else if (!collectionType.getIsOrdered() && collectionType.getIsUnique()) {
+        currentClassImports.insert("java.util.Set");
+        currentClassImports.insert("java.util.HashSet");
+        collectionTypeStr = "Set<" + elementType + ">";
+    } else if (collectionType.getIsOrdered() && collectionType.getIsUnique()) {
+        currentClassImports.insert("java.util.SortedSet");
+        currentClassImports.insert("java.util.TreeSet");
+        collectionTypeStr = "SortedSet<" + elementType + ">";
+    } else {
+        currentClassImports.insert("java.util.List");
+        currentClassImports.insert("java.util.ArrayList");
+        collectionTypeStr = "List<" + elementType + ">";
+    }
+
+    return collectionTypeStr;
+}
+
+std::any VisitorJava::visit(const MetaModel::TupleType& tupleType) {
+
+    return "TODO TUPLES";
+}
+
+std::any VisitorJava::visit(const MetaModel::MetaAssociation& metaAssociation) {
     return 0;
 }
 
 
-std::any VisitorJava::visit(MetaModel::MetaAssociationClass metaAssociationClass) {
+std::any VisitorJava::visit(const MetaModel::MetaAssociationClass& metaAssociationClass) {
+    return 0;
+}
+
+std::any VisitorJava::visitType(const MetaModel::MetaType& metaType){
+    if (const auto* simpleType = dynamic_cast<const MetaModel::SimpleType*>(&metaType)) {
+        return visit(*simpleType);
+    } else {
+        return metaType.accept(*this);
+    }
+}
+
+std::any VisitorJava::visit(const MetaModel::MetaAttribute& metaAttribute) {
+
+    std::string attributeType = std::any_cast<std::string>(visitType(metaAttribute.getType()));
+
+    outFile << "\t" << visibilityToString(metaAttribute.getVisibility()) << " " << attributeType;
+    outFile << " " << metaAttribute.getName() << ";\n";
+
     return 0;
 }
 
 
-std::any VisitorJava::visit(MetaModel::MetaAttribute metaAttribute) {
+std::any VisitorJava::visit(const MetaModel::MetaOperation& metaOperation) {
     return 0;
 }
 
 
-std::any VisitorJava::visit(MetaModel::MetaOperation metaOperation) {
+std::any VisitorJava::visit(const MetaModel::MetaConstraint& metaConstraint) {
     return 0;
 }
 
 
-std::any VisitorJava::visit(MetaModel::MetaConstraint metaConstraint) {
-    return 0;
-}
-
-
-std::any VisitorJava::visit(MetaModel::MetaAssociationEnd metaAssociatonEnd) {
+std::any VisitorJava::visit(const MetaModel::MetaAssociationEnd& metaAssociatonEnd) {
     return 0;
 }
 

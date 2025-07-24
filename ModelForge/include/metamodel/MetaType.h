@@ -1,13 +1,15 @@
 #ifndef METATYPE_H
 #define METATYPE_H
 
+#include "MetaElement.h"
+
 #include <string>
 #include <memory>
 #include <map>
 
 namespace MetaModel{
 
-class MetaType{
+class MetaType : public virtual MetaElement{
 public:
     virtual std::string toString() const;
     virtual bool equals(const MetaType& type) const = 0;
@@ -19,6 +21,10 @@ class SimpleType : public MetaType{
 public:
     virtual std::string toString() const override;
     virtual ~SimpleType(){};
+
+    virtual bool equals(const MetaType& type) const override {return false;};
+
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 class Real : public SimpleType{
@@ -104,6 +110,8 @@ public:
 
     virtual bool equals(const MetaType& type) const override;
     std::string toString() const override;
+
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 // Tuple Type
@@ -137,6 +145,8 @@ public:
 
     std::string toString() const override;
     virtual bool equals(const MetaType& type) const override;
+
+    std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
 }

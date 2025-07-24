@@ -3,7 +3,7 @@
 
 namespace ModelToText {
 
-std::string visibilityToString(MetaModel::Visibility vis) {
+std::string VisitorUSE::visibilityToString(MetaModel::Visibility vis) {
     switch (vis) {
     case MetaModel::Visibility::Public:    return "--+";
     case MetaModel::Visibility::Private:   return "--—";
@@ -26,7 +26,7 @@ VisitorUSE::~VisitorUSE() {
     }
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaModel metaModel){
+std::any VisitorUSE::visit(const MetaModel::MetaModel& metaModel){
     outFile << "model " << metaModel.getName() <<"\n\n";
 
     for(const auto &metaEnumPair : metaModel.getEnums()){
@@ -53,7 +53,7 @@ std::any VisitorUSE::visit(MetaModel::MetaModel metaModel){
     return nullptr;
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaAttribute metaAttribute){
+std::any VisitorUSE::visit(const MetaModel::MetaAttribute& metaAttribute){
     std::string metaAttributeString = "";
     metaAttributeString += metaAttribute.toString() + " " + visibilityToString(metaAttribute.getVisibility()) + "\n";
 
@@ -69,7 +69,7 @@ std::any VisitorUSE::visit(MetaModel::MetaAttribute metaAttribute){
     return metaAttributeString;
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaOperation metaOperation){
+std::any VisitorUSE::visit(const MetaModel::MetaOperation& metaOperation){
     std::string metaOperationString = "";
     metaOperationString += metaOperation.toString() + " " + visibilityToString(metaOperation.getVisibility()) + "\n\t";
 
@@ -87,7 +87,7 @@ std::any VisitorUSE::visit(MetaModel::MetaOperation metaOperation){
     return metaOperationString;
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaConstraint metaConstraint){
+std::any VisitorUSE::visit(const MetaModel::MetaConstraint& metaConstraint){
     std::string metaConstraintString = "";
     if(metaConstraint.getVariables().size() > 1){
         metaConstraintString += "context ";
@@ -120,7 +120,7 @@ std::any VisitorUSE::visit(MetaModel::MetaConstraint metaConstraint){
     return metaConstraintString;
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaAssociationEnd metaAssociationEnd){
+std::any VisitorUSE::visit(const MetaModel::MetaAssociationEnd& metaAssociationEnd){
     std::string metaAssociationEndString = "";
     metaAssociationEndString += metaAssociationEnd.getClass().getName();
 
@@ -163,7 +163,7 @@ std::any VisitorUSE::visit(MetaModel::MetaAssociationEnd metaAssociationEnd){
     return metaAssociationEndString;
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaEnum metaEnum){
+std::any VisitorUSE::visit(const MetaModel::MetaEnum& metaEnum){
     std::string metaEnumString = "enum " + metaEnum.getName() + " {";
 
     auto metaEnumElements = metaEnum.getElements();
@@ -184,7 +184,7 @@ std::any VisitorUSE::visit(MetaModel::MetaEnum metaEnum){
     return 0;
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaClass metaClass){
+std::any VisitorUSE::visit(const MetaModel::MetaClass& metaClass){
     //If class has already been visited, do nothing
     if(visitedClasses.find(metaClass.getName()) != visitedClasses.end()){
         return 0;
@@ -283,7 +283,7 @@ std::any VisitorUSE::visit(MetaModel::MetaClass metaClass){
     return 0;
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaAssociation metaAssociation){
+std::any VisitorUSE::visit(const MetaModel::MetaAssociation& metaAssociation){
     std::string metaAssociationString = "";
 
     if(metaAssociation.getType() == MetaModel::MetaAssociation::AGGREGATION){
@@ -307,7 +307,7 @@ std::any VisitorUSE::visit(MetaModel::MetaAssociation metaAssociation){
     return 0;
 }
 
-std::any VisitorUSE::visit(MetaModel::MetaAssociationClass metaAssociationClass){
+std::any VisitorUSE::visit(const MetaModel::MetaAssociationClass& metaAssociationClass){
     //If association class has already been visited, do nothing
     if(visitedClasses.find(metaAssociationClass.getName()) != visitedClasses.end()){
         return 0;
