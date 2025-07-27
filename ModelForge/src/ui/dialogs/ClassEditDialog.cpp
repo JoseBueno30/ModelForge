@@ -1,3 +1,4 @@
+#include "ui/dialogs/OperationEditDialog.h"
 #include <ui/dialogs/ClassEditDialog.h>
 #include <src/ui/dialogs/ui_ClassEditDialog.h>
 #include <utils/Commands.h>
@@ -22,6 +23,7 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     this->editedClass = std::make_shared<MetaModel::MetaClass>(*metaClass);
 
     this->attributeCounter = metaClass->getAttributes().size() + 1;
+    this->operationCounter = metaClass->getOperations().size() + 1;
 
     ui->attributeTableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->operationTableWidget->horizontalHeader()->setStretchLastSection(true);
@@ -34,7 +36,11 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     connect(ui->addAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::addAttribute);
     connect(ui->removeAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::removeAttribute);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
-    connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::cellDoubleClicked);
+    connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::attributeCellDoubleClicked);
+
+    connect(ui->addOperationButton, &QPushButton::clicked, this, &ClassEditDialog::addOperation);
+    connect(ui->removeOperationButton, &QPushButton::clicked, this, &ClassEditDialog::removeOperation);
+    connect(ui->operationTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::operationCellDoubleClicked);
 
 }
 
@@ -89,9 +95,9 @@ void ClassEditDialog::loadOperations(){
     }
 }
 
-void ClassEditDialog::cellDoubleClicked(int row, int column){
+void ClassEditDialog::attributeCellDoubleClicked(int row, int column){
     //qDebug()<< "r: "<< row << " c:" << column;
-    QLabel * item = dynamic_cast<QLabel*>(ui->attributeTableWidget->cellWidget(row, column)); //get the attribute name cell
+    QLabel * item = dynamic_cast<QLabel*>(ui->attributeTableWidget->cellWidget(row, 0)); //get the attribute name cell
     //qDebug() << "crea el item";
     qDebug() << "Editar atributo: " << item->text();
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = this->editedClass->getAttribute(item->text().toStdString());
@@ -99,6 +105,38 @@ void ClassEditDialog::cellDoubleClicked(int row, int column){
     attrEditDialog->exec();
 }
 
+void ClassEditDialog::operationCellDoubleClicked(int row, int column){
+    QLabel * item = dynamic_cast<QLabel*>(ui->operationTableWidget->cellWidget(row, 0));
+
+    std::shared_ptr<MetaModel::MetaOperation> metaOperation = this->editedClass->getOperation(item->text().toStdString());
+    OperationEditDialog* opEditDialog = new OperationEditDialog(metaOperation);
+    opEditDialog->exec();
+}
+
+void ClassEditDialog::addOperation(){
+    std::string operationName = "operation" + std::to_string(this->operationCounter);
+
+    while(this->editedClass->getOperation(operationName) != nullptr){
+        this->operationCounter++;
+        operationName = "operation" + std::to_string(this->operationCounter);
+    }
+
+    auto metaOperation = std::make_shared<MetaModel::MetaOperation>(operationName, "", MetaModel::Integer::instance());
+    OperationEditDialog *opEditDialog = new OperationEditDialog(metaOperation, this);
+    int opEditDialogReturnCode = opEditDialog->exec();
+
+    if(opEditDialogReturnCode == 1){
+        this->editedClass->addOperation(metaOperation);
+        this->loadOperations();
+    }
+}
+void ClassEditDialog::removeOperation(){
+    auto *operationLabel = dynamic_cast<QLabel*>(this->ui->operationTableWidget->cellWidget(this->ui->operationTableWidget->currentRow(), 0));
+    auto operationName = operationLabel->text().toStdString();
+
+    this->editedClass->removeAttribute(operationName);
+    this->loadOperations();
+}
 
 void ClassEditDialog::addAttribute() {
     std::string attributeName = "attribute" + std::to_string(this->attributeCounter);
@@ -114,7 +152,6 @@ void ClassEditDialog::addAttribute() {
 
     int attrEditDialogReturnCode = attrEditDialog->exec();
 
-    // Add attribute to editedClass (as an action in UndoStack)
     if(attrEditDialogReturnCode == 1){
         this->editedClass->addAttribute(metaAttribute);
         this->loadAttributes();

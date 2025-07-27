@@ -25,7 +25,11 @@ private Q_SLOTS:
     void addAttribute();
     void removeAttribute();
     void saveChanges();
-    void cellDoubleClicked(int row, int column);
+    void attributeCellDoubleClicked(int row, int column);
+
+    void addOperation();
+    void removeOperation();
+    void operationCellDoubleClicked(int row, int column);
 
 private:
     Ui::ClassEditDialog *ui;
@@ -37,6 +41,7 @@ private:
     ModelGraphicsScene* scene;
 
     int attributeCounter;
+    int operationCounter;
 
     void loadAttributes();
     void loadOperations();

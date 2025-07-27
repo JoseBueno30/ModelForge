@@ -16,6 +16,7 @@ AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribut
 
     ui->nameLineEdit->setText(QString::fromStdString(metaAttribute->getName()));
     ui->typeComboBox->addItems({"Integer", "Real", "String", "Boolean"});
+    ui->typeComboBox->setCurrentText(QString::fromStdString(metaAttribute->getType().toString()));
 }
 
 AttributeEditDialog::~AttributeEditDialog()
