@@ -118,7 +118,7 @@ std::string CollectionType::toString() const{
         res = "Bag";
     }
 
-    return res + "<" + this->getType().toString() + ">";
+    return res + "(" + this->getType().toString() + ")";
 }
 
 bool CollectionType::equals(const MetaType& type) const{

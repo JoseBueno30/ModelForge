@@ -36,6 +36,8 @@ private:
 
     std::string capitalize(const std::string& name);
 
+    std::string generateClassConstructor(const MetaModel::MetaClass& metaClass, std::vector<JavaMemberCode> members);
+
     std::any visitType(const MetaModel::MetaType& metaType);
 
     std::string visibilityToString(MetaModel::Visibility vis);

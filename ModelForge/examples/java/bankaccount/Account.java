@@ -1,18 +1,22 @@
 package bankaccount;
+
 public class Account extends SuperAccount{
 
-	private int balance;
+	private Integer balance;
 	private Person test;
 	private AccountType type;
 
-public Account(, , ) {
+	public Account(Integer balance, Person test, AccountType type) {
+		this.setBalance(balance);
+		this.setTest(test);
+		this.setType(type);
 	}
 
-	public int getBalance() {
+	public Integer getBalance() {
 		return this.balance;
 	}
 
-	public void setBalance(int balance) {
+	public void setBalance(Integer balance) {
 		this.balance = balance;
 	}
 

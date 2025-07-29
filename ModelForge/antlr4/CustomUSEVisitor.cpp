@@ -281,7 +281,12 @@ public:
         std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
 
         MetaModel::Visibility visibility = MetaModel::Visibility::Public;
+
+        std::cout << "VISIBILITY:" << std::endl;
+        std::cout << ctx->getText() << std::endl;
+
         if(ctx->visibilty()){
+            std::cout << ctx->visibilty()->getText() << std::endl;
             visibility = std::any_cast<MetaModel::Visibility>(visit(ctx->visibilty()));
         }
 
@@ -385,8 +390,6 @@ public:
     std::any visitPrePost(USEParser::PrePostContext *ctx) override {
         // Check that the class in the context exists
         std::string className = ctx->ID()[0]->getText();
-
-        std::cout << className << std::endl;
 
         std::shared_ptr<MetaModel::MetaClass> scopeClass = model->getClass(className);
 
@@ -790,7 +793,7 @@ public:
 
     std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
         auto expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()));
-        std::cout << "EXPR: " << expr->toString() << std::endl;
+
         return expr;
     }
 

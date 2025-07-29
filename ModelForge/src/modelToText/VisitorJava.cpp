@@ -18,17 +18,17 @@ std::string VisitorJava::visibilityToString(MetaModel::Visibility vis) {
 
 std::string VisitorJava::simpleTypeToJavaString(const MetaModel::SimpleType& type) {
     if (dynamic_cast<const MetaModel::String*>(&type)) {
-        return "string";
+        return "String";
     } else if (dynamic_cast<const MetaModel::Integer*>(&type)) {
-        return "int";
+        return "Integer";
     } else if (dynamic_cast<const MetaModel::Real*>(&type)){
-        return "double";
+        return "Double";
     } else if (dynamic_cast<const MetaModel::Boolean*>(&type)) {
-        return "boolean";
+        return "Boolean";
     } else if (dynamic_cast<const MetaModel::Void*>(&type)) {
         return "void";
     } else {
-        return "null";
+        return "Object";
     }
 }
 
@@ -95,20 +95,22 @@ std::any VisitorJava::visit(const MetaModel::MetaEnum& metaEnum) {
 }
 
 
-std::string generateClassConstructor(const MetaModel::MetaClass& metaClass){
+std::string VisitorJava::generateClassConstructor(const MetaModel::MetaClass& metaClass, const std::vector<JavaMemberCode> members){
     std::string constructor = "";
 
-    constructor += "public " + metaClass.getName() + "(";
+    constructor += "\tpublic " + metaClass.getName() + "(";
 
     bool first = true;
-    for (const auto& attributePair : metaClass.getAttributes()) {
+    for (const auto& member : members) {
         if (!first) constructor += ", ";
-
-
+        constructor += member.paramDeclaration;
         first = false;
     }
     constructor += ") {\n";
 
+    for (const auto& member : members) {
+        constructor += member.paramSet;
+    }
 
     constructor += "\t}\n\n";
 
@@ -122,24 +124,34 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
 
     outFile << "package " << packageName << ";\n";
 
-    outFile << "public" << (metaClass.getIsAbstract() ? " abstract " : " ") << "class " << metaClass.getName();
+    std::string classString = "";
+
+    classString += "public";
+
+    if (metaClass.getIsAbstract()){
+        classString += " abstract";
+    } else {
+        classString += " ";
+    }
+
+    classString += "class " + metaClass.getName();
 
     currentClassImports.clear();
 
     // TODO: improve inheritance, check before generating if is a java valid model, check if class has no attributes to be an interface else an extension
     auto superClasses = metaClass.getSuperClasses();
     if (!superClasses.empty()) {
-        outFile << " extends ";
+        classString += " extends ";
         bool first = true;
         for (const auto &superClassPair : superClasses) {
-            if (!first) outFile << ", ";
-            outFile << superClassPair.second->getName();
+            if (!first) classString += ", ";
+            classString += superClassPair.second->getName();
             first = false;
             break; // only support single inheritance in Java
         }
     }
 
-    outFile << "{\n\n";
+    classString += "{\n\n";
 
     std::vector<JavaMemberCode> members;
 
@@ -149,26 +161,36 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
     }
 
     for (const auto& member : members) {
-        outFile << member.field;
+        classString += member.field;
     }
-    outFile << "\n";
+    classString += "\n";
 
-    outFile << generateClassConstructor(metaClass);
+    classString += generateClassConstructor(metaClass, members);
 
     for (const auto& member : members) {
-        outFile << member.getter;
-        outFile << member.setter;
+        classString += member.getter;
+        classString += member.setter;
 
         if (!member.adder.empty()) {
-            outFile << member.adder;
+            classString += member.adder;
         }
 
         if (!member.remover.empty()) {
-            outFile << member.remover;
+            classString += member.remover;
         }
     }
 
-    outFile << "}\n";
+    classString += "}\n";
+
+
+    for(const auto& import : currentClassImports){
+        outFile << "import " + import + ";\n";
+    }
+
+    outFile << "\n";
+
+    outFile << classString;
+
     outFile.close();
 
     return 0;

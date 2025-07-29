@@ -1,8 +1,9 @@
 package bankaccount;
-public abstract class SuperAccount{
+
+public abstractclass SuperAccount{
 
 
-public SuperAccount() {
+	public SuperAccount() {
 	}
 
 }
