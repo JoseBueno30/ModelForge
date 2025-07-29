@@ -95,6 +95,27 @@ std::any VisitorJava::visit(const MetaModel::MetaEnum& metaEnum) {
 }
 
 
+std::string generateClassConstructor(const MetaModel::MetaClass& metaClass){
+    std::string constructor = "";
+
+    constructor += "public " + metaClass.getName() + "(";
+
+    bool first = true;
+    for (const auto& attributePair : metaClass.getAttributes()) {
+        if (!first) constructor += ", ";
+
+
+        first = false;
+    }
+    constructor += ") {\n";
+
+
+    constructor += "\t}\n\n";
+
+    return constructor;
+}
+
+
 std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
     std::string filePath = this->directoryPath + "/" + metaClass.getName() + ".java";
     outFile.open(filePath);
@@ -120,21 +141,37 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
 
     outFile << "{\n\n";
 
+    std::vector<JavaMemberCode> members;
+
     //attributes
     for(const auto &attributePair : metaClass.getAttributes()){
-        attributePair.second->accept(*this);
+        members.push_back(std::any_cast<JavaMemberCode>(attributePair.second->accept(*this)));
     }
 
+    for (const auto& member : members) {
+        outFile << member.field;
+    }
+    outFile << "\n";
+
+    outFile << generateClassConstructor(metaClass);
+
+    for (const auto& member : members) {
+        outFile << member.getter;
+        outFile << member.setter;
+
+        if (!member.adder.empty()) {
+            outFile << member.adder;
+        }
+
+        if (!member.remover.empty()) {
+            outFile << member.remover;
+        }
+    }
 
     outFile << "}\n";
     outFile.close();
 
     return 0;
-}
-
-void VisitorJava::manageTypeImport(const std::shared_ptr<MetaModel::MetaType>& metaType) {
-
-
 }
 
 std::any VisitorJava::visit(const MetaModel::SimpleType& simpleType) {
@@ -198,14 +235,54 @@ std::any VisitorJava::visitType(const MetaModel::MetaType& metaType){
     }
 }
 
+std::string VisitorJava::capitalize(const std::string& name) {
+    if (name.empty()) return name;
+    std::string capitalized = name;
+    capitalized[0] = std::toupper(capitalized[0]);
+    return capitalized;
+}
+
 std::any VisitorJava::visit(const MetaModel::MetaAttribute& metaAttribute) {
+    JavaMemberCode member;
 
-    std::string attributeType = std::any_cast<std::string>(visitType(metaAttribute.getType()));
+    member.name = metaAttribute.getName();
+    member.type = std::any_cast<std::string>(visitType(metaAttribute.getType()));
+    std::string capitalizedName = capitalize(member.name);
+    std::string visibility = visibilityToString(metaAttribute.getVisibility());
 
-    outFile << "\t" << visibilityToString(metaAttribute.getVisibility()) << " " << attributeType;
-    outFile << " " << metaAttribute.getName() << ";\n";
+    member.field = "\tprivate " + member.type + " " + member.name + ";\n";
 
-    return 0;
+    member.paramDeclaration = member.type + " " + member.name;
+
+    member.paramSet = "\t\tthis.set" + capitalizedName + "(" + member.name + ");\n";
+
+    member.getter = "\t" + visibility + " " + member.type + " get" + capitalizedName + "() {\n" +
+                  "\t\treturn this." + member.name + ";\n" +
+                  "\t}\n\n";
+
+    member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + member.type + " " + member.name + ") {\n" +
+                  "\t\tthis." + member.name + " = " + member.name + ";\n" +
+                  "\t}\n\n";
+
+    if (const auto* collectionType = dynamic_cast<const MetaModel::CollectionType*>(&(metaAttribute.getType()))) {
+        std::string elementType = std::any_cast<std::string>(collectionType->getType().accept(*this));
+        std::string singularName = (member.name.size() > 1 && member.name.substr(member.name.size() - 1) == "s") ?
+                                       member.name.substr(0, member.name.size() - 1) : member.name;
+
+        std::string addName = "add" + capitalize(singularName);
+        std::string removeName = "remove" + capitalize(singularName);
+        std::string collectionVar = member.name;
+
+        member.adder = "\t" + visibility + " void " + addName + "(" + elementType + " element) {\n" +
+                       "\t\tthis." + collectionVar + ".add(element);\n" +
+                       "\t}\n\n";
+
+        member.remover = "\t" + visibility + " void " + removeName + "(" + elementType + " element) {\n" +
+                         "\t\tthis." + collectionVar + ".remove(element);\n" +
+                         "\t}\n\n";
+    }
+
+    return member;
 }
 
 

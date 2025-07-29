@@ -19,6 +19,28 @@ private:
     std::string globalConstraints;
     std::set<std::string> currentClassImports;
 
+    struct JavaMemberCode {
+        std::string name;
+        std::string type;
+
+        std::string field;
+        std::string getter;
+        std::string setter;
+
+        std::string adder = "";
+        std::string remover = "";
+
+        std::string paramDeclaration;
+        std::string paramSet;
+    };
+
+    std::string capitalize(const std::string& name);
+
+    std::any visitType(const MetaModel::MetaType& metaType);
+
+    std::string visibilityToString(MetaModel::Visibility vis);
+
+    std::string simpleTypeToJavaString(const MetaModel::SimpleType& type);
 
 public:
     explicit VisitorJava(const std::string& directoryPath);
@@ -50,12 +72,6 @@ public:
 
     void save();
 
-    std::any visitType(const MetaModel::MetaType& metaType);
-
-    std::string visibilityToString(MetaModel::Visibility vis);
-    void manageTypeImport(const std::shared_ptr<MetaModel::MetaType>& metaType);
-
-    std::string simpleTypeToJavaString(const MetaModel::SimpleType& type);
 };
 
 }
