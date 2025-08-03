@@ -67,17 +67,17 @@ public:
     void setReturnType(const std::shared_ptr<MetaType>& returnType);
 
     const std::map<std::string, std::shared_ptr<MetaVariable>>& getVariables() const;
-    const MetaVariable* getVariable(const std::string& key) const;
+    const std::shared_ptr<MetaVariable> getVariable(const std::string& key) const;
     void addVariable(const std::shared_ptr<MetaVariable>& variable);
     void removeVariable(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<PrePostClause>>& getPreConditions() const;
-    const PrePostClause* getPreCondition(const std::string& key) const;
+    const std::shared_ptr<PrePostClause> getPreCondition(const std::string& key) const;
     void addPreCondition(const std::shared_ptr<PrePostClause>& preCondition);
     void removePreCondition(const std::string& key);
 
     const std::map<std::string, std::shared_ptr<PrePostClause>>& getPostConditions() const;
-    const PrePostClause* getPostCondition(const std::string& key) const;
+    const std::shared_ptr<PrePostClause> getPostCondition(const std::string& key) const;
     void addPostCondition(const std::shared_ptr<PrePostClause>& postCondition);
     void removePostCondition(const std::string& key);
 
