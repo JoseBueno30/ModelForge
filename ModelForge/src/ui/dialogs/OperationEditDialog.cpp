@@ -1,3 +1,4 @@
+#include <ui/dialogs/ConditionEditDialog.h>
 #include <ui/dialogs/OperationEditDialog.h>
 #include <src/ui/dialogs/ui_OperationEditDialog.h>
 
@@ -10,6 +11,9 @@ OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperatio
     loadVisibility();
     loadConditions(metaOperation->getPreConditions());
     loadConditions(metaOperation->getPostConditions());
+
+    variablesCont = metaOperation->getVariables().size();
+    conditionsCont = metaOperation->getPostConditions().size() + metaOperation->getPreConditions().size();
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &OperationEditDialog::saveChanges);
 }
@@ -74,6 +78,59 @@ void OperationEditDialog::loadVisibility(){
     default:
         break;
     }
+}
+
+void OperationEditDialog::conditionCellDoubleClicked(int row, int column){
+    QLabel * item = dynamic_cast<QLabel*>(ui->conditionsTableWidget->cellWidget(row, 0));
+    QLabel * type = dynamic_cast<QLabel*>(ui->conditionsTableWidget->cellWidget(row, 1));
+
+    std::shared_ptr<MetaModel::PrePostClause> condition ;
+    if(type->text().toLower() == "pre"){
+       // condition = metaOperation->getPreCondition(item->text().toStdString());
+    }else{
+        // condition = metaOperation->getPostCondition(item->text().toStdString());
+    }
+    ConditionEditDialog* conditionEditDialog = new ConditionEditDialog(condition);
+
+    int returnCode = conditionEditDialog->exec();
+    if(returnCode == 1){
+        loadConditions(metaOperation->getPreConditions());
+        loadConditions(metaOperation->getPostConditions());
+    }
+}
+
+void OperationEditDialog::addNewCondition(){
+    auto conditionExpression = std::make_shared<MetaModel::Expr>("");
+    auto newCondition = std::make_shared<MetaModel::PrePostClause>("NewPrePostClause"+ std::to_string(conditionsCont), conditionExpression, true, false);
+
+    ConditionEditDialog* conditionEditDialog = new ConditionEditDialog(newCondition);
+    int returnCode = conditionEditDialog->exec();
+
+    if (returnCode == 1){
+        if(newCondition->getIsPost()){
+            metaOperation->addPostCondition(newCondition);
+        }else{
+            metaOperation->addPreCondition(newCondition);
+        }
+        loadConditions(metaOperation->getPreConditions());
+        loadConditions(metaOperation->getPostConditions());
+        conditionsCont++;
+    }
+}
+
+void OperationEditDialog::variableCellDoubleClicked(int row, int column){
+    QLabel * item = dynamic_cast<QLabel*>(ui->variablesTableWidget->cellWidget(row, 0));
+
+    auto variable = metaOperation->getVariable(item->text().toStdString());
+
+    //TODO
+}
+
+void OperationEditDialog::addNewVariable(){
+
+    auto newVariable = std::make_shared<MetaModel::MetaVariable>("newVariable"+ std::to_string(variablesCont), MetaModel::Integer::instance());
+
+    //TODO
 }
 
 void OperationEditDialog::saveReturnType(QString type){

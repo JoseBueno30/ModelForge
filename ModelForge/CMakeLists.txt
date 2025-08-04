@@ -495,6 +495,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/dialogs/OperationEditDialog.ui
         include/ui/dialogs/OperationEditDialog.h
         src/ui/dialogs/OperationEditDialog.cpp
+        src/ui/dialogs/ConditionEditDialog.ui
+        include/ui/dialogs/ConditionEditDialog.h
+        src/ui/dialogs/ConditionEditDialog.cpp
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:
