@@ -17,8 +17,12 @@ public:
     explicit AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, bool isEdit, QWidget *parent = nullptr);
     ~AttributeEditDialog();
 
-private:
+private Q_SLOTS:
     void saveChanges();
+
+private:
+    void loadVisibility();
+    void saveVisibility();
 
     Ui::AttributeEditDialog *ui;
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute;

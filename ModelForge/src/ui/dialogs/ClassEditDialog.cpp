@@ -25,8 +25,8 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     this->attributeCounter = metaClass->getAttributes().size() + 1;
     this->operationCounter = metaClass->getOperations().size() + 1;
 
-    ui->attributeTableWidget->horizontalHeader()->setStretchLastSection(true);
-    ui->operationTableWidget->horizontalHeader()->setStretchLastSection(true);
+    ui->attributeTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->operationTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 
     ui->isAbstractCheckBox->setChecked(this->metaClass->getIsAbstract());
 
@@ -59,6 +59,7 @@ void ClassEditDialog::loadAttributes() {
         // Nombre del atributo (QLineEdit)
         //QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
         QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
+        nameLabel->setAlignment(Qt::AlignCenter);
         ui->attributeTableWidget->setCellWidget(row, 0, nameLabel);
 
         // Tipo del atributo (QComboBox)
@@ -66,6 +67,7 @@ void ClassEditDialog::loadAttributes() {
         // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
         // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
         QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getType().toString()));
+        typeLabel->setAlignment(Qt::AlignCenter);
         ui->attributeTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;
@@ -82,6 +84,7 @@ void ClassEditDialog::loadOperations(){
         // Nombre del atributo (QLineEdit)
         //QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
         QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
+        nameLabel->setAlignment(Qt::AlignCenter);
         ui->operationTableWidget->setCellWidget(row, 0, nameLabel);
 
         // Tipo del atributo (QComboBox)
@@ -89,6 +92,7 @@ void ClassEditDialog::loadOperations(){
         // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
         // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
         QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getReturnType().toString()));
+        typeLabel->setAlignment(Qt::AlignCenter);
         ui->operationTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;

@@ -1,5 +1,6 @@
 #include <ui/dialogs/ConditionEditDialog.h>
 #include <ui/dialogs/OperationEditDialog.h>
+#include <ui/dialogs/VariableEditDialog.h>
 #include <src/ui/dialogs/ui_OperationEditDialog.h>
 
 OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, QWidget* parent) : metaOperation(metaOperation), QDialog(parent), ui(new Ui::OperationEditDialog)
@@ -9,13 +10,27 @@ OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperatio
 
     loadReturnType();
     loadVisibility();
+    loadVariables();
+    ui->conditionsTableWidget->setRowCount(0);
     loadConditions(metaOperation->getPreConditions());
     loadConditions(metaOperation->getPostConditions());
 
     variablesCont = metaOperation->getVariables().size();
     conditionsCont = metaOperation->getPostConditions().size() + metaOperation->getPreConditions().size();
 
+    ui->variablesTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->conditionsTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->variablesTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->conditionsTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+
+    ui->variablesTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->conditionsTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &OperationEditDialog::saveChanges);
+    connect(ui->addVariablePushButton, &QPushButton::clicked, this, &OperationEditDialog::addNewVariable);
+    connect(ui->addConditionPushButton, &QPushButton::clicked, this, &OperationEditDialog::addNewCondition);
+    connect(ui->variablesTableWidget, &QTableWidget::cellDoubleClicked, this, &OperationEditDialog::variableCellDoubleClicked);
+    connect(ui->conditionsTableWidget, &QTableWidget::cellDoubleClicked, this, &OperationEditDialog::conditionCellDoubleClicked);
 }
 
 void OperationEditDialog::loadReturnType(){
@@ -31,9 +46,11 @@ void OperationEditDialog::loadVariables(){
         ui->variablesTableWidget->insertRow(row);
 
         QLabel *nameLabel = new QLabel(QString::fromStdString(variablePair.first));
+        nameLabel->setAlignment(Qt::AlignCenter);
         ui->variablesTableWidget->setCellWidget(row, 0, nameLabel);
 
         QLabel *typeLabel = new QLabel(QString::fromStdString(variablePair.second->getType().toString()));
+        typeLabel->setAlignment(Qt::AlignCenter);
         ui->variablesTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;
@@ -41,16 +58,18 @@ void OperationEditDialog::loadVariables(){
 }
 
 void OperationEditDialog::loadConditions(std::map<std::string, std::shared_ptr<MetaModel::PrePostClause>> conditions){
-    ui->conditionsTableWidget->setRowCount(0);
     int row = 0;
 
     for(auto conditionPair : conditions){
+        qDebug() << "fila: " << row;
         ui->conditionsTableWidget->insertRow(row);
 
         QLabel *nameLabel = new QLabel(QString::fromStdString(conditionPair.first));
+        nameLabel->setAlignment(Qt::AlignCenter);
         ui->conditionsTableWidget->setCellWidget(row, 0, nameLabel);
 
         QLabel *typeLabel = new QLabel(conditionPair.second->getIsPost() ? "Post" : "Pre");
+        typeLabel->setAlignment(Qt::AlignCenter);
         ui->conditionsTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;
@@ -86,14 +105,15 @@ void OperationEditDialog::conditionCellDoubleClicked(int row, int column){
 
     std::shared_ptr<MetaModel::PrePostClause> condition ;
     if(type->text().toLower() == "pre"){
-       // condition = metaOperation->getPreCondition(item->text().toStdString());
+        condition = metaOperation->getPreCondition(item->text().toStdString());
     }else{
-        // condition = metaOperation->getPostCondition(item->text().toStdString());
+        condition = metaOperation->getPostCondition(item->text().toStdString());
     }
     ConditionEditDialog* conditionEditDialog = new ConditionEditDialog(condition);
 
     int returnCode = conditionEditDialog->exec();
     if(returnCode == 1){
+        ui->conditionsTableWidget->setRowCount(0);
         loadConditions(metaOperation->getPreConditions());
         loadConditions(metaOperation->getPostConditions());
     }
@@ -107,6 +127,7 @@ void OperationEditDialog::addNewCondition(){
     int returnCode = conditionEditDialog->exec();
 
     if (returnCode == 1){
+        ui->conditionsTableWidget->setRowCount(0);
         if(newCondition->getIsPost()){
             metaOperation->addPostCondition(newCondition);
         }else{
@@ -123,14 +144,24 @@ void OperationEditDialog::variableCellDoubleClicked(int row, int column){
 
     auto variable = metaOperation->getVariable(item->text().toStdString());
 
-    //TODO
+    VariableEditDialog* variableEditDialog = new VariableEditDialog(variable);
+    int returnCode = variableEditDialog->exec();
+
+    if(returnCode == 1) {
+        loadVariables();
+    }
 }
 
 void OperationEditDialog::addNewVariable(){
-
     auto newVariable = std::make_shared<MetaModel::MetaVariable>("newVariable"+ std::to_string(variablesCont), MetaModel::Integer::instance());
 
-    //TODO
+    VariableEditDialog* variableEditDialog = new VariableEditDialog(newVariable);
+    int returnCode = variableEditDialog->exec();
+
+    if(returnCode == 1) {
+        metaOperation->addVariable(newVariable);
+        loadVariables();
+    }
 }
 
 void OperationEditDialog::saveReturnType(QString type){

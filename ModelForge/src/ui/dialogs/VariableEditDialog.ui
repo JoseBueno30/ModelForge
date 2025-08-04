@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ConditionEditDialog</class>
- <widget class="QDialog" name="ConditionEditDialog">
+ <class>VariableEditDialog</class>
+ <widget class="QDialog" name="VariableEditDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>493</width>
-    <height>347</height>
+    <width>404</width>
+    <height>218</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>300</y>
+     <x>40</x>
+     <y>170</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -33,78 +33,45 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>30</y>
+     <y>40</y>
      <width>51</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Name:</string>
+    <string>Name</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="nameLineEdit">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>30</y>
-     <width>211</width>
+     <x>90</x>
+     <y>40</y>
+     <width>191</width>
      <height>24</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QComboBox" name="typeComboBox">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>80</y>
-     <width>71</width>
-     <height>24</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>Pre</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Post</string>
-    </property>
-   </item>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>80</y>
+     <y>100</y>
      <width>51</width>
      <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Type:</string>
+    <string>Type</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QComboBox" name="typeComboBox">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>120</y>
-     <width>71</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Expression:</string>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="expressionTextEdit">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>150</y>
-     <width>441</width>
-     <height>131</height>
+     <x>90</x>
+     <y>100</y>
+     <width>191</width>
+     <height>24</height>
     </rect>
    </property>
   </widget>
@@ -114,7 +81,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>ConditionEditDialog</receiver>
+   <receiver>VariableEditDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -130,7 +97,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>ConditionEditDialog</receiver>
+   <receiver>VariableEditDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
