@@ -143,6 +143,16 @@ public interface USEListener extends ParseTreeListener {
 	 */
 	void exitDerivedDefinition(USEParser.DerivedDefinitionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link USEParser#visibilty}.
+	 * @param ctx the parse tree
+	 */
+	void enterVisibilty(USEParser.VisibiltyContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link USEParser#visibilty}.
+	 * @param ctx the parse tree
+	 */
+	void exitVisibilty(USEParser.VisibiltyContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link USEParser#operationDefinition}.
 	 * @param ctx the parse tree
 	 */
@@ -377,16 +387,6 @@ public interface USEListener extends ParseTreeListener {
 	 */
 	void exitExpressionOnly(USEParser.ExpressionOnlyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link USEParser#oclExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterOclExpression(USEParser.OclExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link USEParser#oclExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitOclExpression(USEParser.OclExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code LogicalExpr}
 	 * labeled alternative in {@link USEParser#expression}.
 	 * @param ctx the parse tree
@@ -422,16 +422,6 @@ public interface USEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLetExpr(USEParser.LetExprContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link USEParser#lambdaExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterLambdaExpression(USEParser.LambdaExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link USEParser#lambdaExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitLambdaExpression(USEParser.LambdaExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link USEParser#letExpression}.
 	 * @param ctx the parse tree
@@ -772,6 +762,16 @@ public interface USEListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPropertyCallExpr(USEParser.PropertyCallExprContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link USEParser#propertyChain}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyChain(USEParser.PropertyChainContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link USEParser#propertyChain}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyChain(USEParser.PropertyChainContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code LiteralExpr}
 	 * labeled alternative in {@link USEParser#primaryExpression}.

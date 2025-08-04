@@ -82,10 +82,10 @@ const std::map<std::string, std::shared_ptr<MetaVariable>>& MetaOperation::getVa
     return variables;
 }
 
-const MetaVariable* MetaOperation::getVariable(const std::string& key) const{
+const std::shared_ptr<MetaVariable> MetaOperation::getVariable(const std::string& key) const{
     auto iterator = variables.find(key);
     if(iterator != variables.end()){
-        return (iterator->second).get();
+        return iterator->second;
     }
     return nullptr;
 }
@@ -110,10 +110,10 @@ const std::map<std::string, std::shared_ptr<PrePostClause>>& MetaOperation::getP
     return preConditions;
 }
 
-const PrePostClause* MetaOperation::getPreCondition(const std::string& key) const{
+const std::shared_ptr<PrePostClause> MetaOperation::getPreCondition(const std::string& key) const{
     auto iterator = preConditions.find(key);
     if(iterator != preConditions.end()){
-        return (iterator->second).get();
+        return iterator->second;
     }
     return nullptr;
 }
@@ -138,10 +138,10 @@ const std::map<std::string, std::shared_ptr<PrePostClause>>& MetaOperation::getP
     return postConditions;
 }
 
-const PrePostClause* MetaOperation::getPostCondition(const std::string& key) const{
+const std::shared_ptr<PrePostClause> MetaOperation::getPostCondition(const std::string& key) const{
     auto iterator = postConditions.find(key);
     if(iterator != postConditions.end()){
-        return (iterator->second).get();
+        return iterator->second;
     }
     return nullptr;
 }

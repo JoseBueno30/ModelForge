@@ -746,16 +746,6 @@ tuplePart
 WS:
   [ \t\f\r\n]+ -> skip
   ;
-
-// Single-line comments
-SL_COMMENT:
-    ('//' | '--') ~[\r\n]* -> skip
-    ;
-
-// multiple-line comments
-ML_COMMENT:
-    '/*' .*? '*/' -> skip
-    ;
     
 // Use paraphrases for nice error messages
 ARROW         : '->';
@@ -796,6 +786,16 @@ PUBLIC        : '--+';
 PRIVATE       : '--—';
 PROTECTED     : '--#';
 PACKAGE       : '--~';
+
+// Single-line comments
+SL_COMMENT:
+    ('//' | '--') ~[\r\n]* -> skip
+    ;
+
+// multiple-line comments
+ML_COMMENT:
+    '/*' .*? '*/' -> skip
+    ;
 
 
   

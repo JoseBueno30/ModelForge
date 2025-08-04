@@ -21,23 +21,31 @@ public:
     explicit VisitorUSE(const std::string& filename);
     ~VisitorUSE();
 
-    std::any visit(MetaModel::MetaModel metaModel) override;
+    std::any visit(const MetaModel::MetaModel& metaModel) override;
 
-    std::any visit(MetaModel::MetaEnum metaEnum) override;
+    std::any visit(const MetaModel::MetaEnum& metaEnum) override;
 
-    std::any visit(MetaModel::MetaClass metaClass) override;
+    std::any visit(const MetaModel::MetaClass& metaClass) override;
 
-    std::any visit(MetaModel::MetaAssociation metaAssociation) override;
+    std::any visit(const MetaModel::MetaAssociation& metaAssociation) override;
 
-    std::any visit(MetaModel::MetaAssociationClass metaAssociationClass) override;
+    std::any visit(const MetaModel::MetaAssociationClass& metaAssociationClass) override;
 
-    std::any visit(MetaModel::MetaAttribute metaAttribute) override;
+    std::any visit(const MetaModel::MetaAttribute& metaAttribute) override;
 
-    std::any visit(MetaModel::MetaOperation metaOperation) override;
+    std::any visit(const MetaModel::MetaOperation& metaOperation) override;
 
-    std::any visit(MetaModel::MetaConstraint metaConstraint) override;
+    std::any visit(const MetaModel::MetaConstraint& metaConstraint) override;
 
-    std::any visit(MetaModel::MetaAssociationEnd metaAssociatonEnd) override;
+    std::any visit(const MetaModel::MetaAssociationEnd& metaAssociatonEnd) override;
+
+    std::any visit(const MetaModel::SimpleType& simpleType) override {return 0;};
+
+    std::any visit(const MetaModel::CollectionType& collectionType) override {return 0;};
+
+    std::any visit(const MetaModel::TupleType& tupleType) override {return 0;};
+
+    std::string visibilityToString(MetaModel::Visibility vis);
 
     void save();
 };

@@ -1,5 +1,59 @@
-model NewModel
+model BankAccount
 
-class NewClass
+enum AccountType {Investments, Savings}
+
+abstract class SuperAccount
+end
+
+class Account < SuperAccount
+attributes
+balance : Integer --+
+test : Person --+
+type : AccountType --+
+operations
+transfer(variable : Integer) : Integer --+
+	begin
+        self.balance := self.balance + 1;
+    end
+constraints
+inv Positive_Balance:
+	self.balance > 0
+inv Test:
+	(self.balance > 1) or (true and true) or self.type = AccountType::Savings
+inv Test2:
+	not true
+inv Test3:
+	false and (true or true)
+end
+
+class Bank
+attributes
+test : Set(Integer) --+
+end
+
+class Person
+attributes
+age : Integer --—
+name : String --+
+end
+
+composition AccountOfBanks between
+Account [*] role accounts --+
+Bank [1..*] role bank --+
+end
+
+association Ownership between
+Account [*] role accounts --+
+Person [1, 3..4] role owner --+
+end
+
+association Use between
+Account [*] role usedAccounts --+
+Person [*] role user --+
+end
+
+associationclass Employee between
+Bank [1..*] role bank --+
+Person [*] role employees --+
 end
 

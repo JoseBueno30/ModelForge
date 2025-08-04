@@ -166,6 +166,18 @@ public class USEBaseListener implements USEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterVisibilty(USEParser.VisibiltyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVisibilty(USEParser.VisibiltyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterOperationDefinition(USEParser.OperationDefinitionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -430,18 +442,6 @@ public class USEBaseListener implements USEListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOclExpression(USEParser.OclExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitOclExpression(USEParser.OclExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterLogicalExpr(USEParser.LogicalExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -473,18 +473,6 @@ public class USEBaseListener implements USEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLetExpr(USEParser.LetExprContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterLambdaExpression(USEParser.LambdaExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitLambdaExpression(USEParser.LambdaExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -833,6 +821,18 @@ public class USEBaseListener implements USEListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPropertyCallExpr(USEParser.PropertyCallExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPropertyChain(USEParser.PropertyChainContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyChain(USEParser.PropertyChainContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

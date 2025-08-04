@@ -12,23 +12,29 @@ private:
 
 
 public:
-    virtual std::any visit(MetaModel::MetaModel metaModel) = 0;
+    virtual std::any visit(const MetaModel::MetaModel& metaModel) = 0;
 
-    virtual std::any visit(MetaModel::MetaEnum metaEnum) = 0;
+    virtual std::any visit(const MetaModel::MetaEnum& metaEnum) = 0;
 
-    virtual std::any visit(MetaModel::MetaClass metaClass) = 0;
+    virtual std::any visit(const MetaModel::MetaClass& metaClass) = 0;
 
-    virtual std::any visit(MetaModel::MetaAssociation metaAssociation) = 0;
+    virtual std::any visit(const MetaModel::MetaAssociation& metaAssociation) = 0;
 
-    virtual std::any visit(MetaModel::MetaAssociationClass metaAssociationClass) = 0;
+    virtual std::any visit(const MetaModel::MetaAssociationClass& metaAssociationClass) = 0;
 
-    virtual std::any visit(MetaModel::MetaAttribute metaAttribute) = 0;
+    virtual std::any visit(const MetaModel::MetaAttribute& metaAttribute) = 0;
 
-    virtual std::any visit(MetaModel::MetaOperation metaOperation) = 0;
+    virtual std::any visit(const MetaModel::MetaOperation& metaOperation) = 0;
 
-    virtual std::any visit(MetaModel::MetaConstraint metaConstraint) = 0;
+    virtual std::any visit(const MetaModel::MetaConstraint& metaConstraint) = 0;
 
-    virtual std::any visit(MetaModel::MetaAssociationEnd metaAssociatonEnd) = 0;
+    virtual std::any visit(const MetaModel::MetaAssociationEnd& metaAssociatonEnd) = 0;
+
+    virtual std::any visit(const MetaModel::SimpleType& simpleType) = 0;
+
+    virtual std::any visit(const MetaModel::CollectionType& collectionType) = 0;
+
+    virtual std::any visit(const MetaModel::TupleType& tupleType) = 0;
 };
 
 }

@@ -98,19 +98,10 @@ public:
             visit(assocElem);
         }
 
-        // Generalization of association classes might leave out new rolenames. Add them from parent
-
-
         // Add associationEnd specific constraints, e. g. subsets. Role names are known and can be subset
         for(auto assocElem : associationElements){
             visit(assocElem);
         }
-
-        // Add associationEnd specific constraints for association classes, e. g. subsets. Role names are known and can be subset
-
-
-        // Generate bodies of association and non-association classes All class interfaces are known and association features are available for expressions
-
 
         // Generate constraints of association and non-association classes All class interfaces are known and association features are available for expressions
         for (auto classElem : classElements) {
@@ -290,7 +281,12 @@ public:
         std::shared_ptr<MetaModel::MetaType> type = std::any_cast<std::shared_ptr<MetaModel::MetaType>>(visit(ctx->type()));
 
         MetaModel::Visibility visibility = MetaModel::Visibility::Public;
+
+        std::cout << "VISIBILITY:" << std::endl;
+        std::cout << ctx->getText() << std::endl;
+
         if(ctx->visibilty()){
+            std::cout << ctx->visibilty()->getText() << std::endl;
             visibility = std::any_cast<MetaModel::Visibility>(visit(ctx->visibilty()));
         }
 
@@ -395,8 +391,6 @@ public:
         // Check that the class in the context exists
         std::string className = ctx->ID()[0]->getText();
 
-        std::cout << className << std::endl;
-
         std::shared_ptr<MetaModel::MetaClass> scopeClass = model->getClass(className);
 
         if(!scopeClass){
@@ -487,15 +481,15 @@ public:
     std::any visitSimpleType(USEParser::SimpleTypeContext *ctx) override {
         std::string typeName = ctx->ID()->getText();
 
-        if(typeName == "Real"){
+        if(typeName == MetaModel::Real::instance()->toString()){
             return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Real::instance());
-        }else if(typeName == "Integer"){
+        }else if(typeName == MetaModel::Integer::instance()->toString()){
             return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Integer::instance());
-        }else if(typeName == "String"){
+        }else if(typeName == MetaModel::String::instance()->toString()){
             return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::String::instance());
-        }else if(typeName == "Boolean"){
+        }else if(typeName == MetaModel::Boolean::instance()->toString()){
             return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Boolean::instance());
-        }else if(typeName == "Void" || typeName == "OclVoid"){
+        }else if(typeName == MetaModel::Void::instance()->toString()){
             return std::static_pointer_cast<MetaModel::MetaType>(MetaModel::Void::instance());
         }
 
@@ -799,7 +793,7 @@ public:
 
     std::any visitLogicalExpr(USEParser::LogicalExprContext *ctx) override {
         auto expr = std::any_cast<std::shared_ptr<MetaModel::Expr>>(visit(ctx->logicalExpression()));
-        std::cout << "EXPR: " << expr->toString() << std::endl;
+
         return expr;
     }
 

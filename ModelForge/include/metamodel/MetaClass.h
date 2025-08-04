@@ -16,7 +16,7 @@
 
 namespace MetaModel{
 
-class MetaClass : public SimpleType, public MetaElement{
+class MetaClass : public SimpleType, public virtual MetaElement{
 
 private:
     std::string name;

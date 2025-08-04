@@ -3,7 +3,7 @@
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="windowModality">
-   <enum>Qt::WindowModality::WindowModal</enum>
+   <enum>Qt::WindowModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -40,7 +40,7 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="sizeConstraint">
-     <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
+     <enum>QLayout::SetMinimumSize</enum>
     </property>
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="10">
@@ -72,7 +72,7 @@
                <string>ToolBox</string>
               </property>
               <property name="alignment">
-               <set>Qt::AlignmentFlag::AlignCenter</set>
+               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -141,7 +141,7 @@
     <addaction name="actionOpen_Model"/>
     <addaction name="actionClose_Model"/>
     <addaction name="actionSave"/>
-    <addaction name="actionExport_as"/>
+    <addaction name="actionExportJava"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -258,7 +258,7 @@
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="actionExport_as">
+  <action name="actionExportJava">
    <property name="enabled">
     <bool>false</bool>
    </property>
