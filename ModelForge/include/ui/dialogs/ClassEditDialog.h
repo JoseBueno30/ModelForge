@@ -24,8 +24,10 @@ public:
 private Q_SLOTS:
     void addAttribute();
     void removeAttribute();
-    void saveChanges();
     void attributeCellDoubleClicked(int row, int column);
+
+    void saveChanges();
+    void cancelChanges();
 
     void addOperation();
     void removeOperation();

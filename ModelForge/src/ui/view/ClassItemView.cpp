@@ -29,7 +29,7 @@ void ClassItemView::calculateMinimumSize(){
         minHeight += ATTS_HEIGHT;
     }
 
-    if(!this->model->getOperations().empty() && !this->model->getAttributes().empty()){
+    if(!this->model->getOperations().empty()){
         minHeight += 2*ATTS_PADDING;
     }
 

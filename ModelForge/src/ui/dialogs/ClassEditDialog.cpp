@@ -2,6 +2,7 @@
 #include <ui/dialogs/ClassEditDialog.h>
 #include <src/ui/dialogs/ui_ClassEditDialog.h>
 #include <utils/Commands.h>
+#include <utils/MessageBox.h>
 
 #include <ui/dialogs/AttributeEditDialog.h>
 #include <ui/dialogs/MainWindow.h>
@@ -35,8 +36,11 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
 
     connect(ui->addAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::addAttribute);
     connect(ui->removeAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::removeAttribute);
-    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
     connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::attributeCellDoubleClicked);
+
+    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ClassEditDialog::cancelChanges);
 
     connect(ui->addOperationButton, &QPushButton::clicked, this, &ClassEditDialog::addOperation);
     connect(ui->removeOperationButton, &QPushButton::clicked, this, &ClassEditDialog::removeOperation);
@@ -135,10 +139,19 @@ void ClassEditDialog::addOperation(){
     }
 }
 void ClassEditDialog::removeOperation(){
+    if(ui->operationTableWidget->currentRow() == -1){
+        return;
+    }
+
     auto *operationLabel = dynamic_cast<QLabel*>(this->ui->operationTableWidget->cellWidget(this->ui->operationTableWidget->currentRow(), 0));
     auto operationName = operationLabel->text().toStdString();
 
-    this->editedClass->removeAttribute(operationName);
+    auto reply = showQuestionMessageBox("Remove operation", QString::fromStdString("Do you want to remove the operation '" + operationName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    this->editedClass->removeOperation(operationName);
     this->loadOperations();
 }
 
@@ -164,8 +177,17 @@ void ClassEditDialog::addAttribute() {
 }
 
 void ClassEditDialog::removeAttribute() {
+    if(ui->attributeTableWidget->currentRow() == -1){
+        return;
+    }
+
     auto *attributeLabel = dynamic_cast<QLabel*>(this->ui->attributeTableWidget->cellWidget(this->ui->attributeTableWidget->currentRow(), 0));
     auto attributeName = attributeLabel->text().toStdString();
+
+    auto reply = showQuestionMessageBox("Remove attribute", QString::fromStdString("Do you want to remove the attribute '" + attributeName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
 
     this->editedClass->removeAttribute(attributeName);
     this->loadAttributes();
@@ -200,4 +222,14 @@ void ClassEditDialog::saveChanges() {
     this->scene->update();
 
     accept();  // Cierra el diálogo y guarda cambios
+}
+
+void ClassEditDialog::cancelChanges(){
+    auto reply = showQuestionMessageBox("Edit class", "Changes have not been saved. Do you want to cancel?", this);
+
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    reject();
 }
