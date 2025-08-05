@@ -1,3 +1,4 @@
+#include "utils/MessageBox.h"
 #include <ui/dialogs/ConditionEditDialog.h>
 #include <src/ui/dialogs/ui_ConditionEditDialog.h>
 #include <QPushButton>
@@ -17,6 +18,9 @@ ConditionEditDialog::ConditionEditDialog(std::shared_ptr<MetaModel::PrePostClaus
     ui->expressionTextEdit->setText(QString::fromStdString(condition->getExpression().getExpression()));
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ConditionEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ConditionEditDialog::cancelChanges);
+
 }
 
 void ConditionEditDialog::saveChanges(){
@@ -35,4 +39,14 @@ void ConditionEditDialog::saveChanges(){
     condition->setExpression(std::make_shared<MetaModel::Expr>(ui->expressionTextEdit->toPlainText().toStdString()));
 
     accept();
+}
+
+void ConditionEditDialog::cancelChanges(){
+    auto reply = showQuestionMessageBox("Edit class", "Changes have not been saved. Do you want to cancel?", this);
+
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    reject();
 }

@@ -1,3 +1,4 @@
+#include "utils/MessageBox.h"
 #include <ui/dialogs/AttributeEditDialog.h>
 
 #include <QPushButton>
@@ -13,6 +14,9 @@ AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribut
 {
     ui->setupUi(this);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &AttributeEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &AttributeEditDialog::cancelChanges);
+
 
     ui->nameLineEdit->setText(QString::fromStdString(metaAttribute->getName()));
     ui->typeComboBox->addItems({"Integer", "Real", "String", "Boolean"});
@@ -91,4 +95,14 @@ void AttributeEditDialog::saveChanges(){
     metaAttribute->setInitExpr(initExpr);
 
     accept();
+}
+
+void AttributeEditDialog::cancelChanges(){
+    auto reply = showQuestionMessageBox("Edit attribute", "Changes have not been saved. Do you want to cancel?", this);
+
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    reject();
 }

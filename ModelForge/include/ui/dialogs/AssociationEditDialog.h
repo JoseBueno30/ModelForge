@@ -26,6 +26,7 @@ public:
 
 public Q_SLOTS:
     void saveChanges();
+    void cancelChanges();
 
 private:
     Ui::AssociationEditDialog *ui;

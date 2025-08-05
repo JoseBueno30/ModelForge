@@ -1,4 +1,5 @@
 #include "ui/dialogs/MainWindow.h"
+#include "utils/MessageBox.h"
 #include <include/ui/dialogs/EnumEditDialog.h>
 
 #include <src/ui/dialogs/ui_EnumEditDialog.h>
@@ -18,6 +19,8 @@ EnumEditDialog::EnumEditDialog(std::shared_ptr<MetaModel::MetaEnum> metaEnum, Mo
     connect(ui->addElementButton, &QPushButton::clicked, this, &EnumEditDialog::addElement);
     connect(ui->deleteElementButton, &QPushButton::clicked, this, &EnumEditDialog::deleteElement);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &EnumEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &EnumEditDialog::cancelChanges);
 }
 
 void EnumEditDialog::loadElements(){
@@ -78,4 +81,14 @@ void EnumEditDialog::deleteElement(){
     int selectedRow = ui->enumElementsTable->currentRow();
 
     ui->enumElementsTable->removeRow(selectedRow);
+}
+
+void EnumEditDialog::cancelChanges(){
+    auto reply = showQuestionMessageBox("Edit enum", "Changes have not been saved. Do you want to cancel?", this);
+
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    reject();
 }

@@ -19,6 +19,7 @@ public:
 
 private Q_SLOTS:
     void saveChanges();
+    void cancelChanges();
 
 private:
     void loadVisibility();

@@ -18,6 +18,8 @@ public:
 
 public Q_SLOTS:
     void saveChanges();
+    void cancelChanges();
+
     void addElement();
     void deleteElement();
 

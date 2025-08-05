@@ -1,3 +1,4 @@
+#include "utils/MessageBox.h"
 #include <ui/dialogs/AssociationEditDialog.h>
 
 #include <src/ui/dialogs/ui_AssociationEditDialog.h>
@@ -47,6 +48,9 @@ AssociationEditDialog::AssociationEditDialog(
     }
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &AssociationEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &AssociationEditDialog::cancelChanges);
+
 }
 
 void AssociationEditDialog::setupAssociationEnd1(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd){
@@ -97,6 +101,16 @@ void AssociationEditDialog::setupTypesComboBox(){
             QString::fromStdString(metaAssocClassPair.second->getName())
             );
     }
+}
+
+void AssociationEditDialog::cancelChanges(){
+    auto reply = showQuestionMessageBox("Edit association", "Changes have not been saved. Do you want to cancel?", this);
+
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    reject();
 }
 
 void AssociationEditDialog::saveChanges(){

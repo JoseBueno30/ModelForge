@@ -1,3 +1,4 @@
+#include "utils/MessageBox.h"
 #include <ui/dialogs/ConditionEditDialog.h>
 #include <ui/dialogs/OperationEditDialog.h>
 #include <ui/dialogs/VariableEditDialog.h>
@@ -27,6 +28,10 @@ OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperatio
     ui->conditionsTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &OperationEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &OperationEditDialog::cancelChanges);
+
+
     connect(ui->addVariablePushButton, &QPushButton::clicked, this, &OperationEditDialog::addNewVariable);
     connect(ui->addConditionPushButton, &QPushButton::clicked, this, &OperationEditDialog::addNewCondition);
     connect(ui->variablesTableWidget, &QTableWidget::cellDoubleClicked, this, &OperationEditDialog::variableCellDoubleClicked);
@@ -139,6 +144,31 @@ void OperationEditDialog::addNewCondition(){
     }
 }
 
+void OperationEditDialog::removeCondition(){
+    if(ui->conditionsTableWidget->currentRow() == -1){
+        return;
+    }
+
+    auto *conditionNameLabel = dynamic_cast<QLabel*>(this->ui->conditionsTableWidget->cellWidget(this->ui->conditionsTableWidget->currentRow(), 0));
+    auto conditionName = conditionNameLabel->text().toStdString();
+
+    auto reply = showQuestionMessageBox("Remove operation", QString::fromStdString("Do you want to remove the operation '" + conditionName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    auto *conditionTypeLabel = dynamic_cast<QLabel*>(this->ui->conditionsTableWidget->cellWidget(this->ui->conditionsTableWidget->currentRow(), 1));
+    auto conditionType = conditionTypeLabel->text().toStdString();
+
+    if(conditionType == "Pre"){
+        metaOperation->removePreCondition(conditionName);
+    }else{
+        metaOperation->removePostCondition(conditionName);
+    }
+    this->loadConditions(metaOperation->getPreConditions());
+    this->loadConditions(metaOperation->getPostConditions());
+}
+
 void OperationEditDialog::variableCellDoubleClicked(int row, int column){
     QLabel * item = dynamic_cast<QLabel*>(ui->variablesTableWidget->cellWidget(row, 0));
 
@@ -162,6 +192,23 @@ void OperationEditDialog::addNewVariable(){
         metaOperation->addVariable(newVariable);
         loadVariables();
     }
+}
+
+void OperationEditDialog::removeVariable(){
+    if(ui->variablesTableWidget->currentRow() == -1){
+        return;
+    }
+
+    auto *variableLabel = dynamic_cast<QLabel*>(this->ui->variablesTableWidget->cellWidget(this->ui->variablesTableWidget->currentRow(), 0));
+    auto variableName = variableLabel->text().toStdString();
+
+    auto reply = showQuestionMessageBox("Remove operation", QString::fromStdString("Do you want to remove the variable '" + variableName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    this->metaOperation->removeVariable(variableName);
+    this->loadVariables();
 }
 
 void OperationEditDialog::saveReturnType(QString type){
@@ -196,4 +243,14 @@ void OperationEditDialog::saveChanges(){
 
     saveVisibility();
     saveReturnType(ui->returnTypeComboBox->currentText());
+}
+
+void OperationEditDialog::cancelChanges(){
+    auto reply = showQuestionMessageBox("Edit Operation", "Changes have not been saved. Do you want to cancel?", this);
+
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    reject();
 }

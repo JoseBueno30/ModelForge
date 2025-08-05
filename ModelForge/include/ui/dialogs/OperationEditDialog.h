@@ -17,6 +17,7 @@ public:
 
 private Q_SLOTS:
     void saveChanges();
+    void cancelChanges();
 
     void loadReturnType();
     void loadVisibility();
@@ -25,9 +26,11 @@ private Q_SLOTS:
 
     void conditionCellDoubleClicked(int row, int column);
     void addNewCondition();
+    void removeCondition();
 
     void variableCellDoubleClicked(int row, int column);
     void addNewVariable();
+    void removeVariable();
 
     void saveReturnType(QString type);
     void saveVisibility();
