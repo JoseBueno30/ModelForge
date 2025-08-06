@@ -21,6 +21,7 @@
 #include <ui/dialogs/ClassEditDialog.h>
 #include <metamodel/MetaAssociation.h>
 #include <QMessageBox>
+#include <QInputDialog>
 
 QUndoStack* MainWindow::undoStack = new QUndoStack();
 
@@ -152,7 +153,7 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
 
     for(const auto& modelEnum : model->getEnums()){
         EnumItemView * item = new EnumItemView(modelEnum.second, xOffset, yOffset, width, height);
-        this->addModelItemView(modelEnum.second->getName(), item);
+        this->scene->addModelItemView(modelEnum.second->getName(), item);
         scene->addItem(item);
 
         xOffset+=200;
@@ -162,7 +163,7 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
 
     for(const auto& modelClass : model->getClasses()){
         ClassItemView* item = new ClassItemView(modelClass.second, xOffset, yOffset);
-        this->addModelItemView(modelClass.second->getName(), item);
+        this->scene->addModelItemView(modelClass.second->getName(), item);
         scene->addItem(item);
 
         xOffset += 200;
@@ -171,10 +172,10 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
     // Draw generalizations
     for(const auto& modelClass : model->getClasses()){
         if(!modelClass.second->getSuperClasses().empty()){
-            ClassItemView* subClass = dynamic_cast<ClassItemView*>(this->getModelItemView(modelClass.second->getName()));
+            ClassItemView* subClass = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelClass.second->getName()));
             auto superClassIterator = modelClass.second->getSuperClasses().begin();
             for(; superClassIterator != modelClass.second->getSuperClasses().end(); superClassIterator++){
-                ClassItemView* superClass = dynamic_cast<ClassItemView*>(this->getModelItemView(superClassIterator->second->getName()));
+                ClassItemView* superClass = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(superClassIterator->second->getName()));
 
                 GeneralizationItemView *generalization = new GeneralizationItemView(superClass, subClass);
                 scene->addItem(generalization);
@@ -185,38 +186,22 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
 
     //TODO - use model iterators
     for(const auto& modelAssoc : model->getAssociations()){
-        ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(0)));
-        ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(1)));
+        ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(0)));
+        ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(1)));
         AssociationItemView* item = new AssociationItemView(modelAssoc.second, class1, class2);
-        this->addModelItemView(modelAssoc.second->getName(), item);
+        this->scene->addModelItemView(modelAssoc.second->getName(), item);
         scene->addItem(item);
     }
 
     for(const auto& modelAssocClass : model->getAssociationClasses()){
-        ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(0)));
-        ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(1)));
+        ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(0)));
+        ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(1)));
         AssociationClassItemView* item = new AssociationClassItemView(modelAssocClass.second, class1, class2);
         qDebug() << "AsocClass: " << modelAssocClass.second->getName();
-        this->addModelItemView(modelAssocClass.second->getName(), item);
+        this->scene->addModelItemView(modelAssocClass.second->getName(), item);
         scene->addItem(item);
         item->addItemsToScene();
     }
-}
-
-QGraphicsItem* MainWindow::getModelItemView(const std::string& key){
-    auto iterator = this->modelItemViewElementsMap.find(key);
-    if(iterator != this->modelItemViewElementsMap.end()){
-        return (iterator->second);
-    }
-    return nullptr;
-}
-
-void MainWindow::addModelItemView(const std::string& key, QGraphicsItem *item){
-    this->modelItemViewElementsMap[key] = item;
-}
-
-void MainWindow::removeModelItemView(const std::string& key){
-    this->modelItemViewElementsMap.erase(key);
 }
 
 void MainWindow::on_actionSwitch_mode_triggered()
@@ -257,13 +242,13 @@ void MainWindow::openNewAssociationDialog(){
             }
         }
         std::shared_ptr<MetaModel::MetaAssociation> newAssociation = std::make_shared<MetaModel::MetaAssociation>(defaultName, 0);
-        AssociationEditDialog *associationEditDialog = new AssociationEditDialog(newAssociation, this->modelItemViewElementsMap, this->scene, nullptr, this->model);
+        AssociationEditDialog *associationEditDialog = new AssociationEditDialog(newAssociation, this->scene, nullptr, this->model);
         associationEditDialog->exec();
     }
 }
 
 void MainWindow::openEditAssociationDialog(AssociationItemView* association){
-    AssociationEditDialog *associationEditDialog = new AssociationEditDialog(association->getAssociationModel(), this->modelItemViewElementsMap, this->scene, association, this->model);
+    AssociationEditDialog *associationEditDialog = new AssociationEditDialog(association->getAssociationModel(), this->scene, association, this->model);
     associationEditDialog->exec();
 }
 
@@ -325,39 +310,45 @@ void MainWindow::openModelFile(){
 }
 
 void MainWindow::saveModel(){
-    if(path == nullptr){
-        path = QFileDialog::getSaveFileName(
-            this,                         // QWidget padre
-            "Save file",              // Título del diálogo
-            "",                             // Ruta inicial (puedes poner una por defecto)
-            "USE files (*.use)" // Filtros
-            );
+    try{
+        if(path == nullptr){
+            path = QFileDialog::getSaveFileName(
+                this,                         // QWidget padre
+                "Save file",              // Título del diálogo
+                "",                             // Ruta inicial (puedes poner una por defecto)
+                "USE files (*.use)" // Filtros
+                );
 
-        if (QFile::exists(path)) {
-            QMessageBox::StandardButton reply;
-            reply = QMessageBox::question(nullptr, "Archivo ya existe",
-                                          "¿Deseas sobrescribir el archivo?",
-                                          QMessageBox::Yes | QMessageBox::No);
+            if (QFile::exists(path)) {
+                QMessageBox::StandardButton reply;
+                reply = QMessageBox::question(nullptr, "The file already exists",
+                                              "Do you want to overwrite it?",
+                                              QMessageBox::Yes | QMessageBox::No);
 
-            if (reply != QMessageBox::Yes) {
-                return; // No guardamos nada
+                if (reply != QMessageBox::Yes) {
+                    return; // No guardamos nada
+                }
+
+            }else{
+                QFile file(path);
+                file.open(QIODevice::WriteOnly);
+                file.close();
             }
-
-        }else{
-            QFile file(path);
-            file.open(QIODevice::WriteOnly);
-            file.close();
         }
+
+        QFileInfo fileInfo(path);
+        qDebug() << "Archivo a guardar: " << path;
+        // QString directory = fileInfo.absolutePath();
+        ModelToText::VisitorUSE visitorUSE(path.toStdString());
+
+        model->accept(visitorUSE);
+
+        ConsoleHandler::appendSuccessfulLog("The file was succesfully saved.");
+    }
+    catch(std::runtime_error){
+        ConsoleHandler::appendErrorLog("The file couldn't be saved.");
     }
 
-    QFileInfo fileInfo(path);
-    qDebug() << "Archivo a guardar: " << path;
-    // QString directory = fileInfo.absolutePath();
-    ModelToText::VisitorUSE visitorUSE(path.toStdString());
-
-    model->accept(visitorUSE);
-
-    ConsoleHandler::appendSuccessfulLog("The file was succesfully saved.");
 }
 
 void MainWindow::exportToJava(){
@@ -387,10 +378,24 @@ void MainWindow::exportToJava(){
 void MainWindow::newModel(){
     closeModel();
 
-    model = std::make_shared<MetaModel::MetaModel>("NewModel");
+    bool ok;
+    QString modelName = QInputDialog::getText(
+        this,                   // QWidget* parent
+        "Create model",               // Título de la ventana
+        "Insert the model name:", // Texto del mensaje
+        QLineEdit::Normal,      // Tipo de entrada
+        "",                     // Texto por defecto
+        &ok                     // Si se pulsó OK o Cancelar
+        );
+
+    if (!ok || modelName.isEmpty()) {
+        modelName = "NewModel";
+    }
+
+    model = std::make_shared<MetaModel::MetaModel>(modelName.toStdString());
     this->setupModelGraphicsView(model);
 
-    ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
+    ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully created."));
 
     enableModelActions();
 }
@@ -399,6 +404,7 @@ void MainWindow::closeModel(){
     this->model = nullptr;
     this->scene->clear();
     this->scene->update();
+    this->path = "";
 
     MainWindow::undoStack->clear();
 

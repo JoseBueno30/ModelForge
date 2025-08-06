@@ -1,6 +1,8 @@
+#include "ui/dialogs/OperationEditDialog.h"
 #include <ui/dialogs/ClassEditDialog.h>
 #include <src/ui/dialogs/ui_ClassEditDialog.h>
 #include <utils/Commands.h>
+#include <utils/MessageBox.h>
 
 #include <ui/dialogs/AttributeEditDialog.h>
 #include <ui/dialogs/MainWindow.h>
@@ -8,7 +10,7 @@
 #include <QComboBox>
 #include <QLabel>
 
-ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, QGraphicsScene* scene, ClassItemView* classView, std::shared_ptr<MetaModel::MetaModel> model, QWidget *parent) :
+ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, ModelGraphicsScene* scene, ClassItemView* classView, std::shared_ptr<MetaModel::MetaModel> model, QWidget *parent) :
     QDialog(parent), metaClass(metaClass), model(model), classView(classView),
     ui(new Ui::ClassEditDialog), scene(scene)
 {
@@ -22,9 +24,10 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     this->editedClass = std::make_shared<MetaModel::MetaClass>(*metaClass);
 
     this->attributeCounter = metaClass->getAttributes().size() + 1;
+    this->operationCounter = metaClass->getOperations().size() + 1;
 
-    ui->attributeTableWidget->horizontalHeader()->setStretchLastSection(true);
-    ui->operationTableWidget->horizontalHeader()->setStretchLastSection(true);
+    ui->attributeTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->operationTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 
     ui->isAbstractCheckBox->setChecked(this->metaClass->getIsAbstract());
 
@@ -33,8 +36,16 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
 
     connect(ui->addAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::addAttribute);
     connect(ui->removeAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::removeAttribute);
+    connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::attributeCellDoubleClicked);
+
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
-    connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::cellDoubleClicked);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ClassEditDialog::cancelChanges);
+
+    connect(ui->addOperationButton, &QPushButton::clicked, this, &ClassEditDialog::addOperation);
+    connect(ui->removeOperationButton, &QPushButton::clicked, this, &ClassEditDialog::removeOperation);
+    connect(ui->operationTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::operationCellDoubleClicked);
 
 }
 
@@ -53,6 +64,7 @@ void ClassEditDialog::loadAttributes() {
         // Nombre del atributo (QLineEdit)
         //QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
         QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
+        nameLabel->setAlignment(Qt::AlignCenter);
         ui->attributeTableWidget->setCellWidget(row, 0, nameLabel);
 
         // Tipo del atributo (QComboBox)
@@ -60,6 +72,7 @@ void ClassEditDialog::loadAttributes() {
         // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
         // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
         QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getType().toString()));
+        typeLabel->setAlignment(Qt::AlignCenter);
         ui->attributeTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;
@@ -76,6 +89,7 @@ void ClassEditDialog::loadOperations(){
         // Nombre del atributo (QLineEdit)
         //QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
         QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
+        nameLabel->setAlignment(Qt::AlignCenter);
         ui->operationTableWidget->setCellWidget(row, 0, nameLabel);
 
         // Tipo del atributo (QComboBox)
@@ -83,22 +97,73 @@ void ClassEditDialog::loadOperations(){
         // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
         // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
         QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getReturnType().toString()));
+        qDebug() << "Tipo: " << pair.second->getReturnType().toString();
+        typeLabel->setAlignment(Qt::AlignCenter);
         ui->operationTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;
     }
 }
 
-void ClassEditDialog::cellDoubleClicked(int row, int column){
+void ClassEditDialog::attributeCellDoubleClicked(int row, int column){
     //qDebug()<< "r: "<< row << " c:" << column;
-    QLabel * item = dynamic_cast<QLabel*>(ui->attributeTableWidget->cellWidget(row, column)); //get the attribute name cell
+    QLabel * item = dynamic_cast<QLabel*>(ui->attributeTableWidget->cellWidget(row, 0)); //get the attribute name cell
     //qDebug() << "crea el item";
     qDebug() << "Editar atributo: " << item->text();
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = this->editedClass->getAttribute(item->text().toStdString());
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, true, this);
-    attrEditDialog->exec();
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, this);
+    int returnCode = attrEditDialog->exec();
+
+    if(returnCode == 1){
+        loadAttributes();
+    }
 }
 
+void ClassEditDialog::operationCellDoubleClicked(int row, int column){
+    QLabel * item = dynamic_cast<QLabel*>(ui->operationTableWidget->cellWidget(row, 0));
+
+    std::shared_ptr<MetaModel::MetaOperation> metaOperation = this->editedClass->getOperation(item->text().toStdString());
+    OperationEditDialog* opEditDialog = new OperationEditDialog(metaOperation, editedClass, this);
+    int returnCode = opEditDialog->exec();
+
+    if(returnCode == 1){
+        loadOperations();
+    }
+}
+
+void ClassEditDialog::addOperation(){
+    std::string operationName = "operation" + std::to_string(this->operationCounter);
+
+    while(this->editedClass->getOperation(operationName) != nullptr){
+        this->operationCounter++;
+        operationName = "operation" + std::to_string(this->operationCounter);
+    }
+
+    auto metaOperation = std::make_shared<MetaModel::MetaOperation>(operationName, "", MetaModel::Integer::instance());
+    OperationEditDialog *opEditDialog = new OperationEditDialog(metaOperation, editedClass, this);
+    int opEditDialogReturnCode = opEditDialog->exec();
+
+    if(opEditDialogReturnCode == 1){
+        this->editedClass->addOperation(metaOperation);
+        this->loadOperations();
+    }
+}
+void ClassEditDialog::removeOperation(){
+    if(ui->operationTableWidget->currentRow() == -1){
+        return;
+    }
+
+    auto *operationLabel = dynamic_cast<QLabel*>(this->ui->operationTableWidget->cellWidget(this->ui->operationTableWidget->currentRow(), 0));
+    auto operationName = operationLabel->text().toStdString();
+
+    auto reply = showQuestionMessageBox("Remove operation", QString::fromStdString("Do you want to remove the operation '" + operationName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    this->editedClass->removeOperation(operationName);
+    this->loadOperations();
+}
 
 void ClassEditDialog::addAttribute() {
     std::string attributeName = "attribute" + std::to_string(this->attributeCounter);
@@ -110,11 +175,10 @@ void ClassEditDialog::addAttribute() {
 
     auto metaAttribute = std::make_shared<MetaModel::MetaAttribute>(attributeName , MetaModel::Integer::instance());
 
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, false, this);
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, this);
 
     int attrEditDialogReturnCode = attrEditDialog->exec();
 
-    // Add attribute to editedClass (as an action in UndoStack)
     if(attrEditDialogReturnCode == 1){
         this->editedClass->addAttribute(metaAttribute);
         this->loadAttributes();
@@ -123,38 +187,72 @@ void ClassEditDialog::addAttribute() {
 }
 
 void ClassEditDialog::removeAttribute() {
+    if(ui->attributeTableWidget->currentRow() == -1){
+        return;
+    }
+
     auto *attributeLabel = dynamic_cast<QLabel*>(this->ui->attributeTableWidget->cellWidget(this->ui->attributeTableWidget->currentRow(), 0));
     auto attributeName = attributeLabel->text().toStdString();
+
+    auto reply = showQuestionMessageBox("Remove attribute", QString::fromStdString("Do you want to remove the attribute '" + attributeName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
 
     this->editedClass->removeAttribute(attributeName);
     this->loadAttributes();
 }
 
 void ClassEditDialog::saveChanges() {
-    std::map<std::string, std::string> newAttributes;
+    try{
+        std::map<std::string, std::string> newAttributes;
 
-    for (int row = 0; row < ui->attributeTableWidget->rowCount(); ++row) {
-        QLineEdit *nameEdit = qobject_cast<QLineEdit *>(ui->attributeTableWidget->cellWidget(row, 0));
-        QComboBox *typeCombo = qobject_cast<QComboBox *>(ui->attributeTableWidget->cellWidget(row, 1));
+        for (int row = 0; row < ui->attributeTableWidget->rowCount(); ++row) {
+            QLineEdit *nameEdit = qobject_cast<QLineEdit *>(ui->attributeTableWidget->cellWidget(row, 0));
+            QComboBox *typeCombo = qobject_cast<QComboBox *>(ui->attributeTableWidget->cellWidget(row, 1));
 
-        if (nameEdit && typeCombo) {
-            newAttributes[nameEdit->text().toStdString()] = typeCombo->currentText().toStdString();
+            if (nameEdit && typeCombo) {
+                newAttributes[nameEdit->text().toStdString()] = typeCombo->currentText().toStdString();
+            }
         }
+
+        this->editedClass->setIsAbstract(ui->isAbstractCheckBox->isChecked());
+        this->editedClass->setName(ui->classNameEdit->text().toStdString());
+
+
+        //ACTUALIZAR MAPA DE MAINWINDOW EN LOS COMANDOS
+        if(model == nullptr){
+            MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
+        }else{
+            classView = new ClassItemView(this->editedClass);
+            MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
+        }
+
+        //qDebug() << "Nombre: " << this->metaClass->getName();
+
+        this->scene->update();
+
+        accept();  // Cierra el diálogo y guarda cambios
+    }catch(const std::runtime_error& exception){
+        showExceptionMessageBox("Error", "There was an error saving the class. Check the console for more information");
+        ConsoleHandler::appendErrorLog(exception.what());
     }
 
-    this->editedClass->setIsAbstract(ui->isAbstractCheckBox->isChecked());
-    this->editedClass->setName(ui->classNameEdit->text().toStdString());
 
-    if(model == nullptr){
-        MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
-    }else{
-        classView = new ClassItemView(this->editedClass);
-        MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
+}
+
+void ClassEditDialog::cancelChanges(){
+    auto reply = showQuestionMessageBox("Edit class", "Changes have not been saved. Do you want to cancel?", this);
+
+    if(reply == QMessageBox::No){
+        return;
     }
 
-    //qDebug() << "Nombre: " << this->metaClass->getName();
+    reject();
+}
 
-    this->scene->update();
+bool ClassEditDialog::isValidClass(){
+    bool isValid = true;
 
-    accept();  // Cierra el diálogo y guarda cambios
+    return isValid;
 }

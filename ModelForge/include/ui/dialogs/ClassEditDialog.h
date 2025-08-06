@@ -2,7 +2,7 @@
 #define CLASSEDITDIALOG_H
 
 #include <QDialog>
-#include <QGraphicsScene>
+#include <ui/components/ModelGraphicsScene.h>
 
 #include <metamodel/MetaClass.h>
 #include <metamodel/MetaModel.h>
@@ -18,14 +18,20 @@ class ClassEditDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, QGraphicsScene* scene, ClassItemView* classView = nullptr, std::shared_ptr<MetaModel::MetaModel> model = nullptr, QWidget *parent = nullptr);
+    explicit ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass, ModelGraphicsScene* scene, ClassItemView* classView = nullptr, std::shared_ptr<MetaModel::MetaModel> model = nullptr, QWidget *parent = nullptr);
     ~ClassEditDialog();
 
 private Q_SLOTS:
     void addAttribute();
     void removeAttribute();
+    void attributeCellDoubleClicked(int row, int column);
+
     void saveChanges();
-    void cellDoubleClicked(int row, int column);
+    void cancelChanges();
+
+    void addOperation();
+    void removeOperation();
+    void operationCellDoubleClicked(int row, int column);
 
 private:
     Ui::ClassEditDialog *ui;
@@ -34,12 +40,15 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
     std::shared_ptr<MetaModel::MetaClass> metaClass;
     std::shared_ptr<MetaModel::MetaClass> editedClass;
-    QGraphicsScene* scene;
+    ModelGraphicsScene* scene;
 
     int attributeCounter;
+    int operationCounter;
 
     void loadAttributes();
     void loadOperations();
+
+    bool isValidClass();
 };
 
 #endif // CLASSEDITDIALOG_H

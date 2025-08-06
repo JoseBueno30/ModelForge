@@ -5,12 +5,14 @@
 
 #include <metamodel/MetaModel.h>
 
+class ModelGraphicsScene;
+
 class ItemViewClipboard : public QObject{
     Q_OBJECT
 
 public:
 
-    ItemViewClipboard(QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model);
+    ItemViewClipboard(ModelGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model);
 
     void copy(BoxItemView* item);
     void cut(BoxItemView* item);
@@ -20,7 +22,7 @@ public:
 
 private:
     BoxItemView* itemView;
-    QGraphicsScene* scene;
+    ModelGraphicsScene* scene;
     std::shared_ptr<MetaModel::MetaModel> model;
 };
 

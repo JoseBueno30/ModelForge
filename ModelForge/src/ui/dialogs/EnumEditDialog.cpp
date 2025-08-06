@@ -1,4 +1,5 @@
 #include "ui/dialogs/MainWindow.h"
+#include "utils/MessageBox.h"
 #include <include/ui/dialogs/EnumEditDialog.h>
 
 #include <src/ui/dialogs/ui_EnumEditDialog.h>
@@ -7,7 +8,7 @@
 
 #include <utils/Commands.h>
 
-EnumEditDialog::EnumEditDialog(std::shared_ptr<MetaModel::MetaEnum> metaEnum, QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model, EnumItemView * itemView, QWidget* parent)
+EnumEditDialog::EnumEditDialog(std::shared_ptr<MetaModel::MetaEnum> metaEnum, ModelGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model, EnumItemView * itemView, QWidget* parent)
     : metaEnum(metaEnum), scene(scene), model(model), ui(new Ui::EnumEditDialog), itemView(itemView),QDialog(parent)
 {
     ui->setupUi(this);
@@ -18,6 +19,9 @@ EnumEditDialog::EnumEditDialog(std::shared_ptr<MetaModel::MetaEnum> metaEnum, QG
     connect(ui->addElementButton, &QPushButton::clicked, this, &EnumEditDialog::addElement);
     connect(ui->deleteElementButton, &QPushButton::clicked, this, &EnumEditDialog::deleteElement);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &EnumEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &EnumEditDialog::cancelChanges);
 }
 
 void EnumEditDialog::loadElements(){
@@ -50,11 +54,17 @@ void EnumEditDialog::setMetaEnum(std::shared_ptr<MetaModel::MetaEnum> metaEnumPo
 
 void EnumEditDialog::saveChanges(){
     if(model){ //Creating metaEnum
-        setMetaEnum(this->metaEnum);
-        itemView = new EnumItemView(this->metaEnum);
+        try{
+            setMetaEnum(this->metaEnum);
+            itemView = new EnumItemView(this->metaEnum);
 
-        AddMetaEnumCommand* addCommand = new AddMetaEnumCommand(this->metaEnum,this->model, itemView, this->scene);
-        MainWindow::undoStack->push(addCommand);
+            AddMetaEnumCommand* addCommand = new AddMetaEnumCommand(this->metaEnum,this->model, itemView, this->scene);
+            MainWindow::undoStack->push(addCommand);
+        }catch(std::runtime_error exception){
+            showExceptionMessageBox("Error", "There was an error saving the condition. Check the console for more information.");
+            ConsoleHandler::appendErrorLog(exception.what());
+        }
+
     }
     else{ //Edit metaEnum
 
@@ -64,6 +74,8 @@ void EnumEditDialog::saveChanges(){
         EditMetaEnumCommand* editCommand = new EditMetaEnumCommand(this->metaEnum, newMetaEnum, itemView, this->scene);
         MainWindow::undoStack->push(editCommand);
     }
+
+    accept();
 }
 
 void EnumEditDialog::addElement(){
@@ -78,4 +90,14 @@ void EnumEditDialog::deleteElement(){
     int selectedRow = ui->enumElementsTable->currentRow();
 
     ui->enumElementsTable->removeRow(selectedRow);
+}
+
+void EnumEditDialog::cancelChanges(){
+    auto reply = showQuestionMessageBox("Edit enum", "Changes have not been saved. Do you want to cancel?", this);
+
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    reject();
 }

@@ -32,7 +32,7 @@
   <widget class="QPushButton" name="removeAttributeButton">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>450</x>
      <y>270</y>
      <width>83</width>
      <height>29</height>
@@ -81,7 +81,7 @@
   <widget class="QPushButton" name="addAttributeButton">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>360</x>
      <y>270</y>
      <width>83</width>
      <height>29</height>
@@ -165,7 +165,7 @@
   <widget class="QPushButton" name="removeOperationButton">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>450</x>
      <y>520</y>
      <width>83</width>
      <height>29</height>
@@ -178,7 +178,7 @@
   <widget class="QPushButton" name="addOperationButton">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>360</x>
      <y>520</y>
      <width>83</width>
      <height>29</height>

@@ -1,10 +1,10 @@
 #include "ui/dialogs/MainWindow.h"
 #include <include/utils/ItemViewClipboard.h>
-#include <QGraphicsScene>
+#include <ui/components/ModelGraphicsScene.h>
 #include <ui/view/ClassItemView.h>
 #include <utils/Commands.h>
 
-ItemViewClipboard::ItemViewClipboard(QGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model) : scene(scene), model(model){}
+ItemViewClipboard::ItemViewClipboard(ModelGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model) : scene(scene), model(model){}
 
 void ItemViewClipboard::copy(BoxItemView* item){
     if(auto classItemView = qgraphicsitem_cast<ClassItemView*>(item)){

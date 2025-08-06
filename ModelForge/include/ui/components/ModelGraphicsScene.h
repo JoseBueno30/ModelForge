@@ -21,6 +21,10 @@ public:
     void setClipboard(ItemViewClipboard* clipboard);
     void setClipboardModel(std::shared_ptr<MetaModel::MetaModel> model);
 
+    QGraphicsItem* getModelItemView(const std::string& key);
+    void addModelItemView(const std::string& key, QGraphicsItem *item);
+    void removeModelItemView(const std::string& key);
+
 Q_SIGNALS:
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
     void editAssociation(AssociationItemView * association);
@@ -32,5 +36,6 @@ public Q_SLOTS:
 
 private:
     ItemViewClipboard* clipboard;
+    std::map<std::string, QGraphicsItem*> modelItemViewElementsMap;
 };
 #endif // MODELGRAPHICSSCENE_H
