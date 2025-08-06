@@ -177,6 +177,13 @@ void AssociationEditDialog::saveChanges(){
             //Check if fields have been completed and create associationEnds
             if(true){
 
+                std::string associationName = ui->associationNameEdit->text().toStdString();
+
+                if(this->model->getAssociation(associationName) != nullptr){
+                    ConsoleHandler::appendErrorLog("The model already contains an association named '" + QString::fromStdString(associationName) +"'.");
+                    return;
+                }
+
                 associationModel->setName(ui->associationNameEdit->text().toStdString());
 
                 associationModel->setType(ui->associationTypeComboBox->currentIndex());
@@ -299,13 +306,6 @@ void AssociationEditDialog::setAssociationEnd2(std::shared_ptr<MetaModel::MetaAs
 
 bool AssociationEditDialog::isValidAssociation(){
     bool isValid = true;
-
-    std::string associationName = ui->associationNameEdit->text().toStdString();
-
-    if(this->model->getAssociation(associationName) != nullptr){
-        ConsoleHandler::appendErrorLog("The model already contains an association named '" + QString::fromStdString(associationName) +"'.");
-        isValid = false;
-    }
 
     QString multiplicity1 = ui->multiplicityAEnd1LineEdit->text();
     QString multiplicity2 = ui->multiplicityAEnd2LineEdit->text();

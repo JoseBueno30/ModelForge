@@ -5,7 +5,10 @@
 
 #include <QPushButton>
 
-VariableEditDialog::VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable , QWidget* parent) : metaVariable(metaVariable), QDialog(parent){
+#include <ui/components/ConsoleHandler.h>
+
+VariableEditDialog::VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable,std::shared_ptr<MetaModel::MetaOperation> metaOperation, bool isNew, QWidget* parent)
+    : metaVariable(metaVariable), metaOperation(metaOperation), isNew(isNew), QDialog(parent){
     ui = new Ui::VariableEditDialog();
     ui->setupUi(this);
 
@@ -14,6 +17,7 @@ VariableEditDialog::VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> 
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &VariableEditDialog::saveChanges);
     disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &VariableEditDialog::cancelChanges);
 
 }
@@ -43,6 +47,11 @@ std::shared_ptr<MetaModel::MetaType> VariableEditDialog::getTypeFromComboBox(){
 }
 
 void VariableEditDialog::saveChanges(){
+    if(!isValidVariable()){
+        showExceptionMessageBox("Error", "There was an error saving the condition. Check the console for more information.");
+        return;
+    }
+
     metaVariable->setName(ui->nameLineEdit->text().toStdString());
 
     metaVariable->setType(getTypeFromComboBox());
@@ -58,4 +67,16 @@ void VariableEditDialog::cancelChanges(){
     }
 
     reject();
+}
+
+bool VariableEditDialog::isValidVariable(){
+    bool isValid = true;
+
+    std::string variableName = ui->nameLineEdit->text().toStdString();
+    if(metaOperation->getVariable(variableName) && isNew){
+        ConsoleHandler::appendErrorLog("Operation '" + QString::fromStdString(metaOperation->getName()) + "' already contains variable called: " + QString::fromStdString(variableName));
+        isValid = false;
+    }
+
+    return isValid;
 }

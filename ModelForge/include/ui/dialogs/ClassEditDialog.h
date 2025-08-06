@@ -47,6 +47,8 @@ private:
 
     void loadAttributes();
     void loadOperations();
+
+    bool isValidClass();
 };
 
 #endif // CLASSEDITDIALOG_H

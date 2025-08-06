@@ -3,8 +3,10 @@
 #include <ui/dialogs/OperationEditDialog.h>
 #include <ui/dialogs/VariableEditDialog.h>
 #include <src/ui/dialogs/ui_OperationEditDialog.h>
+#include <ui/components/ConsoleHandler.h>
 
-OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, QWidget* parent) : metaOperation(metaOperation), QDialog(parent), ui(new Ui::OperationEditDialog)
+OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass, bool isNew, QWidget* parent)
+    : metaOperation(metaOperation), metaClass(metaClass), isNew(isNew), QDialog(parent), ui(new Ui::OperationEditDialog)
 {
     ui->setupUi(this);
     ui->operationNamelineEdit->setText(QString::fromStdString(metaOperation->getName()));
@@ -29,6 +31,7 @@ OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperatio
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &OperationEditDialog::saveChanges);
     disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &OperationEditDialog::cancelChanges);
 
 
@@ -116,7 +119,7 @@ void OperationEditDialog::conditionCellDoubleClicked(int row, int column){
     }else{
         condition = metaOperation->getPostCondition(item->text().toStdString());
     }
-    ConditionEditDialog* conditionEditDialog = new ConditionEditDialog(condition);
+    ConditionEditDialog* conditionEditDialog = new ConditionEditDialog(condition, metaOperation, this);
 
     int returnCode = conditionEditDialog->exec();
     if(returnCode == 1){
@@ -130,7 +133,7 @@ void OperationEditDialog::addNewCondition(){
     auto conditionExpression = std::make_shared<MetaModel::Expr>("");
     auto newCondition = std::make_shared<MetaModel::PrePostClause>("NewPrePostClause"+ std::to_string(conditionsCont), conditionExpression, true, false);
 
-    ConditionEditDialog* conditionEditDialog = new ConditionEditDialog(newCondition);
+    ConditionEditDialog* conditionEditDialog = new ConditionEditDialog(newCondition, metaOperation, this);
     int returnCode = conditionEditDialog->exec();
 
     if (returnCode == 1){
@@ -176,7 +179,7 @@ void OperationEditDialog::variableCellDoubleClicked(int row, int column){
 
     auto variable = metaOperation->getVariable(item->text().toStdString());
 
-    VariableEditDialog* variableEditDialog = new VariableEditDialog(variable);
+    VariableEditDialog* variableEditDialog = new VariableEditDialog(variable, metaOperation, false, this);
     int returnCode = variableEditDialog->exec();
 
     if(returnCode == 1) {
@@ -187,7 +190,7 @@ void OperationEditDialog::variableCellDoubleClicked(int row, int column){
 void OperationEditDialog::addNewVariable(){
     auto newVariable = std::make_shared<MetaModel::MetaVariable>("newVariable"+ std::to_string(variablesCont), MetaModel::Integer::instance());
 
-    VariableEditDialog* variableEditDialog = new VariableEditDialog(newVariable);
+    VariableEditDialog* variableEditDialog = new VariableEditDialog(newVariable, metaOperation, true, this);
     int returnCode = variableEditDialog->exec();
 
     if(returnCode == 1) {
@@ -241,10 +244,17 @@ void OperationEditDialog::saveVisibility(){
 }
 
 void OperationEditDialog::saveChanges(){
+    if(!isValidOperation()){
+        showExceptionMessageBox("Error", "There was an error saving the operation. Check the console for more information.");
+        return;
+    }
+
     metaOperation->setName(ui->operationNamelineEdit->text().toStdString());
 
     saveVisibility();
     saveReturnType(ui->returnTypeComboBox->currentText());
+
+    accept();
 }
 
 void OperationEditDialog::cancelChanges(){
@@ -255,4 +265,16 @@ void OperationEditDialog::cancelChanges(){
     }
 
     reject();
+}
+
+bool OperationEditDialog::isValidOperation(){
+    bool isValid = true;
+
+    std::string operationName = ui->operationNamelineEdit->text().toStdString();
+    if(metaClass->getOperation(operationName) && isNew){
+        ConsoleHandler::appendErrorLog("Class '" + QString::fromStdString(metaClass->getName()) + "' already contains operation named: " + QString::fromStdString(operationName));
+        isValid = false;
+    }
+
+    return isValid;
 }

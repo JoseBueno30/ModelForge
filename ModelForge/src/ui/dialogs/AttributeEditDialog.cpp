@@ -5,16 +5,19 @@
 
 #include <src/ui/dialogs/ui_AttributeEditDialog.h>
 #include <metamodel/MetaType.h>
+#include <ui/components/ConsoleHandler.h>
 
-AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, bool isEdit, QWidget *parent) :
+AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, std::shared_ptr<MetaModel::MetaClass> metaClass, bool isNew, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AttributeEditDialog),
     metaAttribute(metaAttribute),
-    isEdit(isEdit)
+    metaClass(metaClass),
+    isNew(isNew)
 {
     ui->setupUi(this);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &AttributeEditDialog::saveChanges);
     disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &AttributeEditDialog::cancelChanges);
 
 
@@ -83,6 +86,11 @@ std::shared_ptr<MetaModel::MetaType> getTypefromComboBox(QString type){
 
 void AttributeEditDialog::saveChanges(){
 
+    if(!isValidAttribute()){
+        showExceptionMessageBox("Error", "There was an unexpected error saving the attribute. Please check the console for more information.");
+        return;
+    }
+
     metaAttribute->setName(ui->nameLineEdit->text().toStdString());
     metaAttribute->setType(getTypefromComboBox(ui->typeComboBox->currentText()));
 
@@ -105,4 +113,19 @@ void AttributeEditDialog::cancelChanges(){
     }
 
     reject();
+}
+
+bool AttributeEditDialog::isValidAttribute(){
+    bool isValid = true;
+
+    std::string attributeName = ui->nameLineEdit->text().toStdString();
+    if(metaClass->getAttribute(attributeName) && isNew){
+        ConsoleHandler::appendErrorLog("Class '" + QString::fromStdString(metaClass->getName()) + "' already have an attribute named '"
+                                       + QString::fromStdString(metaAttribute->getName()) +"'.");
+        isValid = false;
+    }
+
+    //Check expr?
+
+    return isValid;
 }

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 
+#include <metamodel/MetaOperation.h>
 #include <metamodel/MetaVariable.h>
 
 
@@ -13,7 +14,7 @@ class VariableEditDialog;
 class VariableEditDialog : public QDialog{
     Q_OBJECT
 public:
-    VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable, QWidget* parent=nullptr);
+    VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable, std::shared_ptr<MetaModel::MetaOperation> metaOperation, bool isNew, QWidget* parent=nullptr);
 
 private Q_SLOTS:
     void saveChanges();
@@ -22,11 +23,13 @@ private Q_SLOTS:
 private:
     Ui::VariableEditDialog* ui;
     std::shared_ptr<MetaModel::MetaVariable> metaVariable;
+    std::shared_ptr<MetaModel::MetaOperation> metaOperation;
+    bool isNew;
 
     void loadComboBoxTypes();
     std::shared_ptr<MetaModel::MetaType> getTypeFromComboBox();
 
-
+    bool isValidVariable();
 };
 
 #endif // VARIABLEEDITDIALOG_H

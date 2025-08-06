@@ -40,6 +40,7 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
     disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ClassEditDialog::cancelChanges);
 
     connect(ui->addOperationButton, &QPushButton::clicked, this, &ClassEditDialog::addOperation);
@@ -109,7 +110,7 @@ void ClassEditDialog::attributeCellDoubleClicked(int row, int column){
     //qDebug() << "crea el item";
     qDebug() << "Editar atributo: " << item->text();
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = this->editedClass->getAttribute(item->text().toStdString());
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, true, this);
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, false, this);
     attrEditDialog->exec();
 }
 
@@ -117,7 +118,7 @@ void ClassEditDialog::operationCellDoubleClicked(int row, int column){
     QLabel * item = dynamic_cast<QLabel*>(ui->operationTableWidget->cellWidget(row, 0));
 
     std::shared_ptr<MetaModel::MetaOperation> metaOperation = this->editedClass->getOperation(item->text().toStdString());
-    OperationEditDialog* opEditDialog = new OperationEditDialog(metaOperation);
+    OperationEditDialog* opEditDialog = new OperationEditDialog(metaOperation, editedClass, false, this);
     opEditDialog->exec();
 }
 
@@ -130,7 +131,7 @@ void ClassEditDialog::addOperation(){
     }
 
     auto metaOperation = std::make_shared<MetaModel::MetaOperation>(operationName, "", MetaModel::Integer::instance());
-    OperationEditDialog *opEditDialog = new OperationEditDialog(metaOperation, this);
+    OperationEditDialog *opEditDialog = new OperationEditDialog(metaOperation, editedClass, true, this);
     int opEditDialogReturnCode = opEditDialog->exec();
 
     if(opEditDialogReturnCode == 1){
@@ -165,7 +166,7 @@ void ClassEditDialog::addAttribute() {
 
     auto metaAttribute = std::make_shared<MetaModel::MetaAttribute>(attributeName , MetaModel::Integer::instance());
 
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, false, this);
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, true, this);
 
     int attrEditDialogReturnCode = attrEditDialog->exec();
 
@@ -194,34 +195,41 @@ void ClassEditDialog::removeAttribute() {
 }
 
 void ClassEditDialog::saveChanges() {
-    std::map<std::string, std::string> newAttributes;
+    try{
+        std::map<std::string, std::string> newAttributes;
 
-    for (int row = 0; row < ui->attributeTableWidget->rowCount(); ++row) {
-        QLineEdit *nameEdit = qobject_cast<QLineEdit *>(ui->attributeTableWidget->cellWidget(row, 0));
-        QComboBox *typeCombo = qobject_cast<QComboBox *>(ui->attributeTableWidget->cellWidget(row, 1));
+        for (int row = 0; row < ui->attributeTableWidget->rowCount(); ++row) {
+            QLineEdit *nameEdit = qobject_cast<QLineEdit *>(ui->attributeTableWidget->cellWidget(row, 0));
+            QComboBox *typeCombo = qobject_cast<QComboBox *>(ui->attributeTableWidget->cellWidget(row, 1));
 
-        if (nameEdit && typeCombo) {
-            newAttributes[nameEdit->text().toStdString()] = typeCombo->currentText().toStdString();
+            if (nameEdit && typeCombo) {
+                newAttributes[nameEdit->text().toStdString()] = typeCombo->currentText().toStdString();
+            }
         }
+
+        this->editedClass->setIsAbstract(ui->isAbstractCheckBox->isChecked());
+        this->editedClass->setName(ui->classNameEdit->text().toStdString());
+
+
+        //ACTUALIZAR MAPA DE MAINWINDOW EN LOS COMANDOS
+        if(model == nullptr){
+            MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
+        }else{
+            classView = new ClassItemView(this->editedClass);
+            MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
+        }
+
+        //qDebug() << "Nombre: " << this->metaClass->getName();
+
+        this->scene->update();
+
+        accept();  // Cierra el diálogo y guarda cambios
+    }catch(const std::runtime_error& exception){
+        showExceptionMessageBox("Error", "There was an error saving the class. Check the console for more information");
+        ConsoleHandler::appendErrorLog(exception.what());
     }
 
-    this->editedClass->setIsAbstract(ui->isAbstractCheckBox->isChecked());
-    this->editedClass->setName(ui->classNameEdit->text().toStdString());
 
-
-    //ACTUALIZAR MAPA DE MAINWINDOW EN LOS COMANDOS
-    if(model == nullptr){
-        MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
-    }else{
-        classView = new ClassItemView(this->editedClass);
-        MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
-    }
-
-    //qDebug() << "Nombre: " << this->metaClass->getName();
-
-    this->scene->update();
-
-    accept();  // Cierra el diálogo y guarda cambios
 }
 
 void ClassEditDialog::cancelChanges(){
@@ -232,4 +240,10 @@ void ClassEditDialog::cancelChanges(){
     }
 
     reject();
+}
+
+bool ClassEditDialog::isValidClass(){
+    bool isValid = true;
+
+    return isValid;
 }

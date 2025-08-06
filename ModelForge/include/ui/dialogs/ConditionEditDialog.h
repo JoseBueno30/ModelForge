@@ -12,7 +12,7 @@ class ConditionEditDialog : public QDialog{
     Q_OBJECT
 
 public:
-    ConditionEditDialog(std::shared_ptr<MetaModel::PrePostClause> condition);
+    ConditionEditDialog(std::shared_ptr<MetaModel::PrePostClause> condition, std::shared_ptr<MetaModel::MetaOperation> metaOperation, QWidget* parent=nullptr);
 
 private Q_SLOTS:
     void saveChanges();
@@ -22,6 +22,9 @@ private:
     Ui::ConditionEditDialog* ui;
 
     std::shared_ptr<MetaModel::PrePostClause> condition;
+    std::shared_ptr<MetaModel::MetaOperation> metaOperation;
+
+    bool isValidCondition();
 };
 
 #endif // CONDITIONEDITDIALOG_H

@@ -20,6 +20,7 @@ EnumEditDialog::EnumEditDialog(std::shared_ptr<MetaModel::MetaEnum> metaEnum, Mo
     connect(ui->deleteElementButton, &QPushButton::clicked, this, &EnumEditDialog::deleteElement);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &EnumEditDialog::saveChanges);
     disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &EnumEditDialog::cancelChanges);
 }
 
@@ -53,11 +54,17 @@ void EnumEditDialog::setMetaEnum(std::shared_ptr<MetaModel::MetaEnum> metaEnumPo
 
 void EnumEditDialog::saveChanges(){
     if(model){ //Creating metaEnum
-        setMetaEnum(this->metaEnum);
-        itemView = new EnumItemView(this->metaEnum);
+        try{
+            setMetaEnum(this->metaEnum);
+            itemView = new EnumItemView(this->metaEnum);
 
-        AddMetaEnumCommand* addCommand = new AddMetaEnumCommand(this->metaEnum,this->model, itemView, this->scene);
-        MainWindow::undoStack->push(addCommand);
+            AddMetaEnumCommand* addCommand = new AddMetaEnumCommand(this->metaEnum,this->model, itemView, this->scene);
+            MainWindow::undoStack->push(addCommand);
+        }catch(std::runtime_error exception){
+            showExceptionMessageBox("Error", "There was an error saving the condition. Check the console for more information.");
+            ConsoleHandler::appendErrorLog(exception.what());
+        }
+
     }
     else{ //Edit metaEnum
 
@@ -67,6 +74,8 @@ void EnumEditDialog::saveChanges(){
         EditMetaEnumCommand* editCommand = new EditMetaEnumCommand(this->metaEnum, newMetaEnum, itemView, this->scene);
         MainWindow::undoStack->push(editCommand);
     }
+
+    accept();
 }
 
 void EnumEditDialog::addElement(){
