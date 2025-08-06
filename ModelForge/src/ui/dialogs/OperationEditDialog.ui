@@ -194,7 +194,7 @@
     <string>Variables:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="deletePushButton">
+  <widget class="QPushButton" name="removeVariablePushButton">
    <property name="geometry">
     <rect>
      <x>410</x>
@@ -246,7 +246,7 @@
     <string>Conditions:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="deleteConditionPushButon">
+  <widget class="QPushButton" name="removeConditionPushButon">
    <property name="geometry">
     <rect>
      <x>410</x>

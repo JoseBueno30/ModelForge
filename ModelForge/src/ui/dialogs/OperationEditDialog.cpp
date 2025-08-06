@@ -33,7 +33,9 @@ OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperatio
 
 
     connect(ui->addVariablePushButton, &QPushButton::clicked, this, &OperationEditDialog::addNewVariable);
+    connect(ui->removeVariablePushButton, &QPushButton::clicked, this, &OperationEditDialog::removeVariable);
     connect(ui->addConditionPushButton, &QPushButton::clicked, this, &OperationEditDialog::addNewCondition);
+    connect(ui->removeConditionPushButon, &QPushButton::clicked, this, &OperationEditDialog::removeCondition);
     connect(ui->variablesTableWidget, &QTableWidget::cellDoubleClicked, this, &OperationEditDialog::variableCellDoubleClicked);
     connect(ui->conditionsTableWidget, &QTableWidget::cellDoubleClicked, this, &OperationEditDialog::conditionCellDoubleClicked);
 }
