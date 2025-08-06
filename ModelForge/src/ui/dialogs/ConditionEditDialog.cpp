@@ -61,9 +61,11 @@ void ConditionEditDialog::cancelChanges(){
 
 bool ConditionEditDialog::isValidCondition(){
     bool isValid = true;
-
     std::string conditionName = ui->nameLineEdit->text().toStdString();
-    if(metaOperation->getPreCondition(conditionName) || metaOperation->getPostCondition(conditionName)){
+
+    auto auxPre = metaOperation->getPreCondition(conditionName);
+    auto auxPost = metaOperation->getPostCondition(conditionName);
+    if( auxPre && auxPre != condition || auxPost && auxPost != condition){
         ConsoleHandler::appendErrorLog("Operation '" + QString::fromStdString(metaOperation->getName()) + "' already contains condition called: " + QString::fromStdString(conditionName));
         isValid = false;
     }

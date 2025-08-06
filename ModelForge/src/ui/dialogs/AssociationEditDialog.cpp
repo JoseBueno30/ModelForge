@@ -321,8 +321,5 @@ bool AssociationEditDialog::isValidAssociation(){
         isValid = false;
     }
 
-    QString role1 = ui->roleAEnd1LineEdit->text();
-    QString role2 = ui->roleAEnd2LineEdit->text();
-
     return isValid;
 }

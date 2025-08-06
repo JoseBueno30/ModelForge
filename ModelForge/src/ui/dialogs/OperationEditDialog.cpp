@@ -5,8 +5,8 @@
 #include <src/ui/dialogs/ui_OperationEditDialog.h>
 #include <ui/components/ConsoleHandler.h>
 
-OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass, bool isNew, QWidget* parent)
-    : metaOperation(metaOperation), metaClass(metaClass), isNew(isNew), QDialog(parent), ui(new Ui::OperationEditDialog)
+OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass, QWidget* parent)
+    : metaOperation(metaOperation), metaClass(metaClass), QDialog(parent), ui(new Ui::OperationEditDialog)
 {
     ui->setupUi(this);
     ui->operationNamelineEdit->setText(QString::fromStdString(metaOperation->getName()));
@@ -164,12 +164,13 @@ void OperationEditDialog::removeCondition(){
 
     auto *conditionTypeLabel = dynamic_cast<QLabel*>(this->ui->conditionsTableWidget->cellWidget(this->ui->conditionsTableWidget->currentRow(), 1));
     auto conditionType = conditionTypeLabel->text().toStdString();
-
+    qDebug() << "Tipo condicion a eliminar: " << conditionType;
     if(conditionType == "Pre"){
         metaOperation->removePreCondition(conditionName);
     }else{
         metaOperation->removePostCondition(conditionName);
     }
+    ui->conditionsTableWidget->setRowCount(0);
     this->loadConditions(metaOperation->getPreConditions());
     this->loadConditions(metaOperation->getPostConditions());
 }
@@ -179,7 +180,7 @@ void OperationEditDialog::variableCellDoubleClicked(int row, int column){
 
     auto variable = metaOperation->getVariable(item->text().toStdString());
 
-    VariableEditDialog* variableEditDialog = new VariableEditDialog(variable, metaOperation, false, this);
+    VariableEditDialog* variableEditDialog = new VariableEditDialog(variable, metaOperation, this);
     int returnCode = variableEditDialog->exec();
 
     if(returnCode == 1) {
@@ -190,7 +191,7 @@ void OperationEditDialog::variableCellDoubleClicked(int row, int column){
 void OperationEditDialog::addNewVariable(){
     auto newVariable = std::make_shared<MetaModel::MetaVariable>("newVariable"+ std::to_string(variablesCont), MetaModel::Integer::instance());
 
-    VariableEditDialog* variableEditDialog = new VariableEditDialog(newVariable, metaOperation, true, this);
+    VariableEditDialog* variableEditDialog = new VariableEditDialog(newVariable, metaOperation, this);
     int returnCode = variableEditDialog->exec();
 
     if(returnCode == 1) {
@@ -271,7 +272,8 @@ bool OperationEditDialog::isValidOperation(){
     bool isValid = true;
 
     std::string operationName = ui->operationNamelineEdit->text().toStdString();
-    if(metaClass->getOperation(operationName) && isNew){
+    auto auxOperation = metaClass->getOperation(operationName);
+    if( auxOperation && auxOperation != metaOperation){
         ConsoleHandler::appendErrorLog("Class '" + QString::fromStdString(metaClass->getName()) + "' already contains operation named: " + QString::fromStdString(operationName));
         isValid = false;
     }

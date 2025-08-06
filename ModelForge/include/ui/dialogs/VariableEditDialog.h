@@ -14,7 +14,7 @@ class VariableEditDialog;
 class VariableEditDialog : public QDialog{
     Q_OBJECT
 public:
-    VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable, std::shared_ptr<MetaModel::MetaOperation> metaOperation, bool isNew, QWidget* parent=nullptr);
+    VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable, std::shared_ptr<MetaModel::MetaOperation> metaOperation, QWidget* parent=nullptr);
 
 private Q_SLOTS:
     void saveChanges();
@@ -24,7 +24,6 @@ private:
     Ui::VariableEditDialog* ui;
     std::shared_ptr<MetaModel::MetaVariable> metaVariable;
     std::shared_ptr<MetaModel::MetaOperation> metaOperation;
-    bool isNew;
 
     void loadComboBoxTypes();
     std::shared_ptr<MetaModel::MetaType> getTypeFromComboBox();

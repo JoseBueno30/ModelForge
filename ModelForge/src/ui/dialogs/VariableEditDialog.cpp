@@ -7,8 +7,8 @@
 
 #include <ui/components/ConsoleHandler.h>
 
-VariableEditDialog::VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable,std::shared_ptr<MetaModel::MetaOperation> metaOperation, bool isNew, QWidget* parent)
-    : metaVariable(metaVariable), metaOperation(metaOperation), isNew(isNew), QDialog(parent){
+VariableEditDialog::VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable,std::shared_ptr<MetaModel::MetaOperation> metaOperation, QWidget* parent)
+    : metaVariable(metaVariable), metaOperation(metaOperation), QDialog(parent){
     ui = new Ui::VariableEditDialog();
     ui->setupUi(this);
 
@@ -73,7 +73,8 @@ bool VariableEditDialog::isValidVariable(){
     bool isValid = true;
 
     std::string variableName = ui->nameLineEdit->text().toStdString();
-    if(metaOperation->getVariable(variableName) && isNew){
+    auto auxVariable = metaOperation->getVariable(variableName);
+    if( auxVariable && auxVariable != metaVariable){
         ConsoleHandler::appendErrorLog("Operation '" + QString::fromStdString(metaOperation->getName()) + "' already contains variable called: " + QString::fromStdString(variableName));
         isValid = false;
     }

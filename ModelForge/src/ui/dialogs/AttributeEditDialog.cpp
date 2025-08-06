@@ -7,12 +7,11 @@
 #include <metamodel/MetaType.h>
 #include <ui/components/ConsoleHandler.h>
 
-AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, std::shared_ptr<MetaModel::MetaClass> metaClass, bool isNew, QWidget *parent) :
+AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, std::shared_ptr<MetaModel::MetaClass> metaClass, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AttributeEditDialog),
     metaAttribute(metaAttribute),
-    metaClass(metaClass),
-    isNew(isNew)
+    metaClass(metaClass)
 {
     ui->setupUi(this);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &AttributeEditDialog::saveChanges);
@@ -119,7 +118,8 @@ bool AttributeEditDialog::isValidAttribute(){
     bool isValid = true;
 
     std::string attributeName = ui->nameLineEdit->text().toStdString();
-    if(metaClass->getAttribute(attributeName) && isNew){
+    auto auxAttribute = metaClass->getAttribute(attributeName);
+    if( auxAttribute && auxAttribute != metaAttribute){
         ConsoleHandler::appendErrorLog("Class '" + QString::fromStdString(metaClass->getName()) + "' already have an attribute named '"
                                        + QString::fromStdString(metaAttribute->getName()) +"'.");
         isValid = false;

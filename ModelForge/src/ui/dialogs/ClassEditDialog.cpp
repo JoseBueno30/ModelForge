@@ -97,6 +97,7 @@ void ClassEditDialog::loadOperations(){
         // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
         // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
         QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getReturnType().toString()));
+        qDebug() << "Tipo: " << pair.second->getReturnType().toString();
         typeLabel->setAlignment(Qt::AlignCenter);
         ui->operationTableWidget->setCellWidget(row, 1, typeLabel);
 
@@ -110,16 +111,24 @@ void ClassEditDialog::attributeCellDoubleClicked(int row, int column){
     //qDebug() << "crea el item";
     qDebug() << "Editar atributo: " << item->text();
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = this->editedClass->getAttribute(item->text().toStdString());
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, false, this);
-    attrEditDialog->exec();
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, this);
+    int returnCode = attrEditDialog->exec();
+
+    if(returnCode == 1){
+        loadAttributes();
+    }
 }
 
 void ClassEditDialog::operationCellDoubleClicked(int row, int column){
     QLabel * item = dynamic_cast<QLabel*>(ui->operationTableWidget->cellWidget(row, 0));
 
     std::shared_ptr<MetaModel::MetaOperation> metaOperation = this->editedClass->getOperation(item->text().toStdString());
-    OperationEditDialog* opEditDialog = new OperationEditDialog(metaOperation, editedClass, false, this);
-    opEditDialog->exec();
+    OperationEditDialog* opEditDialog = new OperationEditDialog(metaOperation, editedClass, this);
+    int returnCode = opEditDialog->exec();
+
+    if(returnCode == 1){
+        loadOperations();
+    }
 }
 
 void ClassEditDialog::addOperation(){
@@ -131,7 +140,7 @@ void ClassEditDialog::addOperation(){
     }
 
     auto metaOperation = std::make_shared<MetaModel::MetaOperation>(operationName, "", MetaModel::Integer::instance());
-    OperationEditDialog *opEditDialog = new OperationEditDialog(metaOperation, editedClass, true, this);
+    OperationEditDialog *opEditDialog = new OperationEditDialog(metaOperation, editedClass, this);
     int opEditDialogReturnCode = opEditDialog->exec();
 
     if(opEditDialogReturnCode == 1){
@@ -166,7 +175,7 @@ void ClassEditDialog::addAttribute() {
 
     auto metaAttribute = std::make_shared<MetaModel::MetaAttribute>(attributeName , MetaModel::Integer::instance());
 
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, true, this);
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, this);
 
     int attrEditDialogReturnCode = attrEditDialog->exec();
 

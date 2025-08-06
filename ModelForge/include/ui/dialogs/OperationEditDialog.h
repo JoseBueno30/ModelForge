@@ -13,7 +13,7 @@ class OperationEditDialog : public QDialog{
     Q_OBJECT
 
 public:
-    OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass, bool isNew, QWidget* parent = nullptr);
+    OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass, QWidget* parent = nullptr);
 
 
 private Q_SLOTS:
@@ -42,7 +42,6 @@ private:
     std::shared_ptr<MetaModel::MetaClass> metaClass;
 
     int variablesCont = 0, conditionsCont = 0;
-    bool isNew;
 
     bool isValidOperation();
 };
