@@ -1,0 +1,77 @@
+model Library
+
+class Library
+attributes
+code : Integer
+name : String
+tel : Integer
+mail : String
+dir : String
+end
+
+class User
+attributes
+name : String
+dni : String
+tel : Integer
+mail : String
+end
+
+class Item
+attributes
+title : String
+author : String
+genre : String
+numPages : Integer
+end
+
+class Book < Item
+end
+
+class Magazine < Item
+end
+
+associationclass Loan between
+Item[*] role item
+User[*] role user
+attributes
+startDate : String
+finishDate : String
+end
+
+association OwnsItem between
+Library[*] role owner
+Item[*] role item
+end
+
+association Registered between
+Library[*] role library
+User[*] role user
+end
+
+
+constraints
+
+context Item inv positive_Pages:
+    self.numPages > 0
+
+
+context Loan inv valid_Loan:
+    self.startDate < self.finishDate
+
+
+/*
+context Loan inv loan_Only_Existing_Items:
+    if self.item.owner -> notEmpty() then
+    self.item.owner.item -> exists(i : Item | i = self.item)
+    else false endif
+
+context User inv only_Registered_Users_Can_Loan:
+    if self.library <> null and self.loan -> notEmpty() then
+    self.loan.item.owner.user -> exists(u : User | u = self)
+    else true endif
+*/
+
+
+context User inv only_One_Loan_Per_Person:
+    self.loan.item -> size() <= 1

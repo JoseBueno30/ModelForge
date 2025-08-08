@@ -11,7 +11,7 @@ std::string UnaryExpr::buildExprString() const {
 
 NotExpr::NotExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr> expr)
     : UnaryExpr(expression, isComplex, type, expr){
-    if(!std::dynamic_pointer_cast<MetaModel::Boolean>(expr->getType())){
+    if(!expr->isComplexExpr() && !std::dynamic_pointer_cast<MetaModel::Boolean>(expr->getType())){
         throw std::invalid_argument("NotExpr expects a Boolean expression");
     }
     this->symbol = "not";
@@ -23,7 +23,7 @@ std::string NotExpr::buildExprString() const {
 
 MinusExpr::MinusExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr> expr)
     : UnaryExpr(expression, isComplex, type, expr){
-    if(!std::dynamic_pointer_cast<MetaModel::Integer>(expr->getType()) && !std::dynamic_pointer_cast<MetaModel::Real>(expr->getType())){
+    if(!expr->isComplexExpr() && !std::dynamic_pointer_cast<MetaModel::Integer>(expr->getType()) && !std::dynamic_pointer_cast<MetaModel::Real>(expr->getType())){
         throw std::invalid_argument("MinusExpr expects a numeric expression");
     }
     this->symbol = "-";
@@ -31,7 +31,7 @@ MinusExpr::MinusExpr(const std::string& expression, const bool isComplex, const 
 
 PlusExpr::PlusExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr> expr)
     : UnaryExpr(expression, isComplex, type, expr){
-    if(!std::dynamic_pointer_cast<MetaModel::Integer>(expr->getType()) && !std::dynamic_pointer_cast<MetaModel::Real>(expr->getType())){
+    if(!expr->isComplexExpr() && !std::dynamic_pointer_cast<MetaModel::Integer>(expr->getType()) && !std::dynamic_pointer_cast<MetaModel::Real>(expr->getType())){
         throw std::invalid_argument("PlusExpr expects a numeric expression");
     }
     this->symbol = "+";

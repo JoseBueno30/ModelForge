@@ -1,0 +1,128 @@
+model Negocio
+
+class Persona
+attributes
+nombre : String
+apellido1 : String
+apellido2 : String
+DNI : String
+edad : Integer
+tlf : Integer
+correo : String
+end
+
+class Empresa
+attributes
+nombre : String
+dir : String
+tlf : Integer
+correo : String
+valor_minimo_pedido : Integer
+end
+
+class Producto
+attributes
+nombre : String
+end
+
+class Pedido 
+attributes
+valor : Integer derived =
+    if self.productos_Pedido -> notEmpty() then
+        self.productos_Pedido->collect(pp : Productos_Pedido |
+        pp.producto.etiqueta->select(e : Etiqueta | e.empresa_propietaria = self.vendedor) -> 
+        collect(precio * pp.cantidad)->sum())->sum()
+    else 0 endif
+descuento : Real derived = 
+    if
+        self.persona.contrato -> select(e : Contrato | e.contratador = self.vendedor ) -> size()=1
+        or
+        self.vendedor.pedido -> select(e : Pedido | e.persona = self.persona and e.fecha <= self.fecha) 
+        -> collect(valor) -> sum() >= 1000
+    then 0.1
+    else 0 endif
+precio_final : Real derived = valor * (1-descuento)
+fecha : String
+end
+
+associationclass Contrato between
+Empresa[0..3] role contratador
+Persona[*] role empleado
+attributes
+puesto : String
+salario : Integer
+end
+
+associationclass Etiqueta < Contrato between
+Empresa[*] role empresa_propietaria
+Producto[*] role producto
+attributes
+cantidad : Integer
+precio : Integer
+end
+
+associationclass Posesion between
+Persona[*] role poseedor
+Producto[0..10] role producto
+attributes
+cantidad : Integer derived:
+    self.poseedor.pedido -> collect(p : Pedido | p.productos_Pedido -> 
+    select(pp : Productos_Pedido | pp.producto = self.producto) -> collect(cantidad)-> sum()) -> sum()
+end
+
+associationclass Productos_Pedido between
+Pedido[*] role pedido
+Producto[*] role producto
+attributes
+cantidad : Integer
+end
+
+association Comprar between
+Pedido[*] role pedido
+Persona[1] role persona
+end
+
+association Vender between
+Pedido[*] role pedido
+Empresa[1] role vendedor
+end
+
+
+constraints
+
+context test: Contrato inv Puest:
+    if 'a' > 'b' then true
+    else false endif
+
+context Contrato inv Puesto_Valido:
+    self.puesto = 'Trabajador' or self.puesto = 'Gerente' or self.puesto = 'Director' 
+
+context Persona inv Cantidad_Contratos:
+    self.contrato -> size() <= 3
+
+context Contrato inv Salarios:
+    if self.puesto = 'Director' then self.contratador.contrato -> 
+    forAll(c : Contrato  | if c.puesto='Director' then true else self.salario>c.salario endif) 
+    else true endif
+    and
+    if self.puesto = 'Gerente' then self.contratador.contrato -> 
+    forAll(c : Contrato  | if c.puesto='Director' or c.puesto='Gerente' then true 
+    else self.salario>c.salario endif) 
+    else true endif
+
+context Empresa inv Plantilla_Valida:
+    self.contrato -> select(puesto = 'Director') -> size() <= 1
+    and
+    self.contrato -> select(puesto = 'Gerente') -> size() <= 1
+
+context Empresa inv Plantilla_Minima:
+    self.contrato -> exists(puesto = 'Trabajador')
+
+context Pedido inv Consistencia_Cantidad_Empresa_Pedido:
+    if self.producto -> forAll(p : Producto | self.vendedor.producto -> includes(p)) then
+        self.productos_Pedido -> forAll(pp : Productos_Pedido | self.vendedor.etiqueta -> 
+        select(e : Etiqueta | pp.producto = e.producto) -> forAll(e : Etiqueta | e.cantidad >= pp.cantidad) and pp.cantidad>0)    
+    else false endif
+
+context Pedido inv Pedido_Minimo:
+    self.valor >= self.vendedor.valor_minimo_pedido

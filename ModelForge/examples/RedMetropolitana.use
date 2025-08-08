@@ -1,0 +1,339 @@
+model RedMetropolitana
+
+class Estacion
+attributes
+ID : String
+operations
+tick()
+    begin
+       --tick auxiliar para cambiar de estado.
+    end
+statemachines
+    psm Estacion_Estado
+        states
+            s: initial
+            Empty [self.tren -> size() = 0]
+            Normal
+            Inicio
+        transitions
+            s -> Inicio
+            Inicio -> Empty {[self.tren -> size()=0] tick()}
+            Inicio -> Normal {[self.tren -> size()>0] tick()}
+            Empty -> Normal {[self.tren -> size()>0] tick()}
+            Empty -> Empty {[self.tren -> size()=0] tick()}
+            Normal -> Empty {[self.tren -> size()=0] tick() }
+            Normal -> Normal {[self.tren -> size()>0] tick() }
+        end    
+        
+            
+end
+
+class Linea 
+attributes
+ID: String
+operations
+addTrain(av : Boolean, dir : Boolean)
+    begin   
+        declare train : Tren;
+        train := new Tren;
+        train.averiado := av;
+        train.direction := dir; 
+        train.circulando := false;
+        insert(self.origen,train) into Tren_En_Estacion 
+    end
+deleteTrain(t : Tren)
+    begin  
+        destroy t;
+    end
+addSegment(id : String, e1 : Estacion, e2 : Estacion)
+    begin
+        declare seg : Segmento;
+        seg := new Segmento;
+        seg.ID := id;
+        insert(e1, seg) into Conecta;
+        insert(e2, seg) into Conecta;
+        insert(self, seg) into Compone;
+    end
+
+deleteSegment(s :Segmento)
+    begin 
+        destroy s;
+    end
+
+addStation(id : String, s : Set(Segmento))
+    begin
+        declare est : Estacion;
+        est := new Estacion;
+        est.ID := id;
+        for segment in s do
+            insert(est,segment) into Conecta;
+        end;
+    end
+    pre lineSegment: (self.segmento -> includesAll(s))
+
+deleteStation(s : Estacion)
+    begin
+        for segment in s.segmento do
+            self.deleteSegment(segment);
+        end;
+        destroy s;
+    end
+end
+
+
+class Segmento
+attributes
+ID: String
+operations
+tick()
+    begin
+        --tick auxiliar para cambiar de estado.
+    end
+statemachines
+    psm Segmento_Estado
+        states
+            s: initial
+            Empty [self.tren -> size() = 0]
+            Normal [self.tren -> size() = 1]
+            Full [self.tren -> size() = 2]
+        transitions
+            s -> Empty
+            Empty -> Normal {[self.tren -> size() = 1] tick()}
+            Empty -> Empty {[self.tren -> size() = 0] tick()}
+            Empty -> Full { [(self.tren -> size() = 2) ] tick()}
+            Normal -> Full { [(self.tren -> size() = 2)] tick()}
+            Normal -> Empty {[self.tren -> size() = 0] tick()}
+            Normal -> Normal {[self.tren -> size() = 1] tick()}
+            Full -> Normal {[self.tren -> size() = 1] tick()}
+            Full -> Empty {[(self.tren -> size() = 0)]tick()}
+            Full -> Full {[(self.tren -> size() = 2)]tick()}
+
+end
+end
+class Tren
+attributes
+    averiado : Boolean init = false
+    direction : Boolean
+    circulando : Boolean init = false
+operations
+    moveToSegment()
+        begin
+            declare seg: Segmento;
+
+            --Para pasar de una estacion a un segmento cogemos aquel que sea distinto del que estabamos antes de llegar a la estacion
+            -- y que sea de la misma linea
+            if (self.estacion_actual = self.linea.destino or self.estacion_actual = self.linea.origen) and self.segmento_previo <> null  then
+                delete(self.segmento_previo,self) from Tren_En_Segmento_Previo;
+            end;
+
+            seg := self.estacion_actual.segmento -> select( s : Segmento | s <> self.segmento_previo and 
+            s.linea -> exists(l : Linea| l = self.linea))->asSequence()->first();
+
+            if (seg.tren -> size() <=1) then
+
+                if(seg.tren -> select(t : Tren | self.estacion_actual=t.estacion_previa) -> size() = 0) then
+                    insert(self.estacion_actual,self) into Tren_En_Estacion_Previa;
+                    delete(self.estacion_actual,self) from Tren_En_Estacion;
+
+                    if self.segmento_previo <> null then
+                        delete(self.segmento_previo,self) from Tren_En_Segmento_Previo;
+                    end;
+                    insert(seg,self) into Tren_En_Segmento;
+                    --Tarda un tick en recorrer el segmento
+                    self.circulando := true;
+                end;
+                
+            end;
+        
+        end
+        pre Segmento_Actual_Nulo: self.segmento_actual = null
+        pre No_Averiado: self.averiado = false
+        moveToStation()
+            begin
+                declare st: Estacion;
+                --Para pasar de un segmento a una estación cogemos aquella estacion relacionada con el segmento que no sea la de origen
+                st := self.segmento_actual.estacion -> select( p : Estacion | p <> self.estacion_previa)->asSequence()->first();
+
+                --Estamos en la ultima estacion de la linea, así que cambiamos el sentido
+            if st = self.linea.destino and self.direction = true then
+                    self.direction := false;
+                else
+                    if st = self.linea.origen and self.direction = false then
+                        self.direction := true;
+                    else
+                        --No estamos en la última, así que especificamos cual es el último segmento recorrido
+                        insert(self.segmento_actual,self) into Tren_En_Segmento_Previo;
+                    end;
+                end;
+                
+                delete(self.segmento_actual,self) from Tren_En_Segmento;
+                delete(self.estacion_previa,self) from Tren_En_Estacion_Previa;
+                insert(st,self) into Tren_En_Estacion;
+
+                
+            
+            end
+            --No podemos mover a una estacion si estamos en un segmento
+            pre Tren_Esta_En_Segmento: self.segmento_actual <> null and self.circulando = false
+            post Tren_Esta_En_Estacion: self.segmento_actual = null and self.estacion_actual <> self.estacion_previa@pre    
+    tick()
+        begin
+            --El tren debe permanecer al menos un instante de tiempo en el segmento
+            if self.circulando = true then
+                self.circulando := false;
+            else
+                if self.averiado = false then   --El tren no esta averiado
+                    if self.estacion_actual <> null then  
+                    self.moveToSegment();
+                    else                                   
+                        self.moveToStation();
+                    end;
+                else                            --El tren esta averiado
+                    if self.estacion_actual = null then
+                        self.moveToStation();
+                    end;
+                end;
+                
+            end;
+        end
+    averiado()
+        begin
+            self.averiado := true;
+        end
+    reparar()
+        begin
+            self.averiado := false;
+        end
+statemachines
+    psm Estado_Tren
+        states
+            s: initial
+            Averiado [self.averiado = true]
+            Reparado [self.averiado = false]
+        transitions
+            s -> Reparado
+            Reparado -> Averiado {[self.averiado = false] averiado()}
+            Averiado -> Reparado {[self.averiado = true] reparar()}
+    end
+
+    psm Localizacion_Tren
+        states
+            s: initial 
+            En_Estacion [self.segmento_actual -> size() = 0]
+            En_Segmento [self.estacion_actual -> size() = 0]
+        transitions
+            s -> En_Estacion
+            En_Estacion -> En_Segmento {[self.estacion_actual -> size() <> 0] tick()}
+            En_Segmento -> En_Estacion {[self.segmento_actual -> size() <> 0] tick()}
+            En_Estacion -> En_Estacion {[self.estacion_actual -> size() <> 0] tick()}
+            En_Segmento -> En_Segmento {[self.segmento_actual -> size() <> 0] tick()}
+    end
+end
+
+class Clock
+attributes
+time : Integer init = 0
+operations
+tick()
+    begin
+        self.time := self.time + 1;
+        for tren in self.tren do
+            tren.tick();
+        end;
+         for estacion in self.estacion do
+            estacion.tick();
+        end;
+         for segmento in self.segmento do
+            segmento.tick();
+        end;
+    end
+    post Consistencia_Tiempo: self.time = self.time@pre + 1
+end
+
+association Tren_En_Estacion between
+Estacion[0..1] role estacion_actual
+Tren[0..*] role tren
+end
+
+association Tren_En_Estacion_Previa between
+Estacion[0..1] role estacion_previa
+Tren[0..*] role tren_previo
+end
+
+association Tren_En_Segmento between
+Segmento[0..1] role segmento_actual
+Tren[0..2] role tren
+end
+
+association Tren_En_Segmento_Previo between
+Segmento[0..1] role segmento_previo
+Tren[0..2] role tren_previo
+end
+
+association Conecta between
+Estacion[2] role estacion
+Segmento[1..*] role segmento
+end
+
+association Origen between
+Estacion[1] role origen
+Linea[0..*] role linea_origen
+end
+
+association Destino between
+Estacion[1] role destino
+Linea[0..*] role linea_destino
+end
+
+aggregation Compone between
+Linea[1..*] role linea
+Segmento[0..*] role segmento ordered
+end
+
+composition Circula between
+Linea[1] role linea
+Tren[0..*] role tren
+end
+
+aggregation Tiempo_Estacion between
+Estacion[0..*] role estacion
+Clock[1] role clock
+end
+
+aggregation Tiempo_Tren between
+Tren[0..*] role tren
+Clock[1] role clock
+end
+
+aggregation Tiempo_Segmento between
+Segmento[0..*] role segmento
+Clock[1] role clock
+end
+
+
+constraints
+context Linea inv Conecta:
+    --Segmentos de una misma linea no deben conectar las mismas estaciones
+    self.segmento -> forAll(s1 : Segmento | self.segmento -> select(s2 : Segmento | s2 <> s1 and s2.estacion = s1.estacion) -> size() = 0)
+
+context Tren inv Ubicacion:
+    --Un tren puede estar en una estacion o en un segmento en cada momento, pero no en ambos
+    self.segmento_actual <> null xor self.estacion_actual <> null
+
+context Segmento inv Cantidad_Trenes:
+    --Solo puede haber un máximo de un tren por sentido en cada segmento.
+    --Sabemos que van en direccion opuesta si sus estaciones de origen son distinta
+    if self.tren -> size() <=1 then
+        true
+    else
+        self.tren -> forAll(t1 : Tren | self.tren -> select(t2 : Tren | t2 <> t1 and t2.estacion_previa <> t1.estacion_previa) -> size() = 1)
+    endif
+
+context Clock inv Clock_Unico:
+    Clock.allInstances -> size() = 1
+
+    
+
+
+ 
+    

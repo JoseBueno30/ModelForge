@@ -683,6 +683,7 @@ public:
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(createAssociationEnd(endCtx, association));
             association->addAssociationEnd(associationEnd);
         }
+
         model->addAssociation(association);
     }
 
@@ -749,6 +750,7 @@ public:
         std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::make_shared<MetaModel::MetaAssociationEnd>(endClass, association, role,
                                                                                                                         0, isNavigable, isOrdered, false,
                                                                                                                         isUnion, multiplicity, visibility);
+
         return associationEnd;
     }
 

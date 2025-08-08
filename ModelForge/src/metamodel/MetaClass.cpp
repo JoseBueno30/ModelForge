@@ -204,7 +204,7 @@ std::shared_ptr<MetaAssociationEnd>  MetaClass::getAssociationEnd(const std::str
 }
 void  MetaClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd){
     if (!associationEnd) {
-        throw std::invalid_argument("Null attribute");
+        throw std::invalid_argument("Null AssociationEnd");
     }
 
     if (associationEnds.find(associationEnd->getRole()) != associationEnds.end()) {

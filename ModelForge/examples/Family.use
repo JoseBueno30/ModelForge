@@ -1,0 +1,103 @@
+model Family
+class Test
+attributes
+name : Boolean
+operations
+    esMayorDeEdad() : Person
+end
+
+class Test3 < Test
+operations
+    esMayorDeEdad() : Person
+
+end
+
+
+class Test2
+
+attributes
+name : String
+end
+
+
+class Person
+attributes
+name : String
+surname1 : String
+surname2 : String
+age : Integer
+operations
+    esMayorDeEdad() : Boolean
+    cumplirAnios(anios : Integer) : Integer
+constraints
+    inv Positive_Age:
+        self.age > 0
+end
+
+class Person2 < Person
+end
+
+associationclass Assoc between
+Person[1] role persona1
+Test[1] role prueba1
+attributes
+age : Integer
+end
+
+
+association Fatherhood between
+Person[1] role father
+Person[*] role childf
+end
+
+association Motherhood between
+Person[1] role mother
+Person[*] role childm
+end
+
+association Cousin between
+Person[*] role cousin1
+Person[*] role cousin2
+end
+
+association Uncle between
+Person[*] role uncle
+Person[*] role nephew
+end
+
+association Brotherhood between
+Person[*] role brother1
+Person[*] role brother2
+end
+
+
+constraints
+context Assoc inv Positive_Age:
+    self.age > 0
+
+context Person::cumplirAnios(anios : Integer) : Integer
+pre EdadValida: self.age >= 0
+pre EdadValidad: self.age >= -1
+post EdadIncrementada: result = self.age@pre + 1 and self.age = self.age@pre + 1
+
+context Person inv Parents_Surname:
+    if self.father <> null and self.mother <> null then
+    self.father.surname1 = self.surname1 and
+    self.mother.surname1 = self.surname2
+    else true endif
+
+context Person inv Parents_Age:
+    if self.father <> null and self.mother <> null then
+    self.father.age > self.age and
+    self.mother.age > self.age
+    else true endif
+
+context Person inv are_Brothers:
+    self.brother2 -> forAll(father = self.father or mother = self.mother)
+
+context Person inv are_Uncles:
+    self.uncle -> forAll(p:Person | p.brother2 -> exists(p2:Person | p2 = self.father or p2 = self.mother)
+    or p.brother1 -> exists(p2:Person | p2 = self.father or p2 = self.mother))
+
+context Person inv are_Cousins:
+    self.cousin2 -> forAll(p:Person | self.uncle -> exists(p2:Person | p2 = p.father or p2 = p.mother)) 

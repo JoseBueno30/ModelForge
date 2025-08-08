@@ -5,7 +5,8 @@ namespace MetaModel{
 
 LogicalExpr::LogicalExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr1, const std::shared_ptr<Expr>& expr2)
     : BinaryExpr(expression, isComplex, type, expr1, expr2){
-    if(!std::dynamic_pointer_cast<MetaModel::Boolean>(expr1->getType()) || !std::dynamic_pointer_cast<MetaModel::Boolean>(expr2->getType())){
+    if(!expr1->isComplexExpr() && !std::dynamic_pointer_cast<MetaModel::Boolean>(expr1->getType()) ||
+       !expr2->isComplexExpr() && !std::dynamic_pointer_cast<MetaModel::Boolean>(expr2->getType())){
         throw std::invalid_argument("Logical Expression expects a Boolean expressions");
     }
 }

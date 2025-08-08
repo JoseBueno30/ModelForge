@@ -1,6 +1,6 @@
 package bankaccount;
 
-public abstractclass SuperAccount{
+public abstract class SuperAccount{
 
 
 	public SuperAccount() {

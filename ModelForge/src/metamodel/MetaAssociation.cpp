@@ -11,7 +11,19 @@ MetaAssociation::MetaAssociation(const std::string& name, int type)
     : name(name), type(type){}
 
 MetaAssociation::MetaAssociation(const std::string& name, int type, std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds)
-    : name(name), type(type), associationEnds(std::move(associationEnds)){}
+    : name(name), type(type), associationEnds(std::move(associationEnds)){
+
+    // for(const auto &associationEndPair : this->getAssociationEnds()){
+    //     auto associationEnd = associationEndPair.second;
+    //     for(const auto &innerAssociationEndPair : this->getAssociationEnds()){
+    //         auto otherAssociationEnd = innerAssociationEndPair.second;
+
+    //         if (associationEnd != otherAssociationEnd) {
+    //             otherAssociationEnd->getClassSharedPtr()->addAssociationEnd(associationEnd);
+    //         }
+    //     }
+    // }
+}
 
 MetaAssociation::~MetaAssociation(){
     for(const auto &associationEndPair : this->getAssociationEnds()){
@@ -50,17 +62,32 @@ std::shared_ptr<MetaAssociationEnd> MetaAssociation::getAssociationEnd(const std
 
 void MetaAssociation::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd){
     if (!associationEnd) {
-        throw std::invalid_argument("Null super class");
+        throw std::invalid_argument("Null association end");
     }
 
-    if (associationEnds.find(associationEnd->getRole()) != associationEnds.end()) {//More generalization restrictions needed
-        throw std::runtime_error("Generalization already declared: " + associationEnd->getRole());
+    if (associationEnds.find(associationEnd->getRole()) != associationEnds.end()) {
+        throw std::runtime_error("Role '" + associationEnd->getRole() + "' already declared in association: " + this->getName());
+    }
+
+    // Add associationEnd to other ends classes
+    for(const auto &associationEndPair : this->getAssociationEnds()){
+        auto otherAssociationEnd = associationEndPair.second;
+
+        if (associationEnd != otherAssociationEnd) {
+            otherAssociationEnd->getClassSharedPtr()->addAssociationEnd(associationEnd);
+        }
     }
 
     associationEnds[associationEnd->getRole()] = std::move(associationEnd);
 }
 void MetaAssociation::removeAssociationEnd(const std::string& key){
     associationEnds.erase(key);
+
+    for(const auto &associationEndPair : this->getAssociationEnds()){
+        auto otherAssociationEnd = associationEndPair.second;
+
+        otherAssociationEnd->getClassSharedPtr()->removeAssociationEnd(key);
+    }
 }
 
 std::vector<std::string> MetaAssociation::getAssociationEndsClassesNames(){

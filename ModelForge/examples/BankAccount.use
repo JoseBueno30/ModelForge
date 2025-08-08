@@ -21,9 +21,9 @@ inv Positive_Balance:
 inv Test:
 	(self.balance > 1) or (true and true) or self.type = AccountType::Savings
 inv Test2:
-	not true
+	true
 inv Test3:
-	false and (true or true)
+	true and (true or true)
 end
 
 class Bank
@@ -37,9 +37,9 @@ age : Integer --—
 name : String --+
 end
 
-composition AccountOfBanks between
+composition BankAccounts between
 Account [*] role accounts --+
-Bank [1..*] role bank --+
+Bank [1] role bank --+
 end
 
 association Ownership between
@@ -49,7 +49,7 @@ end
 
 association Use between
 Account [*] role usedAccounts --+
-Person [*] role user --+
+Person [*] role users --+
 end
 
 associationclass Employee between

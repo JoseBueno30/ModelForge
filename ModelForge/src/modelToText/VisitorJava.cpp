@@ -102,9 +102,11 @@ std::string VisitorJava::generateClassConstructor(const MetaModel::MetaClass& me
 
     bool first = true;
     for (const auto& member : members) {
-        if (!first) constructor += ", ";
-        constructor += member.paramDeclaration;
-        first = false;
+        if (!member.paramDeclaration.empty()){
+            if (!first) constructor += ", ";
+            constructor += member.paramDeclaration;
+            first = false;
+        }
     }
     constructor += ") {\n";
 
@@ -129,7 +131,7 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
     classString += "public";
 
     if (metaClass.getIsAbstract()){
-        classString += " abstract";
+        classString += " abstract ";
     } else {
         classString += " ";
     }
@@ -158,6 +160,12 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
     //attributes
     for(const auto &attributePair : metaClass.getAttributes()){
         members.push_back(std::any_cast<JavaMemberCode>(attributePair.second->accept(*this)));
+    }
+
+    //associations
+
+    for(const auto &assocEndPair: metaClass.getAssociationEnds()){
+        members.push_back(std::any_cast<JavaMemberCode>(assocEndPair.second->accept(*this)));
     }
 
     for (const auto& member : members) {
@@ -295,6 +303,20 @@ std::any VisitorJava::visit(const MetaModel::MetaAttribute& metaAttribute) {
         std::string removeName = "remove" + capitalize(singularName);
         std::string collectionVar = member.name;
 
+        if (member.type.find("List") != std::string::npos) {
+            member.paramDeclaration = "";
+            member.paramSet = "\t\tthis." + collectionVar + " = new ArrayList<>();\n";
+            currentClassImports.insert("java.util.ArrayList");
+        } else if (member.type.find("Set") != std::string::npos) {
+            member.paramDeclaration = "";
+            member.paramSet = "\t\tthis." + collectionVar + " = new HashSet<>();\n";
+            currentClassImports.insert("java.util.HashSet");
+        } else {
+            member.paramDeclaration = "";
+            member.paramSet = "\t\tthis." + collectionVar + " = new ArrayList<>();\n";
+            currentClassImports.insert("java.util.ArrayList");
+        }
+
         member.adder = "\t" + visibility + " void " + addName + "(" + elementType + " element) {\n" +
                        "\t\tthis." + collectionVar + ".add(element);\n" +
                        "\t}\n\n";
@@ -318,8 +340,113 @@ std::any VisitorJava::visit(const MetaModel::MetaConstraint& metaConstraint) {
 }
 
 
-std::any VisitorJava::visit(const MetaModel::MetaAssociationEnd& metaAssociatonEnd) {
-    return 0;
+std::any VisitorJava::visit(const MetaModel::MetaAssociationEnd& metaAssociationEnd) {
+    JavaMemberCode member;
+
+    if (!metaAssociationEnd.getIsNavigable()) return member;
+
+    member.name = metaAssociationEnd.getRole();
+    std::string capitalizedName = capitalize(member.name);
+    std::string visibility = visibilityToString(metaAssociationEnd.getVisibility());
+
+    std::string targetType = metaAssociationEnd.getClass().getName();
+
+    const MetaModel::MetaMultiplicity& multiplicity = metaAssociationEnd.getMultiplicity();
+    int lowerBound = multiplicity.getRanges().empty() ? 1 : multiplicity.getRanges().front()->getLowerBound();
+    int upperBound = multiplicity.getRanges().empty() ? 1 : multiplicity.getRanges().front()->getUpperBound();
+
+    bool isMultiple = (upperBound == -1 || upperBound > 1);
+
+    std::string collectionType = "List<" + targetType + ">";
+    std::string implementationType = "ArrayList<" + targetType + ">";
+
+    if (isMultiple) {
+        currentClassImports.insert("java.util.List");
+        currentClassImports.insert("java.util.ArrayList");
+        currentClassImports.insert("java.util.Collections");
+
+        member.type = collectionType;
+        member.field = "\tprivate " + collectionType + " " + member.name + ";\n";
+
+        std::string singularName = (member.name.back() == 's') ? member.name.substr(0, member.name.size() - 1) : member.name;
+
+        member.getter = "\t" + visibility + " " + collectionType + " get" + capitalizedName + "() {\n" +
+                        "\t\treturn Collections.unmodifiableList(this." + member.name + ");\n" +
+                        "\t}\n\n";
+
+        if ((lowerBound == upperBound && upperBound > 1) || lowerBound > 1) {
+            member.paramDeclaration = collectionType + " " + member.name;
+            member.paramSet = "\t\tthis.set" + capitalizedName + "(" + member.name + ");\n";
+
+            member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + collectionType + " " + member.name + ") {\n" +
+                            "\t\tif (" + member.name + ".size() < " + std::to_string(lowerBound) +
+                            (upperBound != -1 ? " || " + member.name + ".size() > " + std::to_string(upperBound) : "") + ") {\n" +
+                            "\t\t\tthrow new IllegalArgumentException(\"Collection must contain " +
+                            (upperBound != -1 && upperBound == lowerBound
+                                 ? "exactly " + std::to_string(upperBound)
+                                 : "at least " + std::to_string(lowerBound) +
+                                       (upperBound != -1 ? " and at most " + std::to_string(upperBound) : "")) +
+                            " elements.\");\n" +
+                            "\t\t}\n" +
+                            "\t\tthis." + member.name + " = new " + implementationType + "(" + member.name + ");\n" +
+                            "\t}\n\n";
+
+        } else if (lowerBound == 1 && (upperBound == -1 || upperBound > 1)) {
+            std::string paramName = singularName;
+            member.paramDeclaration = targetType + " " + paramName;
+            member.paramSet = "\t\tthis." + member.name + " = new " + implementationType + "(" + (upperBound==-1 ? "" : " " + std::to_string(upperBound) + " " ) + ");\n" +
+                              "\t\tthis." + member.name + ".add(" + paramName + ");\n";
+
+            member.adder = "\t" + visibility + " void add" + capitalize(singularName) + "(" + targetType + " element) {\n" +
+                           "\t\tthis." + member.name + ".add(element);\n" +
+                           "\t}\n\n";
+
+            member.remover = "\t" + visibility + " void remove" + capitalize(singularName) + "(" + targetType + " element) {\n" +
+                             "\t\tthis." + member.name + ".remove(element);\n" +
+                             "\t}\n\n";
+
+            member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + collectionType + " " + member.name + ") {\n" +
+                            "\t\tthis." + member.name + " = new " + implementationType + "(" + member.name + ");\n" +
+                            "\t}\n\n";
+
+        } else {
+            member.paramDeclaration = "";
+            member.paramSet = "\t\tthis." + member.name + " = new " + implementationType + "();\n";
+
+            member.adder = "\t" + visibility + " void add" + capitalize(singularName) + "(" + targetType + " element) {\n" +
+                           "\t\tthis." + member.name + ".add(element);\n" +
+                           "\t}\n\n";
+
+            member.remover = "\t" + visibility + " void remove" + capitalize(singularName) + "(" + targetType + " element) {\n" +
+                             "\t\tthis." + member.name + ".remove(element);\n" +
+                             "\t}\n\n";
+
+            member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + collectionType + " " + member.name + ") {\n" +
+                            "\t\tthis." + member.name + " = new " + implementationType + "(" + member.name + ");\n" +
+                            "\t}\n\n";
+        }
+
+    } else {
+        member.type = targetType;
+        member.field = "\tprivate " + targetType + " " + member.name + ";\n";
+        member.paramDeclaration = targetType + " " + member.name;
+        member.paramSet = "\t\tthis.set" + capitalizedName + "(" + member.name + ");\n";
+
+        member.getter = "\t" + visibility + " " + targetType + " get" + capitalizedName + "() {\n" +
+                        "\t\treturn this." + member.name + ";\n" +
+                        "\t}\n\n";
+
+        member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + targetType + " " + member.name + ") {\n";
+
+        if(lowerBound == 1){
+            member.setter += "\t\tif (" + member.name + " == null) {\n" +
+                             "\t\t\tthrow new IllegalArgumentException(\"" + member.name + " must not be null.\");\n\t\t}\n";
+        }
+
+        member.setter += "\t\tthis." + member.name + " = " + member.name + ";\n\t}\n\n";
+    }
+
+    return member;
 }
 
 
