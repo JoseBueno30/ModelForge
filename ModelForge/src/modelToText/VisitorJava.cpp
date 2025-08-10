@@ -189,6 +189,10 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
         }
     }
 
+    for (const auto& operationPair: metaClass.getOperations()){
+        classString += std::any_cast<std::string>(operationPair.second->accept(*this));
+    }
+
     classString += "}\n";
 
 
@@ -327,6 +331,10 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociationClass& metaAssociati
         }
     }
 
+    for (const auto& operationPair: metaAssociationClass.getOperations()){
+        classString += std::any_cast<std::string>(operationPair.second->accept(*this));
+    }
+
     classString += "}\n";
 
 
@@ -417,7 +425,33 @@ std::any VisitorJava::visit(const MetaModel::MetaAttribute& metaAttribute) {
 
 
 std::any VisitorJava::visit(const MetaModel::MetaOperation& metaOperation) {
-    return 0;
+    std::string operationString = "";
+
+    std::string visibility = visibilityToString(metaOperation.getVisibility());
+    std::string operationType = std::any_cast<std::string>(visitType(metaOperation.getReturnType()));
+
+    std::string paramsDeclaration;
+    for (const auto& variablePair : metaOperation.getVariables()) {
+        if (!paramsDeclaration.empty()) paramsDeclaration += ", ";
+        std::string paramType = std::any_cast<std::string>(visitType(variablePair.second->getType()));
+        paramsDeclaration += paramType + " " + variablePair.second->getName();
+    }
+
+    operationString += "\t" + visibility + " " + operationType + " " + metaOperation.getName() + "(" + paramsDeclaration + "){\n";
+
+    for (const auto& preConditionPair : metaOperation.getPreConditions()){
+        operationString += "\t\t// Pre Condition <" + preConditionPair.second->getName() + ">: " +
+                           preConditionPair.second->getExpression().toString() + "\n";
+    }
+
+    operationString += "\t\t/*\n\t" + metaOperation.getOperationDefinition() + "\n\t\t*/\n";
+
+    for (const auto& postConditionPair : metaOperation.getPostConditions()){
+        operationString += "\t\t// Post Condition <" + postConditionPair.second->getName() + ">: " +
+                           postConditionPair.second->getExpression().toString() + "\n";
+    }
+
+    return operationString;
 }
 
 

@@ -11,10 +11,12 @@ balance : Integer --+
 test : Person --+
 type : AccountType --+
 operations
-transfer(variable : Integer) : Integer --+
+transfer(variable : Integer) : Integer --#
 	begin
         self.balance := self.balance + 1;
     end
+	pre BalancePositive: self.balance > 0
+	post ResultGreaterThanStart: result > self.balance@pre
 constraints
 inv Positive_Balance:
 	self.balance > 0

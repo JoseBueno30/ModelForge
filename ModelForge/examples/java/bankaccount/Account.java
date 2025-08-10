@@ -79,4 +79,12 @@ public class Account extends SuperAccount{
 		this.users.remove(element);
 	}
 
+	protected Integer transfer(Integer variable){
+		// Precondition <BalancePositive>: self.balance > 0
+		/*
+	begin
+        self.balance := self.balance + 1;
+    end
+		*/
+		// Precondition <ResultGreaterThanStart>: result > self.balance
 }

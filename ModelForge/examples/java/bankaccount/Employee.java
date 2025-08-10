@@ -9,16 +9,10 @@ public class Employee{
 	private Bank bank;
 	private List<Person> employees;
 
-	public Employee(Integer salary, Bank bank, Person employees, Person employees2, Person employees3, Person employees4, Person employees5, Person employees6) {
+	public Employee(Integer salary, Bank bank) {
 		this.setSalary(salary);
 		this.setBank(bank);
 		this.employees = new ArrayList<Person>();
-			this.addEmployee(employees);
-			this.addEmployee(employees2);
-			this.addEmployee(employees3);
-			this.addEmployee(employees4);
-			this.addEmployee(employees5);
-			this.addEmployee(employees6);
 	}
 
 	public Integer getSalary() {
@@ -51,9 +45,6 @@ public class Employee{
 	}
 
 	public void removeEmployee(Person element) {
-		if (this.employees.size() <= 6) {
-			throw new IllegalStateException("Cannot remove element: minimum multiplicity of 6 would be violated.");
-		}
 		this.employees.remove(element);
 		element.setEmployee(null);
 	}
