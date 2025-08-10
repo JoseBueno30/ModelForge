@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <iostream>
 #include <modelToText/VisitorJava.h>
 
 
@@ -141,6 +140,8 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
     currentClassImports.clear();
 
     // TODO: improve inheritance, check before generating if is a java valid model, check if class has no attributes to be an interface else an extension
+    // TODO: ^ Also check if any association has more than two ends, in that case say it is not supported yet
+    // TODO: add paramDeclaration of super class too
     auto superClasses = metaClass.getSuperClasses();
     if (!superClasses.empty()) {
         classString += " extends ";
@@ -254,6 +255,91 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociation& metaAssociation) {
 
 
 std::any VisitorJava::visit(const MetaModel::MetaAssociationClass& metaAssociationClass) {
+    std::string filePath = this->directoryPath + "/" + metaAssociationClass.getName() + ".java";
+    outFile.open(filePath);
+
+    outFile << "package " << packageName << ";\n";
+
+    std::string classString = "";
+
+    classString += "public";
+
+    if (metaAssociationClass.getIsAbstract()){
+        classString += " abstract ";
+    } else {
+        classString += " ";
+    }
+
+    classString += "class " + metaAssociationClass.getName();
+
+    currentClassImports.clear();
+
+    // TODO: improve inheritance, check before generating if is a java valid model, check if class has no attributes to be an interface else an extension
+    // TODO: add paramDeclaration of super class too
+    auto superClasses = metaAssociationClass.getSuperClasses();
+    if (!superClasses.empty()) {
+        classString += " extends ";
+        bool first = true;
+        for (const auto &superClassPair : superClasses) {
+            if (!first) classString += ", ";
+            classString += superClassPair.second->getName();
+            first = false;
+            break; // only support single inheritance in Java
+        }
+    }
+
+    classString += "{\n\n";
+
+    std::vector<JavaMemberCode> members;
+
+    //attributes
+    for(const auto &attributePair : metaAssociationClass.getAttributes()){
+        members.push_back(std::any_cast<JavaMemberCode>(attributePair.second->accept(*this)));
+    }
+
+    //associations
+
+    for(const auto &assocEndPair: metaAssociationClass.MetaAssociation::getAssociationEnds()){
+        members.push_back(std::any_cast<JavaMemberCode>(assocEndPair.second->accept(*this)));
+    }
+
+    for(const auto &assocEndPair: metaAssociationClass.MetaClass::getAssociationEnds()){
+        members.push_back(std::any_cast<JavaMemberCode>(assocEndPair.second->accept(*this)));
+    }
+
+    for (const auto& member : members) {
+        classString += member.field;
+    }
+    classString += "\n";
+
+    classString += generateClassConstructor(metaAssociationClass, members);
+
+    for (const auto& member : members) {
+        classString += member.getter;
+        classString += member.setter;
+
+        if (!member.adder.empty()) {
+            classString += member.adder;
+        }
+
+        if (!member.remover.empty()) {
+            classString += member.remover;
+        }
+    }
+
+    classString += "}\n";
+
+
+    for(const auto& import : currentClassImports){
+        outFile << "import " + import + ";\n";
+    }
+
+    outFile << "\n";
+
+    outFile << classString;
+
+    outFile.close();
+
     return 0;
 }
 
@@ -351,11 +437,29 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociationEnd& metaAssociation
 
     std::string targetType = metaAssociationEnd.getClass().getName();
 
+    bool assocIsAssocClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(
+                                metaAssociationEnd.getAssociationSharedPtr()) != nullptr;
+    bool endClassIsAssocClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(
+                                    metaAssociationEnd.getClassSharedPtr()) != nullptr;
+
     const MetaModel::MetaMultiplicity& multiplicity = metaAssociationEnd.getMultiplicity();
     int lowerBound = multiplicity.getRanges().empty() ? 1 : multiplicity.getRanges().front()->getLowerBound();
     int upperBound = multiplicity.getRanges().empty() ? 1 : multiplicity.getRanges().front()->getUpperBound();
 
     bool isMultiple = (upperBound == -1 || upperBound > 1);
+
+    bool otherEndIsMultiple = false;
+    if(assocIsAssocClass && !endClassIsAssocClass){
+        for(const auto& assocEnd : metaAssociationEnd.getAssociation().getAssociationEnds()){
+            if(assocEnd.first != metaAssociationEnd.getRole()){
+                const MetaModel::MetaMultiplicity& otherEndMultiplicity = assocEnd.second->getMultiplicity();
+                int otherEndLowerBound = otherEndMultiplicity .getRanges().empty() ? 1 : otherEndMultiplicity .getRanges().front()->getLowerBound();
+                int otherEndUpperBound = otherEndMultiplicity .getRanges().empty() ? 1 : otherEndMultiplicity .getRanges().front()->getUpperBound();
+                otherEndIsMultiple = (otherEndUpperBound == -1 || otherEndLowerBound > 1);
+                break;
+            }
+        }
+    }
 
     std::string collectionType = "List<" + targetType + ">";
     std::string implementationType = "ArrayList<" + targetType + ">";
@@ -370,80 +474,165 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociationEnd& metaAssociation
 
         std::string singularName = (member.name.back() == 's') ? member.name.substr(0, member.name.size() - 1) : member.name;
 
+        member.getter = "";
         member.getter = "\t" + visibility + " " + collectionType + " get" + capitalizedName + "() {\n" +
                         "\t\treturn Collections.unmodifiableList(this." + member.name + ");\n" +
                         "\t}\n\n";
 
-        if ((lowerBound == upperBound && upperBound > 1) || lowerBound > 1) {
-            member.paramDeclaration = collectionType + " " + member.name;
-            member.paramSet = "\t\tthis.set" + capitalizedName + "(" + member.name + ");\n";
+        if (lowerBound > 1) { //n..m && n..*
+            if(assocIsAssocClass && endClassIsAssocClass){
+                member.paramDeclaration = "";
+                member.paramSet = member.paramSet = "\t\tthis." + member.name + " = new " + implementationType + "(" + (upperBound==-1 ? "" : "" + std::to_string(upperBound) + "" ) + ");\n";
+            } else {
+                for (int i = 1; i <= lowerBound; ++i) {
+                    if (i > 1) member.paramDeclaration += ", ";
+                    member.paramDeclaration += targetType + " " + singularName;
+                    if (i > 1) member.paramDeclaration += std::to_string(i);
+                }
 
-            member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + collectionType + " " + member.name + ") {\n" +
-                            "\t\tif (" + member.name + ".size() < " + std::to_string(lowerBound) +
-                            (upperBound != -1 ? " || " + member.name + ".size() > " + std::to_string(upperBound) : "") + ") {\n" +
-                            "\t\t\tthrow new IllegalArgumentException(\"Collection must contain " +
-                            (upperBound != -1 && upperBound == lowerBound
-                                 ? "exactly " + std::to_string(upperBound)
-                                 : "at least " + std::to_string(lowerBound) +
-                                       (upperBound != -1 ? " and at most " + std::to_string(upperBound) : "")) +
-                            " elements.\");\n" +
-                            "\t\t}\n" +
-                            "\t\tthis." + member.name + " = new " + implementationType + "(" + member.name + ");\n" +
-                            "\t}\n\n";
-
-        } else if (lowerBound == 1 && (upperBound == -1 || upperBound > 1)) {
-            std::string paramName = singularName;
-            member.paramDeclaration = targetType + " " + paramName;
-            member.paramSet = "\t\tthis." + member.name + " = new " + implementationType + "(" + (upperBound==-1 ? "" : " " + std::to_string(upperBound) + " " ) + ");\n" +
-                              "\t\tthis." + member.name + ".add(" + paramName + ");\n";
+                member.paramSet = member.paramSet = "\t\tthis." + member.name + " = new " + implementationType + "(" + (upperBound==-1 ? "" : "" + std::to_string(upperBound) + "" ) + ");\n";
+                for (int i = 1; i <= lowerBound; ++i) {
+                    std::string paramName = member.name + (i > 1 ? std::to_string(i) : "");
+                    member.paramSet += "\t\t\tthis.add" + capitalize(singularName) + "(" +paramName + ");\n";
+                }
+            }
 
             member.adder = "\t" + visibility + " void add" + capitalize(singularName) + "(" + targetType + " element) {\n" +
+                           (upperBound > 1
+                                ? "\t\tif (this." + member.name + ".size() >= " + std::to_string(upperBound) + ") {\n" +
+                                      "\t\t\tthrow new IllegalStateException(\"Cannot add element: maximum multiplicity of " +
+                                      std::to_string(upperBound) + " would be violated.\");\n" +
+                                      "\t\t}\n"
+                                : "") +
                            "\t\tthis." + member.name + ".add(element);\n" +
+                           ((assocIsAssocClass && !endClassIsAssocClass)
+                                ? "\t\telement." +
+                                      ((otherEndIsMultiple)
+                                           ? "add" + capitalize(metaAssociationEnd.getAssociation().getName())
+                                           : "set" + capitalize(metaAssociationEnd.getAssociation().getName())) + "(this);\n"
+                                : "") +
                            "\t}\n\n";
 
             member.remover = "\t" + visibility + " void remove" + capitalize(singularName) + "(" + targetType + " element) {\n" +
+                             "\t\tif (this." + member.name + ".size() <= " + std::to_string(lowerBound) + ") {\n" +
+                             "\t\t\tthrow new IllegalStateException(\"Cannot remove element: minimum multiplicity of " +
+                             std::to_string(lowerBound) + " would be violated.\");\n" +
+                             "\t\t}\n" +
                              "\t\tthis." + member.name + ".remove(element);\n" +
+                             ((assocIsAssocClass && !endClassIsAssocClass)
+                                  ? "\t\telement." +
+                                        ((otherEndIsMultiple)
+                                             ? "remove" + capitalize(metaAssociationEnd.getAssociation().getName()) + "(this);\n"
+                                             : "set" + capitalize(metaAssociationEnd.getAssociation().getName()) + "(null)") + ";\n"
+                                  : "") +
                              "\t}\n\n";
 
-            member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + collectionType + " " + member.name + ") {\n" +
-                            "\t\tthis." + member.name + " = new " + implementationType + "(" + member.name + ");\n" +
-                            "\t}\n\n";
 
-        } else {
+        } else if (lowerBound == 1) { //1..m && 1..*
+            std::string paramName = singularName;
+            if(assocIsAssocClass && endClassIsAssocClass){
+                member.paramDeclaration = "";
+                member.paramSet = "\t\tthis." + member.name + " = new " + implementationType + "(" + (upperBound==-1 ? "" : "" + std::to_string(upperBound) + "" ) + ");\n";
+            } else {
+                member.paramDeclaration = targetType + " " + paramName;
+                member.paramSet = "\t\tthis." + member.name + " = new " + implementationType + "(" + (upperBound==-1 ? "" : "" + std::to_string(upperBound) + "" ) + ");\n" +
+                                  "\t\tthis." + member.name + ".add(" + paramName + ");\n";
+            }
+
+            member.adder = "\t" + visibility + " void add" + capitalize(singularName) + "(" + targetType + " element) {\n" +
+                           (upperBound > 1
+                                ? "\t\tif (this." + member.name + ".size() >= " + std::to_string(upperBound) + ") {\n" +
+                                      "\t\t\tthrow new IllegalStateException(\"Cannot add element: maximum multiplicity of " +
+                                      std::to_string(upperBound) + " would be violated.\");\n" +
+                                      "\t\t}\n"
+                                : "") +
+                           "\t\tthis." + member.name + ".add(element);\n" +
+                           ((assocIsAssocClass && !endClassIsAssocClass)
+                                ? "\t\telement." +
+                                      ((otherEndIsMultiple)
+                                           ? "add" + capitalize(metaAssociationEnd.getAssociation().getName())
+                                           : "set" + capitalize(metaAssociationEnd.getAssociation().getName())) + "(this);\n"
+                                : "") +
+                           "\t}\n\n";
+
+            member.remover = "\t" + visibility + " void remove" + capitalize(singularName) + "(" + targetType + " element) {\n" +
+                             "\t\tif (this." + member.name + ".size() <= " + std::to_string(lowerBound) + ") {\n" +
+                             "\t\t\tthrow new IllegalStateException(\"Cannot remove element: minimum multiplicity of " +
+                             std::to_string(lowerBound) + " would be violated.\");\n" +
+                             "\t\t}\n" +
+                             "\t\tthis." + member.name + ".remove(element);\n" +
+                             ((assocIsAssocClass && !endClassIsAssocClass)
+                                  ? "\t\telement." +
+                                        ((otherEndIsMultiple)
+                                             ? "remove" + capitalize(metaAssociationEnd.getAssociation().getName()) + "(this);\n"
+                                             : "set" + capitalize(metaAssociationEnd.getAssociation().getName()) + "(null)") + ";\n"
+                                  : "") +
+                             "\t}\n\n";
+
+        } else if (lowerBound <= 0) { // 0..m && 0..*
             member.paramDeclaration = "";
             member.paramSet = "\t\tthis." + member.name + " = new " + implementationType + "();\n";
 
             member.adder = "\t" + visibility + " void add" + capitalize(singularName) + "(" + targetType + " element) {\n" +
                            "\t\tthis." + member.name + ".add(element);\n" +
+                           ((assocIsAssocClass && !endClassIsAssocClass)
+                                ? "\t\telement." +
+                                      ((otherEndIsMultiple)
+                                           ? "add" + capitalize(metaAssociationEnd.getAssociation().getName())
+                                           : "set" + capitalize(metaAssociationEnd.getAssociation().getName())) + "(this);\n"
+                                : "") +
                            "\t}\n\n";
 
             member.remover = "\t" + visibility + " void remove" + capitalize(singularName) + "(" + targetType + " element) {\n" +
                              "\t\tthis." + member.name + ".remove(element);\n" +
+                             ((assocIsAssocClass && !endClassIsAssocClass)
+                                  ? "\t\telement." +
+                                        ((otherEndIsMultiple)
+                                             ? "remove" + capitalize(metaAssociationEnd.getAssociation().getName()) + "(this);\n"
+                                             : "set" + capitalize(metaAssociationEnd.getAssociation().getName()) + "(null)") + ";\n"
+                                  : "") +
                              "\t}\n\n";
-
-            member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + collectionType + " " + member.name + ") {\n" +
-                            "\t\tthis." + member.name + " = new " + implementationType + "(" + member.name + ");\n" +
-                            "\t}\n\n";
         }
 
     } else {
         member.type = targetType;
         member.field = "\tprivate " + targetType + " " + member.name + ";\n";
-        member.paramDeclaration = targetType + " " + member.name;
-        member.paramSet = "\t\tthis.set" + capitalizedName + "(" + member.name + ");\n";
+
+        if(assocIsAssocClass && endClassIsAssocClass){
+            member.paramDeclaration = "";
+            member.paramSet = "";
+        } else{
+            member.paramDeclaration = targetType + " " + member.name;
+            member.paramSet = "\t\tthis.set" + capitalizedName + "(" + member.name + ");\n";
+        }
 
         member.getter = "\t" + visibility + " " + targetType + " get" + capitalizedName + "() {\n" +
                         "\t\treturn this." + member.name + ";\n" +
                         "\t}\n\n";
 
-        member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + targetType + " " + member.name + ") {\n";
+        member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + targetType + " " + member.name + ") {\n" +
+                        ((lowerBound == 1)
+                             ? "\t\tif (" + member.name + " == null) {\n" +
+                                   "\t\t\tthrow new IllegalArgumentException(\"" + member.name + " must not be null.\");\n\t\t}\n"
+                             : ""
+                         ) +
+                        ((assocIsAssocClass && !endClassIsAssocClass)
+                           ? "\t\tif (this." + member.name + " != null) {\n" +
+                                  "\t\t\tthis." + member.name + "." +
+                                       ((otherEndIsMultiple)
+                                            ? "remove" + capitalize(metaAssociationEnd.getAssociation().getName()) + "(this);\n"
+                                            : "set" + capitalize(metaAssociationEnd.getAssociation().getName()) + "(null);\n") +
+                             "\t\t}\n"
+                            : "") +
 
-        if(lowerBound == 1){
-            member.setter += "\t\tif (" + member.name + " == null) {\n" +
-                             "\t\t\tthrow new IllegalArgumentException(\"" + member.name + " must not be null.\");\n\t\t}\n";
-        }
-
-        member.setter += "\t\tthis." + member.name + " = " + member.name + ";\n\t}\n\n";
+                        "\t\tthis." + member.name + " = " + member.name + ";\n" +
+                        ((assocIsAssocClass && !endClassIsAssocClass)
+                             ? "\t\t" + member.name + "." +
+                                   ((otherEndIsMultiple)
+                                        ? "add" + capitalize(metaAssociationEnd.getAssociation().getName())
+                                        : "set" + capitalize(metaAssociationEnd.getAssociation().getName())) + "(this);\n"
+                             : "") +
+                        "\t}\n\n";
     }
 
     return member;

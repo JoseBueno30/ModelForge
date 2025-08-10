@@ -237,6 +237,10 @@ const MetaMultiplicity& MetaAssociationEnd::getMultiplicity() const{
     return *multiplicity;
 }
 
+std::shared_ptr<MetaMultiplicity> MetaAssociationEnd::getMultiplicitySharedPtr() const{
+    return this->multiplicity;
+}
+
 void MetaAssociationEnd::setMultiplicity(const std::shared_ptr<MetaMultiplicity>& multiplicity){
     this->multiplicity = multiplicity;
 }

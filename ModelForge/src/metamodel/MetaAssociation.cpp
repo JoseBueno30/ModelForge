@@ -13,16 +13,16 @@ MetaAssociation::MetaAssociation(const std::string& name, int type)
 MetaAssociation::MetaAssociation(const std::string& name, int type, std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds)
     : name(name), type(type), associationEnds(std::move(associationEnds)){
 
-    // for(const auto &associationEndPair : this->getAssociationEnds()){
-    //     auto associationEnd = associationEndPair.second;
-    //     for(const auto &innerAssociationEndPair : this->getAssociationEnds()){
-    //         auto otherAssociationEnd = innerAssociationEndPair.second;
+    for(const auto &associationEndPair : this->getAssociationEnds()){
+        auto associationEnd = associationEndPair.second;
+        for(const auto &innerAssociationEndPair : this->getAssociationEnds()){
+            auto otherAssociationEnd = innerAssociationEndPair.second;
 
-    //         if (associationEnd != otherAssociationEnd) {
-    //             otherAssociationEnd->getClassSharedPtr()->addAssociationEnd(associationEnd);
-    //         }
-    //     }
-    // }
+            if (associationEnd != otherAssociationEnd) {
+                otherAssociationEnd->getClassSharedPtr()->addAssociationEnd(associationEnd);
+            }
+        }
+    }
 }
 
 MetaAssociation::~MetaAssociation(){

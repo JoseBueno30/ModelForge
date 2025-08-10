@@ -106,6 +106,7 @@ public:
     void setIsUnion(bool isUnion);
 
     const MetaMultiplicity& getMultiplicity() const;
+    std::shared_ptr<MetaMultiplicity> getMultiplicitySharedPtr() const;
     void setMultiplicity(const std::shared_ptr<MetaMultiplicity>& multiplicity);
 
     const std::map<std::string,std::shared_ptr<MetaAssociationEnd>>& getRedefinedEnds() const;

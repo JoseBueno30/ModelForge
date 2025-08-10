@@ -12,14 +12,13 @@ public class Account extends SuperAccount{
 	private Person owner;
 	private List<Person> users;
 
-	public Account(Integer balance, Person test, AccountType type, Bank bank, Person owner, Person user) {
+	public Account(Integer balance, Person test, AccountType type, Bank bank, Person owner) {
 		this.setBalance(balance);
 		this.setTest(test);
 		this.setType(type);
 		this.setBank(bank);
 		this.setOwner(owner);
-		this.users = new ArrayList<Person>( 4 );
-		this.users.add(user);
+		this.users = new ArrayList<Person>();
 	}
 
 	public Integer getBalance() {
@@ -70,10 +69,6 @@ public class Account extends SuperAccount{
 
 	public List<Person> getUsers() {
 		return Collections.unmodifiableList(this.users);
-	}
-
-	public void setUsers(List<Person> users) {
-		this.users = new ArrayList<Person>(users);
 	}
 
 	public void addUser(Person element) {

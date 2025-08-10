@@ -1,5 +1,6 @@
 #include <metamodel/MetaClass.h>
 
+#include <iostream>
 #include <stdexcept>
 
 #include <modelToText/VisitorInterface.h>
@@ -203,6 +204,7 @@ std::shared_ptr<MetaAssociationEnd>  MetaClass::getAssociationEnd(const std::str
     return nullptr;
 }
 void  MetaClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd){
+    std::cout << "ADDING ASSOC END: " << associationEnd->getRole() << " TO CLASS" << this->getName() << std::endl;
     if (!associationEnd) {
         throw std::invalid_argument("Null AssociationEnd");
     }

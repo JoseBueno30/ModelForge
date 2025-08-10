@@ -118,8 +118,7 @@ void MetaModel::removeAssociation(const std::string& key){
     auto association = this->getAssociation(key);
 
     for(const auto &associationEndPair : association->getAssociationEnds()){
-        // remove associationEnd from class
-        associationEndPair.second->getClassSharedPtr()->removeAssociationEnd(associationEndPair.first);
+        association->removeAssociationEnd(associationEndPair.first);
     }
 
     associations.erase(key);
@@ -153,8 +152,7 @@ void MetaModel::removeAssociationClass(const std::string& key){
     auto associationClass = this->getAssociationClass(key);
 
     for(const auto &associationEndPair : associationClass->MetaAssociation::getAssociationEnds()){
-        // remove associationEnd from class
-        associationEndPair.second->getClassSharedPtr()->removeAssociationEnd(associationEndPair.first);
+        associationClass->removeAssociationEnd(associationEndPair.first);
     }
 
     associationClasses.erase(key);

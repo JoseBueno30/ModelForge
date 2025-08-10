@@ -35,6 +35,9 @@ class Person
 attributes
 age : Integer --—
 name : String --+
+constraints
+inv TestConstraint1:
+	self.employee.salary > 0
 end
 
 composition BankAccounts between
@@ -53,7 +56,9 @@ Person [*] role users --+
 end
 
 associationclass Employee between
-Bank [1..*] role bank --+
+Bank [0..1] role bank --+
 Person [*] role employees --+
+attributes
+	salary: Integer
 end
 

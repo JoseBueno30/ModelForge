@@ -9,7 +9,7 @@
 namespace MetaModel{
 
 class MetaAssociation : public MetaElement{
-private:
+protected:
     std::string name;
     int type;
     std::map<std::string, std::shared_ptr<MetaAssociationEnd>> associationEnds;
@@ -34,8 +34,8 @@ public:
 
     const std::map<std::string, std::shared_ptr<MetaAssociationEnd>>& getAssociationEnds() const;
     std::shared_ptr<MetaAssociationEnd> getAssociationEnd(const std::string& key);
-    void addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd);
-    void removeAssociationEnd(const std::string& key);
+    virtual void addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd);
+    virtual void removeAssociationEnd(const std::string& key);
 
     std::vector<std::string> getAssociationEndsClassesNames();
 

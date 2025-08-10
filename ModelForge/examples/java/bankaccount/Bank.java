@@ -8,11 +8,11 @@ import java.util.Set;
 public class Bank{
 
 	private Set<Integer> test;
-	private List<Person> employees;
+	private List<Employee> employee;
 
 	public Bank() {
 		this.test = new HashSet<>();
-		this.employees = new ArrayList<Person>();
+		this.employee = new ArrayList<Employee>();
 	}
 
 	public Set<Integer> getTest() {
@@ -31,20 +31,16 @@ public class Bank{
 		this.test.remove(element);
 	}
 
-	public List<Person> getEmployees() {
-		return Collections.unmodifiableList(this.employees);
+	public List<Employee> getEmployee() {
+		return Collections.unmodifiableList(this.employee);
 	}
 
-	public void setEmployees(List<Person> employees) {
-		this.employees = new ArrayList<Person>(employees);
+	public void addEmployee(Employee element) {
+		this.employee.add(element);
 	}
 
-	public void addEmployee(Person element) {
-		this.employees.add(element);
-	}
-
-	public void removeEmployee(Person element) {
-		this.employees.remove(element);
+	public void removeEmployee(Employee element) {
+		this.employee.remove(element);
 	}
 
 }

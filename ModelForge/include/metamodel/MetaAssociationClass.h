@@ -19,6 +19,9 @@ public:
 
     void addSuperClass(std::shared_ptr<MetaClass> metaClass) override;
 
+    void addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd) override;
+    void removeAssociationEnd(const std::string& key) override;
+
     std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 
