@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <modelToText/VisitorJava.h>
@@ -40,7 +41,7 @@ VisitorJava::~VisitorJava() {}
 
 std::any VisitorJava::visit(const MetaModel::MetaModel& metaModel) {
     packageName = metaModel.getName();
-// std::transform(packageName.begin(), packageName.end(), packageName.begin(), ::tolower);
+    std::transform(packageName.begin(), packageName.end(), packageName.begin(), ::tolower);
 
     this->directoryPath = this->directoryPath + "/java/" + packageName;
 
