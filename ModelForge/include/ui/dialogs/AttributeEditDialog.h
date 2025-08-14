@@ -2,6 +2,7 @@
 #define ATTRIBUTEEDITDIALOG_H
 
 #include "metamodel/MetaAttribute.h"
+#include "metamodel/MetaClass.h"
 #include <QDialog>
 
 
@@ -14,15 +15,22 @@ class AttributeEditDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, bool isEdit, QWidget *parent = nullptr);
+    explicit AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, std::shared_ptr<MetaModel::MetaClass> metaClass, QWidget *parent = nullptr);
     ~AttributeEditDialog();
 
-private:
+private Q_SLOTS:
     void saveChanges();
+    void cancelChanges();
+
+private:
+    bool isValidAttribute();
+
+    void loadVisibility();
+    void saveVisibility();
 
     Ui::AttributeEditDialog *ui;
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute;
-    bool isEdit;
+    std::shared_ptr<MetaModel::MetaClass> metaClass;
 };
 
 #endif // ATTRIBUTEEDITDIALOG_H

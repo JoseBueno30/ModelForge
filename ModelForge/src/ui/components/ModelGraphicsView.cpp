@@ -78,20 +78,21 @@ void ModelGraphicsView::keyPressEvent(QKeyEvent *event)
     if (event->key() == Qt::Key_Delete) {
         QList<QGraphicsItem *> selectedItems = scene()->selectedItems();
         try{
+            auto scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
             for (QGraphicsItem *item : selectedItems) {
                 if(auto classItemView = qgraphicsitem_cast<ClassItemView*>(item)){
-                    RemoveMetaClassCommand* removeClassCommand = new RemoveMetaClassCommand(classItemView, this->scene(), this->model);
+                    RemoveMetaClassCommand* removeClassCommand = new RemoveMetaClassCommand(classItemView, scene, this->model);
                     MainWindow::undoStack->push(removeClassCommand);
                 }else if(auto enumItemView = qgraphicsitem_cast<EnumItemView*>(item)){
-                    RemoveMetaEnumCommand* removeMetaEnumCommand = new RemoveMetaEnumCommand(enumItemView, this->scene(), this->model);
+                    RemoveMetaEnumCommand* removeMetaEnumCommand = new RemoveMetaEnumCommand(enumItemView, scene, this->model);
                     MainWindow::undoStack->push(removeMetaEnumCommand);
                 }
                 else if(auto associationItemView = qgraphicsitem_cast<AssociationItemView*>(item)){
-                    RemoveMetaAssociationCommand* removeAssociationCommand = new RemoveMetaAssociationCommand(associationItemView, this->scene(), this->model);
+                    RemoveMetaAssociationCommand* removeAssociationCommand = new RemoveMetaAssociationCommand(associationItemView, scene, this->model);
                     MainWindow::undoStack->push(removeAssociationCommand);
                 }
                 else if(auto generalizationItemView = qgraphicsitem_cast<GeneralizationItemView*>(item)){
-                    RemoveMetaGeneralizationCommand* removeGeneralizationCommand = new RemoveMetaGeneralizationCommand(generalizationItemView, this->scene(), nullptr);
+                    RemoveMetaGeneralizationCommand* removeGeneralizationCommand = new RemoveMetaGeneralizationCommand(generalizationItemView, scene, nullptr);
                     MainWindow::undoStack->push(removeGeneralizationCommand);
                 }
             }

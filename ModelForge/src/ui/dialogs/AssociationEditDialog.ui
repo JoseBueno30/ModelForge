@@ -136,7 +136,7 @@
      <string>Visibility:</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="publicAEnd1RAdioButton">
+   <widget class="QRadioButton" name="publicAEnd1RadioButton">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -168,7 +168,7 @@
      <string notr="true">visibilityAEnd1ButtonGroup</string>
     </attribute>
    </widget>
-   <widget class="QRadioButton" name="protecetedAEnd1RadioButton">
+   <widget class="QRadioButton" name="protectedAEnd1RadioButton">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -430,7 +430,7 @@
   </connection>
  </connections>
  <buttongroups>
-  <buttongroup name="visibilityAEnd2ButtonGroup"/>
   <buttongroup name="visibilityAEnd1ButtonGroup"/>
+  <buttongroup name="visibilityAEnd2ButtonGroup"/>
  </buttongroups>
 </ui>

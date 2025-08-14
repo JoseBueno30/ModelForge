@@ -10,17 +10,17 @@ class class2Copy
 end
 
 association a1 between
-class1 [0..1] role role1
-class2 [0..1] role role2
+class1 [0..1] role role1 --+
+class2 [0..1] role role2 --+
 end
 
 association a2 between
-class1 [0..1] role role1
-class2 [0..1] role role2
+class1 [0..1] role role1 --+
+class2 [0..1] role role2 --+
 end
 
 association a3 between
-class1 [0..1] role role1
-class2 [0..1] role role2
+class1 [0..1] role role1 --+
+class2 [0..1] role role2 --+
 end
 
