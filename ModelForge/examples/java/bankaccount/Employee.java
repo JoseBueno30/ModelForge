@@ -20,7 +20,7 @@ public class Employee{
 	}
 
 	public void setSalary(Integer salary) {
-		this.salary = salary;
+				this.salary = salary;
 	}
 
 	public Bank getBank() {

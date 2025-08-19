@@ -8,5 +8,9 @@ std::string BinaryExpr::buildExprString() const {
     return this->expr1->toString() + " " + this->operation + " " + this->expr2->toString();
 }
 
+std::vector<std::shared_ptr<MetaModel::Expr>> BinaryExpr::getChildren() const {
+    return {this->expr1, this->expr2};
+}
+
 }
 

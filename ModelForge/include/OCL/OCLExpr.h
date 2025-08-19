@@ -2,6 +2,7 @@
 #define OCLEXPR_H
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <metamodel/MetaType.h>
 
@@ -27,16 +28,15 @@ public:
 
     const std::shared_ptr<MetaType> getType() const;
 
-    bool isComplexExpr();
+    bool isComplexExpr() const;
 
     bool hasParenthesis();
     void setHasParenthesis(bool parenthesis);
 
     virtual std::string toString() const;
 
+    virtual std::vector<std::shared_ptr<Expr>> getChildren() const;
     virtual ~Expr() = default;
-
-
 };
 
 }

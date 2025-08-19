@@ -12,6 +12,11 @@ public class Account extends SuperAccount{
 	private Person owner;
 	private List<Person> users;
 
+	// General constraints
+	//(self.balance > 1) or (true and true) or self.type = AccountType::Savings
+	//true
+	//true and (true or true)
+
 	public Account(Integer balance, Person test, AccountType type, Bank bank, Person owner) {
 		this.setBalance(balance);
 		this.setTest(test);
@@ -26,6 +31,7 @@ public class Account extends SuperAccount{
 	}
 
 	public void setBalance(Integer balance) {
+		//self.balance > 0
 		this.balance = balance;
 	}
 
@@ -34,7 +40,7 @@ public class Account extends SuperAccount{
 	}
 
 	public void setTest(Person test) {
-		this.test = test;
+				this.test = test;
 	}
 
 	public AccountType getType() {
@@ -42,7 +48,7 @@ public class Account extends SuperAccount{
 	}
 
 	public void setType(AccountType type) {
-		this.type = type;
+				this.type = type;
 	}
 
 	public Bank getBank() {
@@ -80,11 +86,12 @@ public class Account extends SuperAccount{
 	}
 
 	protected Integer transfer(Integer variable){
-		// Precondition <BalancePositive>: self.balance > 0
+		// Pre Condition <BalancePositive>: self.balance > 0
 		/*
 	begin
         self.balance := self.balance + 1;
     end
 		*/
-		// Precondition <ResultGreaterThanStart>: result > self.balance
+		// Post Condition <ResultGreaterThanStart>: result > self.balance
+	}
 }

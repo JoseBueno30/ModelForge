@@ -9,6 +9,10 @@ std::string UnaryExpr::buildExprString() const {
     return this->symbol + this->expr->toString();
 }
 
+std::vector<std::shared_ptr<Expr>> UnaryExpr::getChildren() const {
+    return {this->expr};
+}
+
 NotExpr::NotExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr> expr)
     : UnaryExpr(expression, isComplex, type, expr){
     if(!expr->isComplexExpr() && !std::dynamic_pointer_cast<MetaModel::Boolean>(expr->getType())){

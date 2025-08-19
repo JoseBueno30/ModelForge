@@ -8,4 +8,8 @@ LetExpr::LetExpr(const std::string& expression, const bool isComplex, const std:
 std::string LetExpr::buildExprString() const {
     return this->expression;
 }
+
+std::vector<std::shared_ptr<Expr>> LetExpr::getChildren() const {
+    return {this->varExpr, this->varExpr};
+}
 }

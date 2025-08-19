@@ -24,7 +24,7 @@ void Expr::setExpression(const std::string& expression){
     this->expression = expression;
 }
 
-bool Expr::isComplexExpr(){
+bool Expr::isComplexExpr() const{
     return this->isComplex;
 }
 
@@ -48,6 +48,10 @@ std::string Expr::wrapWithParentheses(const std::string& str, bool parenthesis) 
 
 std::string Expr::toString() const{
     return wrapWithParentheses(buildExprString(), parenthesis);
+}
+
+std::vector<std::shared_ptr<Expr>> Expr::getChildren() const {
+    return {};
 }
 
 }

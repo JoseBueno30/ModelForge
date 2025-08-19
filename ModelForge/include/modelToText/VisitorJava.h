@@ -16,8 +16,8 @@ private:
     std::string directoryPath;
     std::string packageName;
     const std::map<std::string, std::shared_ptr<MetaModel::MetaClass>>* metaClasses;
-    std::string globalConstraints;
     std::set<std::string> currentClassImports;
+    std::map<std::string, std::vector<std::shared_ptr<MetaModel::Expr>>> currentClassConstraints;
 
     struct JavaMemberCode {
         std::string name;
@@ -43,6 +43,10 @@ private:
     std::string visibilityToString(MetaModel::Visibility vis);
 
     std::string simpleTypeToJavaString(const MetaModel::SimpleType& type);
+
+    std::string findSingleAttribute(const std::shared_ptr<MetaModel::Expr>& expr);
+
+    std::string generateAttributeConstraints(const MetaModel::MetaAttribute& metaAttribute);
 
 public:
     explicit VisitorJava(const std::string& directoryPath);

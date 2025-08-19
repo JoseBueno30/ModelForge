@@ -10,6 +10,8 @@ protected:
     std::shared_ptr<Expr> source;
 public:
     PropertyCallExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const bool arrow, const std::shared_ptr<Expr>& source);
+
+    std::vector<std::shared_ptr<Expr>> getChildren() const override;
 };
 
 class IterateExpr : public PropertyCallExpr{

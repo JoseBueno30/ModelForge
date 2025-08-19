@@ -9,4 +9,8 @@ AttributeNavigationExpr::AttributeNavigationExpr(const std::string& expression, 
 std::string AttributeNavigationExpr::buildExprString() const {
     return this->source->toString() + "." + this->attribute->getName();
 }
+
+const MetaAttribute& AttributeNavigationExpr::getAttribute() const {
+    return *this->attribute;
+}
 }

@@ -13,6 +13,8 @@ protected:
     std::string buildExprString() const override;
 public:
     LetExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::string& name, const std::shared_ptr<MetaType>& varType,  const std::shared_ptr<Expr>& varExpr,  const std::shared_ptr<Expr>& inExpr);
+
+    std::vector<std::shared_ptr<Expr>> getChildren() const override;
 };
 }
 

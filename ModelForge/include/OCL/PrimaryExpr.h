@@ -17,6 +17,8 @@ protected:
     std::string buildExprString() const override;
 public:
     ParenthesisExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::shared_ptr<Expr>& expr);
+
+    std::vector<std::shared_ptr<Expr>> getChildren() const override;
 };
 
 class ObjectReferenceExpr : public PrimaryExpr{

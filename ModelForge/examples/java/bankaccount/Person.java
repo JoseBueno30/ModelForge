@@ -6,6 +6,9 @@ public class Person{
 	private String name;
 	private Employee employee;
 
+	// General constraints
+	//salary > 0
+
 	public Person(Integer age, String name) {
 		this.setAge(age);
 		this.setName(name);
@@ -16,7 +19,7 @@ public class Person{
 	}
 
 	private void setAge(Integer age) {
-		this.age = age;
+				this.age = age;
 	}
 
 	public String getName() {
@@ -24,7 +27,7 @@ public class Person{
 	}
 
 	public void setName(String name) {
-		this.name = name;
+				this.name = name;
 	}
 
 	public Employee getEmployee() {

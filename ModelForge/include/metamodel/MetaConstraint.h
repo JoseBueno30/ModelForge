@@ -38,6 +38,7 @@ public:
     void setIsExistential(const bool isExistential);
 
     const Expr& getExpression() const;
+    const std::shared_ptr<Expr>& getExpressionPtr() const;
     void setExpression(const std::shared_ptr<Expr>& expression);
 
     const std::map<std::string, std::shared_ptr<MetaVariable>>& getVariables() const;

@@ -10,4 +10,8 @@ std::string ConditionalExpr::buildExprString() const {
     return "if " + this->ifExpr->toString() + " then " + this->thenExpr->toString() + " else " + this->elseExpr->toString() + " endif";
 }
 
+std::vector<std::shared_ptr<Expr>> ConditionalExpr::getChildren() const {
+    return {this->ifExpr, this->thenExpr, this->elseExpr};
+}
+
 }

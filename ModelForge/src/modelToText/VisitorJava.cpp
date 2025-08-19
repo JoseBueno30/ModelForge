@@ -1,5 +1,8 @@
+#include <OCL/AttributeNavigationExpr.h>
+#include <OCL/PrimaryExpr.h>
 #include <algorithm>
 #include <filesystem>
+#include <iostream>
 #include <modelToText/VisitorJava.h>
 
 
@@ -38,7 +41,34 @@ VisitorJava::VisitorJava(const std::string& directoryPath) {
 
 VisitorJava::~VisitorJava() {}
 
+void checkValidJavaModel(const MetaModel::MetaModel& metaModel){
+    // Check valid inheritance and association ends
+    for (const auto &metaClassPair : metaModel.getClasses()){
+        if (metaClassPair.second->getSuperClasses().size() > 1){
+            throw std::runtime_error("Can't generate to Java, class <" + metaClassPair.second->getName() + "> inherits from multiple classes, which is not allowed in Java");
+        }
+    }
+
+    for (const auto &metaAssociationPair : metaModel.getAssociations()){
+        if (metaAssociationPair.second->getAssociationEnds().size() > 2){
+            throw std::runtime_error("Can't generate to Java, associtaion <" + metaAssociationPair.second->getName() + "> has more than 2 associaton ends. Not supported yet");
+        }
+    }
+
+    for (const auto &metaAssocClassPair : metaModel.getAssociationClasses()){
+        if (metaAssocClassPair.second->getSuperClasses().size() > 1){
+            throw std::runtime_error("Can't generate to Java, association class <" + metaAssocClassPair.second->getName() + "> inherits from multiple association classes, which is not allowed in Java");
+        }
+
+        if (metaAssocClassPair.second->MetaAssociation::getAssociationEnds().size() > 2){
+            throw std::runtime_error("Can't generate to Java, associtaion class <" + metaAssocClassPair.second->getName() + "> has more than 2 associaton ends. Not supported yet");
+        }
+    }
+}
+
 std::any VisitorJava::visit(const MetaModel::MetaModel& metaModel) {
+    checkValidJavaModel(metaModel);
+
     packageName = metaModel.getName();
     std::transform(packageName.begin(), packageName.end(), packageName.begin(), ::tolower);
 
@@ -53,24 +83,18 @@ std::any VisitorJava::visit(const MetaModel::MetaModel& metaModel) {
         }
     }
 
-    this->metaClasses = &metaModel.getClasses();
-
-    // Visit enums
     for (const auto &metaEnumPair : metaModel.getEnums()) {
         metaEnumPair.second->accept(*this);
     }
 
-    // Visit all classes
     for (const auto &metaClassPair: metaModel.getClasses()) {
         metaClassPair.second->accept(*this);
     }
 
-    // Visit all associations
     for(const auto &metaAssociationPair : metaModel.getAssociations()){
         metaAssociationPair.second->accept(*this);
     }
 
-    // Visit all association classes
     for(const auto &metaAssociationClassPair : metaModel.getAssociationClasses()){
         metaAssociationClassPair.second->accept(*this);
     }
@@ -138,10 +162,9 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
 
     classString += "class " + metaClass.getName();
 
-    currentClassImports.clear();
+    this->currentClassImports.clear();
+    this->currentClassConstraints.clear();
 
-    // TODO: improve inheritance, check before generating if is a java valid model, check if class has no attributes to be an interface else an extension
-    // TODO: ^ Also check if any association has more than two ends, in that case say it is not supported yet
     // TODO: add paramDeclaration of super class too
     auto superClasses = metaClass.getSuperClasses();
     if (!superClasses.empty()) {
@@ -151,11 +174,14 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
             if (!first) classString += ", ";
             classString += superClassPair.second->getName();
             first = false;
-            break; // only support single inheritance in Java
         }
     }
 
     classString += "{\n\n";
+
+    for(const auto &constraintPair : metaClass.getConstraints()){
+        constraintPair.second->accept(*this);
+    }
 
     std::vector<JavaMemberCode> members;
 
@@ -174,6 +200,14 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
         classString += member.field;
     }
     classString += "\n";
+
+    if (this->currentClassConstraints.count("") > 0){
+        classString += "\t// General constraints\n";
+        for (auto attributeConstraint : this->currentClassConstraints.at("")){
+            classString += "\t// " + attributeConstraint->toString() + "\n";
+        }
+        classString += "\n";
+    }
 
     classString += generateClassConstructor(metaClass, members);
 
@@ -277,9 +311,9 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociationClass& metaAssociati
 
     classString += "class " + metaAssociationClass.getName();
 
-    currentClassImports.clear();
+    this->currentClassImports.clear();
+    this->currentClassConstraints.clear();
 
-    // TODO: improve inheritance, check before generating if is a java valid model, check if class has no attributes to be an interface else an extension
     // TODO: add paramDeclaration of super class too
     auto superClasses = metaAssociationClass.getSuperClasses();
     if (!superClasses.empty()) {
@@ -289,11 +323,14 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociationClass& metaAssociati
             if (!first) classString += ", ";
             classString += superClassPair.second->getName();
             first = false;
-            break; // only support single inheritance in Java
         }
     }
 
     classString += "{\n\n";
+
+    for(const auto &constraintPair : metaAssociationClass.getConstraints()){
+        constraintPair.second->accept(*this);
+    }
 
     std::vector<JavaMemberCode> members;
 
@@ -316,6 +353,14 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociationClass& metaAssociati
         classString += member.field;
     }
     classString += "\n";
+
+    if (this->currentClassConstraints.count("") > 0){
+        classString += "\t// General constraints\n";
+        for (auto attributeConstraint : this->currentClassConstraints.at("")){
+            classString += "\t//" + attributeConstraint->toString() + "\n";
+        }
+        classString += "\n";
+    }
 
     classString += generateClassConstructor(metaAssociationClass, members);
 
@@ -367,6 +412,17 @@ std::string VisitorJava::capitalize(const std::string& name) {
     return capitalized;
 }
 
+std::string VisitorJava::generateAttributeConstraints(const MetaModel::MetaAttribute& metaAttribute) {
+    std::string attributeConstraints = "";
+
+    if (this->currentClassConstraints.count(metaAttribute.getName()) > 0){
+        for (auto attributeConstraint : this->currentClassConstraints.at(metaAttribute.getName())){
+            attributeConstraints += "//" + attributeConstraint->toString() + "\n";
+        }
+    }
+    return attributeConstraints;
+}
+
 std::any VisitorJava::visit(const MetaModel::MetaAttribute& metaAttribute) {
     JavaMemberCode member;
 
@@ -382,12 +438,13 @@ std::any VisitorJava::visit(const MetaModel::MetaAttribute& metaAttribute) {
     member.paramSet = "\t\tthis.set" + capitalizedName + "(" + member.name + ");\n";
 
     member.getter = "\t" + visibility + " " + member.type + " get" + capitalizedName + "() {\n" +
-                  "\t\treturn this." + member.name + ";\n" +
-                  "\t}\n\n";
+                    "\t\treturn this." + member.name + ";\n" +
+                    "\t}\n\n";
 
     member.setter = "\t" + visibility + " void set" + capitalizedName + "(" + member.type + " " + member.name + ") {\n" +
-                  "\t\tthis." + member.name + " = " + member.name + ";\n" +
-                  "\t}\n\n";
+                    "\t\t" + generateAttributeConstraints(metaAttribute) +
+                    "\t\tthis." + member.name + " = " + member.name + ";\n" +
+                    "\t}\n\n";
 
     if (const auto* collectionType = dynamic_cast<const MetaModel::CollectionType*>(&(metaAttribute.getType()))) {
         std::string elementType = std::any_cast<std::string>(collectionType->getType().accept(*this));
@@ -452,14 +509,45 @@ std::any VisitorJava::visit(const MetaModel::MetaOperation& metaOperation) {
                            postConditionPair.second->getExpression().toString() + "\n";
     }
 
+    operationString += "\t}\n";
+
     return operationString;
 }
 
 
 std::any VisitorJava::visit(const MetaModel::MetaConstraint& metaConstraint) {
+    const std::shared_ptr<MetaModel::Expr>& expr = metaConstraint.getExpressionPtr();
+    if(expr->isComplexExpr()){
+        this->currentClassConstraints[""].push_back(expr);
+        return 0;
+    }
+    auto attrName = findSingleAttribute(expr);
+    this->currentClassConstraints[attrName].push_back(expr);
+
     return 0;
 }
 
+std::string VisitorJava::findSingleAttribute(const std::shared_ptr<MetaModel::Expr>& expr) {
+    // Case 1: direct attribute navigation
+    if (auto attrNavExpr = std::dynamic_pointer_cast<MetaModel::AttributeNavigationExpr>(expr)) {
+        return attrNavExpr->getAttribute().getName();
+    }
+
+    // Case 2: composite expression -> collect names recursively
+    std::string result = "";
+    for (const auto& child : expr->getChildren()) {
+
+        std::string childName = findSingleAttribute(child);
+
+        if (result.empty()) {
+            result = childName;
+        } else if (childName != "" && result != childName) {
+            // two different attributes -> not single-attribute
+            return "";
+        }
+    }
+    return result;
+}
 
 std::any VisitorJava::visit(const MetaModel::MetaAssociationEnd& metaAssociationEnd) {
     JavaMemberCode member;

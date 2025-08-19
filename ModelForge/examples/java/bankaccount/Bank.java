@@ -20,7 +20,7 @@ public class Bank{
 	}
 
 	public void setTest(Set<Integer> test) {
-		this.test = test;
+				this.test = test;
 	}
 
 	public void addTest(Integer element) {

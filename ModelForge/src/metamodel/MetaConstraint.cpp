@@ -49,6 +49,11 @@ void MetaConstraint::setIsExistential(const bool isExistential){
 const Expr& MetaConstraint::getExpression() const{
     return *expression;
 }
+
+const std::shared_ptr<Expr>& MetaConstraint::getExpressionPtr() const{
+    return expression;
+}
+
 void MetaConstraint::setExpression(const std::shared_ptr<Expr>& expression){
     if(!expression->isComplexExpr() && !std::dynamic_pointer_cast<Boolean>(expression->getType())){
         throw std::invalid_argument("An invariant must be a Boolean expression. Source constraint: " + this->getName());

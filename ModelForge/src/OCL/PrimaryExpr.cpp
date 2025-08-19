@@ -13,6 +13,10 @@ std::string ParenthesisExpr::buildExprString() const {
     return "("+this->expr->toString()+")";
 }
 
+std::vector<std::shared_ptr<Expr>> ParenthesisExpr::getChildren() const {
+    return {this->expr};
+}
+
 ObjectReferenceExpr::ObjectReferenceExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const std::string& reference)
     :PrimaryExpr(expression, isComplex, type), reference(reference){}
 
