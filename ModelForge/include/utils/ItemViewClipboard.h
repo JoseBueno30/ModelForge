@@ -24,6 +24,9 @@ private:
     BoxItemView* itemView;
     ModelGraphicsScene* scene;
     std::shared_ptr<MetaModel::MetaModel> model;
+
+    std::string getClassCopyName(std::string name);
+    std::string getEnumCopyName(std::string name);
 };
 
 #endif // ITEMVIEWCLIPBOARD_H

@@ -505,6 +505,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/dialogs/VariableEditDialog.cpp
         include/utils/MessageBox.h
         src/utils/MessageBox.cpp
+
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
 # Define target properties for Android with Qt 6 as:
