@@ -6,16 +6,39 @@
 
 ItemViewClipboard::ItemViewClipboard(ModelGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model) : scene(scene), model(model){}
 
+std::string ItemViewClipboard::getClassCopyName(std::string name){
+    int defaultNameCont = 0;
+    std::string newName = name;
+    for(auto metaClassPair : this->model->getClasses()){
+        if(metaClassPair.first == newName){
+            defaultNameCont++;
+            newName = name + std::to_string(defaultNameCont);
+        }
+    }
+
+    return newName;
+}
+
+std::string ItemViewClipboard::getEnumCopyName(std::string name){
+    int defaultNameCont = 0;
+    std::string newName = name;
+    for(auto metaEnumPair : this->model->getEnums()){
+        if(metaEnumPair.first == newName){
+            defaultNameCont++;
+            newName = name + std::to_string(defaultNameCont);
+        }
+    }
+
+    return newName;
+}
+
 void ItemViewClipboard::copy(BoxItemView* item){
     if(auto classItemView = qgraphicsitem_cast<ClassItemView*>(item)){
         std::shared_ptr<MetaModel::MetaClass> metaClass = std::make_shared<MetaModel::MetaClass>(".", false);
-        qDebug() << "n";
         *metaClass = *(classItemView->getClassModel());
-        qDebug() << "n";
         metaClass->setName(metaClass->getName() + "Copy");
-        qDebug() << "n";
         itemView = new ClassItemView(metaClass);
-        qDebug() << "n";
+
     }else{
         auto enumItemView = qgraphicsitem_cast<EnumItemView*>(item);
         std::shared_ptr<MetaModel::MetaEnum> metaEnum;
@@ -40,11 +63,19 @@ void ItemViewClipboard::cut(BoxItemView* item){
 
 void ItemViewClipboard::paste(){
     if(auto classItemView = qgraphicsitem_cast<ClassItemView*>(itemView)){
-        AddMetaClassCommand* command = new AddMetaClassCommand(model, classItemView->getClassModel(), classItemView, scene);
+        std::shared_ptr<MetaModel::MetaClass> metaClassToPaste = std::make_shared<MetaModel::MetaClass>(".", false);
+        *metaClassToPaste = *(classItemView->getClassModel());
+        std::string name = getClassCopyName(metaClassToPaste->getName());
+        metaClassToPaste->setName(name);
+        AddMetaClassCommand* command = new AddMetaClassCommand(model, metaClassToPaste, new ClassItemView(metaClassToPaste), scene);
         MainWindow::undoStack->push(command);
     }else if(itemView != nullptr){
         auto enumItemView = qgraphicsitem_cast<EnumItemView*>(itemView);
-        AddMetaEnumCommand* command = new AddMetaEnumCommand(enumItemView->getMetaEnumModel(), model, enumItemView, scene);
+        std::shared_ptr<MetaModel::MetaEnum> metaEnumToPaste;
+        *metaEnumToPaste = *(enumItemView->getMetaEnumModel());
+        std::string name = getEnumCopyName(metaEnumToPaste->getName());
+        metaEnumToPaste->setName(name);
+        AddMetaEnumCommand* command = new AddMetaEnumCommand(metaEnumToPaste, model, new EnumItemView(metaEnumToPaste), scene);
         MainWindow::undoStack->push(command);
     }
 }
