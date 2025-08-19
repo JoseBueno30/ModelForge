@@ -33,12 +33,22 @@ EditMetaClassCommand::EditMetaClassCommand(
 }
 
 void EditMetaClassCommand::undo(){
+    auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaElement);
+    if(modelMetaAssociationClass){
+        modelMetaAssociationClass->setName(oldMetaElement->getName());
+    }
+
     *modelMetaElement = *oldMetaElement;
     classView->calculateMinimumSize();
     scene->update();
 }
 
 void EditMetaClassCommand::redo(){
+    auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaElement);
+    if(modelMetaAssociationClass){
+        modelMetaAssociationClass->setName(newMetaElement->getName());
+    }
+
     *modelMetaElement = *newMetaElement;
     classView->calculateMinimumSize();
     scene->update();
@@ -116,6 +126,11 @@ void EditMetaAssociationCommand::updateItemView(std::shared_ptr<MetaModel::MetaA
 }
 
 void EditMetaAssociationCommand::undo(){
+    auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaAssociation);
+    if(modelMetaAssociationClass){
+        modelMetaAssociationClass->setName(oldMetaAssociation->getName());
+    }
+
     *modelMetaAssociation = *oldMetaAssociation;
 
     updateItemView(oldMetaAssociation);
@@ -123,6 +138,11 @@ void EditMetaAssociationCommand::undo(){
 }
 
 void EditMetaAssociationCommand::redo(){
+    auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaAssociation);
+    if(modelMetaAssociationClass){
+        modelMetaAssociationClass->setName(newMetaAssociation->getName());
+    }
+
     *modelMetaAssociation = *newMetaAssociation;
 
     updateItemView(newMetaAssociation);

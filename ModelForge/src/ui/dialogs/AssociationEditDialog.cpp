@@ -24,6 +24,7 @@ AssociationEditDialog::AssociationEditDialog(
     ui->setupUi(this);
     setupTypesComboBox();
 
+
     ui->associationNameEdit->setText(QString::fromStdString(associationModel->getName()));
 
     //set ui type
@@ -231,6 +232,7 @@ void AssociationEditDialog::saveChanges(){
                 setAssociationEnd1(associationEnd1);
                 setAssociationEnd2(associationEnd2);
 
+
                 EditMetaAssociationCommand *editCommand = new EditMetaAssociationCommand(this->associationModel, newAssociation, this->associationItemView, this->scene);
                 MainWindow::undoStack->push(editCommand);
             }
@@ -286,6 +288,7 @@ void AssociationEditDialog::setAssociationEnd1(std::shared_ptr<MetaModel::MetaAs
     auto newClass = this->model->getClass(ui->typeAEnd1ComboBox->currentText().toStdString());
     associationEnd->setClass(newClass);
 
+    newClass->removeAssociationEnd(associationEnd->getRole());
     newClass->addAssociationEnd(associationEnd);
 }
 
@@ -301,6 +304,7 @@ void AssociationEditDialog::setAssociationEnd2(std::shared_ptr<MetaModel::MetaAs
     auto newClass = this->model->getClass(ui->typeAEnd2ComboBox->currentText().toStdString());
     associationEnd->setClass(newClass);
 
+    newClass->removeAssociationEnd(associationEnd->getRole());
     newClass->addAssociationEnd(associationEnd);
 }
 

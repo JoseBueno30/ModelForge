@@ -50,7 +50,6 @@ ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel) : mode
     calculateMinimumSize();
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
-    // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
 }
 
 ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel, int x, int y) : model(classModel){

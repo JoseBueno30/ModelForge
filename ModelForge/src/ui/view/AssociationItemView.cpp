@@ -17,19 +17,15 @@ void AssociationItemView::applyOffsetToSharedAssociations(){
 
 AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> model, ClassItemView* class1, ClassItemView* class2)
     : model(model), class1(class1), class2(class2){
-    qDebug() << "entra";
     class1->addAssociation(this);
-    qDebug() << "ass1";
+
     class2->addAssociation(this);
-    qDebug() << "ass2";
+
     setZValue(-1);
-    qDebug() << "ass3";
+
     applyOffsetToSharedAssociations();
-    qDebug() << "ass4";
     updatePosition();
-    qDebug() << "ass5";
     setFlag(QGraphicsItem::ItemIsSelectable);
-    qDebug() << "ass6";
 }
 
 ClassesOrientation AssociationItemView::checkOrientation(QRectF& class1Rect, QRectF& class2Rect){

@@ -2,7 +2,9 @@
 #include <ui/view/AssociationClassItemView.h>
 
 AssociationClassItemView::AssociationClassItemView(std::shared_ptr<MetaModel::MetaAssociationClass> model, ClassItemView* class1, ClassItemView* class2)
-    : model(model), classItem(new ClassItemView(model)), associationItem(new AssociationItemView(model, class1, class2)){
+    : model(model), classItem(new ClassItemView(std::shared_ptr<MetaModel::MetaClass>(model, model.get()))),
+    associationItem(new AssociationItemView(std::shared_ptr<MetaModel::MetaAssociation>(model, model.get()), class1, class2))
+{
     QPointF center = (this->associationItem->getP1() + this->associationItem->getP2()) /2;
     class1->addAssociation(this->associationItem);
     class1->addAssociationClass(this);
