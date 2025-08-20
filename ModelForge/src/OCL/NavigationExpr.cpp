@@ -6,4 +6,8 @@ NavigationExpr::NavigationExpr(const std::string& expression, const bool isCompl
                                const std::shared_ptr<MetaAssociationEnd>& src, const std::shared_ptr<MetaAssociationEnd>& dst)
     :OperationExpr(expression, isComplex, type, arrow, source), src(src), dst(dst){}
 
+std::string NavigationExpr::buildExprString() const {
+    return this->source->toString() + "." + this->dst->getRole();
+}
+
 }

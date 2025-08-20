@@ -15,8 +15,8 @@ transfer(variable : Integer) : Integer --#
 	begin
         self.balance := self.balance + 1;
     end
-	pre BalancePositive: self.balance > 0
-	post ResultGreaterThanStart: result > self.balance@pre
+pre BalancePositive: self.balance > 0
+post ResultGreaterThanStart: result > self.balance
 constraints
 inv Positive_Balance:
 	self.balance > 0
@@ -61,6 +61,6 @@ associationclass Employee between
 Bank [0..1] role bank --+
 Person [*] role employees --+
 attributes
-	salary: Integer
+salary : Integer --+
 end
 

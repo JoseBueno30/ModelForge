@@ -1116,11 +1116,11 @@ public:
 
         if(this->currentExprSource){
             // First we check if the source isComplex. If it is, we can create a generic operation expression, as the source may not be fully generated
-            if(this->currentExprSource->isComplexExpr()){
-                resultExpression = buildGenericOperationExpr(ctx);
-            }else{
-                resultExpression = std::any_cast< std::shared_ptr<MetaModel::Expr>>(visitOperationExpressionWithSource(ctx));
-            }
+            // if(this->currentExprSource->isComplexExpr()){
+            //     resultExpression = buildGenericOperationExpr(ctx);
+            // }else{
+            resultExpression = std::any_cast< std::shared_ptr<MetaModel::Expr>>(visitOperationExpressionWithSource(ctx));
+            // }
         } else {
             if(!ctx->LPAREN()){
                 // Check if it's a variable given in the context (defined or implicit "self" in a constraint, implicit "self" in a pre/postCondition defined inside a class)
@@ -1181,7 +1181,8 @@ public:
                 } else {
                     if(ctx->RBRACK().size() >= 1){
                         // Navigation expression with explicit rolename
-                        resultExpression = buildNavigationExpr(ctx, srcType);
+                        std::shared_ptr<MetaModel::MetaAssociationEnd> dst = srcMetaClassType->getAssociationEnd(ctx->ID()->getText());
+                        resultExpression = buildNavigationExpr(ctx, dst);
 
                     } else {
                         std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = srcMetaClassType->getAttribute(ctx->ID()->getText());
@@ -1192,10 +1193,8 @@ public:
 
                         } else {
                             std::shared_ptr<MetaModel::MetaAssociationEnd> dst = srcMetaClassType->getAssociationEnd(ctx->ID()->getText());
-
                             if(dst){
-                                resultExpression = buildNavigationExpr(ctx, srcType);
-
+                                resultExpression = buildNavigationExpr(ctx, dst);
                             } else {
                                 resultExpression = buildStandardOperationExpr(ctx);
                             }
@@ -1271,11 +1270,11 @@ public:
     }
 
     std::shared_ptr<MetaModel::Expr> buildNavigationExpr(USEParser::OperationExpressionContext *ctx,
-                                                         std::shared_ptr<MetaModel::MetaType> srcType){
+                                                          std::shared_ptr<MetaModel::MetaAssociationEnd> dst){
         // For now we skip searching for the navigation src and destination and just use nullptr
         return std::dynamic_pointer_cast<MetaModel::Expr>(
-            std::make_shared<MetaModel::NavigationExpr>(ctx->getText(), true, srcType,
-                                                        this->currentPropertyCallIsArrow, this->currentExprSource, nullptr, nullptr));
+            std::make_shared<MetaModel::NavigationExpr>(ctx->getText(), true, dst->getClassSharedPtr(),
+                                                        this->currentPropertyCallIsArrow, this->currentExprSource, nullptr, dst));
     }
 
     std::shared_ptr<MetaModel::Expr> buildObjectAsSetExpr(USEParser::OperationExpressionContext *ctx,
