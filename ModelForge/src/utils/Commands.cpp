@@ -221,7 +221,12 @@ void RemoveMetaClassCommand::undo(){
         this->scene->addModelItemView(auxAssociationItemView->getAssociationModel()->getName(), auxAssociationItemView);
 
         if(!this->classItemView->getClassModel()->equals(*associationClassesItemView->getAssociationClassModel())){
+            for(auto aEnd : this->associationEnds){
+                qDebug() << "Excepcion con " << aEnd.second->getClass().getName();
+                associationClassesItemView->getAssociationClassModel()->addAssociationEnd(aEnd.second);
+            }
             this->model->addAssociationClass(associationClassesItemView->getAssociationClassModel());
+            qDebug() << "La clase asociacion restaurada tiene " << associationClassesItemView->getAssociationClassModel()->getAssociationEndsClassesNames().size() << " asociation esnds";
         }
     }
 
@@ -256,14 +261,14 @@ void RemoveMetaClassCommand::redo(){
         }*/
         this->scene->removeItem(associationItemView);
         this->scene->removeModelItemView(associationItemView->getAssociationModel()->getName());
-        qDebug() << "a";
+
         if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(associationItemView->getAssociationModel())){
             this->model->removeAssociation(associationItemView->getAssociationModel()->getName());
         }
-        qDebug() << "b";
     }
 
     for(auto associationClassItemView : this->classItemView->getAssociationClasses()){
+        qDebug() << "La clase asociacion borrada tiene " << associationClassItemView->getAssociationClassModel()->getAssociationEndsClassesNames().size() << " asociation esnds";
         /*if(this->classItemView == associationClassItemView->getClass1()){
             associationClassItemView->getClass2()->deleteAssociationClass(associationClassItemView);
         }else{
@@ -275,14 +280,18 @@ void RemoveMetaClassCommand::redo(){
             this->scene->removeItem(associationClassItemView->getAssociationClassItemView());
         }
 
+
         auto auxAssociationItemView = associationClassItemView->getAssociationClassAssociationItemView();
         this->scene->removeItem(auxAssociationItemView);
         this->scene->removeModelItemView(auxAssociationItemView->getAssociationModel()->getName());
 
-        qDebug() << "aa - " << associationClassItemView->getAssociationClassModel()->getName() << this->model->modelContainsKey( associationClassItemView->getAssociationClassModel()->getName());
-        qDebug() << this->model->getAssociationClass(associationClassItemView->getAssociationClassModel()->getName())->getName();
+        if(this->associationEnds.empty()){
+            for(auto aEnd : associationClassItemView->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
+                this->associationEnds[aEnd.first] = aEnd.second;
+            }
+        }
+
         this->model->removeAssociationClass(associationClassItemView->getAssociationClassModel()->getName());
-        qDebug() << "bb";
     }
 
     for(auto generalizationItemView : this->classItemView->getGeneralizations()){
@@ -322,6 +331,10 @@ void RemoveMetaAssociationCommand::undo(){
         this->associationItemView->getClass1()->addAssociationClass(associationClassItem);
         this->associationItemView->getClass2()->addAssociationClass(associationClassItem);
 
+        for(auto aEnd : this->associationEnds){
+            associationClassItem->getAssociationClassModel()->addAssociationEnd(aEnd.second);
+        }
+
         model->addAssociationClass(associationClassItem->getAssociationClassModel());
     }else{
         model->addAssociation(this->associationItemView->getAssociationModel());
@@ -347,6 +360,12 @@ void RemoveMetaAssociationCommand::redo(){
 
         this->associationItemView->getClass1()->deleteAssociationClass(associationClassItem);
         this->associationItemView->getClass2()->deleteAssociationClass(associationClassItem);
+
+        if(this->associationEnds.empty()){
+            for(auto aEnd : associationClassItem->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
+                this->associationEnds[aEnd.first] = aEnd.second;
+            }
+        }
 
         model->removeAssociationClass(associationClassItem->getAssociationClassModel()->getName());
     }else{

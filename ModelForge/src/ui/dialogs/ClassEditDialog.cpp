@@ -21,6 +21,8 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     ui->operationTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->operationTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+    qDebug() << "Editando clase: " + metaClass->getName();
+
     this->editedClass = std::make_shared<MetaModel::MetaClass>(*metaClass);
 
     this->attributeCounter = metaClass->getAttributes().size() + 1;

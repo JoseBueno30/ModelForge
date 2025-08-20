@@ -24,6 +24,9 @@ AssociationEditDialog::AssociationEditDialog(
     ui->setupUi(this);
     setupTypesComboBox();
 
+    if( auto aclass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(associationModel)){
+        qDebug() << "La clase asociacion tiene: " << aclass->getAssociationEndsClassesNames().size() << "aEnds.";
+    }
 
     ui->associationNameEdit->setText(QString::fromStdString(associationModel->getName()));
 

@@ -7,6 +7,7 @@
 #include <QGraphicsItem>
 #include <QUndoCommand>
 
+#include <metamodel/MetaAssociationEnd.h>
 #include <metamodel/MetaAttribute.h>
 #include <metamodel/MetaModel.h>
 #include <ui/components/ModelGraphicsScene.h>
@@ -130,6 +131,9 @@ private:
     ClassItemView* classItemView;
     ModelGraphicsScene* scene;
     std::shared_ptr<MetaModel::MetaModel> model;
+
+    //In case of removing association class
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
 };
 
 class RemoveMetaAssociationCommand : public QUndoCommand{
@@ -143,6 +147,9 @@ private:
     AssociationItemView* associationItemView;
     ModelGraphicsScene* scene;
     std::shared_ptr<MetaModel::MetaModel> model;
+
+    //In case of removing association class
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
 };
 
 class RemoveMetaEnumCommand : public QUndoCommand{
