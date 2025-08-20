@@ -308,8 +308,9 @@ void RemoveMetaClassCommand::redo(){
     qDebug() << "cc";
     this->scene->removeItem(this->classItemView);
     this->scene->removeModelItemView(this->classItemView->getClassModel()->getName());
-    qDebug() << "dd";
+    qDebug() << "remove class";
     if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel())){
+        qDebug() << "REMOVE class";
         this->model->removeClass(this->classItemView->getClassModel()->getName());
     }
     qDebug() << "ee";
