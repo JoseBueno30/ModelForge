@@ -13,11 +13,12 @@ public class Account extends SuperAccount{
 	private List<Person> users;
 
 	// General constraints
-	//(self.balance > 1) or (true and true) or self.type = AccountType::Savings
-	//true
-	//true and (true or true)
+	// (self.balance > 1) or (true and true) or self.type = AccountType::Savings
+	// true
+	// true and (true or true)
 
-	public Account(Integer balance, Person test, AccountType type, Bank bank, Person owner) {
+	public Account(Integer attribute1, Integer balance, Person test, AccountType type, Bank bank, Person owner) {
+		super(attribute1);
 		this.setBalance(balance);
 		this.setTest(test);
 		this.setType(type);

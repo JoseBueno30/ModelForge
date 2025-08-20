@@ -119,12 +119,32 @@ std::any VisitorJava::visit(const MetaModel::MetaEnum& metaEnum) {
 }
 
 
-std::string VisitorJava::generateClassConstructor(const MetaModel::MetaClass& metaClass, const std::vector<JavaMemberCode> members){
+std::string VisitorJava::generateClassConstructor(const MetaModel::MetaClass& metaClass,
+                                                  const std::vector<JavaMemberCode> members){
     std::string constructor = "";
-
     constructor += "\tpublic " + metaClass.getName() + "(";
 
+    std::vector<JavaMemberCode> superClassMembers;
+    for (const auto& superClassPair : metaClass.getSuperClasses()){
+        for(const auto &attributePair : superClassPair.second->getAttributes()){
+            superClassMembers.push_back(std::any_cast<JavaMemberCode>(attributePair.second->accept(*this)));
+        }
+
+        for(const auto &assocEndPair: superClassPair.second->getAssociationEnds()){
+            superClassMembers.push_back(std::any_cast<JavaMemberCode>(assocEndPair.second->accept(*this)));
+        }
+    }
+
     bool first = true;
+
+    for (const auto& superClassMember : superClassMembers) {
+        if (!superClassMember.paramDeclaration.empty()){
+            if (!first) constructor += ", ";
+            constructor += superClassMember.paramDeclaration;
+            first = false;
+        }
+    }
+
     for (const auto& member : members) {
         if (!member.paramDeclaration.empty()){
             if (!first) constructor += ", ";
@@ -132,7 +152,21 @@ std::string VisitorJava::generateClassConstructor(const MetaModel::MetaClass& me
             first = false;
         }
     }
+
     constructor += ") {\n";
+
+    if (!metaClass.getSuperClasses().empty()){
+        constructor += "\t\tsuper(";
+        bool firstArg = true;
+        for (const auto& superClassMember : superClassMembers) {
+            if (!superClassMember.paramDeclaration.empty()) {
+                if (!firstArg) constructor += ", ";
+                constructor += superClassMember.name;
+                firstArg = false;
+            }
+        }
+        constructor += ");\n";
+    }
 
     for (const auto& member : members) {
         constructor += member.paramSet;
@@ -165,7 +199,6 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
     this->currentClassImports.clear();
     this->currentClassConstraints.clear();
 
-    // TODO: add paramDeclaration of super class too
     auto superClasses = metaClass.getSuperClasses();
     if (!superClasses.empty()) {
         classString += " extends ";
@@ -184,14 +217,12 @@ std::any VisitorJava::visit(const MetaModel::MetaClass& metaClass) {
     }
 
     std::vector<JavaMemberCode> members;
-
     //attributes
     for(const auto &attributePair : metaClass.getAttributes()){
         members.push_back(std::any_cast<JavaMemberCode>(attributePair.second->accept(*this)));
     }
 
     //associations
-
     for(const auto &assocEndPair: metaClass.getAssociationEnds()){
         members.push_back(std::any_cast<JavaMemberCode>(assocEndPair.second->accept(*this)));
     }
@@ -314,7 +345,6 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociationClass& metaAssociati
     this->currentClassImports.clear();
     this->currentClassConstraints.clear();
 
-    // TODO: add paramDeclaration of super class too
     auto superClasses = metaAssociationClass.getSuperClasses();
     if (!superClasses.empty()) {
         classString += " extends ";
@@ -333,14 +363,12 @@ std::any VisitorJava::visit(const MetaModel::MetaAssociationClass& metaAssociati
     }
 
     std::vector<JavaMemberCode> members;
-
     //attributes
     for(const auto &attributePair : metaAssociationClass.getAttributes()){
         members.push_back(std::any_cast<JavaMemberCode>(attributePair.second->accept(*this)));
     }
 
     //associations
-
     for(const auto &assocEndPair: metaAssociationClass.MetaAssociation::getAssociationEnds()){
         members.push_back(std::any_cast<JavaMemberCode>(assocEndPair.second->accept(*this)));
     }

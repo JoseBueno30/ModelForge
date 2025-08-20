@@ -7,7 +7,7 @@ public class Person{
 	private Employee employee;
 
 	// General constraints
-	//salary > 0
+	// salary > 0
 
 	public Person(Integer age, String name) {
 		this.setAge(age);
