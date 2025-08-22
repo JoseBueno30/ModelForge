@@ -7,6 +7,11 @@ dir : String --+
 nombre : String --+
 tlf : Integer --+
 valor_minimo_pedido : Integer --+
+constraints
+inv Plantilla_Minima:
+	self.contrato -> exists(puesto='Trabajador')
+inv Plantilla_Valida:
+	self.contrato -> select(puesto='Director') -> size() <= 1 and self.contrato -> select(puesto='Gerente') -> size() <= 1
 end
 
 class Pedido
@@ -18,6 +23,11 @@ precio_final : Real --+
  derived = self.valor * (1 - self.descuento)
 valor : Integer --+
  derived = if self.productos_Pedido -> notEmpty() then self.productos_Pedido -> collect(pp:Productos_Pedido | pp.producto.etiqueta -> select(e:Etiqueta | e.empresa_propietaria = self.vendedor) -> collect(precio*pp.cantidad) -> sum()) -> sum() else 0 endif
+constraints
+inv Consistencia_Cantidad_Empresa_Pedido:
+	if self.producto -> forAll(p:Producto | self.vendedor.producto -> includes(p)) then self.productos_Pedido -> forAll(pp:Productos_Pedido | self.vendedor.etiqueta -> select(e:Etiqueta | pp.producto = e.producto) -> forAll(e:Etiqueta | e.cantidad >= pp.cantidad) and pp.cantidad > 0) else false endif
+inv Pedido_Minimo:
+	self.valor >= self.vendedor.valor_minimo_pedido
 end
 
 class Persona
@@ -61,7 +71,7 @@ inv Puest:
 inv Puesto_Valido:
 	self.puesto = 'Trabajador' or self.puesto = 'Gerente' or self.puesto = 'Director'
 inv Salarios:
-	if self.puesto = 'Director' then self.contratador.contrato -> forAll(c:Contrato | if c.puesto = 'Director' then true else self.salario > c.salario endif) else true endif
+	if self.puesto = 'Director' then self.contratador.contrato -> forAll(c:Contrato | if c.puesto = 'Director' then true else self.salario > c.salario endif) else true endif and if self.puesto = 'Gerente' then self.contratador.contrato -> forAll(c:Contrato | if c.puesto = 'Director' or c.puesto = 'Gerente' then true else self.salario > c.salario endif) else true endif
 end
 
 associationclass Etiqueta < Contrato between
