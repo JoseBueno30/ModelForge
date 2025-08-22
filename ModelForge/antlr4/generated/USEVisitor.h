@@ -97,8 +97,6 @@ public:
 
     virtual std::any visitLogicalExpr(USEParser::LogicalExprContext *context) = 0;
 
-    virtual std::any visitConditionalExpr(USEParser::ConditionalExprContext *context) = 0;
-
     virtual std::any visitLetExpr(USEParser::LetExprContext *context) = 0;
 
     virtual std::any visitLetExpression(USEParser::LetExpressionContext *context) = 0;
@@ -168,6 +166,8 @@ public:
     virtual std::any visitEmptyPropertyCallExpr(USEParser::EmptyPropertyCallExprContext *context) = 0;
 
     virtual std::any visitParenthesizedExpr(USEParser::ParenthesizedExprContext *context) = 0;
+
+    virtual std::any visitConditionalExpr(USEParser::ConditionalExprContext *context) = 0;
 
     virtual std::any visitAllInstancesExpr(USEParser::AllInstancesExprContext *context) = 0;
 

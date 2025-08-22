@@ -98,7 +98,7 @@ public class USEParser extends Parser {
 			"'|'", "':'", "'::'", "':='", "','", "'.'", "'..'", "'='", "'>'", "'>='", 
 			"'#'", "'{'", "'['", "'<'", "'<='", "'('", "'-'", "'<>'", "'+'", "'}'", 
 			"']'", "')'", "';'", "'/'", "'*'", "'abstract'", "'existential'", "'aggregation'", 
-			"'composition'", "'ordered'", "'union'", "'--X'", "'--+'", "'--\\u00E2\\u20AC\\u201D'", 
+			"'composition'", "'ordered'", "'union'", "'--X'", "'--+'", "'--\\u2014'", 
 			"'--#'", "'--~'"
 		};
 	}
@@ -185,14 +185,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_model; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterModel(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitModel(this);
-		}
 	}
 
 	public final ModelContext model() throws RecognitionException {
@@ -253,14 +245,6 @@ public class USEParser extends Parser {
 			return getRuleContext(EnumTypeDefinitionContext.class,0);
 		}
 		public EnumContext(ModelElementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterEnum(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitEnum(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AssociationContext extends ModelElementContext {
@@ -268,14 +252,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationDefinitionContext.class,0);
 		}
 		public AssociationContext(ModelElementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAssociation(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAssociation(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ConstraintsContext extends ModelElementContext {
@@ -286,14 +262,6 @@ public class USEParser extends Parser {
 			return getRuleContext(ConstraintDefinitionContext.class,i);
 		}
 		public ConstraintsContext(ModelElementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterConstraints(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitConstraints(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ClassContext extends ModelElementContext {
@@ -301,14 +269,6 @@ public class USEParser extends Parser {
 			return getRuleContext(ClassDefinitionContext.class,0);
 		}
 		public ClassContext(ModelElementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterClass(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitClass(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AssociationClassContext extends ModelElementContext {
@@ -316,14 +276,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationClassDefinitionContext.class,0);
 		}
 		public AssociationClassContext(ModelElementContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAssociationClass(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAssociationClass(this);
-		}
 	}
 
 	public final ModelElementContext modelElement() throws RecognitionException {
@@ -414,14 +366,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumTypeDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterEnumTypeDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitEnumTypeDefinition(this);
-		}
 	}
 
 	public final EnumTypeDefinitionContext enumTypeDefinition() throws RecognitionException {
@@ -500,14 +444,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_classDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterClassDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitClassDefinition(this);
-		}
 	}
 
 	public final ClassDefinitionContext classDefinition() throws RecognitionException {
@@ -698,14 +634,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_associationClassDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAssociationClassDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAssociationClassDefinition(this);
-		}
 	}
 
 	public final AssociationClassDefinitionContext associationClassDefinition() throws RecognitionException {
@@ -917,14 +845,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_attributeDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAttributeDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAttributeDefinition(this);
-		}
 	}
 
 	public final AttributeDefinitionContext attributeDefinition() throws RecognitionException {
@@ -1012,14 +932,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_initDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterInitDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitInitDefinition(this);
-		}
 	}
 
 	public final InitDefinitionContext initDefinition() throws RecognitionException {
@@ -1067,14 +979,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_derivedDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterDerivedDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitDerivedDefinition(this);
-		}
 	}
 
 	public final DerivedDefinitionContext derivedDefinition() throws RecognitionException {
@@ -1129,14 +1033,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_visibilty; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterVisibilty(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitVisibilty(this);
-		}
 	}
 
 	public final VisibiltyContext visibilty() throws RecognitionException {
@@ -1198,14 +1094,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_operationDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterOperationDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitOperationDefinition(this);
-		}
 	}
 
 	public final OperationDefinitionContext operationDefinition() throws RecognitionException {
@@ -1333,14 +1221,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationEndContext.class,i);
 		}
 		public AggregationContext(AssociationDefinitionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAggregation(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAggregation(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class CompositionContext extends AssociationDefinitionContext {
@@ -1353,14 +1233,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationEndContext.class,i);
 		}
 		public CompositionContext(AssociationDefinitionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterComposition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitComposition(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SimpleAssociationContext extends AssociationDefinitionContext {
@@ -1372,14 +1244,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AssociationEndContext.class,i);
 		}
 		public SimpleAssociationContext(AssociationDefinitionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSimpleAssociation(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSimpleAssociation(this);
-		}
 	}
 
 	public final AssociationDefinitionContext associationDefinition() throws RecognitionException {
@@ -1565,14 +1429,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_associationEnd; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAssociationEnd(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAssociationEnd(this);
-		}
 	}
 
 	public final AssociationEndContext associationEnd() throws RecognitionException {
@@ -1731,14 +1587,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_role; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterRole(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitRole(this);
-		}
 	}
 
 	public final RoleContext role() throws RecognitionException {
@@ -1771,14 +1619,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_redefines; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterRedefines(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitRedefines(this);
-		}
 	}
 
 	public final RedefinesContext redefines() throws RecognitionException {
@@ -1811,14 +1651,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_subsets; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSubsets(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSubsets(this);
-		}
 	}
 
 	public final SubsetsContext subsets() throws RecognitionException {
@@ -1860,14 +1692,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_multiplicity; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterMultiplicity(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitMultiplicity(this);
-		}
 	}
 
 	public final MultiplicityContext multiplicity() throws RecognitionException {
@@ -1921,14 +1745,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_multiplicityRange; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterMultiplicityRange(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitMultiplicityRange(this);
-		}
 	}
 
 	public final MultiplicityRangeContext multiplicityRange() throws RecognitionException {
@@ -1973,14 +1789,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_multiplicitySpec; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterMultiplicitySpec(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitMultiplicitySpec(this);
-		}
 	}
 
 	public final MultiplicitySpecContext multiplicitySpec() throws RecognitionException {
@@ -2031,14 +1839,6 @@ public class USEParser extends Parser {
 			return getRuleContext(PrePostContext.class,0);
 		}
 		public PrePostDefinitionContext(ConstraintDefinitionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPrePostDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPrePostDefinition(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class InvariantDefinitionContext extends ConstraintDefinitionContext {
@@ -2046,14 +1846,6 @@ public class USEParser extends Parser {
 			return getRuleContext(InvariantContext.class,0);
 		}
 		public InvariantDefinitionContext(ConstraintDefinitionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterInvariantDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitInvariantDefinition(this);
-		}
 	}
 
 	public final ConstraintDefinitionContext constraintDefinition() throws RecognitionException {
@@ -2116,14 +1908,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_invariant; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterInvariant(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitInvariant(this);
-		}
 	}
 
 	public final InvariantContext invariant() throws RecognitionException {
@@ -2204,14 +1988,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_invariantClause; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterInvariantClause(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitInvariantClause(this);
-		}
 	}
 
 	public final InvariantClauseContext invariantClause() throws RecognitionException {
@@ -2305,14 +2081,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_prePost; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPrePost(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPrePost(this);
-		}
 	}
 
 	public final PrePostContext prePost() throws RecognitionException {
@@ -2391,14 +2159,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode ID() { return getToken(USEParser.ID, 0); }
 		public PreConditionContext(PrePostClauseContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPreCondition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPreCondition(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class PostConditionContext extends PrePostClauseContext {
@@ -2408,14 +2168,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode ID() { return getToken(USEParser.ID, 0); }
 		public PostConditionContext(PrePostClauseContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPostCondition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPostCondition(this);
-		}
 	}
 
 	public final PrePostClauseContext prePostClause() throws RecognitionException {
@@ -2504,14 +2256,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stateMachine; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterStateMachine(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitStateMachine(this);
-		}
 	}
 
 	public final StateMachineContext stateMachine() throws RecognitionException {
@@ -2588,14 +2332,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stateDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterStateDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitStateDefinition(this);
-		}
 	}
 
 	public final StateDefinitionContext stateDefinition() throws RecognitionException {
@@ -2678,14 +2414,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_transitionDefinition; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTransitionDefinition(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTransitionDefinition(this);
-		}
 	}
 
 	public final TransitionDefinitionContext transitionDefinition() throws RecognitionException {
@@ -2782,14 +2510,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expressionOnly; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterExpressionOnly(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitExpressionOnly(this);
-		}
 	}
 
 	public final ExpressionOnlyContext expressionOnly() throws RecognitionException {
@@ -2833,29 +2553,6 @@ public class USEParser extends Parser {
 			return getRuleContext(LetExpressionContext.class,0);
 		}
 		public LetExprContext(ExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLetExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLetExpr(this);
-		}
-	}
-	@SuppressWarnings("CheckReturnValue")
-	public static class ConditionalExprContext extends ExpressionContext {
-		public ConditionalExpressionContext conditionalExpression() {
-			return getRuleContext(ConditionalExpressionContext.class,0);
-		}
-		public ConditionalExprContext(ExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterConditionalExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitConditionalExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LogicalExprContext extends ExpressionContext {
@@ -2863,21 +2560,13 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,0);
 		}
 		public LogicalExprContext(ExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLogicalExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLogicalExpr(this);
-		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
 		ExpressionContext _localctx = new ExpressionContext(_ctx, getState());
 		enterRule(_localctx, 54, RULE_expression);
 		try {
-			setState(531);
+			setState(530);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__34:
@@ -2895,6 +2584,7 @@ public class USEParser extends Parser {
 			case T__48:
 			case T__49:
 			case T__50:
+			case T__51:
 			case T__55:
 			case T__56:
 			case T__57:
@@ -2924,19 +2614,11 @@ public class USEParser extends Parser {
 				logicalExpression(0);
 				}
 				break;
-			case T__51:
-				_localctx = new ConditionalExprContext(_localctx);
+			case T__25:
+				_localctx = new LetExprContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(529);
-				conditionalExpression();
-				}
-				break;
-			case T__25:
-				_localctx = new LetExprContext(_localctx);
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(530);
 				letExpression();
 				}
 				break;
@@ -2973,14 +2655,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_letExpression; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLetExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLetExpression(this);
-		}
 	}
 
 	public final LetExpressionContext letExpression() throws RecognitionException {
@@ -2990,29 +2664,29 @@ public class USEParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(533);
+			setState(532);
 			match(T__25);
-			setState(534);
+			setState(533);
 			match(ID);
-			setState(537);
+			setState(536);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==COLON) {
 				{
-				setState(535);
+				setState(534);
 				match(COLON);
-				setState(536);
+				setState(535);
 				type();
 				}
 			}
 
-			setState(539);
+			setState(538);
 			match(EQUAL);
-			setState(540);
+			setState(539);
 			expression();
-			setState(541);
+			setState(540);
 			match(T__26);
-			setState(542);
+			setState(541);
 			expression();
 			}
 		}
@@ -3048,14 +2722,6 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,i);
 		}
 		public AndExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAndExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAndExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class EqualityExprContext extends LogicalExpressionContext {
@@ -3063,14 +2729,6 @@ public class USEParser extends Parser {
 			return getRuleContext(EqualityExpressionContext.class,0);
 		}
 		public EqualityExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterEqualityExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitEqualityExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class XorExprContext extends LogicalExpressionContext {
@@ -3081,14 +2739,6 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,i);
 		}
 		public XorExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterXorExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitXorExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ImpliesExprContext extends LogicalExpressionContext {
@@ -3099,14 +2749,6 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,i);
 		}
 		public ImpliesExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterImpliesExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitImpliesExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class OrExprContext extends LogicalExpressionContext {
@@ -3117,14 +2759,6 @@ public class USEParser extends Parser {
 			return getRuleContext(LogicalExpressionContext.class,i);
 		}
 		public OrExprContext(LogicalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterOrExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitOrExpr(this);
-		}
 	}
 
 	public final LogicalExpressionContext logicalExpression() throws RecognitionException {
@@ -3147,11 +2781,11 @@ public class USEParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(545);
+			setState(544);
 			equalityExpression(0);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(567);
+			setState(566);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,71,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -3159,18 +2793,18 @@ public class USEParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(565);
+					setState(564);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,70,_ctx) ) {
 					case 1:
 						{
 						_localctx = new AndExprContext(new LogicalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_logicalExpression);
-						setState(547);
+						setState(546);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
-						setState(548);
+						setState(547);
 						match(T__27);
-						setState(549);
+						setState(548);
 						logicalExpression(8);
 						}
 						break;
@@ -3178,11 +2812,11 @@ public class USEParser extends Parser {
 						{
 						_localctx = new AndExprContext(new LogicalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_logicalExpression);
-						setState(550);
+						setState(549);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
-						setState(551);
+						setState(550);
 						match(T__28);
-						setState(552);
+						setState(551);
 						logicalExpression(7);
 						}
 						break;
@@ -3190,11 +2824,11 @@ public class USEParser extends Parser {
 						{
 						_localctx = new OrExprContext(new LogicalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_logicalExpression);
-						setState(553);
+						setState(552);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(554);
+						setState(553);
 						match(T__29);
-						setState(555);
+						setState(554);
 						logicalExpression(6);
 						}
 						break;
@@ -3202,11 +2836,11 @@ public class USEParser extends Parser {
 						{
 						_localctx = new XorExprContext(new LogicalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_logicalExpression);
-						setState(556);
+						setState(555);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(557);
+						setState(556);
 						match(T__30);
-						setState(558);
+						setState(557);
 						logicalExpression(5);
 						}
 						break;
@@ -3214,11 +2848,11 @@ public class USEParser extends Parser {
 						{
 						_localctx = new ImpliesExprContext(new LogicalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_logicalExpression);
-						setState(559);
+						setState(558);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(560);
+						setState(559);
 						match(T__31);
-						setState(561);
+						setState(560);
 						logicalExpression(4);
 						}
 						break;
@@ -3226,18 +2860,18 @@ public class USEParser extends Parser {
 						{
 						_localctx = new ImpliesExprContext(new LogicalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_logicalExpression);
-						setState(562);
+						setState(561);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(563);
+						setState(562);
 						match(T__32);
-						setState(564);
+						setState(563);
 						logicalExpression(3);
 						}
 						break;
 					}
 					} 
 				}
-				setState(569);
+				setState(568);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,71,_ctx);
 			}
@@ -3272,14 +2906,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_paramList; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterParamList(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitParamList(this);
-		}
 	}
 
 	public final ParamListContext paramList() throws RecognitionException {
@@ -3289,35 +2915,35 @@ public class USEParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(570);
+			setState(569);
 			match(LPAREN);
-			setState(579);
+			setState(578);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==ID) {
 				{
-				setState(571);
+				setState(570);
 				variableDeclaration();
-				setState(576);
+				setState(575);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==COMMA) {
 					{
 					{
-					setState(572);
+					setState(571);
 					match(COMMA);
-					setState(573);
+					setState(572);
 					variableDeclaration();
 					}
 					}
-					setState(578);
+					setState(577);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
 				}
 			}
 
-			setState(581);
+			setState(580);
 			match(RPAREN);
 			}
 		}
@@ -3346,14 +2972,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_idList; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterIdList(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitIdList(this);
-		}
 	}
 
 	public final IdListContext idList() throws RecognitionException {
@@ -3363,21 +2981,21 @@ public class USEParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(583);
+			setState(582);
 			match(ID);
-			setState(588);
+			setState(587);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==COMMA) {
 				{
 				{
-				setState(584);
+				setState(583);
 				match(COMMA);
-				setState(585);
+				setState(584);
 				match(ID);
 				}
 				}
-				setState(590);
+				setState(589);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -3405,14 +3023,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableDeclaration; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterVariableDeclaration(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitVariableDeclaration(this);
-		}
 	}
 
 	public final VariableDeclarationContext variableDeclaration() throws RecognitionException {
@@ -3421,11 +3031,11 @@ public class USEParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(591);
+			setState(590);
 			match(ID);
-			setState(592);
+			setState(591);
 			match(COLON);
-			setState(593);
+			setState(592);
 			type();
 			}
 		}
@@ -3462,14 +3072,6 @@ public class USEParser extends Parser {
 			return getRuleContext(RelationalExpressionContext.class,0);
 		}
 		public EqualExprContext(EqualityExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterEqualExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitEqualExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class RelationalExprContext extends EqualityExpressionContext {
@@ -3477,14 +3079,6 @@ public class USEParser extends Parser {
 			return getRuleContext(RelationalExpressionContext.class,0);
 		}
 		public RelationalExprContext(EqualityExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterRelationalExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitRelationalExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class NotEqualExprContext extends EqualityExpressionContext {
@@ -3496,14 +3090,6 @@ public class USEParser extends Parser {
 			return getRuleContext(RelationalExpressionContext.class,0);
 		}
 		public NotEqualExprContext(EqualityExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterNotEqualExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitNotEqualExpr(this);
-		}
 	}
 
 	public final EqualityExpressionContext equalityExpression() throws RecognitionException {
@@ -3526,11 +3112,11 @@ public class USEParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(596);
+			setState(595);
 			relationalExpression(0);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(606);
+			setState(605);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,76,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -3538,18 +3124,18 @@ public class USEParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(604);
+					setState(603);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,75,_ctx) ) {
 					case 1:
 						{
 						_localctx = new EqualExprContext(new EqualityExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_equalityExpression);
-						setState(598);
+						setState(597);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(599);
+						setState(598);
 						match(EQUAL);
-						setState(600);
+						setState(599);
 						relationalExpression(0);
 						}
 						break;
@@ -3557,18 +3143,18 @@ public class USEParser extends Parser {
 						{
 						_localctx = new NotEqualExprContext(new EqualityExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_equalityExpression);
-						setState(601);
+						setState(600);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(602);
+						setState(601);
 						match(NOT_EQUAL);
-						setState(603);
+						setState(602);
 						relationalExpression(0);
 						}
 						break;
 					}
 					} 
 				}
-				setState(608);
+				setState(607);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,76,_ctx);
 			}
@@ -3607,14 +3193,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public LessThanOrEqualExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLessThanOrEqualExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLessThanOrEqualExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class GreaterThanExprContext extends RelationalExpressionContext {
@@ -3626,14 +3204,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public GreaterThanExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterGreaterThanExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitGreaterThanExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AdditiveExprContext extends RelationalExpressionContext {
@@ -3641,14 +3211,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public AdditiveExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAdditiveExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAdditiveExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LessThanExprContext extends RelationalExpressionContext {
@@ -3660,14 +3222,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public LessThanExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLessThanExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLessThanExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class GreaterThanOrEqualExprContext extends RelationalExpressionContext {
@@ -3679,14 +3233,6 @@ public class USEParser extends Parser {
 			return getRuleContext(AdditiveExpressionContext.class,0);
 		}
 		public GreaterThanOrEqualExprContext(RelationalExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterGreaterThanOrEqualExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitGreaterThanOrEqualExpr(this);
-		}
 	}
 
 	public final RelationalExpressionContext relationalExpression() throws RecognitionException {
@@ -3709,11 +3255,11 @@ public class USEParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(610);
+			setState(609);
 			additiveExpression(0);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(626);
+			setState(625);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,78,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -3721,18 +3267,18 @@ public class USEParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(624);
+					setState(623);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,77,_ctx) ) {
 					case 1:
 						{
 						_localctx = new LessThanExprContext(new RelationalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_relationalExpression);
-						setState(612);
+						setState(611);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(613);
+						setState(612);
 						match(LESS);
-						setState(614);
+						setState(613);
 						additiveExpression(0);
 						}
 						break;
@@ -3740,11 +3286,11 @@ public class USEParser extends Parser {
 						{
 						_localctx = new GreaterThanExprContext(new RelationalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_relationalExpression);
-						setState(615);
+						setState(614);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(616);
+						setState(615);
 						match(GREATER);
-						setState(617);
+						setState(616);
 						additiveExpression(0);
 						}
 						break;
@@ -3752,11 +3298,11 @@ public class USEParser extends Parser {
 						{
 						_localctx = new LessThanOrEqualExprContext(new RelationalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_relationalExpression);
-						setState(618);
+						setState(617);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(619);
+						setState(618);
 						match(LESS_EQUAL);
-						setState(620);
+						setState(619);
 						additiveExpression(0);
 						}
 						break;
@@ -3764,18 +3310,18 @@ public class USEParser extends Parser {
 						{
 						_localctx = new GreaterThanOrEqualExprContext(new RelationalExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_relationalExpression);
-						setState(621);
+						setState(620);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(622);
+						setState(621);
 						match(GREATER_EQUAL);
-						setState(623);
+						setState(622);
 						additiveExpression(0);
 						}
 						break;
 					}
 					} 
 				}
-				setState(628);
+				setState(627);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,78,_ctx);
 			}
@@ -3814,14 +3360,6 @@ public class USEParser extends Parser {
 			return getRuleContext(FactorExpressionContext.class,0);
 		}
 		public AdditionExprContext(AdditiveExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAdditionExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAdditionExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SubtractionExprContext extends AdditiveExpressionContext {
@@ -3833,14 +3371,6 @@ public class USEParser extends Parser {
 			return getRuleContext(FactorExpressionContext.class,0);
 		}
 		public SubtractionExprContext(AdditiveExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSubtractionExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSubtractionExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class FactorExprContext extends AdditiveExpressionContext {
@@ -3848,14 +3378,6 @@ public class USEParser extends Parser {
 			return getRuleContext(FactorExpressionContext.class,0);
 		}
 		public FactorExprContext(AdditiveExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterFactorExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitFactorExpr(this);
-		}
 	}
 
 	public final AdditiveExpressionContext additiveExpression() throws RecognitionException {
@@ -3878,11 +3400,11 @@ public class USEParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(630);
+			setState(629);
 			factorExpression(0);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(640);
+			setState(639);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,80,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -3890,18 +3412,18 @@ public class USEParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(638);
+					setState(637);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,79,_ctx) ) {
 					case 1:
 						{
 						_localctx = new AdditionExprContext(new AdditiveExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_additiveExpression);
-						setState(632);
+						setState(631);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(633);
+						setState(632);
 						match(PLUS);
-						setState(634);
+						setState(633);
 						factorExpression(0);
 						}
 						break;
@@ -3909,18 +3431,18 @@ public class USEParser extends Parser {
 						{
 						_localctx = new SubtractionExprContext(new AdditiveExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_additiveExpression);
-						setState(635);
+						setState(634);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(636);
+						setState(635);
 						match(MINUS);
-						setState(637);
+						setState(636);
 						factorExpression(0);
 						}
 						break;
 					}
 					} 
 				}
-				setState(642);
+				setState(641);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,80,_ctx);
 			}
@@ -3959,14 +3481,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode SLASH() { return getToken(USEParser.SLASH, 0); }
 		public DivisionExprContext(FactorExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterDivisionExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitDivisionExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class MultiplicationExprContext extends FactorExpressionContext {
@@ -3978,14 +3492,6 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public MultiplicationExprContext(FactorExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterMultiplicationExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitMultiplicationExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class UnaryExprContext extends FactorExpressionContext {
@@ -3993,14 +3499,6 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public UnaryExprContext(FactorExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterUnaryExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitUnaryExpr(this);
-		}
 	}
 
 	public final FactorExpressionContext factorExpression() throws RecognitionException {
@@ -4024,11 +3522,11 @@ public class USEParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(644);
+			setState(643);
 			unaryExpression();
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(654);
+			setState(653);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,82,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -4036,18 +3534,18 @@ public class USEParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(652);
+					setState(651);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,81,_ctx) ) {
 					case 1:
 						{
 						_localctx = new MultiplicationExprContext(new FactorExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_factorExpression);
-						setState(646);
+						setState(645);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(647);
+						setState(646);
 						match(STAR);
-						setState(648);
+						setState(647);
 						unaryExpression();
 						}
 						break;
@@ -4055,9 +3553,9 @@ public class USEParser extends Parser {
 						{
 						_localctx = new DivisionExprContext(new FactorExpressionContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_factorExpression);
-						setState(649);
+						setState(648);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(650);
+						setState(649);
 						_la = _input.LA(1);
 						if ( !(_la==T__33 || _la==SLASH) ) {
 						_errHandler.recoverInline(this);
@@ -4067,14 +3565,14 @@ public class USEParser extends Parser {
 							_errHandler.reportMatch(this);
 							consume();
 						}
-						setState(651);
+						setState(650);
 						unaryExpression();
 						}
 						break;
 					}
 					} 
 				}
-				setState(656);
+				setState(655);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,82,_ctx);
 			}
@@ -4109,14 +3607,6 @@ public class USEParser extends Parser {
 			return getRuleContext(PostfixExpressionContext.class,0);
 		}
 		public PostfixExprContext(UnaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPostfixExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPostfixExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class PlusExprContext extends UnaryExpressionContext {
@@ -4125,14 +3615,6 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public PlusExprContext(UnaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPlusExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPlusExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class NotExprContext extends UnaryExpressionContext {
@@ -4140,14 +3622,6 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public NotExprContext(UnaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterNotExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitNotExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class MinusExprContext extends UnaryExpressionContext {
@@ -4156,30 +3630,22 @@ public class USEParser extends Parser {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
 		public MinusExprContext(UnaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterMinusExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitMinusExpr(this);
-		}
 	}
 
 	public final UnaryExpressionContext unaryExpression() throws RecognitionException {
 		UnaryExpressionContext _localctx = new UnaryExpressionContext(_ctx, getState());
 		enterRule(_localctx, 74, RULE_unaryExpression);
 		try {
-			setState(664);
+			setState(663);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__34:
 				_localctx = new NotExprContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(657);
+				setState(656);
 				match(T__34);
-				setState(658);
+				setState(657);
 				unaryExpression();
 				}
 				break;
@@ -4187,9 +3653,9 @@ public class USEParser extends Parser {
 				_localctx = new MinusExprContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(659);
+				setState(658);
 				match(MINUS);
-				setState(660);
+				setState(659);
 				unaryExpression();
 				}
 				break;
@@ -4197,9 +3663,9 @@ public class USEParser extends Parser {
 				_localctx = new PlusExprContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(661);
+				setState(660);
 				match(PLUS);
-				setState(662);
+				setState(661);
 				unaryExpression();
 				}
 				break;
@@ -4217,6 +3683,7 @@ public class USEParser extends Parser {
 			case T__48:
 			case T__49:
 			case T__50:
+			case T__51:
 			case T__55:
 			case T__56:
 			case T__57:
@@ -4240,7 +3707,7 @@ public class USEParser extends Parser {
 				_localctx = new PostfixExprContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(663);
+				setState(662);
 				postfixExpression();
 				}
 				break;
@@ -4283,14 +3750,6 @@ public class USEParser extends Parser {
 			return getRuleContext(PropertyChainContext.class,i);
 		}
 		public PropertyCallExprContext(PostfixExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPropertyCallExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPropertyCallExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class PrimaryExprContext extends PostfixExpressionContext {
@@ -4298,14 +3757,6 @@ public class USEParser extends Parser {
 			return getRuleContext(PrimaryExpressionContext.class,0);
 		}
 		public PrimaryExprContext(PostfixExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPrimaryExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPrimaryExpr(this);
-		}
 	}
 
 	public final PostfixExpressionContext postfixExpression() throws RecognitionException {
@@ -4313,14 +3764,14 @@ public class USEParser extends Parser {
 		enterRule(_localctx, 76, RULE_postfixExpression);
 		try {
 			int _alt;
-			setState(673);
+			setState(672);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,85,_ctx) ) {
 			case 1:
 				_localctx = new PrimaryExprContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(666);
+				setState(665);
 				primaryExpression();
 				}
 				break;
@@ -4328,9 +3779,9 @@ public class USEParser extends Parser {
 				_localctx = new PropertyCallExprContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(667);
+				setState(666);
 				primaryExpression();
-				setState(669); 
+				setState(668); 
 				_errHandler.sync(this);
 				_alt = 1;
 				do {
@@ -4338,7 +3789,7 @@ public class USEParser extends Parser {
 					case 1:
 						{
 						{
-						setState(668);
+						setState(667);
 						propertyChain();
 						}
 						}
@@ -4346,7 +3797,7 @@ public class USEParser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(671); 
+					setState(670); 
 					_errHandler.sync(this);
 					_alt = getInterpreter().adaptivePredict(_input,84,_ctx);
 				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
@@ -4376,14 +3827,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_propertyChain; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterPropertyChain(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitPropertyChain(this);
-		}
 	}
 
 	public final PropertyChainContext propertyChain() throws RecognitionException {
@@ -4393,7 +3836,7 @@ public class USEParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(675);
+			setState(674);
 			_la = _input.LA(1);
 			if ( !(_la==ARROW || _la==DOT) ) {
 			_errHandler.recoverInline(this);
@@ -4403,7 +3846,7 @@ public class USEParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(676);
+			setState(675);
 			propertyCall();
 			}
 		}
@@ -4436,14 +3879,6 @@ public class USEParser extends Parser {
 			return getRuleContext(PropertyCallContext.class,0);
 		}
 		public EmptyPropertyCallExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterEmptyPropertyCallExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitEmptyPropertyCallExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ByUseIdExprContext extends PrimaryExpressionContext {
@@ -4456,14 +3891,6 @@ public class USEParser extends Parser {
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TerminalNode AT() { return getToken(USEParser.AT, 0); }
 		public ByUseIdExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterByUseIdExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitByUseIdExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralExprContext extends PrimaryExpressionContext {
@@ -4471,14 +3898,6 @@ public class USEParser extends Parser {
 			return getRuleContext(LiteralContext.class,0);
 		}
 		public LiteralExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ParenthesizedExprContext extends PrimaryExpressionContext {
@@ -4488,14 +3907,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public ParenthesizedExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterParenthesizedExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitParenthesizedExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class AllInstancesExprContext extends PrimaryExpressionContext {
@@ -4505,14 +3916,6 @@ public class USEParser extends Parser {
 		public TerminalNode LPAREN() { return getToken(USEParser.LPAREN, 0); }
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public AllInstancesExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterAllInstancesExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitAllInstancesExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ObjectReferenceExprContext extends PrimaryExpressionContext {
@@ -4520,14 +3923,13 @@ public class USEParser extends Parser {
 			return getRuleContext(ObjectReferenceContext.class,0);
 		}
 		public ObjectReferenceExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterObjectReferenceExpr(this);
+	}
+	@SuppressWarnings("CheckReturnValue")
+	public static class ConditionalExprContext extends PrimaryExpressionContext {
+		public ConditionalExpressionContext conditionalExpression() {
+			return getRuleContext(ConditionalExpressionContext.class,0);
 		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitObjectReferenceExpr(this);
-		}
+		public ConditionalExprContext(PrimaryExpressionContext ctx) { copyFrom(ctx); }
 	}
 
 	public final PrimaryExpressionContext primaryExpression() throws RecognitionException {
@@ -4541,7 +3943,7 @@ public class USEParser extends Parser {
 				_localctx = new LiteralExprContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(678);
+				setState(677);
 				literal();
 				}
 				break;
@@ -4549,7 +3951,7 @@ public class USEParser extends Parser {
 				_localctx = new ObjectReferenceExprContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(679);
+				setState(678);
 				objectReference();
 				}
 				break;
@@ -4557,7 +3959,7 @@ public class USEParser extends Parser {
 				_localctx = new EmptyPropertyCallExprContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(680);
+				setState(679);
 				propertyCall();
 				}
 				break;
@@ -4565,17 +3967,25 @@ public class USEParser extends Parser {
 				_localctx = new ParenthesizedExprContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(681);
+				setState(680);
 				match(LPAREN);
-				setState(682);
+				setState(681);
 				expression();
-				setState(683);
+				setState(682);
 				match(RPAREN);
 				}
 				break;
 			case 5:
-				_localctx = new AllInstancesExprContext(_localctx);
+				_localctx = new ConditionalExprContext(_localctx);
 				enterOuterAlt(_localctx, 5);
+				{
+				setState(684);
+				conditionalExpression();
+				}
+				break;
+			case 6:
+				_localctx = new AllInstancesExprContext(_localctx);
+				enterOuterAlt(_localctx, 6);
 				{
 				setState(685);
 				match(ID);
@@ -4609,9 +4019,9 @@ public class USEParser extends Parser {
 				}
 				}
 				break;
-			case 6:
+			case 7:
 				_localctx = new ByUseIdExprContext(_localctx);
-				enterOuterAlt(_localctx, 6);
+				enterOuterAlt(_localctx, 7);
 				{
 				setState(696);
 				match(ID);
@@ -4660,14 +4070,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_objectReference; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterObjectReference(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitObjectReference(this);
-		}
 	}
 
 	public final ObjectReferenceContext objectReference() throws RecognitionException {
@@ -4711,14 +4113,6 @@ public class USEParser extends Parser {
 			return getRuleContext(QueryExpressionContext.class,0);
 		}
 		public QueryExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterQueryExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitQueryExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class OperationExprContext extends PropertyCallContext {
@@ -4726,14 +4120,6 @@ public class USEParser extends Parser {
 			return getRuleContext(OperationExpressionContext.class,0);
 		}
 		public OperationExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterOperationExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitOperationExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class IterateExprContext extends PropertyCallContext {
@@ -4741,14 +4127,6 @@ public class USEParser extends Parser {
 			return getRuleContext(IterateExpressionContext.class,0);
 		}
 		public IterateExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterIterateExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitIterateExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeExprContext extends PropertyCallContext {
@@ -4756,14 +4134,6 @@ public class USEParser extends Parser {
 			return getRuleContext(TypeExpressionContext.class,0);
 		}
 		public TypeExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class InStateExprContext extends PropertyCallContext {
@@ -4771,14 +4141,6 @@ public class USEParser extends Parser {
 			return getRuleContext(InStateExpressionContext.class,0);
 		}
 		public InStateExprContext(PropertyCallContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterInStateExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitInStateExpr(this);
-		}
 	}
 
 	public final PropertyCallContext propertyCall() throws RecognitionException {
@@ -4877,14 +4239,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public IsUniqueExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterIsUniqueExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitIsUniqueExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SortedByExprContext extends QueryExpressionContext {
@@ -4898,14 +4252,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public SortedByExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSortedByExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSortedByExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SelectExprContext extends QueryExpressionContext {
@@ -4919,14 +4265,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public SelectExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSelectExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSelectExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class CollectExprContext extends QueryExpressionContext {
@@ -4940,14 +4278,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public CollectExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterCollectExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitCollectExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ForAllExprContext extends QueryExpressionContext {
@@ -4961,14 +4291,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public ForAllExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterForAllExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitForAllExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class ExistsExprContext extends QueryExpressionContext {
@@ -4982,14 +4304,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public ExistsExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterExistsExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitExistsExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class RejectExprContext extends QueryExpressionContext {
@@ -5003,14 +4317,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode BAR() { return getToken(USEParser.BAR, 0); }
 		public RejectExprContext(QueryExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterRejectExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitRejectExpr(this);
-		}
 	}
 
 	public final QueryExpressionContext queryExpression() throws RecognitionException {
@@ -5236,14 +4542,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_iterateExpression; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterIterateExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitIterateExpression(this);
-		}
 	}
 
 	public final IterateExpressionContext iterateExpression() throws RecognitionException {
@@ -5309,14 +4607,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_operationExpression; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterOperationExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitOperationExpression(this);
-		}
 	}
 
 	public final OperationExpressionContext operationExpression() throws RecognitionException {
@@ -5460,14 +4750,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_inStateExpression; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterInStateExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitInStateExpression(this);
-		}
 	}
 
 	public final InStateExpressionContext inStateExpression() throws RecognitionException {
@@ -5517,14 +4799,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public OclIsTypeOfExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterOclIsTypeOfExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitOclIsTypeOfExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class OclIsKindOfExprContext extends TypeExpressionContext {
@@ -5534,14 +4808,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public OclIsKindOfExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterOclIsKindOfExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitOclIsKindOfExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SelectByKindExprContext extends TypeExpressionContext {
@@ -5551,14 +4817,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public SelectByKindExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSelectByKindExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSelectByKindExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SelectByTypeExprContext extends TypeExpressionContext {
@@ -5568,14 +4826,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public SelectByTypeExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSelectByTypeExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSelectByTypeExpr(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class OclAsTypeExprContext extends TypeExpressionContext {
@@ -5585,14 +4835,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public OclAsTypeExprContext(TypeExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterOclAsTypeExpr(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitOclAsTypeExpr(this);
-		}
 	}
 
 	public final TypeExpressionContext typeExpression() throws RecognitionException {
@@ -5711,14 +4953,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_elemVarsDeclaration; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterElemVarsDeclaration(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitElemVarsDeclaration(this);
-		}
 	}
 
 	public final ElemVarsDeclarationContext elemVarsDeclaration() throws RecognitionException {
@@ -5798,14 +5032,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableInitialization; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterVariableInitialization(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitVariableInitialization(this);
-		}
 	}
 
 	public final VariableInitializationContext variableInitialization() throws RecognitionException {
@@ -5849,14 +5075,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_conditionalExpression; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterConditionalExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitConditionalExpression(this);
-		}
 	}
 
 	public final ConditionalExpressionContext conditionalExpression() throws RecognitionException {
@@ -5908,14 +5126,6 @@ public class USEParser extends Parser {
 	public static class LiteralIntegerContext extends LiteralContext {
 		public TerminalNode INT() { return getToken(USEParser.INT, 0); }
 		public LiteralIntegerContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralInteger(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralInteger(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralEmptyCollectionContext extends LiteralContext {
@@ -5923,40 +5133,16 @@ public class USEParser extends Parser {
 			return getRuleContext(EmptyCollectionLiteralContext.class,0);
 		}
 		public LiteralEmptyCollectionContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralEmptyCollection(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralEmptyCollection(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralStringContext extends LiteralContext {
 		public TerminalNode STRING() { return getToken(USEParser.STRING, 0); }
 		public LiteralStringContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralString(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralString(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralUnlimitedNaturalContext extends LiteralContext {
 		public TerminalNode STAR() { return getToken(USEParser.STAR, 0); }
 		public LiteralUnlimitedNaturalContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralUnlimitedNatural(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralUnlimitedNatural(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralCollectionContext extends LiteralContext {
@@ -5964,40 +5150,16 @@ public class USEParser extends Parser {
 			return getRuleContext(CollectionLiteralContext.class,0);
 		}
 		public LiteralCollectionContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralCollection(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralCollection(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralBooleanFalseContext extends LiteralContext {
 		public LiteralBooleanFalseContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralBooleanFalse(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralBooleanFalse(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralEnumContext extends LiteralContext {
 		public TerminalNode HASH() { return getToken(USEParser.HASH, 0); }
 		public TerminalNode ID() { return getToken(USEParser.ID, 0); }
 		public LiteralEnumContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralEnum(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralEnum(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralQualifiedEnumContext extends LiteralContext {
@@ -6007,14 +5169,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode COLON_COLON() { return getToken(USEParser.COLON_COLON, 0); }
 		public LiteralQualifiedEnumContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralQualifiedEnum(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralQualifiedEnum(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralUndefinedContext extends LiteralContext {
@@ -6022,14 +5176,6 @@ public class USEParser extends Parser {
 			return getRuleContext(UndefinedLiteralContext.class,0);
 		}
 		public LiteralUndefinedContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralUndefined(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralUndefined(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralTupleContext extends LiteralContext {
@@ -6037,39 +5183,15 @@ public class USEParser extends Parser {
 			return getRuleContext(TupleLiteralContext.class,0);
 		}
 		public LiteralTupleContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralTuple(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralTuple(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralBooleanTrueContext extends LiteralContext {
 		public LiteralBooleanTrueContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralBooleanTrue(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralBooleanTrue(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class LiteralRealContext extends LiteralContext {
 		public TerminalNode REAL() { return getToken(USEParser.REAL, 0); }
 		public LiteralRealContext(LiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterLiteralReal(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitLiteralReal(this);
-		}
 	}
 
 	public final LiteralContext literal() throws RecognitionException {
@@ -6221,14 +5343,6 @@ public class USEParser extends Parser {
 			return getToken(USEParser.COMMA, i);
 		}
 		public OrderedSetLiteralContext(CollectionLiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterOrderedSetLiteral(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitOrderedSetLiteral(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SequenceLiteralContext extends CollectionLiteralContext {
@@ -6245,14 +5359,6 @@ public class USEParser extends Parser {
 			return getToken(USEParser.COMMA, i);
 		}
 		public SequenceLiteralContext(CollectionLiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSequenceLiteral(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSequenceLiteral(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class BagLiteralContext extends CollectionLiteralContext {
@@ -6269,14 +5375,6 @@ public class USEParser extends Parser {
 			return getToken(USEParser.COMMA, i);
 		}
 		public BagLiteralContext(CollectionLiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterBagLiteral(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitBagLiteral(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class SetLiteralContext extends CollectionLiteralContext {
@@ -6293,14 +5391,6 @@ public class USEParser extends Parser {
 			return getToken(USEParser.COMMA, i);
 		}
 		public SetLiteralContext(CollectionLiteralContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSetLiteral(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSetLiteral(this);
-		}
 	}
 
 	public final CollectionLiteralContext collectionLiteral() throws RecognitionException {
@@ -6491,14 +5581,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_collectionItem; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterCollectionItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitCollectionItem(this);
-		}
 	}
 
 	public final CollectionItemContext collectionItem() throws RecognitionException {
@@ -6548,14 +5630,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_emptyCollectionLiteral; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterEmptyCollectionLiteral(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitEmptyCollectionLiteral(this);
-		}
 	}
 
 	public final EmptyCollectionLiteralContext emptyCollectionLiteral() throws RecognitionException {
@@ -6619,14 +5693,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_undefinedLiteral; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterUndefinedLiteral(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitUndefinedLiteral(this);
-		}
 	}
 
 	public final UndefinedLiteralContext undefinedLiteral() throws RecognitionException {
@@ -6707,14 +5773,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_tupleLiteral; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTupleLiteral(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTupleLiteral(this);
-		}
 	}
 
 	public final TupleLiteralContext tupleLiteral() throws RecognitionException {
@@ -6782,14 +5840,6 @@ public class USEParser extends Parser {
 		public TerminalNode COLON() { return getToken(USEParser.COLON, 0); }
 		public TerminalNode EQUAL() { return getToken(USEParser.EQUAL, 0); }
 		public UntypedTupleItemContext(TupleItemContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterUntypedTupleItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitUntypedTupleItem(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypedTupleItemContext extends TupleItemContext {
@@ -6803,14 +5853,6 @@ public class USEParser extends Parser {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public TypedTupleItemContext(TupleItemContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypedTupleItem(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypedTupleItem(this);
-		}
 	}
 
 	public final TupleItemContext tupleItem() throws RecognitionException {
@@ -6888,14 +5930,6 @@ public class USEParser extends Parser {
 			return getRuleContext(TupleTypeContext.class,0);
 		}
 		public TypeTupleContext(TypeContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeTuple(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeTuple(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeCollectionContext extends TypeContext {
@@ -6903,14 +5937,6 @@ public class USEParser extends Parser {
 			return getRuleContext(CollectionTypeContext.class,0);
 		}
 		public TypeCollectionContext(TypeContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeCollection(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeCollection(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeSimpleContext extends TypeContext {
@@ -6918,14 +5944,6 @@ public class USEParser extends Parser {
 			return getRuleContext(SimpleTypeContext.class,0);
 		}
 		public TypeSimpleContext(TypeContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeSimple(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeSimple(this);
-		}
 	}
 
 	public final TypeContext type() throws RecognitionException {
@@ -6988,14 +6006,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_typeOnly; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeOnly(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeOnly(this);
-		}
 	}
 
 	public final TypeOnlyContext typeOnly() throws RecognitionException {
@@ -7028,14 +6038,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_simpleType; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterSimpleType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitSimpleType(this);
-		}
 	}
 
 	public final SimpleTypeContext simpleType() throws RecognitionException {
@@ -7079,14 +6081,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeBagContext(CollectionTypeContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeBag(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeBag(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeSimpleCollectionContext extends CollectionTypeContext {
@@ -7096,14 +6090,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeSimpleCollectionContext(CollectionTypeContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeSimpleCollection(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeSimpleCollection(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeOrderedSetContext extends CollectionTypeContext {
@@ -7113,14 +6099,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeOrderedSetContext(CollectionTypeContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeOrderedSet(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeOrderedSet(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeSequenceContext extends CollectionTypeContext {
@@ -7130,14 +6108,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeSequenceContext(CollectionTypeContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeSequence(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeSequence(this);
-		}
 	}
 	@SuppressWarnings("CheckReturnValue")
 	public static class TypeSetContext extends CollectionTypeContext {
@@ -7147,14 +6117,6 @@ public class USEParser extends Parser {
 		}
 		public TerminalNode RPAREN() { return getToken(USEParser.RPAREN, 0); }
 		public TypeSetContext(CollectionTypeContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTypeSet(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTypeSet(this);
-		}
 	}
 
 	public final CollectionTypeContext collectionType() throws RecognitionException {
@@ -7267,14 +6229,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_tupleType; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTupleType(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTupleType(this);
-		}
 	}
 
 	public final TupleTypeContext tupleType() throws RecognitionException {
@@ -7332,14 +6286,6 @@ public class USEParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_tuplePart; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).enterTuplePart(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof USEListener ) ((USEListener)listener).exitTuplePart(this);
-		}
 	}
 
 	public final TuplePartContext tuplePart() throws RecognitionException {
@@ -7521,27 +6467,27 @@ public class USEParser extends Parser {
 		"\b\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0003\u0019\u0201\b\u0019"+
 		"\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019\u0001\u0019"+
 		"\u0003\u0019\u0209\b\u0019\u0001\u0019\u0003\u0019\u020c\b\u0019\u0001"+
-		"\u001a\u0001\u001a\u0001\u001a\u0001\u001b\u0001\u001b\u0001\u001b\u0003"+
-		"\u001b\u0214\b\u001b\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0003"+
-		"\u001c\u021a\b\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001"+
-		"\u001c\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001"+
+		"\u001a\u0001\u001a\u0001\u001a\u0001\u001b\u0001\u001b\u0003\u001b\u0213"+
+		"\b\u001b\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0003\u001c\u0219"+
+		"\b\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001\u001c\u0001"+
 		"\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001"+
 		"\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001"+
-		"\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0005\u001d\u0236\b\u001d\n"+
-		"\u001d\f\u001d\u0239\t\u001d\u0001\u001e\u0001\u001e\u0001\u001e\u0001"+
-		"\u001e\u0005\u001e\u023f\b\u001e\n\u001e\f\u001e\u0242\t\u001e\u0003\u001e"+
-		"\u0244\b\u001e\u0001\u001e\u0001\u001e\u0001\u001f\u0001\u001f\u0001\u001f"+
-		"\u0005\u001f\u024b\b\u001f\n\u001f\f\u001f\u024e\t\u001f\u0001 \u0001"+
-		" \u0001 \u0001 \u0001!\u0001!\u0001!\u0001!\u0001!\u0001!\u0001!\u0001"+
-		"!\u0001!\u0005!\u025d\b!\n!\f!\u0260\t!\u0001\"\u0001\"\u0001\"\u0001"+
+		"\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001\u001d\u0001"+
+		"\u001d\u0001\u001d\u0001\u001d\u0005\u001d\u0235\b\u001d\n\u001d\f\u001d"+
+		"\u0238\t\u001d\u0001\u001e\u0001\u001e\u0001\u001e\u0001\u001e\u0005\u001e"+
+		"\u023e\b\u001e\n\u001e\f\u001e\u0241\t\u001e\u0003\u001e\u0243\b\u001e"+
+		"\u0001\u001e\u0001\u001e\u0001\u001f\u0001\u001f\u0001\u001f\u0005\u001f"+
+		"\u024a\b\u001f\n\u001f\f\u001f\u024d\t\u001f\u0001 \u0001 \u0001 \u0001"+
+		" \u0001!\u0001!\u0001!\u0001!\u0001!\u0001!\u0001!\u0001!\u0001!\u0005"+
+		"!\u025c\b!\n!\f!\u025f\t!\u0001\"\u0001\"\u0001\"\u0001\"\u0001\"\u0001"+
 		"\"\u0001\"\u0001\"\u0001\"\u0001\"\u0001\"\u0001\"\u0001\"\u0001\"\u0001"+
-		"\"\u0001\"\u0001\"\u0005\"\u0271\b\"\n\"\f\"\u0274\t\"\u0001#\u0001#\u0001"+
-		"#\u0001#\u0001#\u0001#\u0001#\u0001#\u0001#\u0005#\u027f\b#\n#\f#\u0282"+
-		"\t#\u0001$\u0001$\u0001$\u0001$\u0001$\u0001$\u0001$\u0001$\u0001$\u0005"+
-		"$\u028d\b$\n$\f$\u0290\t$\u0001%\u0001%\u0001%\u0001%\u0001%\u0001%\u0001"+
-		"%\u0003%\u0299\b%\u0001&\u0001&\u0001&\u0004&\u029e\b&\u000b&\f&\u029f"+
-		"\u0003&\u02a2\b&\u0001\'\u0001\'\u0001\'\u0001(\u0001(\u0001(\u0001(\u0001"+
-		"(\u0001(\u0001(\u0001(\u0001(\u0001(\u0001(\u0001(\u0003(\u02b3\b(\u0001"+
+		"\"\u0005\"\u0270\b\"\n\"\f\"\u0273\t\"\u0001#\u0001#\u0001#\u0001#\u0001"+
+		"#\u0001#\u0001#\u0001#\u0001#\u0005#\u027e\b#\n#\f#\u0281\t#\u0001$\u0001"+
+		"$\u0001$\u0001$\u0001$\u0001$\u0001$\u0001$\u0001$\u0005$\u028c\b$\n$"+
+		"\f$\u028f\t$\u0001%\u0001%\u0001%\u0001%\u0001%\u0001%\u0001%\u0003%\u0298"+
+		"\b%\u0001&\u0001&\u0001&\u0004&\u029d\b&\u000b&\f&\u029e\u0003&\u02a1"+
+		"\b&\u0001\'\u0001\'\u0001\'\u0001(\u0001(\u0001(\u0001(\u0001(\u0001("+
+		"\u0001(\u0001(\u0001(\u0001(\u0001(\u0001(\u0001(\u0003(\u02b3\b(\u0001"+
 		"(\u0001(\u0003(\u02b7\b(\u0001(\u0001(\u0001(\u0001(\u0001(\u0001(\u0001"+
 		"(\u0001(\u0003(\u02c1\b(\u0003(\u02c3\b(\u0001)\u0001)\u0001)\u0001*\u0001"+
 		"*\u0001*\u0001*\u0001*\u0003*\u02cd\b*\u0001+\u0001+\u0001+\u0001+\u0001"+
@@ -7597,12 +6543,12 @@ public class USEParser extends Parser {
 		"\u0000\u0000(\u01ba\u0001\u0000\u0000\u0000*\u01bc\u0001\u0000\u0000\u0000"+
 		",\u01d6\u0001\u0000\u0000\u0000.\u01d8\u0001\u0000\u0000\u00000\u01e8"+
 		"\u0001\u0000\u0000\u00002\u01f3\u0001\u0000\u0000\u00004\u020d\u0001\u0000"+
-		"\u0000\u00006\u0213\u0001\u0000\u0000\u00008\u0215\u0001\u0000\u0000\u0000"+
-		":\u0220\u0001\u0000\u0000\u0000<\u023a\u0001\u0000\u0000\u0000>\u0247"+
-		"\u0001\u0000\u0000\u0000@\u024f\u0001\u0000\u0000\u0000B\u0253\u0001\u0000"+
-		"\u0000\u0000D\u0261\u0001\u0000\u0000\u0000F\u0275\u0001\u0000\u0000\u0000"+
-		"H\u0283\u0001\u0000\u0000\u0000J\u0298\u0001\u0000\u0000\u0000L\u02a1"+
-		"\u0001\u0000\u0000\u0000N\u02a3\u0001\u0000\u0000\u0000P\u02c2\u0001\u0000"+
+		"\u0000\u00006\u0212\u0001\u0000\u0000\u00008\u0214\u0001\u0000\u0000\u0000"+
+		":\u021f\u0001\u0000\u0000\u0000<\u0239\u0001\u0000\u0000\u0000>\u0246"+
+		"\u0001\u0000\u0000\u0000@\u024e\u0001\u0000\u0000\u0000B\u0252\u0001\u0000"+
+		"\u0000\u0000D\u0260\u0001\u0000\u0000\u0000F\u0274\u0001\u0000\u0000\u0000"+
+		"H\u0282\u0001\u0000\u0000\u0000J\u0297\u0001\u0000\u0000\u0000L\u02a0"+
+		"\u0001\u0000\u0000\u0000N\u02a2\u0001\u0000\u0000\u0000P\u02c2\u0001\u0000"+
 		"\u0000\u0000R\u02c4\u0001\u0000\u0000\u0000T\u02cc\u0001\u0000\u0000\u0000"+
 		"V\u0314\u0001\u0000\u0000\u0000X\u0316\u0001\u0000\u0000\u0000Z\u031f"+
 		"\u0001\u0000\u0000\u0000\\\u034b\u0001\u0000\u0000\u0000^\u0369\u0001"+
@@ -7840,104 +6786,104 @@ public class USEParser extends Parser {
 		"\u0000\u0000\u020a\u020c\u0005Z\u0000\u0000\u020b\u01f6\u0001\u0000\u0000"+
 		"\u0000\u020b\u020c\u0001\u0000\u0000\u0000\u020c3\u0001\u0000\u0000\u0000"+
 		"\u020d\u020e\u00036\u001b\u0000\u020e\u020f\u0005\u0000\u0000\u0001\u020f"+
-		"5\u0001\u0000\u0000\u0000\u0210\u0214\u0003:\u001d\u0000\u0211\u0214\u0003"+
-		"d2\u0000\u0212\u0214\u00038\u001c\u0000\u0213\u0210\u0001\u0000\u0000"+
-		"\u0000\u0213\u0211\u0001\u0000\u0000\u0000\u0213\u0212\u0001\u0000\u0000"+
-		"\u0000\u02147\u0001\u0000\u0000\u0000\u0215\u0216\u0005\u001a\u0000\u0000"+
-		"\u0216\u0219\u0005r\u0000\u0000\u0217\u0218\u0005H\u0000\u0000\u0218\u021a"+
-		"\u0003t:\u0000\u0219\u0217\u0001\u0000\u0000\u0000\u0219\u021a\u0001\u0000"+
-		"\u0000\u0000\u021a\u021b\u0001\u0000\u0000\u0000\u021b\u021c\u0005N\u0000"+
-		"\u0000\u021c\u021d\u00036\u001b\u0000\u021d\u021e\u0005\u001b\u0000\u0000"+
-		"\u021e\u021f\u00036\u001b\u0000\u021f9\u0001\u0000\u0000\u0000\u0220\u0221"+
-		"\u0006\u001d\uffff\uffff\u0000\u0221\u0222\u0003B!\u0000\u0222\u0237\u0001"+
-		"\u0000\u0000\u0000\u0223\u0224\n\u0007\u0000\u0000\u0224\u0225\u0005\u001c"+
-		"\u0000\u0000\u0225\u0236\u0003:\u001d\b\u0226\u0227\n\u0006\u0000\u0000"+
-		"\u0227\u0228\u0005\u001d\u0000\u0000\u0228\u0236\u0003:\u001d\u0007\u0229"+
-		"\u022a\n\u0005\u0000\u0000\u022a\u022b\u0005\u001e\u0000\u0000\u022b\u0236"+
-		"\u0003:\u001d\u0006\u022c\u022d\n\u0004\u0000\u0000\u022d\u022e\u0005"+
-		"\u001f\u0000\u0000\u022e\u0236\u0003:\u001d\u0005\u022f\u0230\n\u0003"+
-		"\u0000\u0000\u0230\u0231\u0005 \u0000\u0000\u0231\u0236\u0003:\u001d\u0004"+
-		"\u0232\u0233\n\u0002\u0000\u0000\u0233\u0234\u0005!\u0000\u0000\u0234"+
-		"\u0236\u0003:\u001d\u0003\u0235\u0223\u0001\u0000\u0000\u0000\u0235\u0226"+
-		"\u0001\u0000\u0000\u0000\u0235\u0229\u0001\u0000\u0000\u0000\u0235\u022c"+
-		"\u0001\u0000\u0000\u0000\u0235\u022f\u0001\u0000\u0000\u0000\u0235\u0232"+
-		"\u0001\u0000\u0000\u0000\u0236\u0239\u0001\u0000\u0000\u0000\u0237\u0235"+
-		"\u0001\u0000\u0000\u0000\u0237\u0238\u0001\u0000\u0000\u0000\u0238;\u0001"+
-		"\u0000\u0000\u0000\u0239\u0237\u0001\u0000\u0000\u0000\u023a\u0243\u0005"+
-		"V\u0000\u0000\u023b\u0240\u0003@ \u0000\u023c\u023d\u0005K\u0000\u0000"+
-		"\u023d\u023f\u0003@ \u0000\u023e\u023c\u0001\u0000\u0000\u0000\u023f\u0242"+
-		"\u0001\u0000\u0000\u0000\u0240\u023e\u0001\u0000\u0000\u0000\u0240\u0241"+
-		"\u0001\u0000\u0000\u0000\u0241\u0244\u0001\u0000\u0000\u0000\u0242\u0240"+
-		"\u0001\u0000\u0000\u0000\u0243\u023b\u0001\u0000\u0000\u0000\u0243\u0244"+
-		"\u0001\u0000\u0000\u0000\u0244\u0245\u0001\u0000\u0000\u0000\u0245\u0246"+
-		"\u0005\\\u0000\u0000\u0246=\u0001\u0000\u0000\u0000\u0247\u024c\u0005"+
-		"r\u0000\u0000\u0248\u0249\u0005K\u0000\u0000\u0249\u024b\u0005r\u0000"+
-		"\u0000\u024a\u0248\u0001\u0000\u0000\u0000\u024b\u024e\u0001\u0000\u0000"+
-		"\u0000\u024c\u024a\u0001\u0000\u0000\u0000\u024c\u024d\u0001\u0000\u0000"+
-		"\u0000\u024d?\u0001\u0000\u0000\u0000\u024e\u024c\u0001\u0000\u0000\u0000"+
-		"\u024f\u0250\u0005r\u0000\u0000\u0250\u0251\u0005H\u0000\u0000\u0251\u0252"+
-		"\u0003t:\u0000\u0252A\u0001\u0000\u0000\u0000\u0253\u0254\u0006!\uffff"+
-		"\uffff\u0000\u0254\u0255\u0003D\"\u0000\u0255\u025e\u0001\u0000\u0000"+
-		"\u0000\u0256\u0257\n\u0002\u0000\u0000\u0257\u0258\u0005N\u0000\u0000"+
-		"\u0258\u025d\u0003D\"\u0000\u0259\u025a\n\u0001\u0000\u0000\u025a\u025b"+
-		"\u0005X\u0000\u0000\u025b\u025d\u0003D\"\u0000\u025c\u0256\u0001\u0000"+
-		"\u0000\u0000\u025c\u0259\u0001\u0000\u0000\u0000\u025d\u0260\u0001\u0000"+
-		"\u0000\u0000\u025e\u025c\u0001\u0000\u0000\u0000\u025e\u025f\u0001\u0000"+
-		"\u0000\u0000\u025fC\u0001\u0000\u0000\u0000\u0260\u025e\u0001\u0000\u0000"+
-		"\u0000\u0261\u0262\u0006\"\uffff\uffff\u0000\u0262\u0263\u0003F#\u0000"+
-		"\u0263\u0272\u0001\u0000\u0000\u0000\u0264\u0265\n\u0004\u0000\u0000\u0265"+
-		"\u0266\u0005T\u0000\u0000\u0266\u0271\u0003F#\u0000\u0267\u0268\n\u0003"+
-		"\u0000\u0000\u0268\u0269\u0005O\u0000\u0000\u0269\u0271\u0003F#\u0000"+
-		"\u026a\u026b\n\u0002\u0000\u0000\u026b\u026c\u0005U\u0000\u0000\u026c"+
-		"\u0271\u0003F#\u0000\u026d\u026e\n\u0001\u0000\u0000\u026e\u026f\u0005"+
-		"P\u0000\u0000\u026f\u0271\u0003F#\u0000\u0270\u0264\u0001\u0000\u0000"+
-		"\u0000\u0270\u0267\u0001\u0000\u0000\u0000\u0270\u026a\u0001\u0000\u0000"+
-		"\u0000\u0270\u026d\u0001\u0000\u0000\u0000\u0271\u0274\u0001\u0000\u0000"+
-		"\u0000\u0272\u0270\u0001\u0000\u0000\u0000\u0272\u0273\u0001\u0000\u0000"+
-		"\u0000\u0273E\u0001\u0000\u0000\u0000\u0274\u0272\u0001\u0000\u0000\u0000"+
-		"\u0275\u0276\u0006#\uffff\uffff\u0000\u0276\u0277\u0003H$\u0000\u0277"+
-		"\u0280\u0001\u0000\u0000\u0000\u0278\u0279\n\u0002\u0000\u0000\u0279\u027a"+
-		"\u0005Y\u0000\u0000\u027a\u027f\u0003H$\u0000\u027b\u027c\n\u0001\u0000"+
-		"\u0000\u027c\u027d\u0005W\u0000\u0000\u027d\u027f\u0003H$\u0000\u027e"+
-		"\u0278\u0001\u0000\u0000\u0000\u027e\u027b\u0001\u0000\u0000\u0000\u027f"+
-		"\u0282\u0001\u0000\u0000\u0000\u0280\u027e\u0001\u0000\u0000\u0000\u0280"+
-		"\u0281\u0001\u0000\u0000\u0000\u0281G\u0001\u0000\u0000\u0000\u0282\u0280"+
-		"\u0001\u0000\u0000\u0000\u0283\u0284\u0006$\uffff\uffff\u0000\u0284\u0285"+
-		"\u0003J%\u0000\u0285\u028e\u0001\u0000\u0000\u0000\u0286\u0287\n\u0002"+
-		"\u0000\u0000\u0287\u0288\u0005_\u0000\u0000\u0288\u028d\u0003J%\u0000"+
-		"\u0289\u028a\n\u0001\u0000\u0000\u028a\u028b\u0007\u0005\u0000\u0000\u028b"+
-		"\u028d\u0003J%\u0000\u028c\u0286\u0001\u0000\u0000\u0000\u028c\u0289\u0001"+
-		"\u0000\u0000\u0000\u028d\u0290\u0001\u0000\u0000\u0000\u028e\u028c\u0001"+
-		"\u0000\u0000\u0000\u028e\u028f\u0001\u0000\u0000\u0000\u028fI\u0001\u0000"+
-		"\u0000\u0000\u0290\u028e\u0001\u0000\u0000\u0000\u0291\u0292\u0005#\u0000"+
-		"\u0000\u0292\u0299\u0003J%\u0000\u0293\u0294\u0005W\u0000\u0000\u0294"+
-		"\u0299\u0003J%\u0000\u0295\u0296\u0005Y\u0000\u0000\u0296\u0299\u0003"+
-		"J%\u0000\u0297\u0299\u0003L&\u0000\u0298\u0291\u0001\u0000\u0000\u0000"+
-		"\u0298\u0293\u0001\u0000\u0000\u0000\u0298\u0295\u0001\u0000\u0000\u0000"+
-		"\u0298\u0297\u0001\u0000\u0000\u0000\u0299K\u0001\u0000\u0000\u0000\u029a"+
-		"\u02a2\u0003P(\u0000\u029b\u029d\u0003P(\u0000\u029c\u029e\u0003N\'\u0000"+
-		"\u029d\u029c\u0001\u0000\u0000\u0000\u029e\u029f\u0001\u0000\u0000\u0000"+
-		"\u029f\u029d\u0001\u0000\u0000\u0000\u029f\u02a0\u0001\u0000\u0000\u0000"+
-		"\u02a0\u02a2\u0001\u0000\u0000\u0000\u02a1\u029a\u0001\u0000\u0000\u0000"+
-		"\u02a1\u029b\u0001\u0000\u0000\u0000\u02a2M\u0001\u0000\u0000\u0000\u02a3"+
-		"\u02a4\u0007\u0006\u0000\u0000\u02a4\u02a5\u0003T*\u0000\u02a5O\u0001"+
-		"\u0000\u0000\u0000\u02a6\u02c3\u0003f3\u0000\u02a7\u02c3\u0003R)\u0000"+
-		"\u02a8\u02c3\u0003T*\u0000\u02a9\u02aa\u0005V\u0000\u0000\u02aa\u02ab"+
-		"\u00036\u001b\u0000\u02ab\u02ac\u0005\\\u0000\u0000\u02ac\u02c3\u0001"+
-		"\u0000\u0000\u0000\u02ad\u02ae\u0005r\u0000\u0000\u02ae\u02af\u0005L\u0000"+
-		"\u0000\u02af\u02b2\u0005$\u0000\u0000\u02b0\u02b1\u0005F\u0000\u0000\u02b1"+
-		"\u02b3\u0005\u0015\u0000\u0000\u02b2\u02b0\u0001\u0000\u0000\u0000\u02b2"+
-		"\u02b3\u0001\u0000\u0000\u0000\u02b3\u02b6\u0001\u0000\u0000\u0000\u02b4"+
-		"\u02b5\u0005V\u0000\u0000\u02b5\u02b7\u0005\\\u0000\u0000\u02b6\u02b4"+
-		"\u0001\u0000\u0000\u0000\u02b6\u02b7\u0001\u0000\u0000\u0000\u02b7\u02c3"+
-		"\u0001\u0000\u0000\u0000\u02b8\u02b9\u0005r\u0000\u0000\u02b9\u02ba\u0005"+
-		"L\u0000\u0000\u02ba\u02bb\u0005%\u0000\u0000\u02bb\u02bc\u0005V\u0000"+
-		"\u0000\u02bc\u02bd\u00036\u001b\u0000\u02bd\u02c0\u0005\\\u0000\u0000"+
-		"\u02be\u02bf\u0005F\u0000\u0000\u02bf\u02c1\u0005\u0015\u0000\u0000\u02c0"+
-		"\u02be\u0001\u0000\u0000\u0000\u02c0\u02c1\u0001\u0000\u0000\u0000\u02c1"+
-		"\u02c3\u0001\u0000\u0000\u0000\u02c2\u02a6\u0001\u0000\u0000\u0000\u02c2"+
+		"5\u0001\u0000\u0000\u0000\u0210\u0213\u0003:\u001d\u0000\u0211\u0213\u0003"+
+		"8\u001c\u0000\u0212\u0210\u0001\u0000\u0000\u0000\u0212\u0211\u0001\u0000"+
+		"\u0000\u0000\u02137\u0001\u0000\u0000\u0000\u0214\u0215\u0005\u001a\u0000"+
+		"\u0000\u0215\u0218\u0005r\u0000\u0000\u0216\u0217\u0005H\u0000\u0000\u0217"+
+		"\u0219\u0003t:\u0000\u0218\u0216\u0001\u0000\u0000\u0000\u0218\u0219\u0001"+
+		"\u0000\u0000\u0000\u0219\u021a\u0001\u0000\u0000\u0000\u021a\u021b\u0005"+
+		"N\u0000\u0000\u021b\u021c\u00036\u001b\u0000\u021c\u021d\u0005\u001b\u0000"+
+		"\u0000\u021d\u021e\u00036\u001b\u0000\u021e9\u0001\u0000\u0000\u0000\u021f"+
+		"\u0220\u0006\u001d\uffff\uffff\u0000\u0220\u0221\u0003B!\u0000\u0221\u0236"+
+		"\u0001\u0000\u0000\u0000\u0222\u0223\n\u0007\u0000\u0000\u0223\u0224\u0005"+
+		"\u001c\u0000\u0000\u0224\u0235\u0003:\u001d\b\u0225\u0226\n\u0006\u0000"+
+		"\u0000\u0226\u0227\u0005\u001d\u0000\u0000\u0227\u0235\u0003:\u001d\u0007"+
+		"\u0228\u0229\n\u0005\u0000\u0000\u0229\u022a\u0005\u001e\u0000\u0000\u022a"+
+		"\u0235\u0003:\u001d\u0006\u022b\u022c\n\u0004\u0000\u0000\u022c\u022d"+
+		"\u0005\u001f\u0000\u0000\u022d\u0235\u0003:\u001d\u0005\u022e\u022f\n"+
+		"\u0003\u0000\u0000\u022f\u0230\u0005 \u0000\u0000\u0230\u0235\u0003:\u001d"+
+		"\u0004\u0231\u0232\n\u0002\u0000\u0000\u0232\u0233\u0005!\u0000\u0000"+
+		"\u0233\u0235\u0003:\u001d\u0003\u0234\u0222\u0001\u0000\u0000\u0000\u0234"+
+		"\u0225\u0001\u0000\u0000\u0000\u0234\u0228\u0001\u0000\u0000\u0000\u0234"+
+		"\u022b\u0001\u0000\u0000\u0000\u0234\u022e\u0001\u0000\u0000\u0000\u0234"+
+		"\u0231\u0001\u0000\u0000\u0000\u0235\u0238\u0001\u0000\u0000\u0000\u0236"+
+		"\u0234\u0001\u0000\u0000\u0000\u0236\u0237\u0001\u0000\u0000\u0000\u0237"+
+		";\u0001\u0000\u0000\u0000\u0238\u0236\u0001\u0000\u0000\u0000\u0239\u0242"+
+		"\u0005V\u0000\u0000\u023a\u023f\u0003@ \u0000\u023b\u023c\u0005K\u0000"+
+		"\u0000\u023c\u023e\u0003@ \u0000\u023d\u023b\u0001\u0000\u0000\u0000\u023e"+
+		"\u0241\u0001\u0000\u0000\u0000\u023f\u023d\u0001\u0000\u0000\u0000\u023f"+
+		"\u0240\u0001\u0000\u0000\u0000\u0240\u0243\u0001\u0000\u0000\u0000\u0241"+
+		"\u023f\u0001\u0000\u0000\u0000\u0242\u023a\u0001\u0000\u0000\u0000\u0242"+
+		"\u0243\u0001\u0000\u0000\u0000\u0243\u0244\u0001\u0000\u0000\u0000\u0244"+
+		"\u0245\u0005\\\u0000\u0000\u0245=\u0001\u0000\u0000\u0000\u0246\u024b"+
+		"\u0005r\u0000\u0000\u0247\u0248\u0005K\u0000\u0000\u0248\u024a\u0005r"+
+		"\u0000\u0000\u0249\u0247\u0001\u0000\u0000\u0000\u024a\u024d\u0001\u0000"+
+		"\u0000\u0000\u024b\u0249\u0001\u0000\u0000\u0000\u024b\u024c\u0001\u0000"+
+		"\u0000\u0000\u024c?\u0001\u0000\u0000\u0000\u024d\u024b\u0001\u0000\u0000"+
+		"\u0000\u024e\u024f\u0005r\u0000\u0000\u024f\u0250\u0005H\u0000\u0000\u0250"+
+		"\u0251\u0003t:\u0000\u0251A\u0001\u0000\u0000\u0000\u0252\u0253\u0006"+
+		"!\uffff\uffff\u0000\u0253\u0254\u0003D\"\u0000\u0254\u025d\u0001\u0000"+
+		"\u0000\u0000\u0255\u0256\n\u0002\u0000\u0000\u0256\u0257\u0005N\u0000"+
+		"\u0000\u0257\u025c\u0003D\"\u0000\u0258\u0259\n\u0001\u0000\u0000\u0259"+
+		"\u025a\u0005X\u0000\u0000\u025a\u025c\u0003D\"\u0000\u025b\u0255\u0001"+
+		"\u0000\u0000\u0000\u025b\u0258\u0001\u0000\u0000\u0000\u025c\u025f\u0001"+
+		"\u0000\u0000\u0000\u025d\u025b\u0001\u0000\u0000\u0000\u025d\u025e\u0001"+
+		"\u0000\u0000\u0000\u025eC\u0001\u0000\u0000\u0000\u025f\u025d\u0001\u0000"+
+		"\u0000\u0000\u0260\u0261\u0006\"\uffff\uffff\u0000\u0261\u0262\u0003F"+
+		"#\u0000\u0262\u0271\u0001\u0000\u0000\u0000\u0263\u0264\n\u0004\u0000"+
+		"\u0000\u0264\u0265\u0005T\u0000\u0000\u0265\u0270\u0003F#\u0000\u0266"+
+		"\u0267\n\u0003\u0000\u0000\u0267\u0268\u0005O\u0000\u0000\u0268\u0270"+
+		"\u0003F#\u0000\u0269\u026a\n\u0002\u0000\u0000\u026a\u026b\u0005U\u0000"+
+		"\u0000\u026b\u0270\u0003F#\u0000\u026c\u026d\n\u0001\u0000\u0000\u026d"+
+		"\u026e\u0005P\u0000\u0000\u026e\u0270\u0003F#\u0000\u026f\u0263\u0001"+
+		"\u0000\u0000\u0000\u026f\u0266\u0001\u0000\u0000\u0000\u026f\u0269\u0001"+
+		"\u0000\u0000\u0000\u026f\u026c\u0001\u0000\u0000\u0000\u0270\u0273\u0001"+
+		"\u0000\u0000\u0000\u0271\u026f\u0001\u0000\u0000\u0000\u0271\u0272\u0001"+
+		"\u0000\u0000\u0000\u0272E\u0001\u0000\u0000\u0000\u0273\u0271\u0001\u0000"+
+		"\u0000\u0000\u0274\u0275\u0006#\uffff\uffff\u0000\u0275\u0276\u0003H$"+
+		"\u0000\u0276\u027f\u0001\u0000\u0000\u0000\u0277\u0278\n\u0002\u0000\u0000"+
+		"\u0278\u0279\u0005Y\u0000\u0000\u0279\u027e\u0003H$\u0000\u027a\u027b"+
+		"\n\u0001\u0000\u0000\u027b\u027c\u0005W\u0000\u0000\u027c\u027e\u0003"+
+		"H$\u0000\u027d\u0277\u0001\u0000\u0000\u0000\u027d\u027a\u0001\u0000\u0000"+
+		"\u0000\u027e\u0281\u0001\u0000\u0000\u0000\u027f\u027d\u0001\u0000\u0000"+
+		"\u0000\u027f\u0280\u0001\u0000\u0000\u0000\u0280G\u0001\u0000\u0000\u0000"+
+		"\u0281\u027f\u0001\u0000\u0000\u0000\u0282\u0283\u0006$\uffff\uffff\u0000"+
+		"\u0283\u0284\u0003J%\u0000\u0284\u028d\u0001\u0000\u0000\u0000\u0285\u0286"+
+		"\n\u0002\u0000\u0000\u0286\u0287\u0005_\u0000\u0000\u0287\u028c\u0003"+
+		"J%\u0000\u0288\u0289\n\u0001\u0000\u0000\u0289\u028a\u0007\u0005\u0000"+
+		"\u0000\u028a\u028c\u0003J%\u0000\u028b\u0285\u0001\u0000\u0000\u0000\u028b"+
+		"\u0288\u0001\u0000\u0000\u0000\u028c\u028f\u0001\u0000\u0000\u0000\u028d"+
+		"\u028b\u0001\u0000\u0000\u0000\u028d\u028e\u0001\u0000\u0000\u0000\u028e"+
+		"I\u0001\u0000\u0000\u0000\u028f\u028d\u0001\u0000\u0000\u0000\u0290\u0291"+
+		"\u0005#\u0000\u0000\u0291\u0298\u0003J%\u0000\u0292\u0293\u0005W\u0000"+
+		"\u0000\u0293\u0298\u0003J%\u0000\u0294\u0295\u0005Y\u0000\u0000\u0295"+
+		"\u0298\u0003J%\u0000\u0296\u0298\u0003L&\u0000\u0297\u0290\u0001\u0000"+
+		"\u0000\u0000\u0297\u0292\u0001\u0000\u0000\u0000\u0297\u0294\u0001\u0000"+
+		"\u0000\u0000\u0297\u0296\u0001\u0000\u0000\u0000\u0298K\u0001\u0000\u0000"+
+		"\u0000\u0299\u02a1\u0003P(\u0000\u029a\u029c\u0003P(\u0000\u029b\u029d"+
+		"\u0003N\'\u0000\u029c\u029b\u0001\u0000\u0000\u0000\u029d\u029e\u0001"+
+		"\u0000\u0000\u0000\u029e\u029c\u0001\u0000\u0000\u0000\u029e\u029f\u0001"+
+		"\u0000\u0000\u0000\u029f\u02a1\u0001\u0000\u0000\u0000\u02a0\u0299\u0001"+
+		"\u0000\u0000\u0000\u02a0\u029a\u0001\u0000\u0000\u0000\u02a1M\u0001\u0000"+
+		"\u0000\u0000\u02a2\u02a3\u0007\u0006\u0000\u0000\u02a3\u02a4\u0003T*\u0000"+
+		"\u02a4O\u0001\u0000\u0000\u0000\u02a5\u02c3\u0003f3\u0000\u02a6\u02c3"+
+		"\u0003R)\u0000\u02a7\u02c3\u0003T*\u0000\u02a8\u02a9\u0005V\u0000\u0000"+
+		"\u02a9\u02aa\u00036\u001b\u0000\u02aa\u02ab\u0005\\\u0000\u0000\u02ab"+
+		"\u02c3\u0001\u0000\u0000\u0000\u02ac\u02c3\u0003d2\u0000\u02ad\u02ae\u0005"+
+		"r\u0000\u0000\u02ae\u02af\u0005L\u0000\u0000\u02af\u02b2\u0005$\u0000"+
+		"\u0000\u02b0\u02b1\u0005F\u0000\u0000\u02b1\u02b3\u0005\u0015\u0000\u0000"+
+		"\u02b2\u02b0\u0001\u0000\u0000\u0000\u02b2\u02b3\u0001\u0000\u0000\u0000"+
+		"\u02b3\u02b6\u0001\u0000\u0000\u0000\u02b4\u02b5\u0005V\u0000\u0000\u02b5"+
+		"\u02b7\u0005\\\u0000\u0000\u02b6\u02b4\u0001\u0000\u0000\u0000\u02b6\u02b7"+
+		"\u0001\u0000\u0000\u0000\u02b7\u02c3\u0001\u0000\u0000\u0000\u02b8\u02b9"+
+		"\u0005r\u0000\u0000\u02b9\u02ba\u0005L\u0000\u0000\u02ba\u02bb\u0005%"+
+		"\u0000\u0000\u02bb\u02bc\u0005V\u0000\u0000\u02bc\u02bd\u00036\u001b\u0000"+
+		"\u02bd\u02c0\u0005\\\u0000\u0000\u02be\u02bf\u0005F\u0000\u0000\u02bf"+
+		"\u02c1\u0005\u0015\u0000\u0000\u02c0\u02be\u0001\u0000\u0000\u0000\u02c0"+
+		"\u02c1\u0001\u0000\u0000\u0000\u02c1\u02c3\u0001\u0000\u0000\u0000\u02c2"+
+		"\u02a5\u0001\u0000\u0000\u0000\u02c2\u02a6\u0001\u0000\u0000\u0000\u02c2"+
 		"\u02a7\u0001\u0000\u0000\u0000\u02c2\u02a8\u0001\u0000\u0000\u0000\u02c2"+
-		"\u02a9\u0001\u0000\u0000\u0000\u02c2\u02ad\u0001\u0000\u0000\u0000\u02c2"+
+		"\u02ac\u0001\u0000\u0000\u0000\u02c2\u02ad\u0001\u0000\u0000\u0000\u02c2"+
 		"\u02b8\u0001\u0000\u0000\u0000\u02c3Q\u0001\u0000\u0000\u0000\u02c4\u02c5"+
 		"\u0005F\u0000\u0000\u02c5\u02c6\u0005r\u0000\u0000\u02c6S\u0001\u0000"+
 		"\u0000\u0000\u02c7\u02cd\u0003V+\u0000\u02c8\u02cd\u0003X,\u0000\u02c9"+
@@ -8145,8 +7091,8 @@ public class USEParser extends Parser {
 		"\u0111\u0114\u0124\u0127\u012c\u0131\u0135\u013e\u0149\u0154\u0158\u015f"+
 		"\u0162\u0165\u0170\u0176\u0178\u017c\u018c\u0192\u0198\u01a0\u01a4\u01aa"+
 		"\u01af\u01b6\u01ba\u01c3\u01c8\u01cc\u01d2\u01d6\u01de\u01e4\u01eb\u01f1"+
-		"\u01fb\u0200\u0208\u020b\u0213\u0219\u0235\u0237\u0240\u0243\u024c\u025c"+
-		"\u025e\u0270\u0272\u027e\u0280\u028c\u028e\u0298\u029f\u02a1\u02b2\u02b6"+
+		"\u01fb\u0200\u0208\u020b\u0212\u0218\u0234\u0236\u023f\u0242\u024b\u025b"+
+		"\u025d\u026f\u0271\u027d\u027f\u028b\u028d\u0297\u029e\u02a0\u02b2\u02b6"+
 		"\u02c0\u02c2\u02cc\u02d3\u02dd\u02e7\u02f1\u02fb\u0305\u030f\u0314\u0326"+
 		"\u0330\u0335\u0337\u033b\u0343\u0346\u0349\u0369\u036e\u0374\u0378\u0398"+
 		"\u03a1\u03a4\u03ae\u03b1\u03bb\u03be\u03c8\u03cb\u03ce\u03d3\u03de\u03ec"+

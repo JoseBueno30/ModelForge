@@ -16,7 +16,7 @@ transfer(variable : Integer) : Integer --#
         self.balance := self.balance + 1;
     end
 pre BalancePositive: self.balance > 0
-post ResultGreaterThanStart: result > self.balance
+post ResultGreaterThanStart: self.balance.result > self.balance
 constraints
 inv Positive_Balance:
 	self.balance > 0
