@@ -117,7 +117,20 @@ void MetaModel::addAssociation(std::shared_ptr<MetaAssociation> modelAssociation
         throw std::runtime_error("Model already contains element named: " + modelAssociation->getName());
     }
 
+    for(const auto &associationEndPair : modelAssociation->getAssociationEnds()){
+        for(const auto &otherAssociationEndPair : modelAssociation->getAssociationEnds()){
+
+            if (associationEndPair != otherAssociationEndPair){
+                try{
+                    otherAssociationEndPair.second->getClassSharedPtr()->addAssociationEnd(associationEndPair.second);
+                    associationEndPair.second->getClassSharedPtr()->addAssociationEnd(otherAssociationEndPair.second);
+                }catch(std::invalid_argument e){}
+            }
+        }
+    }
+
     associations[modelAssociation->getName()] = std::move(modelAssociation);
+
 }
 
 void MetaModel::removeAssociation(const std::string& key){
