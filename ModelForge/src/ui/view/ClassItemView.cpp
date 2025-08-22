@@ -138,7 +138,9 @@ std::vector<AssociationItemView *> ClassItemView::getAssociations(){
 }
 
 void ClassItemView::addAssociationClass(AssociationClassItemView* associationClass){
-    this->associationClasses.push_back(associationClass);
+    if (std::find(this->associationClasses.begin(), this->associationClasses.end(), associationClass) == this->associationClasses.end()) {
+        this->associationClasses.push_back(associationClass);
+    }
 }
 void ClassItemView::deleteAssociationClass(AssociationClassItemView* associationClass){
     this->associationClasses.erase(std::remove(this->associationClasses.begin(), this->associationClasses.end(), associationClass), this->associationClasses.end());

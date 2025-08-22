@@ -36,6 +36,7 @@ public Q_SLOTS:
     void openModelFile();
     void openNewClassDialog();
     void openNewAssociationDialog();
+    void openNewAssociationClassDialog();
     void openEditAssociationDialog(AssociationItemView* association);
     void openNewEnumDialog();
 

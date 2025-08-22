@@ -22,6 +22,8 @@ public:
     void addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd) override;
     void removeAssociationEnd(const std::string& key) override;
 
+    void addIntermediateAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd);
+
     std::any accept(ModelToText::VisitorInterface& visitor) const override;
 };
 

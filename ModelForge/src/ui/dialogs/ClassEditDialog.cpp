@@ -230,8 +230,14 @@ void ClassEditDialog::saveChanges() {
         if(model == nullptr){
             MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
         }else{
-            classView = new ClassItemView(this->editedClass);
-            MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
+            if(auto associationClassModelCast = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->metaClass)){
+                *this->metaClass = *editedClass;
+                associationClassModelCast->setName(editedClass->getName());
+            }else{
+
+                classView = new ClassItemView(this->editedClass);
+                MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
+            }
         }
 
         //qDebug() << "Nombre: " << this->metaClass->getName();

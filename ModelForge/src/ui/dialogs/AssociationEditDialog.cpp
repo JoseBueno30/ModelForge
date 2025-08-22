@@ -5,6 +5,7 @@
 
 #include <QPushButton>
 
+#include <ui/view/AssociationClassItemView.h>
 #include <ui/view/AssociationItemView.h>
 
 #include <utils/Commands.h>
@@ -217,8 +218,14 @@ void AssociationEditDialog::saveChanges(){
                 qDebug()<< "d";
                 AssociationItemView * newAssociation = new AssociationItemView(associationModel, class1, class2);
                 qDebug()<< "e";
-                AddMetaAssociationCommand* addCommand = new AddMetaAssociationCommand(associationModel, model, newAssociation, scene);
-                MainWindow::undoStack->push(addCommand);
+                if(auto associationClassModelCast = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->associationModel)){
+                    AssociationClassItemView* associationClassView = new AssociationClassItemView(associationClassModelCast, class1, class2);
+                    AddMetaAssociationClassCommand* addCommand = new AddMetaAssociationClassCommand(associationClassModelCast, model, associationClassView, scene);
+                    MainWindow::undoStack->push(addCommand);
+                }else{
+                    AddMetaAssociationCommand* addCommand = new AddMetaAssociationCommand(associationModel, model, newAssociation, scene);
+                    MainWindow::undoStack->push(addCommand);
+                }
             }
         }
         else{ //Updating an existing association
