@@ -75,6 +75,7 @@ void MetaModel::removeClass(const std::string& key){
         auto association = assocEndPair.second->getAssociationSharedPtr();
 
         std::cout << "REMOVING ASSOCEND: " << assocEndPair.first << std::endl;
+        std::cout << "ASOCIACION NULA ? " << !association << std::endl;
 
         if(std::dynamic_pointer_cast<MetaAssociationClass>(association)){
             std::cout << "REMOVING ASSOC CLASS FROM CLASS: " << association->getName() << std::endl;
@@ -117,7 +118,20 @@ void MetaModel::addAssociation(std::shared_ptr<MetaAssociation> modelAssociation
         throw std::runtime_error("Model already contains element named: " + modelAssociation->getName());
     }
 
+    for(const auto &associationEndPair : modelAssociation->getAssociationEnds()){
+        for(const auto &otherAssociationEndPair : modelAssociation->getAssociationEnds()){
+
+            if (associationEndPair != otherAssociationEndPair){
+                try{
+                    otherAssociationEndPair.second->getClassSharedPtr()->addAssociationEnd(associationEndPair.second);
+                    associationEndPair.second->getClassSharedPtr()->addAssociationEnd(otherAssociationEndPair.second);
+                }catch(std::invalid_argument e){}
+            }
+        }
+    }
+
     associations[modelAssociation->getName()] = std::move(modelAssociation);
+
 }
 
 void MetaModel::removeAssociation(const std::string& key){
@@ -150,6 +164,15 @@ void MetaModel::addAssociationClass(std::shared_ptr<MetaAssociationClass> modelA
 
     if (modelContainsKey(modelAssociationClass->getName())) {
         throw std::runtime_error("Model already contains element named: " + modelAssociationClass->getName());
+    }
+
+    for(auto &associationEndPair : modelAssociationClass->MetaAssociation::getAssociationEnds()){
+        try{
+            std::cout << "ANYADIENDO INTERMEDIA CON " << associationEndPair.second->getClassSharedPtr()->getName() << std::endl;//"DE LA ASOCIACION " << associationEndPair.second->getAssociationSharedPtr()->getName() << std::endl;
+            modelAssociationClass->addIntermediateAssociationEnd(associationEndPair.second);
+        }catch(std::invalid_argument e){
+            std::cerr << "FALLA ANYADIR INTERMEDIAS con "<<associationEndPair.second->getClassSharedPtr()->getName() << std::endl;
+        }
     }
 
     associationClasses[modelAssociationClass->getName()] = std::move(modelAssociationClass);

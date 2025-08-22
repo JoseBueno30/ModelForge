@@ -45,6 +45,8 @@ private:
     int attributeCounter;
     int operationCounter;
 
+    void setupUiInfo();
+
     void loadAttributes();
     void loadOperations();
 

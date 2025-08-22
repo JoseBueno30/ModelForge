@@ -36,6 +36,7 @@ private:
     AssociationItemView * associationItemView;
     std::shared_ptr<MetaModel::MetaModel> model;
 
+    void setupUiInfo();
     void setupTypesComboBox();
 
     void loadVisibilityAssociationEnd1(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd);

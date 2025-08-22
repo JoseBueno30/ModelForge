@@ -47,8 +47,15 @@ void MetaAssociationClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd>
         std::cout << "ASSOC END CLASS ENDS: " << pair.first << std::endl;
     }
 
+    addIntermediateAssociationEnd(associationEnd);
+
+    this->MetaAssociation::associationEnds[associationEnd->getRole()] = std::move(associationEnd);
+}
+
+void MetaAssociationClass::addIntermediateAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd){
     std::string intermediateRole = this->getName();
     std::transform(intermediateRole.begin(), intermediateRole.end(), intermediateRole.begin(), ::tolower);
+    std::cout<< "ASSOCIATION SHARED PTR OTHER ASSOC END NULL: " << !associationEnd->getAssociationSharedPtr()<<std::endl;
     std::shared_ptr<MetaAssociationEnd> intermediateAssociationEnd = std::make_shared<MetaAssociationEnd>(
         std::dynamic_pointer_cast<MetaAssociationClass>(associationEnd->getAssociationSharedPtr()),
         associationEnd->getAssociationSharedPtr(),
@@ -71,6 +78,8 @@ void MetaAssociationClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd>
             std::cout << "OTHER ASSOC END CLASS ENDS: " << pair.first << std::endl;
         }
 
+        std::cout<< "ASSOCIATION SHARED PTR OTHER ASSOC END NULL: " << !otherAssociationEnd->getAssociationSharedPtr()<<std::endl;
+
         std::shared_ptr<MetaAssociationEnd> otherIntermediateAssociationEnd = std::make_shared<MetaAssociationEnd>(
             std::dynamic_pointer_cast<MetaAssociationClass>(otherAssociationEnd->getAssociationSharedPtr()),
             otherAssociationEnd->getAssociationSharedPtr(),
@@ -89,9 +98,8 @@ void MetaAssociationClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd>
             associationEnd->getClassSharedPtr()->addAssociationEnd(otherIntermediateAssociationEnd);
         }
     }
-
-    this->MetaAssociation::associationEnds[associationEnd->getRole()] = std::move(associationEnd);
 }
+
 void MetaAssociationClass::removeAssociationEnd(const std::string& key){
 
     std::cout << "<AssocClass> REMOVING ASSOC END: " << key << " FROM ASSOC CLASS: " << this->getName() << std::endl;

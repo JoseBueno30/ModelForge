@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->addClassButton, &QPushButton::clicked, this, &MainWindow::openNewClassDialog);
     connect(ui->addAssociationButton, &QPushButton::clicked, this, &MainWindow::openNewAssociationDialog);
     connect(ui->addEnumButton, &QPushButton::clicked, this, &MainWindow::openNewEnumDialog);
+    connect(ui->addAssociationClassButton, &QPushButton::clicked, this, &MainWindow::openNewAssociationClassDialog);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveModel);
     connect(ui->actionNew_Model, &QAction::triggered, this, &MainWindow::newModel);
     connect(ui->actionClose_Model, &QAction::triggered, this, &MainWindow::closeModel);
@@ -244,6 +245,29 @@ void MainWindow::openNewAssociationDialog(){
         std::shared_ptr<MetaModel::MetaAssociation> newAssociation = std::make_shared<MetaModel::MetaAssociation>(defaultName, 0);
         AssociationEditDialog *associationEditDialog = new AssociationEditDialog(newAssociation, this->scene, nullptr, this->model);
         associationEditDialog->exec();
+    }
+}
+
+void MainWindow::openNewAssociationClassDialog(){
+    if(this->model != nullptr){
+        std::string defaultName = "NewAssociationClass";
+        int defaultNameCont = 0;
+        for(auto metaAssociationClassPair : this->model->getAssociationClasses()){
+            if(metaAssociationClassPair.first == defaultName){
+                defaultNameCont++;
+                defaultName = "NewAssociationClass" + std::to_string(defaultNameCont);
+            }
+        }
+
+        std::shared_ptr<MetaModel::MetaAssociationClass> newAssociationClass = std::make_shared<MetaModel::MetaAssociationClass>(defaultName, false, 0);
+        ClassEditDialog* classInfoEdit = new ClassEditDialog(newAssociationClass, scene, nullptr, this->model, this);
+        int returnCode = classInfoEdit->exec();
+
+        qDebug() << "Atributos de la nueva  clase asociacion: " << newAssociationClass->getAttributes().size();
+        if(returnCode){
+            AssociationEditDialog* associationInfoEdit = new AssociationEditDialog(newAssociationClass, scene, nullptr, this->model);
+            associationInfoEdit->exec();
+        }
     }
 }
 

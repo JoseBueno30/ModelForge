@@ -15,6 +15,24 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     ui(new Ui::ClassEditDialog), scene(scene)
 {
     ui->setupUi(this);
+    setupUiInfo();
+
+    connect(ui->addAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::addAttribute);
+    connect(ui->removeAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::removeAttribute);
+    connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::attributeCellDoubleClicked);
+
+    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ClassEditDialog::cancelChanges);
+
+    connect(ui->addOperationButton, &QPushButton::clicked, this, &ClassEditDialog::addOperation);
+    connect(ui->removeOperationButton, &QPushButton::clicked, this, &ClassEditDialog::removeOperation);
+    connect(ui->operationTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::operationCellDoubleClicked);
+
+}
+
+void ClassEditDialog::setupUiInfo(){
     ui->classNameEdit->setText(QString::fromStdString(metaClass->getName()));
     ui->attributeTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->attributeTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -35,20 +53,6 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
 
     loadAttributes();
     loadOperations();
-
-    connect(ui->addAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::addAttribute);
-    connect(ui->removeAttributeButton, &QPushButton::clicked, this, &ClassEditDialog::removeAttribute);
-    connect(ui->attributeTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::attributeCellDoubleClicked);
-
-    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ClassEditDialog::saveChanges);
-    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
-    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &ClassEditDialog::cancelChanges);
-
-    connect(ui->addOperationButton, &QPushButton::clicked, this, &ClassEditDialog::addOperation);
-    connect(ui->removeOperationButton, &QPushButton::clicked, this, &ClassEditDialog::removeOperation);
-    connect(ui->operationTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::operationCellDoubleClicked);
-
 }
 
 ClassEditDialog::~ClassEditDialog()
@@ -226,8 +230,14 @@ void ClassEditDialog::saveChanges() {
         if(model == nullptr){
             MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
         }else{
-            classView = new ClassItemView(this->editedClass);
-            MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
+            if(auto associationClassModelCast = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->metaClass)){
+                *this->metaClass = *editedClass;
+                associationClassModelCast->setName(editedClass->getName());
+            }else{
+
+                classView = new ClassItemView(this->editedClass);
+                MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
+            }
         }
 
         //qDebug() << "Nombre: " << this->metaClass->getName();
