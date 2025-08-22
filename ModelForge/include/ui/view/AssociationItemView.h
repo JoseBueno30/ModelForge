@@ -36,6 +36,8 @@ public:
     void setClass2(ClassItemView* newClass);
 
     shared_ptr<MetaModel::MetaAssociation> getAssociationModel();
+    void setAssociationModel(shared_ptr<MetaModel::MetaAssociation> model);
+
     QPointF getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last);
 
     void applyOffsetToSharedAssociations();

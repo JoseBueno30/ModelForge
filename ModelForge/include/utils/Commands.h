@@ -132,6 +132,8 @@ private:
     ModelGraphicsScene* scene;
     std::shared_ptr<MetaModel::MetaModel> model;
 
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociation>> associationsRemoved;
+
     //In case of removing association class
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
 };

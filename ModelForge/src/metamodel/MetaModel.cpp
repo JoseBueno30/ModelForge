@@ -127,7 +127,7 @@ void MetaModel::removeAssociation(const std::string& key){
     for(const auto &associationEndPair : association->getAssociationEnds()){
         association->removeAssociationEnd(associationEndPair.first);
     }
-
+    std::cout<<"SALE BUCLE" << std::endl;
     associations.erase(key);
 }
 

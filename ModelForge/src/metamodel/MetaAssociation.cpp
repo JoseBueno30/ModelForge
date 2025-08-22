@@ -1,5 +1,7 @@
+#include <iostream>
 #include <metamodel/MetaAssociation.h>
 
+#include <ostream>
 #include <stdexcept>
 #include <metamodel/MetaClass.h>
 #include <modelToText/VisitorInterface.h>
@@ -81,13 +83,18 @@ void MetaAssociation::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> asso
     associationEnds[associationEnd->getRole()] = std::move(associationEnd);
 }
 void MetaAssociation::removeAssociationEnd(const std::string& key){
+    std::cout << "REMOVING ASSOCIATION END: " << key << std::endl;
+    auto associationEnd = this->getAssociationEnd(key);
+
+    associationEnd->getClassSharedPtr()->removeAssociationEnd(associationEnd->getRole());
+
     associationEnds.erase(key);
 
-    for(const auto &associationEndPair : this->getAssociationEnds()){
+    /*for(const auto &associationEndPair : this->getAssociationEnds()){
         auto otherAssociationEnd = associationEndPair.second;
 
         otherAssociationEnd->getClassSharedPtr()->removeAssociationEnd(key);
-    }
+    }*/
 }
 
 std::vector<std::string> MetaAssociation::getAssociationEndsClassesNames(){
