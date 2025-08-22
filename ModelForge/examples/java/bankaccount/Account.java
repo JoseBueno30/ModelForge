@@ -17,8 +17,8 @@ public class Account extends SuperAccount{
 	// true
 	// true and (true or true)
 
-	public Account(Integer attribute1, Integer balance, Person test, AccountType type, Bank bank, Person owner) {
-		super(attribute1);
+	public Account(Integer balance, Person test, AccountType type, Bank bank, Person owner) {
+		super();
 		this.setBalance(balance);
 		this.setTest(test);
 		this.setType(type);
@@ -93,6 +93,6 @@ public class Account extends SuperAccount{
         self.balance := self.balance + 1;
     end
 		*/
-		// Post Condition <ResultGreaterThanStart>: result > self.balance
+		// Post Condition <ResultGreaterThanStart>: self.balance.result > self.balance
 	}
 }

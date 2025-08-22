@@ -77,6 +77,7 @@ void MetaAssociation::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> asso
 
         if (associationEnd != otherAssociationEnd) {
             otherAssociationEnd->getClassSharedPtr()->addAssociationEnd(associationEnd);
+            associationEnd->getClassSharedPtr()->addAssociationEnd(otherAssociationEnd);
         }
     }
 
@@ -86,15 +87,15 @@ void MetaAssociation::removeAssociationEnd(const std::string& key){
     std::cout << "REMOVING ASSOCIATION END: " << key << std::endl;
     auto associationEnd = this->getAssociationEnd(key);
 
-    associationEnd->getClassSharedPtr()->removeAssociationEnd(associationEnd->getRole());
+    // associationEnd->getClassSharedPtr()->removeAssociationEnd(associationEnd->getRole());
 
     associationEnds.erase(key);
 
-    /*for(const auto &associationEndPair : this->getAssociationEnds()){
+    for(const auto &associationEndPair : this->getAssociationEnds()){
         auto otherAssociationEnd = associationEndPair.second;
-
         otherAssociationEnd->getClassSharedPtr()->removeAssociationEnd(key);
-    }*/
+        associationEnd->getClassSharedPtr()->removeAssociationEnd(otherAssociationEnd->getRole());
+    }
 }
 
 std::vector<std::string> MetaAssociation::getAssociationEndsClassesNames(){
