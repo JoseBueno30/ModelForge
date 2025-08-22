@@ -2,7 +2,6 @@
 #include <OCL/PrimaryExpr.h>
 #include <algorithm>
 #include <filesystem>
-#include <iostream>
 #include <modelToText/VisitorJava.h>
 
 

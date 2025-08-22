@@ -8,6 +8,8 @@ class PropertyCallExpr : public Expr{
 protected:
     bool arrow;
     std::shared_ptr<Expr> source;
+
+    std::string buildExprString() const override;
 public:
     PropertyCallExpr(const std::string& expression, const bool isComplex, const std::shared_ptr<MetaType>& type, const bool arrow, const std::shared_ptr<Expr>& source);
 

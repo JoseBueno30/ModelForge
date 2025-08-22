@@ -6,17 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f82eed18-37ac-494f-8bfb-a7b4085b77ce" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../../antlr4/CustomUSEVisitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../antlr4/CustomUSEVisitor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../BankAccount.use" beforeDir="false" afterPath="$PROJECT_DIR$/../../BankAccount.use" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../BankAccount_default.clt" beforeDir="false" afterPath="$PROJECT_DIR$/../../BankAccount_default.clt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bank.java" beforeDir="false" afterPath="$PROJECT_DIR$/Bank.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SuperAccount.java" beforeDir="false" afterPath="$PROJECT_DIR$/SuperAccount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../src/OCL/LogicalExpr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/OCL/LogicalExpr.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../src/OCL/UnaryExpr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/OCL/UnaryExpr.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../src/metamodel/MetaAssociation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/metamodel/MetaAssociation.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../src/metamodel/MetaClass.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/metamodel/MetaClass.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../src/metamodel/MetaConstraint.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/metamodel/MetaConstraint.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../src/modelToText/VisitorJava.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/modelToText/VisitorJava.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -60,7 +60,7 @@ std::any VisitorUSE::visit(const MetaModel::MetaAttribute& metaAttribute){
     if (metaAttribute.getInitExpr()) {
         metaAttributeString += " init = " + metaAttribute.getInitExpr()->toString();
     } else if (metaAttribute.getDeriveExpr()) {
-        metaAttributeString += " derive = " + metaAttribute.getDeriveExpr()->toString();
+        metaAttributeString += " derived = " + metaAttribute.getDeriveExpr()->toString();
     }
 
     if(metaAttributeString.back() != '\n'){
