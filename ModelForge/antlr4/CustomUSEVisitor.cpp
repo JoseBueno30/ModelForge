@@ -1346,7 +1346,7 @@ public:
         if(this->currentExprSource){
             //if currentExprSource si query, (at least a select), use its source
             std::cout << "CURRENT SOURCE EXPR: " << this->currentExprSource->getExpression() << std::endl;
-            std::cout << "CURRENT SOURCE TYPE: " << this->currentExprSource->getType()->toString() << std::endl;
+            // std::cout << "CURRENT SOURCE TYPE: " << this->currentExprSource->getType()->toString() << std::endl;
             // std::cout << "CURRENT SOURCE STR: " << this->currentExprSource->toString() << std::endl;
         } else {
             std::cout << "NO CURRENT EXPR" << std::endl;
@@ -1420,7 +1420,7 @@ public:
 
     std::any visitOperationExpressionWithSource(USEParser::OperationExpressionContext *ctx) {
         std::cout << "VISITING: " <<ctx->getText() << " WITH SOURCE: " << this->currentExprSource->getExpression() << std::endl;
-        std::cout << "CURRENT SOURCE TYPE: " << this->currentExprSource->getType()->toString() << std::endl;
+        // std::cout << "CURRENT SOURCE TYPE: " << this->currentExprSource->getType()->toString() << std::endl;
         std::cout << "CURRENT CLASS CONTEXT: " << this->currentClassContext->getName() << std::endl;
         if(this->currentExprSource->getExpression() == "self"){
             std::cout << "TYPE: " << this->currentExprSource->getType()->toString() << std::endl;

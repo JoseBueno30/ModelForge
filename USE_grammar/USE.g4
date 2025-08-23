@@ -807,7 +807,8 @@ REAL:
     INT ('.' INT ([eE] [+-]? INT)? | [eE] [+-]? INT)
     ;
 
-SOIL_OPERATION: 'begin' .*? 'end';
+SOIL_OPERATION
+  : 'begin' .*? 'end' ( ~';' );
 
 // String literals
 STRING:	
