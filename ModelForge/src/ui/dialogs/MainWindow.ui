@@ -45,7 +45,34 @@
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="10">
       <item>
-       <layout class="QVBoxLayout" name="rightVerticalLayout" stretch="10,0">
+       <layout class="QVBoxLayout" name="rightVerticalLayout" stretch="0,10,0">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,3,12">
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Mode name:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit"/>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
         <item>
          <widget class="ModelGraphicsView" name="modelGraphicsView">
           <property name="autoFillBackground">

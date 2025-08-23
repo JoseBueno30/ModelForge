@@ -343,6 +343,7 @@ void MainWindow::openModelFile(){
 
 void MainWindow::saveModel(){
     try{
+        this->model->setName(ui->modelNameLineEdit->text().toStdString());
         if(path == nullptr){
             path = QFileDialog::getSaveFileName(
                 this,                         // QWidget padre
