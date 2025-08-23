@@ -1,0 +1,8 @@
+model NewModel
+
+class NewClass1
+end
+
+class NewClass < NewClass1
+end
+

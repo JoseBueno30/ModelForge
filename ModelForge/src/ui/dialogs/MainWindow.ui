@@ -3,7 +3,7 @@
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
+   <enum>Qt::WindowModality::WindowModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -40,7 +40,7 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="sizeConstraint">
-     <enum>QLayout::SetMinimumSize</enum>
+     <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
     </property>
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="10">
@@ -72,7 +72,7 @@
                <string>ToolBox</string>
               </property>
               <property name="alignment">
-               <set>Qt::AlignCenter</set>
+               <set>Qt::AlignmentFlag::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -105,9 +105,9 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_5">
+             <widget class="QPushButton" name="addGeneralizationButton">
               <property name="text">
-               <string>?</string>
+               <string>Add Generalization</string>
               </property>
              </widget>
             </item>

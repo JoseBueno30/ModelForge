@@ -232,6 +232,29 @@ void AddMetaAssociationClassCommand::redo(){
     scene->update();
 }
 
+AddMetaGeneralizationCommand::AddMetaGeneralizationCommand(std::shared_ptr<MetaModel::MetaClass> childClass, std::shared_ptr<MetaModel::MetaClass> superClass, ModelGraphicsScene* scene)
+    : childClass(childClass), superClass(superClass), scene(scene){
+    auto childClassItemView = dynamic_cast<ClassItemView*>(scene->getModelItemView(childClass->getName()));
+    auto superClassItemView = dynamic_cast<ClassItemView*>(scene->getModelItemView(superClass->getName()));
+
+    generalizationItemView = new GeneralizationItemView(superClassItemView, childClassItemView);
+}
+
+void AddMetaGeneralizationCommand::undo(){
+    childClass->removeSuperClass(superClass->getName());
+    superClass->removeChildrenClass(childClass->getName());
+
+    scene->removeItem(generalizationItemView);
+    scene->update();
+}
+void AddMetaGeneralizationCommand::redo(){
+    childClass->addSuperClass(superClass);
+    superClass->addChildrenClass(childClass);
+
+    scene->addItem(generalizationItemView);
+    scene->update();
+}
+
 
 RemoveMetaClassCommand::RemoveMetaClassCommand(ClassItemView* classItemView, ModelGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model)
     : classItemView(classItemView), scene(scene), model(model){}

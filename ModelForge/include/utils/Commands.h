@@ -133,6 +133,19 @@ private:
     ModelGraphicsScene* scene;
 };
 
+class AddMetaGeneralizationCommand : public QUndoCommand{
+public:
+    AddMetaGeneralizationCommand(std::shared_ptr<MetaModel::MetaClass> childClass, std::shared_ptr<MetaModel::MetaClass> superClass, ModelGraphicsScene* scene);
+
+    void undo() override;
+    void redo() override;
+private:
+    std::shared_ptr<MetaModel::MetaClass> childClass;
+    std::shared_ptr<MetaModel::MetaClass> superClass;
+    GeneralizationItemView* generalizationItemView;
+    ModelGraphicsScene* scene;
+};
+
 class RemoveMetaClassCommand : public QUndoCommand{
 public:
     RemoveMetaClassCommand(ClassItemView* classItemView, ModelGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model);

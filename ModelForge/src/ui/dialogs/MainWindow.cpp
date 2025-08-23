@@ -1,6 +1,7 @@
 #include <ui/dialogs/MainWindow.h>
 #include "ui/dialogs/EnumEditDialog.h"
 #include "ui_MainWindow.h"
+#include "utils/MessageBox.h"
 
 
 #include <ui/view/AssociationClassItemView.h>
@@ -17,6 +18,7 @@
 #include <ui/components/ThemeManager.h>
 #include <QStyleFactory>
 #include <utils/Commands.h>
+#include <ui/dialogs/AddGeneraliaztionDialog.h>
 #include <ui/dialogs/AssociationEditDialog.h>
 #include <ui/dialogs/ClassEditDialog.h>
 #include <metamodel/MetaAssociation.h>
@@ -92,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionNew_Model, &QAction::triggered, this, &MainWindow::newModel);
     connect(ui->actionClose_Model, &QAction::triggered, this, &MainWindow::closeModel);
     connect(ui->actionExportJava, &QAction::triggered, this, &MainWindow::exportToJava);
+    connect(ui->addGeneralizationButton, &QPushButton::clicked, this, &MainWindow::openNewGeneralizationDialog);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
 
@@ -292,6 +295,11 @@ void MainWindow::openNewEnumDialog(){
     }
 }
 
+void MainWindow::openNewGeneralizationDialog(){
+    AddGeneralizationDialog* addGeneralizationDialog = new AddGeneralizationDialog(this->model, this->scene, this);
+    addGeneralizationDialog->exec();
+}
+
 
 void MainWindow::openModelFile(){
     closeModel();
@@ -425,6 +433,14 @@ void MainWindow::newModel(){
 }
 
 void MainWindow::closeModel(){
+    if(model){
+        auto response = showQuestionMessageBox("Close Model", "Are you sure you want to close the model?");
+
+        if(response == QMessageBox::Yes){
+            return;
+        }
+    }
+
     this->model = nullptr;
     this->scene->clear();
     this->scene->update();
@@ -446,6 +462,7 @@ void MainWindow::enableModelActions(){
     ui->addClassButton->setEnabled(true);
     ui->addAssociationClassButton->setEnabled(true);
     ui->addEnumButton->setEnabled(true);
+    ui->addGeneralizationButton->setEnabled(true);
 
     ui->actionClose_Model->setEnabled(true);
     ui->actionSave->setEnabled(true);
@@ -463,6 +480,7 @@ void MainWindow::disableModelActions(){
     ui->addClassButton->setEnabled(false);
     ui->addAssociationClassButton->setEnabled(false);
     ui->addEnumButton->setEnabled(false);
+    ui->addGeneralizationButton->setEnabled(false);
 
     ui->actionClose_Model->setEnabled(false);
     ui->actionSave->setEnabled(false);
