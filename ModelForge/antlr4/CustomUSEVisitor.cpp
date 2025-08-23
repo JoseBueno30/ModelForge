@@ -653,7 +653,7 @@ public:
 
         for(auto associationEndsCtx : ctx->associationEnd()){
             std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd = std::any_cast<std::shared_ptr<MetaModel::MetaAssociationEnd>>(createAssociationEnd(associationEndsCtx, metaAssociationClass));
-            std::cout << "ADDING ASSOC END: " << associationEnd->getRole() << " TO ASSOCIATION CLASS" << std::endl;
+            std::cout << "ADDING ASSOC END: " << associationEnd->getRole() << " TO ASSOCIATION CLASS " << associationEnd->getAssociationSharedPtr()->getName() << std::endl;
             metaAssociationClass->addAssociationEnd(associationEnd);
         }
 

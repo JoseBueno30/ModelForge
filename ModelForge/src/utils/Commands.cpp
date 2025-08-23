@@ -321,6 +321,7 @@ void RemoveMetaClassCommand::undo(){
 }
 void RemoveMetaClassCommand::redo(){
     for(auto associationItemView : this->classItemView->getAssociations()){
+        qDebug() << "Haciendo borrado de " << associationItemView->getAssociationModel()->getName();
         if(this->classItemView == associationItemView->getClass1()){
             associationItemView->getClass2()->deleteAssociation(associationItemView);
         }else{
@@ -340,6 +341,9 @@ void RemoveMetaClassCommand::redo(){
 
     qDebug() << "Borrando " << this->classItemView->getAssociationClasses().size() << " clases asociacion";
     for(auto associationClassItemView : this->classItemView->getAssociationClasses()){
+        for(auto aEnds : associationClassItemView->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
+            qDebug() << aEnds.first << " tiene puntero a asociacion nulo ? " << !aEnds.second->getAssociationSharedPtr();
+        }
         qDebug() << "La clase asociacion borrada tiene " << associationClassItemView->getAssociationClassModel()->getAssociationEndsClassesNames().size() << " asociation esnds";
         if(this->classItemView == associationClassItemView->getClass1()){
             associationClassItemView->getClass2()->deleteAssociationClass(associationClassItemView);
@@ -351,7 +355,9 @@ void RemoveMetaClassCommand::redo(){
         if(!classItemView->getClassModel()->equals(*associationClassItemView->getAssociationClassModel())){
             this->scene->removeItem(associationClassItemView->getAssociationClassItemView());
         }
-
+        for(auto aEnds : associationClassItemView->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
+            qDebug() << aEnds.first << " tiene puntero a asociacion nulo ? " << !aEnds.second->getAssociationSharedPtr();
+        }
 
         auto auxAssociationItemView = associationClassItemView->getAssociationClassAssociationItemView();
         this->scene->removeItem(auxAssociationItemView);
@@ -368,12 +374,14 @@ void RemoveMetaClassCommand::redo(){
             std::make_shared<MetaModel::MetaAssociationClass>(*associationClassItemView->getAssociationClassModel());
 
         for(auto aEnds : associationClassItemView->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
+            aEnds.second->setAssociation(associationClassItemView->getAssociationClassModel());
             qDebug() << aEnds.first << " tiene puntero a asociacion nulo ? " << !aEnds.second->getAssociationSharedPtr();
         }
 
-        if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel())){
-            this->model->removeAssociationClass(associationClassItemView->getAssociationClassModel()->getName());
-        }
+        // if(std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel())){
+        //     qDebug() << "BORRA CLASE ASOC DIRECTAMENTE";
+        //     this->model->removeAssociationClass(associationClassItemView->getAssociationClassModel()->getName());
+        // }
 
 
         // for(auto aEnd : this->associationEnds){

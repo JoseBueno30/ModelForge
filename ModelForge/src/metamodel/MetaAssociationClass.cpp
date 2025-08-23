@@ -43,11 +43,12 @@ void MetaAssociationClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd>
 
     std::cout << "ADDING ASSOC END: " << associationEnd->getRole() << " FROM ASSOCIATION CLASS: " << this->getName() << std::endl;
 
-    for(const auto &pair : associationEnd->getClassSharedPtr()->getAssociationEnds()){
-        std::cout << "ASSOC END CLASS ENDS: " << pair.first << std::endl;
-    }
-
     addIntermediateAssociationEnd(associationEnd);
+
+    std::cout << "ASSOC END "<< associationEnd->getClassSharedPtr()->getName() <<" ENDS: " << std::endl;
+    for(const auto &pair : associationEnd->getClassSharedPtr()->getAssociationEnds()){
+        std::cout<< "\t" << pair.first << std::endl;
+    }
 
     this->MetaAssociation::associationEnds[associationEnd->getRole()] = std::move(associationEnd);
 }
@@ -72,7 +73,7 @@ void MetaAssociationClass::addIntermediateAssociationEnd(std::shared_ptr<MetaAss
     for(const auto &associationEndPair : this->MetaAssociation::getAssociationEnds()){
         auto otherAssociationEnd = associationEndPair.second;
 
-        std::cout << "ADDING TO OTHER ASSOC END: " << otherAssociationEnd->getRole() << " FROM ASSOCIATION CLASS: " << this->getName() << std::endl;
+        std::cout << "ADDING TO "<<otherAssociationEnd->getClassSharedPtr()->getName()<<": " << otherAssociationEnd->getRole() << " FROM ASSOCIATION CLASS: " << this->getName() << std::endl;
 
         for(const auto &pair : otherAssociationEnd->getClassSharedPtr()->getAssociationEnds()){
             std::cout << "OTHER ASSOC END CLASS ENDS: " << pair.first << std::endl;
