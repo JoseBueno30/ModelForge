@@ -138,12 +138,13 @@ void MetaModel::addAssociation(std::shared_ptr<MetaAssociation> modelAssociation
 void MetaModel::removeAssociation(const std::string& key){
     std::cout << "REMOVING ASSOCIATION: " << key << std::endl;
     auto association = this->getAssociation(key);
-
-    for(const auto &associationEndPair : association->getAssociationEnds()){
-        association->removeAssociationEnd(associationEndPair.first);
+    if(association){
+        for(const auto &associationEndPair : association->getAssociationEnds()){
+            association->removeAssociationEnd(associationEndPair.first);
+        }
+        std::cout<<"SALE BUCLE" << std::endl;
+        associations.erase(key);
     }
-    std::cout<<"SALE BUCLE" << std::endl;
-    associations.erase(key);
 }
 
 const std::map<std::string, std::shared_ptr<MetaAssociationClass>>& MetaModel::getAssociationClasses() const{
