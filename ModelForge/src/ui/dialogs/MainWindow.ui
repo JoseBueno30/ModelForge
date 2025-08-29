@@ -51,12 +51,12 @@
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Mode name:</string>
+             <string>Model name:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit"/>
+           <widget class="QLineEdit" name="modelNameLineEdit"/>
           </item>
           <item>
            <spacer name="horizontalSpacer">
@@ -157,7 +157,7 @@
      <x>0</x>
      <y>0</y>
      <width>1399</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

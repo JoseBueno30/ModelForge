@@ -37,6 +37,10 @@ void ItemViewClipboard::copy(BoxItemView* item){
         std::shared_ptr<MetaModel::MetaClass> metaClass = std::make_shared<MetaModel::MetaClass>(".", false);
         *metaClass = *(classItemView->getClassModel());
         metaClass->setName(metaClass->getName() + "Copy");
+
+        for(auto aEndPair : classItemView->getClassModel()->getAssociationEnds()){
+            metaClass->removeAssociationEnd(aEndPair.first);
+        }
         itemView = new ClassItemView(metaClass);
 
     }else{

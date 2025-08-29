@@ -13,6 +13,23 @@
 #define PADDING 20
 #define TEST_NAME "ClassLongTextAdriduty"
 
+QString fromVisibilityToQString(MetaModel::Visibility vis){
+    switch (vis) {
+    case MetaModel::Visibility::Public:
+        return "+ ";
+        break;
+    case MetaModel::Visibility::Private:
+        return "- ";
+        break;
+    case MetaModel::Visibility::Protected:
+        return "# ";
+        break;
+    default:
+        return "~ ";
+        break;
+    }
+}
+
 void ClassItemView::calculateMinimumSize(){
     QFontMetrics fm(QFont("Arial", 13, QFont::Bold));
     int minHeight = fm.height() + NAME_PADDING + ATTS_PADDING;
@@ -100,7 +117,7 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setFont(QFont("Arial", 10, QFont::StyleNormal));
     for(const auto& pair : this->model->getAttributes()){
         QRectF rect(ATTS_PADDING, yOffset,this->getDimensions().x(),ATTS_HEIGHT);
-        painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.second->toString()));
+        painter->drawText(rect, Qt::AlignLeft, fromVisibilityToQString(pair.second->getVisibility()) + QString::fromStdString(pair.second->toString()));
         yOffset += ATTS_HEIGHT;
     }
 
@@ -112,7 +129,7 @@ void ClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 
     for(const auto& pair: this->model->getOperations()){
         QRectF rect(ATTS_PADDING, yOffset,this->getDimensions().x(), ATTS_HEIGHT);
-        painter->drawText(rect, Qt::AlignLeft, QString::fromStdString(pair.second->toString()));
+        painter->drawText(rect, Qt::AlignLeft, fromVisibilityToQString(pair.second->getVisibility()) + QString::fromStdString(pair.second->toString()));
         yOffset += ATTS_HEIGHT;
     }
 }

@@ -440,6 +440,7 @@ add_library(MetaModelLib SHARED
     include/OCL/ObjectOperationExpr.h
     src/OCL/ObjectOperationExpr.cpp
     include/metamodel/Visibility.h
+
 )
 
 set(DIALOGS

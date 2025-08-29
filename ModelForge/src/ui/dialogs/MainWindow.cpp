@@ -333,6 +333,7 @@ void MainWindow::openModelFile(){
         // Verifica que el MetaModel se haya creado correctamente
         model = visitor.model;
         this->setupModelGraphicsView(model);
+        ui->modelNameLineEdit->setText(QString::fromStdString(model->getName()));
         ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
 
         enableModelActions();
@@ -437,11 +438,12 @@ void MainWindow::closeModel(){
     if(model){
         auto response = showQuestionMessageBox("Close Model", "Are you sure you want to close the model?");
 
-        if(response == QMessageBox::Yes){
+        if(response == QMessageBox::No){
             return;
         }
     }
 
+    ui->modelNameLineEdit->setText("");
     this->model = nullptr;
     this->scene->clear();
     this->scene->update();
@@ -453,6 +455,8 @@ void MainWindow::closeModel(){
 }
 
 void MainWindow::enableModelActions(){
+    ui->modelNameLineEdit->setEnabled(true);
+
     ui->actionCopy->setEnabled(true);
     ui->actionCut->setEnabled(true);
     ui->actionPaste->setEnabled(true);
@@ -471,6 +475,8 @@ void MainWindow::enableModelActions(){
 }
 
 void MainWindow::disableModelActions(){
+    ui->modelNameLineEdit->setEnabled(false);
+
     ui->actionCopy->setEnabled(false);
     ui->actionCut->setEnabled(false);
     ui->actionPaste->setEnabled(false);

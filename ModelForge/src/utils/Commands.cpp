@@ -557,7 +557,3 @@ void RemoveMetaGeneralizationCommand::redo(){
 
     this->scene->update();
 }
-
-
-
-
