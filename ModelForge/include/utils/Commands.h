@@ -120,6 +120,32 @@ private:
     ModelGraphicsScene* scene;
 };
 
+class AddMetaAssociationClassCommand : public QUndoCommand{
+public:
+    AddMetaAssociationClassCommand(std::shared_ptr<MetaModel::MetaAssociationClass> metaAssociationClass, std::shared_ptr<MetaModel::MetaModel> model, AssociationClassItemView* associationClassItemView, ModelGraphicsScene* scene);
+
+    void undo() override;
+    void redo() override;
+private:
+    std::shared_ptr<MetaModel::MetaAssociationClass> metaAssociationClass;
+    std::shared_ptr<MetaModel::MetaModel> model;
+    AssociationClassItemView* associationClassItemView;
+    ModelGraphicsScene* scene;
+};
+
+class AddMetaGeneralizationCommand : public QUndoCommand{
+public:
+    AddMetaGeneralizationCommand(std::shared_ptr<MetaModel::MetaClass> childClass, std::shared_ptr<MetaModel::MetaClass> superClass, ModelGraphicsScene* scene);
+
+    void undo() override;
+    void redo() override;
+private:
+    std::shared_ptr<MetaModel::MetaClass> childClass;
+    std::shared_ptr<MetaModel::MetaClass> superClass;
+    GeneralizationItemView* generalizationItemView;
+    ModelGraphicsScene* scene;
+};
+
 class RemoveMetaClassCommand : public QUndoCommand{
 public:
     RemoveMetaClassCommand(ClassItemView* classItemView, ModelGraphicsScene* scene, std::shared_ptr<MetaModel::MetaModel> model);
@@ -132,8 +158,7 @@ private:
     ModelGraphicsScene* scene;
     std::shared_ptr<MetaModel::MetaModel> model;
 
-    //In case of removing association class
-    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociation>> associationsRemoved;
 };
 
 class RemoveMetaAssociationCommand : public QUndoCommand{
@@ -148,7 +173,6 @@ private:
     ModelGraphicsScene* scene;
     std::shared_ptr<MetaModel::MetaModel> model;
 
-    //In case of removing association class
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
 };
 

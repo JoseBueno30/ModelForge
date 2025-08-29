@@ -1,6 +1,7 @@
 #include <ui/dialogs/MainWindow.h>
 #include "ui/dialogs/EnumEditDialog.h"
 #include "ui_MainWindow.h"
+#include "utils/MessageBox.h"
 
 
 #include <ui/view/AssociationClassItemView.h>
@@ -17,6 +18,7 @@
 #include <ui/components/ThemeManager.h>
 #include <QStyleFactory>
 #include <utils/Commands.h>
+#include <ui/dialogs/AddGeneraliaztionDialog.h>
 #include <ui/dialogs/AssociationEditDialog.h>
 #include <ui/dialogs/ClassEditDialog.h>
 #include <metamodel/MetaAssociation.h>
@@ -87,10 +89,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->addClassButton, &QPushButton::clicked, this, &MainWindow::openNewClassDialog);
     connect(ui->addAssociationButton, &QPushButton::clicked, this, &MainWindow::openNewAssociationDialog);
     connect(ui->addEnumButton, &QPushButton::clicked, this, &MainWindow::openNewEnumDialog);
+    connect(ui->addAssociationClassButton, &QPushButton::clicked, this, &MainWindow::openNewAssociationClassDialog);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::saveModel);
     connect(ui->actionNew_Model, &QAction::triggered, this, &MainWindow::newModel);
     connect(ui->actionClose_Model, &QAction::triggered, this, &MainWindow::closeModel);
     connect(ui->actionExportJava, &QAction::triggered, this, &MainWindow::exportToJava);
+    connect(ui->addGeneralizationButton, &QPushButton::clicked, this, &MainWindow::openNewGeneralizationDialog);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
 
@@ -247,6 +251,29 @@ void MainWindow::openNewAssociationDialog(){
     }
 }
 
+void MainWindow::openNewAssociationClassDialog(){
+    if(this->model != nullptr){
+        std::string defaultName = "NewAssociationClass";
+        int defaultNameCont = 0;
+        for(auto metaAssociationClassPair : this->model->getAssociationClasses()){
+            if(metaAssociationClassPair.first == defaultName){
+                defaultNameCont++;
+                defaultName = "NewAssociationClass" + std::to_string(defaultNameCont);
+            }
+        }
+
+        std::shared_ptr<MetaModel::MetaAssociationClass> newAssociationClass = std::make_shared<MetaModel::MetaAssociationClass>(defaultName, false, 0);
+        ClassEditDialog* classInfoEdit = new ClassEditDialog(newAssociationClass, scene, nullptr, this->model, this);
+        int returnCode = classInfoEdit->exec();
+
+        qDebug() << "Atributos de la nueva  clase asociacion: " << newAssociationClass->getAttributes().size();
+        if(returnCode){
+            AssociationEditDialog* associationInfoEdit = new AssociationEditDialog(newAssociationClass, scene, nullptr, this->model);
+            associationInfoEdit->exec();
+        }
+    }
+}
+
 void MainWindow::openEditAssociationDialog(AssociationItemView* association){
     AssociationEditDialog *associationEditDialog = new AssociationEditDialog(association->getAssociationModel(), this->scene, association, this->model);
     associationEditDialog->exec();
@@ -266,6 +293,11 @@ void MainWindow::openNewEnumDialog(){
         EnumEditDialog *enumEditDialog = new EnumEditDialog(newEnum, this->scene, this->model, nullptr, this);
         enumEditDialog->exec();
     }
+}
+
+void MainWindow::openNewGeneralizationDialog(){
+    AddGeneralizationDialog* addGeneralizationDialog = new AddGeneralizationDialog(this->model, this->scene, this);
+    addGeneralizationDialog->exec();
 }
 
 
@@ -301,6 +333,7 @@ void MainWindow::openModelFile(){
         // Verifica que el MetaModel se haya creado correctamente
         model = visitor.model;
         this->setupModelGraphicsView(model);
+        ui->modelNameLineEdit->setText(QString::fromStdString(model->getName()));
         ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
 
         enableModelActions();
@@ -311,6 +344,7 @@ void MainWindow::openModelFile(){
 
 void MainWindow::saveModel(){
     try{
+        this->model->setName(ui->modelNameLineEdit->text().toStdString());
         if(path == nullptr){
             path = QFileDialog::getSaveFileName(
                 this,                         // QWidget padre
@@ -401,6 +435,15 @@ void MainWindow::newModel(){
 }
 
 void MainWindow::closeModel(){
+    if(model){
+        auto response = showQuestionMessageBox("Close Model", "Are you sure you want to close the model?");
+
+        if(response == QMessageBox::No){
+            return;
+        }
+    }
+
+    ui->modelNameLineEdit->setText("");
     this->model = nullptr;
     this->scene->clear();
     this->scene->update();
@@ -412,6 +455,8 @@ void MainWindow::closeModel(){
 }
 
 void MainWindow::enableModelActions(){
+    ui->modelNameLineEdit->setEnabled(true);
+
     ui->actionCopy->setEnabled(true);
     ui->actionCut->setEnabled(true);
     ui->actionPaste->setEnabled(true);
@@ -422,6 +467,7 @@ void MainWindow::enableModelActions(){
     ui->addClassButton->setEnabled(true);
     ui->addAssociationClassButton->setEnabled(true);
     ui->addEnumButton->setEnabled(true);
+    ui->addGeneralizationButton->setEnabled(true);
 
     ui->actionClose_Model->setEnabled(true);
     ui->actionSave->setEnabled(true);
@@ -429,6 +475,8 @@ void MainWindow::enableModelActions(){
 }
 
 void MainWindow::disableModelActions(){
+    ui->modelNameLineEdit->setEnabled(false);
+
     ui->actionCopy->setEnabled(false);
     ui->actionCut->setEnabled(false);
     ui->actionPaste->setEnabled(false);
@@ -439,6 +487,7 @@ void MainWindow::disableModelActions(){
     ui->addClassButton->setEnabled(false);
     ui->addAssociationClassButton->setEnabled(false);
     ui->addEnumButton->setEnabled(false);
+    ui->addGeneralizationButton->setEnabled(false);
 
     ui->actionClose_Model->setEnabled(false);
     ui->actionSave->setEnabled(false);

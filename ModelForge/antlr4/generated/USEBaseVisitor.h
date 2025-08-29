@@ -165,10 +165,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitLetExpr(USEParser::LetExprContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -306,6 +302,10 @@ public:
   }
 
   virtual std::any visitParenthesizedExpr(USEParser::ParenthesizedExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitConditionalExpr(USEParser::ConditionalExprContext *ctx) override {
     return visitChildren(ctx);
   }
 

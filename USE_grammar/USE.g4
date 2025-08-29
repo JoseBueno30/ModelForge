@@ -332,7 +332,6 @@ expressionOnly
 */
 expression
     : logicalExpression       #LogicalExpr
-    | conditionalExpression   #ConditionalExpr
     | letExpression           #LetExpr
     ;
 
@@ -461,10 +460,11 @@ propertyChain
 */
 
 primaryExpression
-  : literal                                                   #LiteralExpr
-  | objectReference                                           #ObjectReferenceExpr
-  | propertyCall                                              #EmptyPropertyCallExpr
-  | LPAREN expression RPAREN                                  #ParenthesizedExpr
+  : literal                                                #LiteralExpr
+  | objectReference                                        #ObjectReferenceExpr
+  | propertyCall                                           #EmptyPropertyCallExpr
+  | LPAREN expression RPAREN                               #ParenthesizedExpr
+  | conditionalExpression                                  #ConditionalExpr
   | ID DOT 'allInstances' (AT 'pre')? (LPAREN RPAREN)?     #AllInstancesExpr
   | ID DOT 'byUseId' LPAREN expression RPAREN (AT 'pre')?  #ByUseIdExpr
   ;
@@ -783,7 +783,7 @@ ORDERED       : 'ordered';
 UNION         : 'union';
 NO_NAVIGABLE  : '--X';
 PUBLIC        : '--+';
-PRIVATE       : '--—';
+PRIVATE       : '--\u2014';
 PROTECTED     : '--#';
 PACKAGE       : '--~';
 
@@ -807,7 +807,8 @@ REAL:
     INT ('.' INT ([eE] [+-]? INT)? | [eE] [+-]? INT)
     ;
 
-SOIL_OPERATION: 'begin' .*? 'end';
+SOIL_OPERATION
+  : 'begin' .*? 'end' ( ~';' );
 
 // String literals
 STRING:	

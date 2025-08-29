@@ -3,7 +3,7 @@
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
+   <enum>Qt::WindowModality::WindowModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -40,12 +40,39 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="sizeConstraint">
-     <enum>QLayout::SetMinimumSize</enum>
+     <enum>QLayout::SizeConstraint::SetMinimumSize</enum>
     </property>
     <item row="0" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="10">
       <item>
-       <layout class="QVBoxLayout" name="rightVerticalLayout" stretch="10,0">
+       <layout class="QVBoxLayout" name="rightVerticalLayout" stretch="0,10,0">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,3,12">
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Model name:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="modelNameLineEdit"/>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
         <item>
          <widget class="ModelGraphicsView" name="modelGraphicsView">
           <property name="autoFillBackground">
@@ -72,7 +99,7 @@
                <string>ToolBox</string>
               </property>
               <property name="alignment">
-               <set>Qt::AlignCenter</set>
+               <set>Qt::AlignmentFlag::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -105,9 +132,9 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_5">
+             <widget class="QPushButton" name="addGeneralizationButton">
               <property name="text">
-               <string>?</string>
+               <string>Add Generalization</string>
               </property>
              </widget>
             </item>
@@ -130,7 +157,7 @@
      <x>0</x>
      <y>0</y>
      <width>1399</width>
-     <height>21</height>
+     <height>17</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

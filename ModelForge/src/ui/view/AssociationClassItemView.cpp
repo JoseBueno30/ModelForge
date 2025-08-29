@@ -56,6 +56,11 @@ std::shared_ptr<MetaModel::MetaAssociationClass> AssociationClassItemView::getAs
     return this->model;
 }
 
+void AssociationClassItemView::setAssociationClassModel(std::shared_ptr<MetaModel::MetaAssociationClass> model){
+    this->model = model;
+    this->getAssociationClassAssociationItemView()->setAssociationModel(model);
+}
+
 ClassItemView* AssociationClassItemView::getClass1(){
     return this->associationItem->getClass1();
 }

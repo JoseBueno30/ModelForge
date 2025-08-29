@@ -3,7 +3,6 @@
 
 #include <string>
 
-
 namespace MetaModel {
 
 enum class Visibility {
@@ -14,5 +13,7 @@ enum class Visibility {
 };
 
 }
+
+std::string fromVisibilityToStdString(MetaModel::Visibility vis);
 
 #endif // VISIBILITY_H

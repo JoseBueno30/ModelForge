@@ -71,10 +71,12 @@ void MetaModel::addClass(std::shared_ptr<MetaClass> modelClass){
 void MetaModel::removeClass(const std::string& key){
     auto metaClass = this->getClass(key);
     std::cout << "REMOVING CLASS: " << key << std::endl;
+    std::cout << "<Remove MetaClass> nAssocEnd: " << metaClass->getAssociationEnds().size() << std::endl;
     for(const auto &assocEndPair : metaClass->getAssociationEnds()){
         auto association = assocEndPair.second->getAssociationSharedPtr();
 
         std::cout << "REMOVING ASSOCEND: " << assocEndPair.first << std::endl;
+        std::cout << "ASOCIACION NULA ? " << !association << std::endl;
 
         if(std::dynamic_pointer_cast<MetaAssociationClass>(association)){
             std::cout << "REMOVING ASSOC CLASS FROM CLASS: " << association->getName() << std::endl;
@@ -117,18 +119,32 @@ void MetaModel::addAssociation(std::shared_ptr<MetaAssociation> modelAssociation
         throw std::runtime_error("Model already contains element named: " + modelAssociation->getName());
     }
 
+    for(const auto &associationEndPair : modelAssociation->getAssociationEnds()){
+        for(const auto &otherAssociationEndPair : modelAssociation->getAssociationEnds()){
+
+            if (associationEndPair != otherAssociationEndPair){
+                try{
+                    otherAssociationEndPair.second->getClassSharedPtr()->addAssociationEnd(associationEndPair.second);
+                    associationEndPair.second->getClassSharedPtr()->addAssociationEnd(otherAssociationEndPair.second);
+                }catch(std::invalid_argument e){}
+            }
+        }
+    }
+
     associations[modelAssociation->getName()] = std::move(modelAssociation);
+
 }
 
 void MetaModel::removeAssociation(const std::string& key){
     std::cout << "REMOVING ASSOCIATION: " << key << std::endl;
     auto association = this->getAssociation(key);
-
-    for(const auto &associationEndPair : association->getAssociationEnds()){
-        association->removeAssociationEnd(associationEndPair.first);
+    if(association){
+        for(const auto &associationEndPair : association->getAssociationEnds()){
+            association->removeAssociationEnd(associationEndPair.first);
+        }
+        std::cout<<"SALE BUCLE" << std::endl;
+        associations.erase(key);
     }
-
-    associations.erase(key);
 }
 
 const std::map<std::string, std::shared_ptr<MetaAssociationClass>>& MetaModel::getAssociationClasses() const{
@@ -150,6 +166,15 @@ void MetaModel::addAssociationClass(std::shared_ptr<MetaAssociationClass> modelA
 
     if (modelContainsKey(modelAssociationClass->getName())) {
         throw std::runtime_error("Model already contains element named: " + modelAssociationClass->getName());
+    }
+
+    for(auto &associationEndPair : modelAssociationClass->MetaAssociation::getAssociationEnds()){
+        try{
+            std::cout << "ANYADIENDO INTERMEDIA CON " << associationEndPair.second->getClassSharedPtr()->getName() << std::endl;//"DE LA ASOCIACION " << associationEndPair.second->getAssociationSharedPtr()->getName() << std::endl;
+            modelAssociationClass->addIntermediateAssociationEnd(associationEndPair.second);
+        }catch(std::invalid_argument e){
+            std::cerr << "FALLA ANYADIR INTERMEDIAS con "<<associationEndPair.second->getClassSharedPtr()->getName() << std::endl;
+        }
     }
 
     associationClasses[modelAssociationClass->getName()] = std::move(modelAssociationClass);

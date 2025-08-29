@@ -43,12 +43,20 @@ void MetaAssociationClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd>
 
     std::cout << "ADDING ASSOC END: " << associationEnd->getRole() << " FROM ASSOCIATION CLASS: " << this->getName() << std::endl;
 
+    addIntermediateAssociationEnd(associationEnd);
+
+    std::cout << "ASSOC END "<< associationEnd->getClassSharedPtr()->getName() <<" ENDS: " << std::endl;
     for(const auto &pair : associationEnd->getClassSharedPtr()->getAssociationEnds()){
-        std::cout << "ASSOC END CLASS ENDS: " << pair.first << std::endl;
+        std::cout<< "\t" << pair.first << std::endl;
     }
 
+    this->MetaAssociation::associationEnds[associationEnd->getRole()] = std::move(associationEnd);
+}
+
+void MetaAssociationClass::addIntermediateAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd){
     std::string intermediateRole = this->getName();
     std::transform(intermediateRole.begin(), intermediateRole.end(), intermediateRole.begin(), ::tolower);
+    std::cout<< "ASSOCIATION SHARED PTR OTHER ASSOC END NULL: " << !associationEnd->getAssociationSharedPtr()<<std::endl;
     std::shared_ptr<MetaAssociationEnd> intermediateAssociationEnd = std::make_shared<MetaAssociationEnd>(
         std::dynamic_pointer_cast<MetaAssociationClass>(associationEnd->getAssociationSharedPtr()),
         associationEnd->getAssociationSharedPtr(),
@@ -65,11 +73,13 @@ void MetaAssociationClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd>
     for(const auto &associationEndPair : this->MetaAssociation::getAssociationEnds()){
         auto otherAssociationEnd = associationEndPair.second;
 
-        std::cout << "ADDING TO OTHER ASSOC END: " << otherAssociationEnd->getRole() << " FROM ASSOCIATION CLASS: " << this->getName() << std::endl;
+        std::cout << "ADDING TO "<<otherAssociationEnd->getClassSharedPtr()->getName()<<": " << otherAssociationEnd->getRole() << " FROM ASSOCIATION CLASS: " << this->getName() << std::endl;
 
         for(const auto &pair : otherAssociationEnd->getClassSharedPtr()->getAssociationEnds()){
             std::cout << "OTHER ASSOC END CLASS ENDS: " << pair.first << std::endl;
         }
+
+        std::cout<< "ASSOCIATION SHARED PTR OTHER ASSOC END NULL: " << !otherAssociationEnd->getAssociationSharedPtr()<<std::endl;
 
         std::shared_ptr<MetaAssociationEnd> otherIntermediateAssociationEnd = std::make_shared<MetaAssociationEnd>(
             std::dynamic_pointer_cast<MetaAssociationClass>(otherAssociationEnd->getAssociationSharedPtr()),
@@ -89,9 +99,8 @@ void MetaAssociationClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd>
             associationEnd->getClassSharedPtr()->addAssociationEnd(otherIntermediateAssociationEnd);
         }
     }
-
-    this->MetaAssociation::associationEnds[associationEnd->getRole()] = std::move(associationEnd);
 }
+
 void MetaAssociationClass::removeAssociationEnd(const std::string& key){
 
     std::cout << "<AssocClass> REMOVING ASSOC END: " << key << " FROM ASSOC CLASS: " << this->getName() << std::endl;

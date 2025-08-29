@@ -1,0 +1,16 @@
+model Example
+
+class ExampleClass
+attributes
+attribute1 : Integer --+ 
+attribute2 : String --—
+operations
+operation1(newVariable0 : Integer) : Boolean --—
+	
+operation2() : Real --#
+	
+end
+
+class ExampleClass2
+end
+

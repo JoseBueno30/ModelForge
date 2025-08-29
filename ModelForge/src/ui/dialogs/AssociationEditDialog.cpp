@@ -5,6 +5,7 @@
 
 #include <QPushButton>
 
+#include <ui/view/AssociationClassItemView.h>
 #include <ui/view/AssociationItemView.h>
 
 #include <utils/Commands.h>
@@ -22,15 +23,29 @@ AssociationEditDialog::AssociationEditDialog(
     associationItemView(associationItemView), ui(new Ui::AssociationEditDialog)
 {
     ui->setupUi(this);
-    setupTypesComboBox();
 
     if( auto aclass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(associationModel)){
         qDebug() << "La clase asociacion tiene: " << aclass->getAssociationEndsClassesNames().size() << "aEnds.";
+        qDebug() << "Los aEnds de la clase asociación son nulos ? ";
+        for(auto aEnd : aclass->MetaAssociation::getAssociationEnds()){
+            qDebug() << "\t" << !aEnd.second->getAssociationSharedPtr();
+        }
     }
 
+    setupUiInfo();
+
+    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &AssociationEditDialog::saveChanges);
+    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &AssociationEditDialog::cancelChanges);
+
+}
+
+void AssociationEditDialog::setupUiInfo(){
     ui->associationNameEdit->setText(QString::fromStdString(associationModel->getName()));
 
     //set ui type
+    setupTypesComboBox();
     ui->associationTypeComboBox->setCurrentIndex(associationModel->getType());
 
     //set Association end if not null
@@ -40,25 +55,19 @@ AssociationEditDialog::AssociationEditDialog(
         setupAssociationEnd1(aEndIterator->second);
         ui->multiplicityAEnd1LineEdit->setText(
             QString::fromStdString(aEndIterator->second->getMultiplicity().toString())
-        );
+            );
         ui->roleAEnd1LineEdit->setText(QString::fromStdString(aEndIterator->second->getRole()));
 
         aEndIterator++;
         setupAssociationEnd2(aEndIterator->second);
         ui->multiplicityAEnd2LineEdit->setText(
             QString::fromStdString(aEndIterator->second->getMultiplicity().toString())
-        );
+            );
         ui->roleAEnd2LineEdit->setText(QString::fromStdString(aEndIterator->second->getRole()));
     }else{
         ui->publicAEnd1RadioButton->setChecked(true);
         ui->publicAEnd2RadioButton->setChecked(true);
     }
-
-    connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &AssociationEditDialog::saveChanges);
-    disconnect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-    disconnect(ui->buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
-    connect(ui->buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &AssociationEditDialog::cancelChanges);
-
 }
 
 void AssociationEditDialog::setupAssociationEnd1(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd){
@@ -202,19 +211,26 @@ void AssociationEditDialog::saveChanges(){
                 setAssociationEnd1(associationEnd1);
                 setAssociationEnd2(associationEnd2);
 
-                qDebug()<< "b";
-                associationModel->addAssociationEnd(associationEnd1);
-                associationModel->addAssociationEnd(associationEnd2);
-
                 qDebug()<< "c";
                 ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(ui->typeAEnd1ComboBox->currentText().toStdString()));
                 ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(ui->typeAEnd2ComboBox->currentText().toStdString()));
 
                 qDebug()<< "d";
-                AssociationItemView * newAssociation = new AssociationItemView(associationModel, class1, class2);
+
                 qDebug()<< "e";
-                AddMetaAssociationCommand* addCommand = new AddMetaAssociationCommand(associationModel, model, newAssociation, scene);
-                MainWindow::undoStack->push(addCommand);
+                if(auto associationClassModelCast = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->associationModel)){
+                    associationClassModelCast->addAssociationEnd(associationEnd1);
+                    associationClassModelCast->addAssociationEnd(associationEnd2);
+                    AssociationClassItemView* associationClassView = new AssociationClassItemView(associationClassModelCast, class1, class2);
+                    AddMetaAssociationClassCommand* addCommand = new AddMetaAssociationClassCommand(associationClassModelCast, model, associationClassView, scene);
+                    MainWindow::undoStack->push(addCommand);
+                }else{
+                    associationModel->addAssociationEnd(associationEnd1);
+                    associationModel->addAssociationEnd(associationEnd2);
+                    AssociationItemView * newAssociation = new AssociationItemView(associationModel, class1, class2);
+                    AddMetaAssociationCommand* addCommand = new AddMetaAssociationCommand(associationModel, model, newAssociation, scene);
+                    MainWindow::undoStack->push(addCommand);
+                }
             }
         }
         else{ //Updating an existing association
@@ -291,8 +307,8 @@ void AssociationEditDialog::setAssociationEnd1(std::shared_ptr<MetaModel::MetaAs
     auto newClass = this->model->getClass(ui->typeAEnd1ComboBox->currentText().toStdString());
     associationEnd->setClass(newClass);
 
-    newClass->removeAssociationEnd(associationEnd->getRole());
-    newClass->addAssociationEnd(associationEnd);
+    //newClass->removeAssociationEnd(associationEnd->getRole());
+    //newClass->addAssociationEnd(associationEnd);
 }
 
 void AssociationEditDialog::setAssociationEnd2(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd){
@@ -307,8 +323,8 @@ void AssociationEditDialog::setAssociationEnd2(std::shared_ptr<MetaModel::MetaAs
     auto newClass = this->model->getClass(ui->typeAEnd2ComboBox->currentText().toStdString());
     associationEnd->setClass(newClass);
 
-    newClass->removeAssociationEnd(associationEnd->getRole());
-    newClass->addAssociationEnd(associationEnd);
+    //newClass->removeAssociationEnd(associationEnd->getRole());
+    //newClass->addAssociationEnd(associationEnd);
 }
 
 bool AssociationEditDialog::isValidAssociation(){

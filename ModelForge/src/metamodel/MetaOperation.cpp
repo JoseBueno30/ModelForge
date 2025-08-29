@@ -207,7 +207,6 @@ std::string MetaOperation::variablesToString() const{
 }
 
 std::string MetaOperation::toString() const{
-
     return this->getName() + this->variablesToString() + " : " + this->getReturnType().toString();
 }
 

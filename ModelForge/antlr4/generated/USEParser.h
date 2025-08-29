@@ -776,15 +776,6 @@ public:
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  ConditionalExprContext : public ExpressionContext {
-  public:
-    ConditionalExprContext(ExpressionContext *ctx);
-
-    ConditionalExpressionContext *conditionalExpression();
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
   class  LogicalExprContext : public ExpressionContext {
   public:
     LogicalExprContext(ExpressionContext *ctx);
@@ -1310,6 +1301,15 @@ public:
     ObjectReferenceExprContext(PrimaryExpressionContext *ctx);
 
     ObjectReferenceContext *objectReference();
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  ConditionalExprContext : public PrimaryExpressionContext {
+  public:
+    ConditionalExprContext(PrimaryExpressionContext *ctx);
+
+    ConditionalExpressionContext *conditionalExpression();
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };

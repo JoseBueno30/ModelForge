@@ -17,6 +17,7 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
     void addItemsToScene();
     std::shared_ptr<MetaModel::MetaAssociationClass> getAssociationClassModel();
+    void setAssociationClassModel(std::shared_ptr<MetaModel::MetaAssociationClass> model);
 
     ClassItemView* getClass1();
     ClassItemView* getClass2();

@@ -440,6 +440,7 @@ add_library(MetaModelLib SHARED
     include/OCL/ObjectOperationExpr.h
     src/OCL/ObjectOperationExpr.cpp
     include/metamodel/Visibility.h
+
 )
 
 set(DIALOGS
@@ -505,6 +506,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/dialogs/VariableEditDialog.cpp
         include/utils/MessageBox.h
         src/utils/MessageBox.cpp
+        src/ui/dialogs/AddGeneralizationDialog.ui
+        include/ui/dialogs/AddGeneraliaztionDialog.h
+        src/ui/dialogs/AddGeneralizationDialog.cpp
 
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)

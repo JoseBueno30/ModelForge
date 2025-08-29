@@ -3,7 +3,6 @@
 
 #include <stdexcept>
 
-
 namespace MetaModel{
 
 

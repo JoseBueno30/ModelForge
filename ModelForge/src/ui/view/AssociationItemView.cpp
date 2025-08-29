@@ -182,6 +182,9 @@ shared_ptr<MetaModel::MetaAssociation> AssociationItemView::getAssociationModel(
     return this->model;
 }
 
+void AssociationItemView::setAssociationModel(shared_ptr<MetaModel::MetaAssociation> model){
+    this->model = model;
+}
 
 void AssociationItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event){
     if (shape().contains(event->pos())) {
