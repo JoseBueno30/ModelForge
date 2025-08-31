@@ -509,6 +509,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/ui/dialogs/AddGeneralizationDialog.ui
         include/ui/dialogs/AddGeneraliaztionDialog.h
         src/ui/dialogs/AddGeneralizationDialog.cpp
+        src/ui/dialogs/ConstraintEditDialog.ui
+        include/ui/dialogs/ConstraintEditDialog.h
+        src/ui/dialogs/ConstraintEditDialog.cpp
 
     )
     #qt_add_resources(PROJECT_RESOURCES resources.qrc)
