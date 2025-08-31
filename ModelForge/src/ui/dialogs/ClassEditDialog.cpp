@@ -4,6 +4,7 @@
 #include <utils/Commands.h>
 #include <utils/MessageBox.h>
 
+#include <ui/dialogs/AssociationEditDialog.h>
 #include <ui/dialogs/AttributeEditDialog.h>
 #include <ui/dialogs/ConstraintEditDialog.h>
 #include <ui/dialogs/MainWindow.h>
@@ -36,6 +37,8 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     connect(ui->constraintsTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::constraintCellDoubleClicked);
 
     connect(ui->removeSelfAssociationButton, &QPushButton::clicked, this, &ClassEditDialog::removeSelfAssociation);
+    connect(ui->selfAssociationsTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::selfAssociationDoubleClicked);
+
 
 }
 
@@ -219,7 +222,18 @@ void ClassEditDialog::removeSelfAssociation(){
     this->loadSelfAssociations();
 
 }
-void ClassEditDialog::selfAssociationDoubleClicked(int row, int column){}
+void ClassEditDialog::selfAssociationDoubleClicked(int row, int column){
+    QLabel * item = dynamic_cast<QLabel*>(ui->selfAssociationsTableWidget->cellWidget(row, 0));
+
+    auto associationItemView = dynamic_cast<AssociationItemView*>(scene->getModelItemView(item->text().toStdString()));
+    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation = this->model->getAssociation(item->text().toStdString());
+    AssociationEditDialog* associationEditDialog = new AssociationEditDialog(metaAssociation, scene, associationItemView, model);
+    int returnCode = associationEditDialog->exec();
+
+    if(returnCode == 1){
+        loadSelfAssociations();
+    }
+}
 
 void ClassEditDialog::addConstraint(){
     std::string constraintName = "constraint" + std::to_string(this->constraintCounter);
