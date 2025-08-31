@@ -35,6 +35,8 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     connect(ui->removeConstraintButton, &QPushButton::clicked, this, &ClassEditDialog::removeConstraint);
     connect(ui->constraintsTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::constraintCellDoubleClicked);
 
+    connect(ui->removeSelfAssociationButton, &QPushButton::clicked, this, &ClassEditDialog::removeSelfAssociation);
+
 }
 
 void ClassEditDialog::setupUiInfo(){
@@ -66,6 +68,7 @@ void ClassEditDialog::setupUiInfo(){
     loadAttributes();
     loadOperations();
     loadConstraints();
+    loadSelfAssociations();
 }
 
 ClassEditDialog::~ClassEditDialog()
@@ -141,6 +144,82 @@ void ClassEditDialog::loadConstraints(){
         row++;
     }
 }
+
+QString getSelfAssociationType(int type){
+    switch (type) {
+    case 0:
+        return "Association";
+        break;
+    case 1:
+        return "Aggregation";
+        break;
+    default:
+        return "Composition";
+        break;
+    }
+}
+
+bool ClassEditDialog::isSelfAssociationVisited(QString associationName){
+    for (int fila = 0; fila < ui->selfAssociationsTableWidget->rowCount(); ++fila) {
+        QLabel *label = qobject_cast<QLabel*>(ui->selfAssociationsTableWidget->cellWidget(fila, 0));
+        if (label && label->text() == associationName) {
+            return true;
+            break;
+        }
+    }
+    return false;
+}
+
+void ClassEditDialog::loadSelfAssociations(){
+    ui->selfAssociationsTableWidget->setRowCount(0);
+    int row = 0;
+    for (const auto &pair : this->editedClass->getAssociationEnds()) {
+        if(pair.second->getClass().equals(*this->metaClass) && !isSelfAssociationVisited(QString::fromStdString(pair.second->getAssociation().getName()))){
+            ui->selfAssociationsTableWidget->insertRow(row);
+
+            QLabel *nameLabel = new QLabel(QString::fromStdString(pair.second->getAssociation().getName()));
+            nameLabel->setAlignment(Qt::AlignCenter);
+            ui->selfAssociationsTableWidget->setCellWidget(row, 0, nameLabel);
+
+            QLabel *typeLabel = new QLabel(getSelfAssociationType(pair.second->getType()));
+            typeLabel->setAlignment(Qt::AlignCenter);
+            ui->selfAssociationsTableWidget->setCellWidget(row, 1, typeLabel);
+
+            row++;
+        }
+
+    }
+}
+
+void ClassEditDialog::removeSelfAssociation(){
+    if(ui->selfAssociationsTableWidget->currentRow() == -1){
+        return;
+    }
+
+    auto *associationLabel = dynamic_cast<QLabel*>(this->ui->selfAssociationsTableWidget->cellWidget(this->ui->selfAssociationsTableWidget->currentRow(), 0));
+    auto associationName = associationLabel->text().toStdString();
+
+    auto reply = showQuestionMessageBox("Remove association", QString::fromStdString("Do you want to remove the self association '" + associationName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    auto associationItemViewHided = dynamic_cast<AssociationItemView*>(this->scene->getModelItemView(associationName));
+    //model->removeAssociation(associationName);
+    //scene->removeModelItemView(associationName);
+
+    for(auto aEnds : associationItemViewHided->getAssociationModel()->getAssociationEnds()){
+        this->editedClass->removeAssociationEnd(aEnds.first);
+    }
+
+    RemoveMetaAssociationCommand *command = new RemoveMetaAssociationCommand(associationItemViewHided, scene, model);
+    MainWindow::undoStack->push(command);
+
+    //accept();
+    this->loadSelfAssociations();
+
+}
+void ClassEditDialog::selfAssociationDoubleClicked(int row, int column){}
 
 void ClassEditDialog::addConstraint(){
     std::string constraintName = "constraint" + std::to_string(this->constraintCounter);
@@ -305,7 +384,7 @@ void ClassEditDialog::saveChanges() {
 
 
         //ACTUALIZAR MAPA DE MAINWINDOW EN LOS COMANDOS
-        if(model == nullptr){
+        if(classView){
             MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
         }else{
             if(auto associationClassModelCast = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->metaClass)){

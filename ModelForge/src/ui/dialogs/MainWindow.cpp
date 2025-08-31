@@ -108,6 +108,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     bool succes = connect(scene, &ModelGraphicsScene::itemMoved, this, &MainWindow::itemMoved);
     connect(scene, &ModelGraphicsScene::editAssociation, this, &MainWindow::openEditAssociationDialog);
+    connect(scene, &ModelGraphicsScene::editClass, this, &MainWindow::openEditClassDialog);
     qDebug() << "Connect = " << succes;
     modelGraphicsView->setScene(scene);
 
@@ -278,6 +279,12 @@ void MainWindow::openEditAssociationDialog(AssociationItemView* association){
     AssociationEditDialog *associationEditDialog = new AssociationEditDialog(association->getAssociationModel(), this->scene, association, this->model);
     associationEditDialog->exec();
 }
+
+void MainWindow::openEditClassDialog(ClassItemView* classView){
+    ClassEditDialog *classEdit = new ClassEditDialog(classView->getClassModel(), scene, classView, model, this);
+    classEdit->exec();
+}
+
 
 void MainWindow::openNewEnumDialog(){
     if(this->model != nullptr){

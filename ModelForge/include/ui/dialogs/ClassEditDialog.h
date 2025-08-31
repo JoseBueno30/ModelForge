@@ -37,6 +37,9 @@ private Q_SLOTS:
     void removeConstraint();
     void constraintCellDoubleClicked(int row, int column);
 
+    void removeSelfAssociation();
+    void selfAssociationDoubleClicked(int row, int column);
+
 private:
     Ui::ClassEditDialog *ui;
     ClassItemView* classView;
@@ -55,6 +58,9 @@ private:
     void loadAttributes();
     void loadOperations();
     void loadConstraints();
+    void loadSelfAssociations();
+
+    bool isSelfAssociationVisited(QString associationName);
 
     bool isValidClass();
 };

@@ -69,7 +69,7 @@ private:
     shared_ptr<MetaModel::MetaAssociation> model;
     ClassItemView* class1;
     ClassItemView* class2;
-    AssociationClassItemView* associationClass;
+    AssociationClassItemView* associationClass = nullptr;
     QPointF p1;
     QPointF p2;
     qreal offset;
