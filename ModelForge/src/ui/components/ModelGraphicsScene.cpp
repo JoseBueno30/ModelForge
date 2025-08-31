@@ -24,6 +24,10 @@ void ModelGraphicsScene::emitEditAssociationSignal(AssociationItemView * associa
     Q_EMIT editAssociation(association);
 }
 
+void ModelGraphicsScene::emitEditClassSignal(ClassItemView* classView){
+    Q_EMIT editClass(classView);
+}
+
 void ModelGraphicsScene::copyItemView(){
     for(auto item : this->selectedItems()){
         if(auto boxItem = qgraphicsitem_cast<ClassItemView*>(item)){

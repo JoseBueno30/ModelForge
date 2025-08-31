@@ -17,6 +17,7 @@ public:
     ModelGraphicsScene(QObject *parent = nullptr);
     void emitMoveSignal(QGraphicsItem * item, const QPointF& pos);
     void emitEditAssociationSignal(AssociationItemView * association);
+    void emitEditClassSignal(ClassItemView* classView);
 
     void setClipboard(ItemViewClipboard* clipboard);
     void setClipboardModel(std::shared_ptr<MetaModel::MetaModel> model);
@@ -28,6 +29,7 @@ public:
 Q_SIGNALS:
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
     void editAssociation(AssociationItemView * association);
+    void editClass(ClassItemView* classView);
 
 public Q_SLOTS:
     void copyItemView();

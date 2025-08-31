@@ -236,8 +236,7 @@ void ClassItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent* event){
 void ClassItemView::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
     Q_UNUSED(event);
     auto scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
-    ClassEditDialog *classEdit = new ClassEditDialog(this->getClassModel(), scene, this, nullptr, this->scene()->views().first());
-    classEdit->exec();
+    scene->emitEditClassSignal(this);
 }
 
 ClassItemView::~ClassItemView(){}

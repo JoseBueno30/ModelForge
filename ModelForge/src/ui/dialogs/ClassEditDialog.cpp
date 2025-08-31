@@ -4,7 +4,9 @@
 #include <utils/Commands.h>
 #include <utils/MessageBox.h>
 
+#include <ui/dialogs/AssociationEditDialog.h>
 #include <ui/dialogs/AttributeEditDialog.h>
+#include <ui/dialogs/ConstraintEditDialog.h>
 #include <ui/dialogs/MainWindow.h>
 
 #include <QComboBox>
@@ -30,6 +32,14 @@ ClassEditDialog::ClassEditDialog(std::shared_ptr<MetaModel::MetaClass> metaClass
     connect(ui->removeOperationButton, &QPushButton::clicked, this, &ClassEditDialog::removeOperation);
     connect(ui->operationTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::operationCellDoubleClicked);
 
+    connect(ui->addConstraintButton, &QPushButton::clicked, this, &ClassEditDialog::addConstraint);
+    connect(ui->removeConstraintButton, &QPushButton::clicked, this, &ClassEditDialog::removeConstraint);
+    connect(ui->constraintsTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::constraintCellDoubleClicked);
+
+    connect(ui->removeSelfAssociationButton, &QPushButton::clicked, this, &ClassEditDialog::removeSelfAssociation);
+    connect(ui->selfAssociationsTableWidget, &QTableWidget::cellDoubleClicked, this, &ClassEditDialog::selfAssociationDoubleClicked);
+
+
 }
 
 void ClassEditDialog::setupUiInfo(){
@@ -38,6 +48,10 @@ void ClassEditDialog::setupUiInfo(){
     ui->attributeTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->operationTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->operationTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->constraintsTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->constraintsTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->selfAssociationsTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->selfAssociationsTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     qDebug() << "Editando clase: " + metaClass->getName();
 
@@ -45,14 +59,19 @@ void ClassEditDialog::setupUiInfo(){
 
     this->attributeCounter = metaClass->getAttributes().size() + 1;
     this->operationCounter = metaClass->getOperations().size() + 1;
+    this->constraintCounter = metaClass->getConstraints().size() + 1;
 
     ui->attributeTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
     ui->operationTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->constraintsTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->selfAssociationsTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 
     ui->isAbstractCheckBox->setChecked(this->metaClass->getIsAbstract());
 
     loadAttributes();
     loadOperations();
+    loadConstraints();
+    loadSelfAssociations();
 }
 
 ClassEditDialog::~ClassEditDialog()
@@ -108,6 +127,158 @@ void ClassEditDialog::loadOperations(){
         ui->operationTableWidget->setCellWidget(row, 1, typeLabel);
 
         row++;
+    }
+}
+
+void ClassEditDialog::loadConstraints(){
+    ui->constraintsTableWidget->setRowCount(0);
+    int row = 0;
+    for (const auto &pair : this->editedClass->getConstraints()) {
+        ui->constraintsTableWidget->insertRow(row);
+
+        QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
+        nameLabel->setAlignment(Qt::AlignCenter);
+        ui->constraintsTableWidget->setCellWidget(row, 0, nameLabel);
+
+        QLabel *isExistentialLabel = new QLabel(QString::fromStdString(pair.second->getIsExistential() ? "Yes" : "No"));
+        isExistentialLabel->setAlignment(Qt::AlignCenter);
+        ui->constraintsTableWidget->setCellWidget(row, 1, isExistentialLabel);
+
+        row++;
+    }
+}
+
+QString getSelfAssociationType(int type){
+    switch (type) {
+    case 0:
+        return "Association";
+        break;
+    case 1:
+        return "Aggregation";
+        break;
+    default:
+        return "Composition";
+        break;
+    }
+}
+
+bool ClassEditDialog::isSelfAssociationVisited(QString associationName){
+    for (int fila = 0; fila < ui->selfAssociationsTableWidget->rowCount(); ++fila) {
+        QLabel *label = qobject_cast<QLabel*>(ui->selfAssociationsTableWidget->cellWidget(fila, 0));
+        if (label && label->text() == associationName) {
+            return true;
+            break;
+        }
+    }
+    return false;
+}
+
+void ClassEditDialog::loadSelfAssociations(){
+    ui->selfAssociationsTableWidget->setRowCount(0);
+    int row = 0;
+    for (const auto &pair : this->editedClass->getAssociationEnds()) {
+        if(pair.second->getClass().equals(*this->metaClass) && !isSelfAssociationVisited(QString::fromStdString(pair.second->getAssociation().getName()))){
+            ui->selfAssociationsTableWidget->insertRow(row);
+
+            QLabel *nameLabel = new QLabel(QString::fromStdString(pair.second->getAssociation().getName()));
+            nameLabel->setAlignment(Qt::AlignCenter);
+            ui->selfAssociationsTableWidget->setCellWidget(row, 0, nameLabel);
+
+            QLabel *typeLabel = new QLabel(getSelfAssociationType(pair.second->getType()));
+            typeLabel->setAlignment(Qt::AlignCenter);
+            ui->selfAssociationsTableWidget->setCellWidget(row, 1, typeLabel);
+
+            row++;
+        }
+
+    }
+}
+
+void ClassEditDialog::removeSelfAssociation(){
+    if(ui->selfAssociationsTableWidget->currentRow() == -1){
+        return;
+    }
+
+    auto *associationLabel = dynamic_cast<QLabel*>(this->ui->selfAssociationsTableWidget->cellWidget(this->ui->selfAssociationsTableWidget->currentRow(), 0));
+    auto associationName = associationLabel->text().toStdString();
+
+    auto reply = showQuestionMessageBox("Remove association", QString::fromStdString("Do you want to remove the self association '" + associationName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    auto associationItemViewHided = dynamic_cast<AssociationItemView*>(this->scene->getModelItemView(associationName));
+    //model->removeAssociation(associationName);
+    //scene->removeModelItemView(associationName);
+
+    for(auto aEnds : associationItemViewHided->getAssociationModel()->getAssociationEnds()){
+        this->editedClass->removeAssociationEnd(aEnds.first);
+    }
+
+    RemoveMetaAssociationCommand *command = new RemoveMetaAssociationCommand(associationItemViewHided, scene, model);
+    MainWindow::undoStack->push(command);
+
+    //accept();
+    this->loadSelfAssociations();
+
+}
+void ClassEditDialog::selfAssociationDoubleClicked(int row, int column){
+    QLabel * item = dynamic_cast<QLabel*>(ui->selfAssociationsTableWidget->cellWidget(row, 0));
+
+    auto associationItemView = dynamic_cast<AssociationItemView*>(scene->getModelItemView(item->text().toStdString()));
+    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation = this->model->getAssociation(item->text().toStdString());
+    AssociationEditDialog* associationEditDialog = new AssociationEditDialog(metaAssociation, scene, associationItemView, model);
+    int returnCode = associationEditDialog->exec();
+
+    if(returnCode == 1){
+        loadSelfAssociations();
+    }
+}
+
+void ClassEditDialog::addConstraint(){
+    std::string constraintName = "constraint" + std::to_string(this->constraintCounter);
+
+    while(this->editedClass->getOperation(constraintName) != nullptr){
+        this->constraintCounter++;
+        constraintName = "constraint" + std::to_string(this->constraintCounter);
+    }
+
+    auto metaConstraint = std::make_shared<MetaModel::MetaConstraint>(metaClass, constraintName);
+    ConstraintEditDialog *constraintEditDialog = new ConstraintEditDialog(metaConstraint, editedClass, this);
+    int opEditDialogReturnCode = constraintEditDialog->exec();
+
+    if(opEditDialogReturnCode == 1){
+        this->editedClass->addConstraint(metaConstraint);
+        this->loadConstraints();
+    }
+}
+
+void ClassEditDialog::removeConstraint(){
+    if(ui->constraintsTableWidget->currentRow() == -1){
+        return;
+    }
+
+    auto *constraintLabel = dynamic_cast<QLabel*>(this->ui->constraintsTableWidget->cellWidget(this->ui->constraintsTableWidget->currentRow(), 0));
+    auto constraintName = constraintLabel->text().toStdString();
+
+    auto reply = showQuestionMessageBox("Remove constraint", QString::fromStdString("Do you want to remove the constraint '" + constraintName + "'?"), this);
+    if(reply == QMessageBox::No){
+        return;
+    }
+
+    this->editedClass->removeConstraint(constraintName);
+    this->loadConstraints();
+}
+
+void ClassEditDialog::constraintCellDoubleClicked(int row, int column){
+    QLabel * item = dynamic_cast<QLabel*>(ui->constraintsTableWidget->cellWidget(row, 0)); //get the attribute name cell
+
+    std::shared_ptr<MetaModel::MetaConstraint> metaConstraint = this->editedClass->getConstraint(item->text().toStdString());
+    ConstraintEditDialog *constraintEditDialog = new ConstraintEditDialog(metaConstraint, editedClass, this);
+    int returnCode = constraintEditDialog->exec();
+
+    if(returnCode == 1){
+        loadConstraints();
     }
 }
 
@@ -227,7 +398,7 @@ void ClassEditDialog::saveChanges() {
 
 
         //ACTUALIZAR MAPA DE MAINWINDOW EN LOS COMANDOS
-        if(model == nullptr){
+        if(classView){
             MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
         }else{
             if(auto associationClassModelCast = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->metaClass)){

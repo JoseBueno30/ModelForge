@@ -460,6 +460,9 @@ void RemoveMetaAssociationCommand::undo(){
 
         model->addAssociationClass(associationClassItem->getAssociationClassModel());
     }else{
+        for(auto aEnd : this->associationEnds){
+            associationItemView->getAssociationModel()->addAssociationEnd(aEnd.second);
+        }
         model->addAssociation(this->associationItemView->getAssociationModel());
     }
 
@@ -472,7 +475,9 @@ void RemoveMetaAssociationCommand::undo(){
 }
 
 void RemoveMetaAssociationCommand::redo(){
+    qDebug() << "REDO BORRAR ASOCIACION";
     if(auto associationClassItem = this->associationItemView->getAssociationClassItem()){
+        qDebug() << "BORRANDO CLASE ASOCIACION" << associationClassItem->getAssociationClassModel()->getName();
         scene->removeItem(associationClassItem);
         scene->removeModelItemView(associationClassItem->getAssociationClassModel()->getName());
 
@@ -492,6 +497,14 @@ void RemoveMetaAssociationCommand::redo(){
 
         model->removeAssociationClass(associationClassItem->getAssociationClassModel()->getName());
     }else{
+        qDebug() << "BORRANDO ASOCIACION";
+
+        if(this->associationEnds.empty()){
+            for(auto aEnd : associationItemView->getAssociationModel()->MetaAssociation::getAssociationEnds()){
+                this->associationEnds[aEnd.first] = aEnd.second;
+            }
+        }
+
         model->removeAssociation(this->associationItemView->getAssociationModel()->getName());
     }
 
