@@ -24,6 +24,9 @@
 #include <metamodel/MetaAssociation.h>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QXmlStreamReader>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 QUndoStack* MainWindow::undoStack = new QUndoStack();
 
@@ -94,6 +97,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionNew_Model, &QAction::triggered, this, &MainWindow::newModel);
     connect(ui->actionClose_Model, &QAction::triggered, this, &MainWindow::closeModel);
     connect(ui->actionExportJava, &QAction::triggered, this, &MainWindow::exportToJava);
+    connect(ui->actionOpen_Layout, &QAction::triggered, this, &MainWindow::openLayoutFile);
+    connect(ui->actionSave_layout, &QAction::triggered, this, &MainWindow::saveLayout);
     connect(ui->addGeneralizationButton, &QPushButton::clicked, this, &MainWindow::openNewGeneralizationDialog);
 
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
@@ -174,21 +179,6 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
         xOffset += 200;
     }
 
-    // Draw generalizations
-    for(const auto& modelClass : model->getClasses()){
-        if(!modelClass.second->getSuperClasses().empty()){
-            ClassItemView* subClass = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelClass.second->getName()));
-            auto superClassIterator = modelClass.second->getSuperClasses().begin();
-            for(; superClassIterator != modelClass.second->getSuperClasses().end(); superClassIterator++){
-                ClassItemView* superClass = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(superClassIterator->second->getName()));
-
-                GeneralizationItemView *generalization = new GeneralizationItemView(superClass, subClass);
-                scene->addItem(generalization);
-            }
-        }
-
-    }
-
     //TODO - use model iterators
     for(const auto& modelAssoc : model->getAssociations()){
         ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(0)));
@@ -207,12 +197,172 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
         scene->addItem(item);
         item->addItemsToScene();
     }
+
+    // Draw generalizations
+    for(const auto& modelClass : model->getClasses()){
+        if(!modelClass.second->getSuperClasses().empty()){
+            ClassItemView* subClass = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelClass.second->getName()));
+            auto superClassIterator = modelClass.second->getSuperClasses().begin();
+            for(; superClassIterator != modelClass.second->getSuperClasses().end(); superClassIterator++){
+                ClassItemView* superClass = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(superClassIterator->second->getName()));
+
+                GeneralizationItemView *generalization = new GeneralizationItemView(superClass, subClass);
+                scene->addItem(generalization);
+            }
+        }
+    }
+
+    for(const auto& modelAssociationClass : model->getAssociationClasses()){
+        if(!modelAssociationClass.second->getSuperClasses().empty()){
+            AssociationClassItemView* subClass = dynamic_cast<AssociationClassItemView*>(this->scene->getModelItemView(modelAssociationClass.second->getName()));
+            auto superClassIterator = modelAssociationClass.second->getSuperClasses().begin();
+            for(; superClassIterator != modelAssociationClass.second->getSuperClasses().end(); superClassIterator++){
+                AssociationClassItemView* superClass = dynamic_cast<AssociationClassItemView*>(this->scene->getModelItemView(superClassIterator->second->getName()));
+
+                GeneralizationItemView *generalization = new GeneralizationItemView(superClass->getAssociationClassItemView(), subClass->getAssociationClassItemView());
+                scene->addItem(generalization);
+            }
+        }
+    }
 }
 
-void MainWindow::on_actionSwitch_mode_triggered()
-{
+void MainWindow::openCLTLayout(QFile& file){
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        ConsoleHandler::appendErrorLog("No se pudo abrir el archivo:" + path);
+        return;
+    }
+
+    QXmlStreamReader xml(&file);
+    bool inStrategy = false;
+    QString id = "";
+    QString type = "";
+    double x = 0, y = 0;
+
+    qDebug() << "Leyendo archivo";
+    while (!xml.atEnd() && !xml.hasError()) {
+        auto token = xml.readNext();
+        if (token == QXmlStreamReader::StartElement) {
+            // qDebug() << "Etiqueta: " << xml.name();
+            if (xml.name() == "node") {
+                // qDebug() << xml.attributes().value("id").toString() << " " << xml.attributes().value("type").toString();
+                id = xml.attributes().value("id").toString();
+                type = xml.attributes().value("type").toString();
+                // qDebug() << "Guarda " << id << " y " << type;
+            }
+            else if (xml.name() == "strategy") {
+                inStrategy = true;
+            }
+            else if (inStrategy && xml.name() == "x") {
+                x = xml.readElementText().toDouble();
+            }
+            else if (inStrategy && xml.name() == "y") {
+                y = xml.readElementText().toDouble();
+            }
+        }
+        else if (token == QXmlStreamReader::EndElement) {
+            // qDebug() << "sale en " << xml.name();
+            if (xml.name() == "strategy") {
+                inStrategy = false;
+            } else if (xml.name() == "node") {
+
+                // qDebug() << type << " a guardar";
+                if (type == "Class" || type == "Enum") {
+                    auto item = this->scene->getModelItemView(id.toStdString());
+
+                    if(type == "Class"){
+                        if(auto auxAssociationClass = dynamic_cast<AssociationClassItemView*>(item)){
+                            auxAssociationClass->getAssociationClassItemView()->setPos(x,y);
+                            auxAssociationClass->getAssociationClassItemView()->updateConnectionPositions();
+                        }
+                        else{
+                            item->setPos(x,y);
+                            if(auto auxItem = dynamic_cast<ClassItemView*>(item)){
+                                auxItem->updateConnectionPositions(); // Fix update association class dot line
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    this->scene->update();
+
+    qDebug() << "Cerrando archivo";
+
+    if (xml.hasError()) {
+        qWarning() << "Error en XML:" << xml.errorString();
+    }
+
+    file.close();
 
 }
+
+void MainWindow::openJSONLayout(QFile& file){
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "No se pudo abrir el archivo JSON";
+        return;
+    }
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(jsonData, &parseError);
+    if (parseError.error != QJsonParseError::NoError) {
+        qWarning() << "Error al parsear JSON:" << parseError.errorString();
+        return ;
+    }
+
+    if (!doc.isObject()) {
+        qWarning() << "El JSON raíz no es un objeto";
+        return;
+    }
+
+    QJsonObject root = doc.object();
+    for (auto it = root.begin(); it != root.end(); ++it) {
+        QString nodeName = it.key();
+        QJsonObject posObj = it.value().toObject();
+
+        double x = posObj["x"].toDouble();
+        double y = posObj["y"].toDouble();
+
+        auto item = this->scene->getModelItemView(nodeName.toStdString());
+
+        if(!dynamic_cast<AssociationItemView*>(item)){
+            if(auto auxAssocClass = dynamic_cast<AssociationClassItemView*>(item)){
+                auxAssocClass->getAssociationClassItemView()->setPos(x,y);
+                auxAssocClass->getAssociationClassItemView()->updateConnectionPositions();
+            }else{
+                item->setPos(x,y);
+                if(auto classItem = dynamic_cast<ClassItemView*>(item)){
+                    classItem->updateConnectionPositions();
+                }
+            }
+        }
+    }
+    this->scene->update();
+}
+
+void MainWindow::openLayoutFile(){
+
+    path = QFileDialog::getOpenFileName(this, "Select file", "", "USE Layout files (*.clt);;JSON Layout files (*.json);;All files (*.*)");
+    if (path.isEmpty()) {
+        return;
+    }
+
+    QFile file(path);
+    QFileInfo info(path);
+    try{
+        if(info.suffix() == "clt"){
+            openCLTLayout(file);
+        }else if(info.suffix() == "json"){
+            openJSONLayout(file);
+        }
+    }catch(std::exception e){
+        ConsoleHandler::appendErrorLog("Ha habido un error inesperado al intentar abrir el layout");
+    }
+}
+
 
 std::string base_name(std::string const & path)
 {
@@ -349,6 +499,52 @@ void MainWindow::openModelFile(){
     }
 }
 
+void MainWindow::saveLayout(){
+    path = QFileDialog::getSaveFileName(
+        this,                         // QWidget padre
+        "Save file",              // Título del diálogo
+        QString::fromStdString(this->model->getName() + ".json"),                             // Ruta inicial (puedes poner una por defecto)
+        "USE files (*.use)" // Filtros
+        );
+
+    if (QFile::exists(path)) {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::question(nullptr, "The file already exists",
+                                      "Do you want to overwrite it?",
+                                      QMessageBox::Yes | QMessageBox::No);
+
+        if (reply != QMessageBox::Yes) {
+            return; // No guardamos nada
+        }
+    }else {
+        QJsonObject root;
+
+        for(auto itemPair : this->scene->getModelItemViewElementsMap()){
+            if(!dynamic_cast<AssociationItemView*>(itemPair.second)){
+                QJsonObject pos;
+                if(auto assocClass = dynamic_cast<AssociationClassItemView*>(itemPair.second)){
+                    pos["x"] = assocClass->getAssociationClassItemView()->pos().x();
+                    pos["y"] = assocClass->getAssociationClassItemView()->pos().y();
+                }else{
+                    pos["x"] = itemPair.second->pos().x();
+                    pos["y"] = itemPair.second->pos().y();
+                }
+                root[QString::fromStdString(itemPair.first)] = pos;
+            }
+        }
+
+        QJsonDocument doc(root);
+        QFile file(path);
+        if (!file.open(QIODevice::WriteOnly)) {
+            qWarning() << "No se pudo abrir el archivo para escribir:" << path;
+            return;
+        }
+
+        file.write(doc.toJson(QJsonDocument::Indented)); // formato bonito
+        file.close();
+    }
+}
+
 void MainWindow::saveModel(){
     try{
         this->model->setName(ui->modelNameLineEdit->text().toStdString());
@@ -429,7 +625,9 @@ void MainWindow::newModel(){
         &ok                     // Si se pulsó OK o Cancelar
         );
 
-    if (!ok || modelName.isEmpty()) {
+    if (!ok){
+        return;
+    }else if(modelName.isEmpty()) {
         modelName = "NewModel";
     }
 

@@ -26,6 +26,8 @@ public:
     void addModelItemView(const std::string& key, QGraphicsItem *item);
     void removeModelItemView(const std::string& key);
 
+    std::map<std::string, QGraphicsItem*> getModelItemViewElementsMap();
+
 Q_SIGNALS:
     void itemMoved(QGraphicsItem * item, const QPointF& pos);
     void editAssociation(AssociationItemView * association);

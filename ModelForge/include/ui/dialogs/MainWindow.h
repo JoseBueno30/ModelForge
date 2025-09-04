@@ -27,13 +27,13 @@ public:
     static QUndoStack *undoStack;
 
 public Q_SLOTS:
-    void on_actionSwitch_mode_triggered();
-
     void setModel(std::shared_ptr<MetaModel::MetaModel> model);
     std::shared_ptr<MetaModel::MetaModel> getModel();
     void setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> model);
 
     void openModelFile();
+    void openLayoutFile();
+
     void openNewClassDialog();
     void openNewAssociationDialog();
     void openNewAssociationClassDialog();
@@ -43,6 +43,7 @@ public Q_SLOTS:
     void openNewGeneralizationDialog();
 
     void saveModel();
+    void saveLayout();
 
     void exportToJava();
 
@@ -68,5 +69,8 @@ private:
     void setupUndoStack();
     void enableModelActions();
     void disableModelActions();
+
+    void openCLTLayout(QFile& file);
+    void openJSONLayout(QFile& file);
 };
 #endif // MAINWINDOW_H

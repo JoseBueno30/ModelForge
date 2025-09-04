@@ -67,6 +67,10 @@ QGraphicsItem* ModelGraphicsScene::getModelItemView(const std::string& key){
     return nullptr;
 }
 
+std::map<std::string, QGraphicsItem*> ModelGraphicsScene::getModelItemViewElementsMap(){
+    return this->modelItemViewElementsMap;
+}
+
 void ModelGraphicsScene::addModelItemView(const std::string& key, QGraphicsItem *item){
     this->modelItemViewElementsMap[key] = item;
 }
