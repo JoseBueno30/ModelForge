@@ -7,6 +7,6 @@ void showExceptionMessageBox(QString title, QString msg, QWidget* parent){
 }
 
 QMessageBox::StandardButton showQuestionMessageBox(QString title, QString msg, QWidget* parent){
-    auto reply = QMessageBox::question(parent, title, msg, QMessageBox::Yes | QMessageBox::No);
+    auto reply = QMessageBox::warning(parent, title, msg, QMessageBox::Yes | QMessageBox::No);
     return reply;
 }
