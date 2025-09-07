@@ -14,6 +14,7 @@ set(USE_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/subsetsAssociationEnd_undefinedSubsettedAssociationEnd.use
     ${CMAKE_CURRENT_SOURCE_DIR}/associationEndDefinition_undefinedClass.use
     ${CMAKE_CURRENT_SOURCE_DIR}/duplicateClassDefinition.use
+    ${CMAKE_CURRENT_SOURCE_DIR}/BankAccount.use
 
 )
 

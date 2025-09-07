@@ -20,6 +20,8 @@ SETUP_TESTS(
    MetaEnum MetaAttribute MetaVariable MetaStateMachine MetaOperation MetaType MetaClass MetaAssociation MetaAssociationClass MetaAssociationEnd MetaModel MetaConstraint
 
    ANTLRVisitor
+
+   RoundtripTransformations
 )
 
 add_subdirectory(ANTLRVisitorUSETestFiles)

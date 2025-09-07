@@ -50,6 +50,8 @@ std::any VisitorUSE::visit(const MetaModel::MetaModel& metaModel){
         outFile << globalConstraints;
     }
 
+    this->save();
+
     return nullptr;
 }
 
