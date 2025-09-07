@@ -457,6 +457,22 @@ void MainWindow::openNewGeneralizationDialog(){
     addGeneralizationDialog->exec();
 }
 
+std::shared_ptr<MetaModel::MetaModel> MainWindow::loadModel(std::ifstream& file){
+    std::ostringstream buffer;
+    buffer << file.rdbuf();
+    antlr4::ANTLRInputStream input(buffer.str());
+
+    USELexer lexer(&input);
+    antlr4::CommonTokenStream tokens(&lexer);
+    USEParser parser(&tokens);
+
+    USEParser::ModelContext* tree = parser.model();
+
+    CustomUSEVisitor visitor;
+    visitor.visit(tree);
+
+    return visitor.model;
+}
 
 void MainWindow::openModelFile(){
     closeModel();
@@ -473,22 +489,9 @@ void MainWindow::openModelFile(){
             throw std::runtime_error("(0/)ModelForge didn't find the file.");
         }
         ConsoleHandler::appendStandardLog(QString::fromStdString("Loading '" + base_name(path.toStdString()) + "'"));
-        std::ostringstream buffer;
-        buffer << file.rdbuf();
-        antlr4::ANTLRInputStream input(buffer.str());
 
-        USELexer lexer(&input);
-        antlr4::CommonTokenStream tokens(&lexer);
-        USEParser parser(&tokens);
+        auto model = loadModel(file);
 
-        USEParser::ModelContext* tree = parser.model();
-
-        // Crea el visitor y visita el árbol
-        CustomUSEVisitor visitor;
-        visitor.visit(tree);
-
-        // Verifica que el MetaModel se haya creado correctamente
-        model = visitor.model;
         this->setupModelGraphicsView(model);
         ui->modelNameLineEdit->setText(QString::fromStdString(model->getName()));
         ConsoleHandler::appendSuccessfulLog(QString::fromStdString("Model '" + model->getName() + "' was succesfully loaded."));
@@ -576,38 +579,67 @@ void MainWindow::saveModel(){
         QFileInfo fileInfo(path);
         qDebug() << "Archivo a guardar: " << path;
         // QString directory = fileInfo.absolutePath();
-        ModelToText::VisitorUSE visitorUSE(path.toStdString());
 
-        model->accept(visitorUSE);
+        QString tempPath = QDir::temp().filePath("modelforge_tmp.use");
+        {
+            ModelToText::VisitorUSE tempVisitor(tempPath.toStdString());
+            model->accept(tempVisitor);
+        }
 
-        ConsoleHandler::appendSuccessfulLog("The file was succesfully saved.");
+        std::shared_ptr<MetaModel::MetaModel> testModel;
+        try {
+            std::ifstream tempFile(tempPath.toStdString());
+            testModel = loadModel(tempFile);
+            tempFile.close();
+        } catch (const std::exception &ex) {
+            ConsoleHandler::appendErrorLog("Validation failed: the model can't be saved.");
+            QFile::remove(tempPath);
+            return;
+        }
+
+        if (!testModel) {
+            ConsoleHandler::appendErrorLog("Validation failed: the model can't be saved.");
+            QFile::remove(tempPath);
+            return;
+        } else {
+            ModelToText::VisitorUSE visitorUSE(path.toStdString());
+            model->accept(visitorUSE);
+        }
+
+        QFile::remove(tempPath);
+        ConsoleHandler::appendSuccessfulLog("The file was successfully saved.");
     }
-    catch(std::runtime_error){
-        ConsoleHandler::appendErrorLog("The file couldn't be saved.");
+    catch (const std::runtime_error& e) {
+        ConsoleHandler::appendErrorLog(QString("The file couldn't be saved: ") + QString::fromUtf8(e.what()));
     }
 
 }
 
 void MainWindow::exportToJava(){
-    if(path == nullptr){
-        QString  path = QFileDialog::getSaveFileName(
-            this,                         // QWidget padre
-            "Save file",              // Título del diálogo
-            "",                             // Ruta inicial (puedes poner una por defecto)
-            "USE files (*.use)" // Filtros
-            );
+    try{
+        if(path == nullptr){
+            QString  path = QFileDialog::getSaveFileName(
+                this,                         // QWidget padre
+                "Save file",              // Título del diálogo
+                "",                             // Ruta inicial (puedes poner una por defecto)
+                "USE files (*.use)" // Filtros
+                );
+            }
+
+        if (!path.isEmpty()) {
+            QFileInfo fileInfo(path);
+            QString directoryPath = fileInfo.absolutePath();
+            qDebug() << "Directory path:" << directoryPath;
+
+            ModelToText::VisitorJava visitorJava(directoryPath.toStdString());
+
+            model->accept(visitorJava);
+
+            ConsoleHandler::appendSuccessfulLog("Java code succesfully generated.");
         }
-
-    if (!path.isEmpty()) {
-        QFileInfo fileInfo(path);
-        QString directoryPath = fileInfo.absolutePath();
-        qDebug() << "Directory path:" << directoryPath;
-
-        ModelToText::VisitorJava visitorJava(directoryPath.toStdString());
-
-        model->accept(visitorJava);
-
-        ConsoleHandler::appendSuccessfulLog("Java code succesfully generated.");
+    }
+    catch (const std::runtime_error& e) {
+        ConsoleHandler::appendErrorLog(QString("Java code couldn't be generated: ") + QString::fromUtf8(e.what()));
     }
 
 }

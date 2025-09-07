@@ -34,6 +34,8 @@ public Q_SLOTS:
     void openModelFile();
     void openLayoutFile();
 
+    std::shared_ptr<MetaModel::MetaModel> loadModel(std::ifstream& file);
+
     void openNewClassDialog();
     void openNewAssociationDialog();
     void openNewAssociationClassDialog();
