@@ -490,7 +490,7 @@ void MainWindow::openModelFile(){
         }
         ConsoleHandler::appendStandardLog(QString::fromStdString("Loading '" + base_name(path.toStdString()) + "'"));
 
-        auto model = loadModel(file);
+        this->model = loadModel(file);
 
         this->setupModelGraphicsView(model);
         ui->modelNameLineEdit->setText(QString::fromStdString(model->getName()));

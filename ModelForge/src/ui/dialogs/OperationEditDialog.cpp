@@ -123,6 +123,13 @@ void OperationEditDialog::conditionCellDoubleClicked(int row, int column){
 
     int returnCode = conditionEditDialog->exec();
     if(returnCode == 1){
+        if(type->text().toLower() == "pre"){
+            this->metaOperation->removePreCondition(item->text().toStdString());
+            this->metaOperation->addPreCondition(condition);
+        }else{
+            this->metaOperation->removePostCondition(item->text().toStdString());
+            this->metaOperation->addPostCondition(condition);
+        }
         ui->conditionsTableWidget->setRowCount(0);
         loadConditions(metaOperation->getPreConditions());
         loadConditions(metaOperation->getPostConditions());
@@ -184,6 +191,8 @@ void OperationEditDialog::variableCellDoubleClicked(int row, int column){
     int returnCode = variableEditDialog->exec();
 
     if(returnCode == 1) {
+        this->metaOperation->removeVariable(item->text().toStdString());
+        this->metaOperation->addVariable(variable);
         loadVariables();
     }
 }

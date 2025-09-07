@@ -278,6 +278,8 @@ void ClassEditDialog::constraintCellDoubleClicked(int row, int column){
     int returnCode = constraintEditDialog->exec();
 
     if(returnCode == 1){
+        this->editedClass->removeConstraint(item->text().toStdString());
+        this->editedClass->addConstraint(metaConstraint);
         loadConstraints();
     }
 }
@@ -307,6 +309,8 @@ void ClassEditDialog::operationCellDoubleClicked(int row, int column){
     int returnCode = opEditDialog->exec();
 
     if(returnCode == 1){
+        this->editedClass->removeOperation(item->text().toStdString());
+        this->editedClass->addOperation(metaOperation);
         loadOperations();
     }
 }
