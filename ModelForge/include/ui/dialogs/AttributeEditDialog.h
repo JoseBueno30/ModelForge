@@ -26,7 +26,8 @@ private Q_SLOTS:
 private:
     bool isValidAttribute();
 
-    std::shared_ptr<MetaModel::MetaType> getTypeFromComboBox(QString type);
+    std::shared_ptr<MetaModel::MetaType> getType(QString type);
+    std::shared_ptr<MetaModel::MetaType> getSingleTypeFromComboBox(QString type);
 
     void loadVisibility();
     void saveVisibility();

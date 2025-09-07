@@ -693,6 +693,7 @@ void MainWindow::closeModel(){
 
 void MainWindow::enableModelActions(){
     ui->modelNameLineEdit->setEnabled(true);
+    ui->modelNameLineEdit->setText(QString::fromStdString(this->model->getName()));
 
     ui->actionCopy->setEnabled(true);
     ui->actionCut->setEnabled(true);

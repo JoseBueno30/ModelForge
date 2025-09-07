@@ -34,6 +34,12 @@ AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribut
     }
     ui->typeComboBox->setCurrentText(QString::fromStdString(metaAttribute->getType().toString()));
 
+    if(auto collectionType = std::dynamic_pointer_cast<MetaModel::CollectionType>(metaAttribute->getTypePtr())){
+        ui->collectionGroupBox->setChecked(true);
+        ui->isUniqueCheckBox->setChecked(collectionType->getIsUnique());
+        ui->isOrderedCheckBox->setChecked(collectionType->getIsOrdered());
+    }
+
     loadVisibility();
 }
 
@@ -79,29 +85,40 @@ void AttributeEditDialog::saveVisibility(){
 
     metaAttribute->setVisibility(vis);
 }
-
-
-std::shared_ptr<MetaModel::MetaType> AttributeEditDialog::getTypeFromComboBox(QString type){
+std::shared_ptr<MetaModel::MetaType> AttributeEditDialog::getSingleTypeFromComboBox(QString type){
     if (type == "Integer"){
         return MetaModel::Integer::instance();
-    }else if(type == "Real"){
+    }
+    else if(type == "Real"){
         return MetaModel::Real::instance();
-    }else if(type == "String"){
+    }
+    else if(type == "String"){
         return MetaModel::String::instance();
-    }else if(type == "Boolean"){
+    }
+    else if(type == "Boolean"){
         return MetaModel::Boolean::instance();
     }
-    if (auto cls = metaModel->getClass(type.toStdString())) {
+    else if (auto cls = metaModel->getClass(type.toStdString())) {
         return cls;
     }
-    if (auto en = metaModel->getEnum(type.toStdString())) {
+    else if (auto en = metaModel->getEnum(type.toStdString())) {
         return en;
     }
-    if (auto assocCls = metaModel->getAssociationClass((type.toStdString()))){
+    else if (auto assocCls = metaModel->getAssociationClass((type.toStdString()))){
         return assocCls;
     }
 
     return nullptr;
+}
+
+std::shared_ptr<MetaModel::MetaType> AttributeEditDialog::getType(QString type){
+    auto typePtr = getSingleTypeFromComboBox(type);
+    if(ui->collectionGroupBox->isChecked()){
+        auto collection = std::make_shared<MetaModel::CollectionType>(ui->isOrderedCheckBox->isChecked(), ui->isUniqueCheckBox->isChecked(), ui->sizeSpinBox->value(), typePtr);
+        return collection;
+    }else{
+        return typePtr;
+    }
 }
 
 void AttributeEditDialog::saveChanges(){
@@ -112,7 +129,7 @@ void AttributeEditDialog::saveChanges(){
     }
 
     metaAttribute->setName(ui->nameLineEdit->text().toStdString());
-    metaAttribute->setType(getTypeFromComboBox(ui->typeComboBox->currentText()));
+    metaAttribute->setType(getType(ui->typeComboBox->currentText()));
 
     saveVisibility();
 
