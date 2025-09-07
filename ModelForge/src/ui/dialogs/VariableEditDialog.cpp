@@ -1,3 +1,4 @@
+#include "metamodel/MetaModel.h"
 #include "utils/MessageBox.h"
 #include <ui/dialogs/VariableEditDialog.h>
 
@@ -7,8 +8,8 @@
 
 #include <ui/components/ConsoleHandler.h>
 
-VariableEditDialog::VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable,std::shared_ptr<MetaModel::MetaOperation> metaOperation, QWidget* parent)
-    : metaVariable(metaVariable), metaOperation(metaOperation), QDialog(parent){
+VariableEditDialog::VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> metaVariable, std::shared_ptr<MetaModel::MetaOperation> metaOperation,  std::shared_ptr<MetaModel::MetaModel> metaModel, QWidget* parent)
+    : metaVariable(metaVariable), metaOperation(metaOperation), metaModel(metaModel), QDialog(parent){
     ui = new Ui::VariableEditDialog();
     ui->setupUi(this);
 
@@ -24,26 +25,39 @@ VariableEditDialog::VariableEditDialog(std::shared_ptr<MetaModel::MetaVariable> 
 
 void VariableEditDialog::loadComboBoxTypes(){
     ui->typeComboBox->addItems({"Integer", "Real", "String", "Boolean"});
+    for (const auto& [name, cls] : metaModel->getClasses()) {
+        ui->typeComboBox->addItem(QString::fromStdString(name));
+    }
+    for (const auto& [name, en] : metaModel->getEnums()) {
+        ui->typeComboBox->addItem(QString::fromStdString(name));
+    }
+    for (const auto& [name, assocCls] : metaModel->getAssociationClasses()) {
+        ui->typeComboBox->addItem(QString::fromStdString(name));
+    }
     ui->typeComboBox->setCurrentText(QString::fromStdString(metaVariable->getType().toString()));
 }
 
-std::shared_ptr<MetaModel::MetaType> VariableEditDialog::getTypeFromComboBox(){
-    switch (ui->typeComboBox->currentIndex()) {
-    case 0:
+std::shared_ptr<MetaModel::MetaType> VariableEditDialog::getTypeFromComboBox(QString type){
+    if (type == "Integer"){
         return MetaModel::Integer::instance();
-        break;
-    case 1:
+    }else if(type == "Real"){
         return MetaModel::Real::instance();
-        break;
-    case 2:
+    }else if(type == "String"){
         return MetaModel::String::instance();
-        break;
-    case 3:
+    }else if(type == "Boolean"){
         return MetaModel::Boolean::instance();
-    default:
-        return MetaModel::Integer::instance(); // Devolver tipo personalizado del modelo si se puediese
-        break;
     }
+    if (auto cls = metaModel->getClass(type.toStdString())) {
+        return cls;
+    }
+    if (auto en = metaModel->getEnum(type.toStdString())) {
+        return en;
+    }
+    if (auto assocCls = metaModel->getAssociationClass((type.toStdString()))){
+        return assocCls;
+    }
+
+    return nullptr;
 }
 
 void VariableEditDialog::saveChanges(){
@@ -54,7 +68,7 @@ void VariableEditDialog::saveChanges(){
 
     metaVariable->setName(ui->nameLineEdit->text().toStdString());
 
-    metaVariable->setType(getTypeFromComboBox());
+    metaVariable->setType(getTypeFromComboBox(ui->typeComboBox->currentText()));
 
     accept();
 }

@@ -4,6 +4,7 @@
 #include "metamodel/MetaAttribute.h"
 #include "metamodel/MetaClass.h"
 #include <QDialog>
+#include <metamodel/MetaModel.h>
 
 
 namespace Ui {
@@ -15,7 +16,7 @@ class AttributeEditDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, std::shared_ptr<MetaModel::MetaClass> metaClass, QWidget *parent = nullptr);
+    explicit AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, std::shared_ptr<MetaModel::MetaClass> metaClass,  std::shared_ptr<MetaModel::MetaModel> metaModel, QWidget *parent = nullptr);
     ~AttributeEditDialog();
 
 private Q_SLOTS:
@@ -25,12 +26,15 @@ private Q_SLOTS:
 private:
     bool isValidAttribute();
 
+    std::shared_ptr<MetaModel::MetaType> getTypeFromComboBox(QString type);
+
     void loadVisibility();
     void saveVisibility();
 
     Ui::AttributeEditDialog *ui;
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute;
     std::shared_ptr<MetaModel::MetaClass> metaClass;
+    std::shared_ptr<MetaModel::MetaModel> metaModel;
 };
 
 #endif // ATTRIBUTEEDITDIALOG_H

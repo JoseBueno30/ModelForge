@@ -5,8 +5,8 @@
 #include <src/ui/dialogs/ui_OperationEditDialog.h>
 #include <ui/components/ConsoleHandler.h>
 
-OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass, QWidget* parent)
-    : metaOperation(metaOperation), metaClass(metaClass), QDialog(parent), ui(new Ui::OperationEditDialog)
+OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass,  std::shared_ptr<MetaModel::MetaModel> metaModel, QWidget* parent)
+    : metaOperation(metaOperation), metaClass(metaClass), metaModel(metaModel), QDialog(parent), ui(new Ui::OperationEditDialog)
 {
     ui->setupUi(this);
     ui->operationNamelineEdit->setText(QString::fromStdString(metaOperation->getName()));
@@ -45,6 +45,15 @@ OperationEditDialog::OperationEditDialog(std::shared_ptr<MetaModel::MetaOperatio
 
 void OperationEditDialog::loadReturnType(){
     ui->returnTypeComboBox->addItems({"Integer", "Real", "String", "Boolean"});
+    for (const auto& [name, cls] : metaModel->getClasses()) {
+        ui->returnTypeComboBox->addItem(QString::fromStdString(name));
+    }
+    for (const auto& [name, en] : metaModel->getEnums()) {
+        ui->returnTypeComboBox->addItem(QString::fromStdString(name));
+    }
+    for (const auto& [name, assocCls] : metaModel->getAssociationClasses()) {
+        ui->returnTypeComboBox->addItem(QString::fromStdString(name));
+    }
     ui->returnTypeComboBox->setCurrentText(QString::fromStdString(metaOperation->getReturnType().toString()));
 }
 
@@ -187,7 +196,7 @@ void OperationEditDialog::variableCellDoubleClicked(int row, int column){
 
     auto variable = metaOperation->getVariable(item->text().toStdString());
 
-    VariableEditDialog* variableEditDialog = new VariableEditDialog(variable, metaOperation, this);
+    VariableEditDialog* variableEditDialog = new VariableEditDialog(variable, metaOperation, metaModel, this);
     int returnCode = variableEditDialog->exec();
 
     if(returnCode == 1) {
@@ -200,7 +209,7 @@ void OperationEditDialog::variableCellDoubleClicked(int row, int column){
 void OperationEditDialog::addNewVariable(){
     auto newVariable = std::make_shared<MetaModel::MetaVariable>("newVariable"+ std::to_string(variablesCont), MetaModel::Integer::instance());
 
-    VariableEditDialog* variableEditDialog = new VariableEditDialog(newVariable, metaOperation, this);
+    VariableEditDialog* variableEditDialog = new VariableEditDialog(newVariable, metaOperation, metaModel, this);
     int returnCode = variableEditDialog->exec();
 
     if(returnCode == 1) {
@@ -226,16 +235,31 @@ void OperationEditDialog::removeVariable(){
     this->loadVariables();
 }
 
-void OperationEditDialog::saveReturnType(QString type){
+std::shared_ptr<MetaModel::MetaType> OperationEditDialog::getTypeFromComboBox(QString type){
     if (type == "Integer"){
-        metaOperation->setReturnType(MetaModel::Integer::instance());
+        return MetaModel::Integer::instance();
     }else if(type == "Real"){
-        metaOperation->setReturnType(MetaModel::Real::instance());
+        return MetaModel::Real::instance();
     }else if(type == "String"){
-        metaOperation->setReturnType(MetaModel::String::instance());
-    }else{
-        metaOperation->setReturnType(MetaModel::Boolean::instance());
+        return MetaModel::String::instance();
+    }else if(type == "Boolean"){
+        return MetaModel::Boolean::instance();
     }
+    if (auto cls = metaModel->getClass(type.toStdString())) {
+        return cls;
+    }
+    if (auto en = metaModel->getEnum(type.toStdString())) {
+        return en;
+    }
+    if (auto assocCls = metaModel->getAssociationClass((type.toStdString()))){
+        return assocCls;
+    }
+
+    return nullptr;
+}
+
+void OperationEditDialog::saveReturnType(QString type){
+    metaOperation->setReturnType(getTypeFromComboBox(type));
 }
 
 void OperationEditDialog::saveVisibility(){

@@ -7,11 +7,12 @@
 #include <metamodel/MetaType.h>
 #include <ui/components/ConsoleHandler.h>
 
-AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, std::shared_ptr<MetaModel::MetaClass> metaClass, QWidget *parent) :
+AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribute> metaAttribute, std::shared_ptr<MetaModel::MetaClass> metaClass, std::shared_ptr<MetaModel::MetaModel> metaModel, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AttributeEditDialog),
     metaAttribute(metaAttribute),
-    metaClass(metaClass)
+    metaClass(metaClass),
+    metaModel(metaModel)
 {
     ui->setupUi(this);
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &AttributeEditDialog::saveChanges);
@@ -22,6 +23,15 @@ AttributeEditDialog::AttributeEditDialog(std::shared_ptr<MetaModel::MetaAttribut
 
     ui->nameLineEdit->setText(QString::fromStdString(metaAttribute->getName()));
     ui->typeComboBox->addItems({"Integer", "Real", "String", "Boolean"});
+    for (const auto& [name, cls] : metaModel->getClasses()) {
+        ui->typeComboBox->addItem(QString::fromStdString(name));
+    }
+    for (const auto& [name, en] : metaModel->getEnums()) {
+        ui->typeComboBox->addItem(QString::fromStdString(name));
+    }
+    for (const auto& [name, assocCls] : metaModel->getAssociationClasses()) {
+        ui->typeComboBox->addItem(QString::fromStdString(name));
+    }
     ui->typeComboBox->setCurrentText(QString::fromStdString(metaAttribute->getType().toString()));
 
     loadVisibility();
@@ -71,16 +81,27 @@ void AttributeEditDialog::saveVisibility(){
 }
 
 
-std::shared_ptr<MetaModel::MetaType> getTypefromComboBox(QString type){
+std::shared_ptr<MetaModel::MetaType> AttributeEditDialog::getTypeFromComboBox(QString type){
     if (type == "Integer"){
         return MetaModel::Integer::instance();
     }else if(type == "Real"){
         return MetaModel::Real::instance();
     }else if(type == "String"){
         return MetaModel::String::instance();
-    }else{
+    }else if(type == "Boolean"){
         return MetaModel::Boolean::instance();
     }
+    if (auto cls = metaModel->getClass(type.toStdString())) {
+        return cls;
+    }
+    if (auto en = metaModel->getEnum(type.toStdString())) {
+        return en;
+    }
+    if (auto assocCls = metaModel->getAssociationClass((type.toStdString()))){
+        return assocCls;
+    }
+
+    return nullptr;
 }
 
 void AttributeEditDialog::saveChanges(){
@@ -91,15 +112,17 @@ void AttributeEditDialog::saveChanges(){
     }
 
     metaAttribute->setName(ui->nameLineEdit->text().toStdString());
-    metaAttribute->setType(getTypefromComboBox(ui->typeComboBox->currentText()));
+    metaAttribute->setType(getTypeFromComboBox(ui->typeComboBox->currentText()));
 
     saveVisibility();
 
-    std::shared_ptr<MetaModel::Expr> derivedExpr = std::make_shared<MetaModel::Expr>(ui->derivedExprTextEdit->toPlainText().toStdString());
-    metaAttribute->setDeriveExpr(derivedExpr);
-
-    std::shared_ptr<MetaModel::Expr> initExpr = std::make_shared<MetaModel::Expr>(ui->initExprTextEdit->toPlainText().toStdString());
-    metaAttribute->setInitExpr(initExpr);
+    if(!ui->derivedExprTextEdit->toPlainText().isEmpty()){
+        std::shared_ptr<MetaModel::Expr> derivedExpr = std::make_shared<MetaModel::Expr>(ui->derivedExprTextEdit->toPlainText().toStdString());
+        metaAttribute->setDeriveExpr(derivedExpr);
+    }else if(!ui->initExprTextEdit->toPlainText().isEmpty()){
+        std::shared_ptr<MetaModel::Expr> initExpr = std::make_shared<MetaModel::Expr>(ui->initExprTextEdit->toPlainText().toStdString());
+        metaAttribute->setInitExpr(initExpr);
+    }
 
     accept();
 }

@@ -8,7 +8,8 @@ end
 class Account < SuperAccount
 attributes
 balance : Integer --+
-test : Person --+
+test : Integer --+
+ init = 0
 type : AccountType --+
 operations
 transfer(variable : Integer) : Integer --#
@@ -17,7 +18,7 @@ transfer(variable : Integer) : Integer --#
     end
 
 pre BalancePositive: self.balance > 0
-post ResultGreaterThanStart: self.balance.result > self.balance
+post ResultGreaterThanStart: self.balance + 1 > self.balance
 constraints
 inv Positive_Balance:
 	self.balance > 0

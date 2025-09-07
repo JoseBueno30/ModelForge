@@ -290,7 +290,7 @@ void ClassEditDialog::attributeCellDoubleClicked(int row, int column){
     //qDebug() << "crea el item";
     qDebug() << "Editar atributo: " << item->text();
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = this->editedClass->getAttribute(item->text().toStdString());
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, this);
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, model, this);
     int returnCode = attrEditDialog->exec();
 
     if(returnCode == 1){
@@ -305,7 +305,7 @@ void ClassEditDialog::operationCellDoubleClicked(int row, int column){
     QLabel * item = dynamic_cast<QLabel*>(ui->operationTableWidget->cellWidget(row, 0));
 
     std::shared_ptr<MetaModel::MetaOperation> metaOperation = this->editedClass->getOperation(item->text().toStdString());
-    OperationEditDialog* opEditDialog = new OperationEditDialog(metaOperation, editedClass, this);
+    OperationEditDialog* opEditDialog = new OperationEditDialog(metaOperation, editedClass, model, this);
     int returnCode = opEditDialog->exec();
 
     if(returnCode == 1){
@@ -324,7 +324,7 @@ void ClassEditDialog::addOperation(){
     }
 
     auto metaOperation = std::make_shared<MetaModel::MetaOperation>(operationName, "", MetaModel::Integer::instance());
-    OperationEditDialog *opEditDialog = new OperationEditDialog(metaOperation, editedClass, this);
+    OperationEditDialog *opEditDialog = new OperationEditDialog(metaOperation, editedClass, model, this);
     int opEditDialogReturnCode = opEditDialog->exec();
 
     if(opEditDialogReturnCode == 1){
@@ -359,7 +359,7 @@ void ClassEditDialog::addAttribute() {
 
     auto metaAttribute = std::make_shared<MetaModel::MetaAttribute>(attributeName , MetaModel::Integer::instance());
 
-    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, this);
+    AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, model, this);
 
     int attrEditDialogReturnCode = attrEditDialog->exec();
 

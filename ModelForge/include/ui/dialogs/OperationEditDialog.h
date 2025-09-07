@@ -4,6 +4,7 @@
 #include "metamodel/MetaOperation.h"
 #include <QDialog>
 #include <metamodel/MetaClass.h>
+#include <metamodel/MetaModel.h>
 
 namespace Ui{
 class OperationEditDialog;
@@ -13,7 +14,7 @@ class OperationEditDialog : public QDialog{
     Q_OBJECT
 
 public:
-    OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass, QWidget* parent = nullptr);
+    OperationEditDialog(std::shared_ptr<MetaModel::MetaOperation> metaOperation, std::shared_ptr<MetaModel::MetaClass> metaClass,  std::shared_ptr<MetaModel::MetaModel> metaModel, QWidget* parent = nullptr);
 
 
 private Q_SLOTS:
@@ -40,8 +41,11 @@ private:
     Ui::OperationEditDialog* ui;
     std::shared_ptr<MetaModel::MetaOperation> metaOperation;
     std::shared_ptr<MetaModel::MetaClass> metaClass;
+    std::shared_ptr<MetaModel::MetaModel> metaModel;
 
     int variablesCont = 0, conditionsCont = 0;
+
+    std::shared_ptr<MetaModel::MetaType> getTypeFromComboBox(QString type);
 
     bool isValidOperation();
 };
