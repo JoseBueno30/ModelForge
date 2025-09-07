@@ -292,7 +292,10 @@ void ClassEditDialog::attributeCellDoubleClicked(int row, int column){
     int returnCode = attrEditDialog->exec();
 
     if(returnCode == 1){
+        this->editedClass->removeAttribute(item->text().toStdString());
+        this->editedClass->addAttribute(metaAttribute);
         loadAttributes();
+
     }
 }
 
