@@ -80,7 +80,6 @@ void OperationEditDialog::loadConditions(std::map<std::string, std::shared_ptr<M
     int row = 0;
 
     for(auto conditionPair : conditions){
-        qDebug() << "fila: " << row;
         ui->conditionsTableWidget->insertRow(row);
 
         QLabel *nameLabel = new QLabel(QString::fromStdString(conditionPair.first));
@@ -180,7 +179,6 @@ void OperationEditDialog::removeCondition(){
 
     auto *conditionTypeLabel = dynamic_cast<QLabel*>(this->ui->conditionsTableWidget->cellWidget(this->ui->conditionsTableWidget->currentRow(), 1));
     auto conditionType = conditionTypeLabel->text().toStdString();
-    qDebug() << "Tipo condicion a eliminar: " << conditionType;
     if(conditionType == "Pre"){
         metaOperation->removePreCondition(conditionName);
     }else{

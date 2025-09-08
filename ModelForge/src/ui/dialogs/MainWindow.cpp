@@ -32,22 +32,14 @@ QUndoStack* MainWindow::undoStack = new QUndoStack();
 
 void openColorTheme(bool toogle = true){
     if(toogle) ThemeManager::toogleTheme();
-    else qDebug() << "no toogle" << toogle;
 
     QString theme = ThemeManager::getTheme() ? "light" : "dark";
     QFile file(":/styles/" + theme + ".qss");
-    qDebug() << "Tema: " << theme;
     qApp->setPalette(theme == "light" ? ThemeManager::getLightPalette() : ThemeManager::getDarkPalette());
 
     QPalette defaultPalette = QApplication::palette();
 
-    qDebug() << "Color de fondo:" << defaultPalette.color(QPalette::Window);
-    qDebug() << "Color de texto:" << defaultPalette.color(QPalette::WindowText);
-    qDebug() << "Color de fondo del botón:" << defaultPalette.color(QPalette::Button);
-    qDebug() << "Color de texto del botón:" << defaultPalette.color(QPalette::ButtonText);
-
     if(file.open(QFile::ReadOnly)){
-        qDebug() << "entra";
         QString stylesheet = file.readAll();
         qApp->setStyleSheet(stylesheet);
 
@@ -66,7 +58,7 @@ std::shared_ptr<MetaModel::MetaModel> MainWindow::getModel(){
 }
 
 void checkTrigger(){
-    qDebug() << "Ctrl + z";
+
 }
 void openColorThemeAux(){
     openColorTheme();
@@ -78,10 +70,8 @@ MainWindow::MainWindow(QWidget *parent)
     theme("dark")
 {
     ui->setupUi(this);
-    //qDebug() << ui->actionOpen_Model->icon().name() << "\t" << ui->actionOpen_Model->icon().themeName();
     setupUndoStack();
 
-    //qDebug() << "Palette: " << qApp->palette().window();
     ThemeManager::createPalettes(qApp->palette());
     qApp->setStyle(QStyleFactory::create("fusion"));
 
@@ -114,7 +104,6 @@ MainWindow::MainWindow(QWidget *parent)
     bool succes = connect(scene, &ModelGraphicsScene::itemMoved, this, &MainWindow::itemMoved);
     connect(scene, &ModelGraphicsScene::editAssociation, this, &MainWindow::openEditAssociationDialog);
     connect(scene, &ModelGraphicsScene::editClass, this, &MainWindow::openEditClassDialog);
-    qDebug() << "Connect = " << succes;
     modelGraphicsView->setScene(scene);
 
     ThemeManager::getInitialTheme();
@@ -147,8 +136,6 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> model){
-    // qDebug() << "El nombre del MetaModel es: " << model->getName();
-
     int xOffset = -450;
     int yOffset = -200;
     int width = 150;
@@ -158,8 +145,6 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
     QGraphicsView * modelGraphicsView = ui->modelGraphicsView;
 
     QGraphicsScene *scene = modelGraphicsView->scene();
-
-    qDebug() <<"SCENE: "<< scene;
 
     for(const auto& modelEnum : model->getEnums()){
         EnumItemView * item = new EnumItemView(modelEnum.second, xOffset, yOffset, width, height);
@@ -179,7 +164,6 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
         xOffset += 200;
     }
 
-    //TODO - use model iterators
     for(const auto& modelAssoc : model->getAssociations()){
         ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(0)));
         ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssoc.second->getAssociationEndsClassesNames().at(1)));
@@ -192,7 +176,6 @@ void MainWindow::setupModelGraphicsView(std::shared_ptr<MetaModel::MetaModel> mo
         ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(0)));
         ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(modelAssocClass.second->getAssociationEndsClassesNames().at(1)));
         AssociationClassItemView* item = new AssociationClassItemView(modelAssocClass.second, class1, class2);
-        qDebug() << "AsocClass: " << modelAssocClass.second->getName();
         this->scene->addModelItemView(modelAssocClass.second->getName(), item);
         scene->addItem(item);
         item->addItemsToScene();
@@ -238,16 +221,12 @@ void MainWindow::openCLTLayout(QFile& file){
     QString type = "";
     double x = 0, y = 0;
 
-    qDebug() << "Leyendo archivo";
     while (!xml.atEnd() && !xml.hasError()) {
         auto token = xml.readNext();
         if (token == QXmlStreamReader::StartElement) {
-            // qDebug() << "Etiqueta: " << xml.name();
             if (xml.name() == "node") {
-                // qDebug() << xml.attributes().value("id").toString() << " " << xml.attributes().value("type").toString();
                 id = xml.attributes().value("id").toString();
                 type = xml.attributes().value("type").toString();
-                // qDebug() << "Guarda " << id << " y " << type;
             }
             else if (xml.name() == "strategy") {
                 inStrategy = true;
@@ -260,12 +239,10 @@ void MainWindow::openCLTLayout(QFile& file){
             }
         }
         else if (token == QXmlStreamReader::EndElement) {
-            // qDebug() << "sale en " << xml.name();
             if (xml.name() == "strategy") {
                 inStrategy = false;
             } else if (xml.name() == "node") {
 
-                // qDebug() << type << " a guardar";
                 if (type == "Class" || type == "Enum") {
                     auto item = this->scene->getModelItemView(id.toStdString());
 
@@ -286,8 +263,6 @@ void MainWindow::openCLTLayout(QFile& file){
         }
     }
     this->scene->update();
-
-    qDebug() << "Cerrando archivo";
 
     if (xml.hasError()) {
         qWarning() << "Error en XML:" << xml.errorString();
@@ -370,7 +345,6 @@ std::string base_name(std::string const & path)
 }
 
 void MainWindow::openNewClassDialog(){
-    qDebug() << "lol";
     if(this->model != nullptr){
         std::string defaultName = "NewClass";
         int defaultNameCont = 0;
@@ -417,7 +391,6 @@ void MainWindow::openNewAssociationClassDialog(){
         ClassEditDialog* classInfoEdit = new ClassEditDialog(newAssociationClass, scene, nullptr, this->model, this);
         int returnCode = classInfoEdit->exec();
 
-        qDebug() << "Atributos de la nueva  clase asociacion: " << newAssociationClass->getAttributes().size();
         if(returnCode){
             AssociationEditDialog* associationInfoEdit = new AssociationEditDialog(newAssociationClass, scene, nullptr, this->model);
             associationInfoEdit->exec();
@@ -577,8 +550,6 @@ void MainWindow::saveModel(){
         }
 
         QFileInfo fileInfo(path);
-        qDebug() << "Archivo a guardar: " << path;
-        // QString directory = fileInfo.absolutePath();
 
         QString tempPath = QDir::temp().filePath("modelforge_tmp.use");
         {
@@ -629,7 +600,6 @@ void MainWindow::exportToJava(){
         if (!path.isEmpty()) {
             QFileInfo fileInfo(path);
             QString directoryPath = fileInfo.absolutePath();
-            qDebug() << "Directory path:" << directoryPath;
 
             ModelToText::VisitorJava visitorJava(directoryPath.toStdString());
 
@@ -734,7 +704,6 @@ void MainWindow::disableModelActions(){
 
 void MainWindow::itemMoved(QGraphicsItem * movedItem, const QPointF& oldPos)
 {
-    qDebug() << "MoveCommand: " << oldPos;
     undoStack->push(new MoveCommand(movedItem, oldPos));
 }
 

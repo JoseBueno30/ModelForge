@@ -18,10 +18,6 @@ void GeneralizationItemView::updatePosition(){
     QRectF class1Rect = superClass->boundingRect();
     QRectF class2Rect = subClass->boundingRect();
 
-    //qDebug() << class1Rect << "\t" <<class2Rect;
-
-    //qDebug() << class1Rect.center() + class1->scenePos() << "\t" << class2Rect.center() + class2->scenePos();
-
     QLineF line(class1Rect.center() + superClass->scenePos(), class2Rect.center() + subClass->scenePos());
 
     QPointF p1 = getNearestEdgeIntersection(QRectF(superClass->scenePos().x(), superClass->scenePos().y(),
@@ -31,8 +27,6 @@ void GeneralizationItemView::updatePosition(){
     setP1(p1);
     setP2(p2);
     update();
-    qDebug() << "P1: " << this->p1 << "\tP2:" << this->p2;
-
 }
 
 QPointF GeneralizationItemView::getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last){
@@ -68,10 +62,7 @@ void GeneralizationItemView::paint(QPainter *painter, const QStyleOptionGraphics
 
     painter->setPen(QPen(lineColor, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p2, this->p1);
-    //qDebug() << line;
-    // Arrow metrics:
-    // drawArrow(line, painter);
-    // line.setLength(92.5);
+
     QPointF newP2 = drawArrowHead(line, painter);
     line.setP2(newP2);
 
@@ -92,7 +83,6 @@ QPointF GeneralizationItemView::drawArrowHead(QLineF &line, QPainter *painter){
     QPolygonF arrowHead;
     arrowHead << head << arrowP1 << arrowP2;
 
-    //painter->setBrush(Qt::white);
     painter->drawPolygon(arrowHead);
 
     return QPointF((arrowP1.x() + arrowP2.x()) / 2, (arrowP1.y() + arrowP2.y()) / 2);

@@ -24,14 +24,11 @@ void ModelGraphicsView::setupGraphicsView(){
 ModelGraphicsView::ModelGraphicsView(QWidget *parent, std::shared_ptr<MetaModel::MetaModel> model)
     : QGraphicsView(parent), model(model), minScale(0.25), maxScale(3.0), currentScale(1.0){
     setupGraphicsView();
-    //this->setBackgroundBrush(QBrush(QColor(0x21252A)));
 }
 
 void ModelGraphicsView::setModel(std::shared_ptr<MetaModel::MetaModel> model){
     auto scene = dynamic_cast<ModelGraphicsScene*>(this->scene());
-    qDebug() << "Castea la escena";
     scene->setClipboardModel(model);
-    qDebug() << "setea el model en clipboard";
     this->model = model;
 }
 
@@ -97,7 +94,7 @@ void ModelGraphicsView::keyPressEvent(QKeyEvent *event)
                 }
             }
         }catch(int err){
-            qDebug() <<"code " << err;
+
         }
     } else {
         QGraphicsView::keyPressEvent(event); // Propaga el evento si no es Delete

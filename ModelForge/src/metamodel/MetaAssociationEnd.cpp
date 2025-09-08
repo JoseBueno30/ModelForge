@@ -1,4 +1,3 @@
-#include <iostream>
 #include <modelToText/VisitorInterface.h>
 #include <metamodel/MetaAssociationEnd.h>
 
@@ -126,17 +125,13 @@ void MetaMultiplicity::setMultiplicictyFromString(std::string multiplicityString
     auto rangesStrings = split(multiplicityString, ", ");
     this->ranges = std::vector<std::shared_ptr<MetaMultiplicityRange>>();
     for(auto rangeString : rangesStrings){
-         std::cout << "x";
         auto bounds = split(rangeString, "..");
-         std::cout << "x";
         if(bounds.size() == 1){
             int value = getMultiplicityValueFromString(bounds[0]);
-             std::cout << "xx";
             this->addRange(value, value);
         }else{
             int lowerValue = getMultiplicityValueFromString(bounds[0]);
             int upperValue = getMultiplicityValueFromString(bounds[1]);
-             std::cout << "xxx";
             this->addRange(lowerValue, upperValue);
         }
     }

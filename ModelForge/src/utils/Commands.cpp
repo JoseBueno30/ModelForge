@@ -263,12 +263,6 @@ void RemoveMetaClassCommand::undo(){
     for(auto associationItemView : this->classItemView->getAssociations()){
         auto removedAssociation = this->associationsRemoved[associationItemView->getAssociationModel()->getName()];
 
-        qDebug() << "aEnds de " << associationItemView->getAssociationModel()->getName()<<": " << this->associationsRemoved[associationItemView->getAssociationModel()->getName()]->getAssociationEnds().size();
-        for(auto aEnd : removedAssociation->getAssociationEnds()){
-            qDebug() << "\t" << aEnd.second->getRole();
-        }
-        qDebug() << "a";
-
         this->scene->addItem(associationItemView);
         this->scene->addModelItemView(associationItemView->getAssociationModel()->getName(), associationItemView);
 
@@ -279,8 +273,6 @@ void RemoveMetaClassCommand::undo(){
         }
 
         if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(associationItemView->getAssociationModel())){
-            qDebug() << "added - " << associationItemView->getAssociationModel()->getName() + " association";
-
             this->model->addAssociation(removedAssociation);
             associationItemView->setAssociationModel(removedAssociation);
         }
@@ -289,7 +281,6 @@ void RemoveMetaClassCommand::undo(){
 
     for(auto associationClassesItemView : this->classItemView->getAssociationClasses()){
         auto removedAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->associationsRemoved[associationClassesItemView->getAssociationClassModel()->getName()]);
-        qDebug() << "La clase asociacion a restaurar es nula ? " << !removedAssociationClass;
         this->scene->addItem(associationClassesItemView);
         this->scene->addModelItemView(associationClassesItemView->getAssociationClassModel()->getName(), associationClassesItemView);
 
@@ -300,10 +291,8 @@ void RemoveMetaClassCommand::undo(){
         }
 
         if(!classItemView->getClassModel()->equals(*associationClassesItemView->getAssociationClassItemView()->getClassModel())){
-            qDebug() << "a1";
             this->scene->addItem(associationClassesItemView->getAssociationClassItemView());
         }
-        qDebug() << "a";
 
         auto auxAssociationItemView = associationClassesItemView->getAssociationClassAssociationItemView();
         this->scene->addItem(auxAssociationItemView);
@@ -312,14 +301,7 @@ void RemoveMetaClassCommand::undo(){
         this->model->addAssociationClass(
             removedAssociationClass
         );
-        // for(auto aEnds : removedAssociationClass->MetaAssociation::getAssociationEnds()){
-        //     qDebug() << "La clase: " << aEnds.second->getClassSharedPtr()->getName() << "tiene de aEnds:";
-        //     for(auto aEnds2 : aEnds.second->getClassSharedPtr()->getAssociationEnds()){
-        //         qDebug() << "\t" << aEnds2.first << " nulo ? " << !aEnds2.second;
-        //     }
-        // }
         associationClassesItemView->setAssociationClassModel(removedAssociationClass);
-        qDebug() << "La clase asociacion restaurada tiene " << associationClassesItemView->getAssociationClassModel()->getAssociationEndsClassesNames().size() << " asociation esnds";
     }
 
     for(auto generalizationItemView : this->classItemView->getGeneralizations()){
@@ -334,7 +316,6 @@ void RemoveMetaClassCommand::undo(){
 
         this->scene->addItem(generalizationItemView);
     }
-    qDebug() << "a";
     this->scene->addItem(this->classItemView);
     this->scene->addModelItemView(this->classItemView->getClassModel()->getName(), this->classItemView);
     if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel())){
@@ -344,7 +325,6 @@ void RemoveMetaClassCommand::undo(){
 }
 void RemoveMetaClassCommand::redo(){
     for(auto associationItemView : this->classItemView->getAssociations()){
-        qDebug() << "Haciendo borrado de " << associationItemView->getAssociationModel()->getName();
         if(this->classItemView == associationItemView->getClass1()){
             associationItemView->getClass2()->deleteAssociation(associationItemView);
         }else{
@@ -356,18 +336,11 @@ void RemoveMetaClassCommand::redo(){
 
         this->associationsRemoved[associationItemView->getAssociationModel()->getName()] =
             std::make_shared<MetaModel::MetaAssociation>(*associationItemView->getAssociationModel());
-
-        /*if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(associationItemView->getAssociationModel())){
-            this->model->removeAssociation(associationItemView->getAssociationModel()->getName());
-        }*/
     }
 
-    qDebug() << "Borrando " << this->classItemView->getAssociationClasses().size() << " clases asociacion";
     for(auto associationClassItemView : this->classItemView->getAssociationClasses()){
         for(auto aEnds : associationClassItemView->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
-            qDebug() << aEnds.first << " tiene puntero a asociacion nulo ? " << !aEnds.second->getAssociationSharedPtr();
         }
-        qDebug() << "La clase asociacion borrada tiene " << associationClassItemView->getAssociationClassModel()->getAssociationEndsClassesNames().size() << " asociation esnds";
         if(this->classItemView == associationClassItemView->getClass1()){
             associationClassItemView->getClass2()->deleteAssociationClass(associationClassItemView);
         }else{
@@ -378,41 +351,17 @@ void RemoveMetaClassCommand::redo(){
         if(!classItemView->getClassModel()->equals(*associationClassItemView->getAssociationClassModel())){
             this->scene->removeItem(associationClassItemView->getAssociationClassItemView());
         }
-        for(auto aEnds : associationClassItemView->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
-            qDebug() << aEnds.first << " tiene puntero a asociacion nulo ? " << !aEnds.second->getAssociationSharedPtr();
-        }
 
         auto auxAssociationItemView = associationClassItemView->getAssociationClassAssociationItemView();
         this->scene->removeItem(auxAssociationItemView);
         this->scene->removeModelItemView(auxAssociationItemView->getAssociationModel()->getName());
 
-        /*if(this->associationEnds.empty()){
-            for(auto aEnd : associationClassItemView->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
-                this->associationEnds[aEnd.first] = aEnd.second;
-            }
-        }*/
-
-        //this->model->removeAssociationClass(associationClassItemView->getAssociationClassModel()->getName());
         this->associationsRemoved[associationClassItemView->getAssociationClassModel()->getName()] =
             std::make_shared<MetaModel::MetaAssociationClass>(*associationClassItemView->getAssociationClassModel());
 
         for(auto aEnds : associationClassItemView->getAssociationClassModel()->MetaAssociation::getAssociationEnds()){
             aEnds.second->setAssociation(associationClassItemView->getAssociationClassModel());
-            qDebug() << aEnds.first << " tiene puntero a asociacion nulo ? " << !aEnds.second->getAssociationSharedPtr();
         }
-
-        // if(std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel())){
-        //     qDebug() << "BORRA CLASE ASOC DIRECTAMENTE";
-        //     this->model->removeAssociationClass(associationClassItemView->getAssociationClassModel()->getName());
-        // }
-
-
-        // for(auto aEnd : this->associationEnds){
-        //     qDebug() << "aEnds de " << aEnd.second->getClass().getName()<<": " << aEnd.second->getClass().getAssociationEnds().size();
-        //     for(auto aEnd2 :  aEnd.second->getClass().getAssociationEnds()){
-        //         qDebug() << "\t" << aEnd2.first;
-        //     }
-        // }
     }
 
     for(auto generalizationItemView : this->classItemView->getGeneralizations()){
@@ -428,11 +377,8 @@ void RemoveMetaClassCommand::redo(){
     }
     this->scene->removeItem(this->classItemView);
     this->scene->removeModelItemView(this->classItemView->getClassModel()->getName());
-    qDebug() << "remove class";
     if(!std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->classItemView->getClassModel())){
-        qDebug() << "REMOVE class";
         this->model->removeClass(this->classItemView->getClassModel()->getName());
-        qDebug() << "CLASS REMOVED";
     }else{
         this->model->removeAssociationClass(this->classItemView->getClassModel()->getName());
     }
@@ -475,9 +421,7 @@ void RemoveMetaAssociationCommand::undo(){
 }
 
 void RemoveMetaAssociationCommand::redo(){
-    qDebug() << "REDO BORRAR ASOCIACION";
     if(auto associationClassItem = this->associationItemView->getAssociationClassItem()){
-        qDebug() << "BORRANDO CLASE ASOCIACION" << associationClassItem->getAssociationClassModel()->getName();
         scene->removeItem(associationClassItem);
         scene->removeModelItemView(associationClassItem->getAssociationClassModel()->getName());
 
@@ -497,14 +441,11 @@ void RemoveMetaAssociationCommand::redo(){
 
         model->removeAssociationClass(associationClassItem->getAssociationClassModel()->getName());
     }else{
-        qDebug() << "BORRANDO ASOCIACION";
-
         if(this->associationEnds.empty()){
             for(auto aEnd : associationItemView->getAssociationModel()->MetaAssociation::getAssociationEnds()){
                 this->associationEnds[aEnd.first] = aEnd.second;
             }
         }
-
         model->removeAssociation(this->associationItemView->getAssociationModel()->getName());
     }
 
@@ -529,12 +470,9 @@ void RemoveMetaEnumCommand::undo(){
 }
 
 void RemoveMetaEnumCommand::redo(){
-    qDebug() << "enum";
     scene->removeItem(enumItemView);
     scene->removeModelItemView(enumItemView->getMetaEnumModel()->getName());
-    qDebug() << "enum";
     model->removeEnum(enumItemView->getMetaEnumModel()->getName());
-    qDebug() << "enum";
     scene->update();
 }
 

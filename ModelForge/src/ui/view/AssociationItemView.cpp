@@ -8,8 +8,6 @@ void AssociationItemView::applyOffsetToSharedAssociations(){
     int cont = 1;
     for(auto association : associationsShared){
         qreal offset = (qreal) cont/(associationsShared.size() + 1);
-        //qDebug() << "Offset calculated: " << cont << " / " << (associationsShared.size() + 1) << " = " << offset;
-
         association->setOffset(offset);
         cont++;
     }
@@ -31,21 +29,15 @@ AssociationItemView::AssociationItemView(shared_ptr<MetaModel::MetaAssociation> 
 ClassesOrientation AssociationItemView::checkOrientation(QRectF& class1Rect, QRectF& class2Rect){
     qreal angle = QLineF(class1Rect.center() + this->class1->scenePos(), class2Rect.center() + this->class2->scenePos()).angle();
     int angleOffset = 20;
-    //qDebug() <<"Angulo: " << angle;
     return angle < angleOffset || angle > 360 - angleOffset || (angle > 180 - angleOffset && angle < 180 + angleOffset) ? HORIZONTAL : VERTICAL;
 }
 
 void AssociationItemView::updatePosition(){
-    //qDebug() << "Offset: " << offset;
-
     if(!class1 || !class2) throw std::runtime_error("ERROR: No hay clases en la asociacion.");
 
     QRectF class1Rect = class1->boundingRect();
     QRectF class2Rect = class2->boundingRect();
 
-    //qDebug() << class1Rect << "\t" <<class2Rect;
-
-    //qDebug() << class1Rect.center() + class1->scenePos() << "\t" << class2Rect.center() + class2->scenePos();
     QLineF axis1;
     QLineF axis2;
     if(checkOrientation(class1Rect, class2Rect) == VERTICAL){
@@ -69,7 +61,6 @@ void AssociationItemView::updatePosition(){
     setP1(p1);
     setP2(p2);
     update();
-    //qDebug() << "P1: " << this->p1 << "\tP2:" << this->p2;
 }
 
 QPointF AssociationItemView::getNearestEdgeIntersection(const QRectF &rect, const QLineF &line, const QPointF& last){
@@ -102,10 +93,7 @@ void AssociationItemView::paint(QPainter *painter, const QStyleOptionGraphicsIte
 
     painter->setPen(QPen(lineColor, 1, Qt::SolidLine,Qt::FlatCap));
     QLineF line(this->p1, this->p2);
-    //qDebug() << line;
-    // Arrow metrics:
-    // drawArrow(line, painter);
-    // line.setLength(92.5);
+
     if(this->model->getType() != 0){
          QPointF newP2 = drawDiamond(line, painter, this->model->getType() == 2);
         line.setP2(newP2);

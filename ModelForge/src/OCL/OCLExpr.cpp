@@ -1,5 +1,4 @@
 #include <OCL/OCLExpr.h>
-#include <iostream>
 
 namespace MetaModel{
 

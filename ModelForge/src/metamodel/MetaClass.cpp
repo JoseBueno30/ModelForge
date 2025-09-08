@@ -1,6 +1,5 @@
 #include <metamodel/MetaClass.h>
 
-#include <iostream>
 #include <stdexcept>
 
 #include <modelToText/VisitorInterface.h>
@@ -221,8 +220,6 @@ void  MetaClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associati
     associationEnds[associationEnd->getRole()] = associationEnd;
 }
 void  MetaClass::removeAssociationEnd(const std::string& key){
-
-    std::cout << "REMOVING ASSOC END: " << key << " FROM CLASS: " << this->getName() << std::endl;
     associationEnds.erase(key);
 }
 

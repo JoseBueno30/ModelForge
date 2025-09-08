@@ -27,11 +27,7 @@ QRectF AssociationClassItemView::boundingRect() const {
     return QRectF(center, p2).normalized().adjusted(-100, -100, 100, 100);;
 }
 void AssociationClassItemView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    // painter->save();
-    // painter->translate(this->associationItem->pos());
-    // this->associationItem->paint(painter, option, widget);
-    // painter->restore();
-    //qDebug()<<"Scene:" << this->scenePos() << "\tnormal:" << this->pos();
+
     QPointF center = (this->associationItem->getP1() + this->associationItem->getP2()) /2;
 
     QRectF auxRect = this->classItem->sceneBoundingRect();
@@ -42,9 +38,6 @@ void AssociationClassItemView::paint(QPainter *painter, const QStyleOptionGraphi
 
     painter->setPen(QPen(QColor(ThemeManager::getAssociationColor()), 1, Qt::DashLine));
     painter->drawLine(line);
-
-    // painter->translate(this->classItem->pos());
-    // this->classItem->paint(painter, option, widget);
 }
 
 void AssociationClassItemView::addItemsToScene(){

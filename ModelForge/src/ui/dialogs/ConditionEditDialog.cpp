@@ -35,11 +35,9 @@ void ConditionEditDialog::saveChanges(){
     condition->setName(ui->nameLineEdit->text().toStdString());
 
     if(ui->typeComboBox->currentIndex() == 0){
-        qDebug() << "indice 0";
         condition->setIsPost(false);
         condition->setIsPre(true);
     }else{
-        qDebug() << "indice 1";
         condition->setIsPost(true);
         condition->setIsPre(false);
     }

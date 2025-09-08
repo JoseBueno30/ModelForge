@@ -1,5 +1,4 @@
 #include <OCL/QueryExpr.h>
-#include <iostream>
 
 namespace MetaModel {
 QueryExpr::QueryExpr(const std::string& expression,
@@ -12,28 +11,14 @@ QueryExpr::QueryExpr(const std::string& expression,
     :PropertyCallExpr(expression, isComplex, type, arrow, source), varsDeclarationString(varsDeclarationString), queryExpr(queryExpr){}
 
 std::string QueryExpr::buildExprString() const {
-    std::cout << "BUILDING QUERY EXPR STR <" << this << ">" << std::endl;
-    std::cout << "EXPR <" << this << ">: " << this->getExpression() << std::endl;
-    std::cout << "SRC EXPR <" << this << ">: " << this->source << std::endl;
-    std::cout << "IS SRC COMPLEX <" << this << ">: " << this->source->isComplexExpr() << std::endl;
-    std::cout << "SRC EXPR <" << this << ">: " << this->source->getExpression() << std::endl;
-    std::cout << "SRC STR <" << this << ">: " << this->source->toString() << std::endl;
-
-
     std::string res = "";
 
     if (this->varsDeclarationString.empty()){
-        std::cout << "NO DECLARATION??" <<  std::endl;
         res = this->source->toString() + (this->arrow ? " -> " : ".") + this->getExpression();
     }else{
-        std::cout << "VISING QUERY -----<" << this << ">" <<  std::endl;
-        std::cout << "QUERY EXPR TYPE<" << this << ">: " << queryExpr->getType()->toString() << std::endl;
         std::string queryString = queryExpr->toString();
-        std::cout << "QUERY STR <" << this << ">: " << queryString << std::endl;
         res = this->source->toString() + (this->arrow ? " -> " : ".") + this->queryType + "(" + (this->varsDeclarationString.empty() ? "" : this->varsDeclarationString + " | ") + queryExpr->toString() + ")";
     }
-
-    std::cout << "TO STR RESULT <" << this << ">: " << res << std::endl;
     return res;
 }
 

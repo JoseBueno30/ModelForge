@@ -53,8 +53,6 @@ void ClassEditDialog::setupUiInfo(){
     ui->selfAssociationsTableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->selfAssociationsTableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    qDebug() << "Editando clase: " + metaClass->getName();
-
     this->editedClass = std::make_shared<MetaModel::MetaClass>(*metaClass);
 
     this->attributeCounter = metaClass->getAttributes().size() + 1;
@@ -83,19 +81,12 @@ void ClassEditDialog::loadAttributes() {
     ui->attributeTableWidget->setRowCount(0);  // Limpiar tabla antes de cargar
     int row = 0;
 
-    for (const auto &pair : this->editedClass->getAttributes()) {  // Asumiendo que `getAttributes()` devuelve `std::map<std::string, std::string>`
+    for (const auto &pair : this->editedClass->getAttributes()) {
         ui->attributeTableWidget->insertRow(row);
-
-        // Nombre del atributo (QLineEdit)
-        //QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
         QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
         nameLabel->setAlignment(Qt::AlignCenter);
         ui->attributeTableWidget->setCellWidget(row, 0, nameLabel);
 
-        // Tipo del atributo (QComboBox)
-        // QComboBox *typeCombo = new QComboBox();
-        // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
-        // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
         QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getType().toString()));
         typeLabel->setAlignment(Qt::AlignCenter);
         ui->attributeTableWidget->setCellWidget(row, 1, typeLabel);
@@ -108,21 +99,14 @@ void ClassEditDialog::loadOperations(){
     ui->operationTableWidget->setRowCount(0);  // Limpiar tabla antes de cargar
     int row = 0;
 
-    for (const auto &pair : this->editedClass->getOperations()) {  // Asumiendo que `getOperations()` devuelve `std::map<std::string, std::string>`
+    for (const auto &pair : this->editedClass->getOperations()) {
         ui->operationTableWidget->insertRow(row);
 
-        // Nombre del atributo (QLineEdit)
-        //QLineEdit *nameEdit = new QLineEdit(QString::fromStdString(pair.first));
         QLabel *nameLabel = new QLabel(QString::fromStdString(pair.first));
         nameLabel->setAlignment(Qt::AlignCenter);
         ui->operationTableWidget->setCellWidget(row, 0, nameLabel);
 
-        // Tipo del atributo (QComboBox)
-        // QComboBox *typeCombo = new QComboBox();
-        // typeCombo->addItems({"int", "float", "string", "bool"});  // Agrega más tipos según necesidad
-        // typeCombo->setCurrentText(QString::fromStdString(pair.second->getType().toString()));
         QLabel *typeLabel = new QLabel(QString::fromStdString(pair.second->getReturnType().toString()));
-        qDebug() << "Tipo: " << pair.second->getReturnType().toString();
         typeLabel->setAlignment(Qt::AlignCenter);
         ui->operationTableWidget->setCellWidget(row, 1, typeLabel);
 
@@ -208,8 +192,6 @@ void ClassEditDialog::removeSelfAssociation(){
     }
 
     auto associationItemViewHided = dynamic_cast<AssociationItemView*>(this->scene->getModelItemView(associationName));
-    //model->removeAssociation(associationName);
-    //scene->removeModelItemView(associationName);
 
     for(auto aEnds : associationItemViewHided->getAssociationModel()->getAssociationEnds()){
         this->editedClass->removeAssociationEnd(aEnds.first);
@@ -218,7 +200,6 @@ void ClassEditDialog::removeSelfAssociation(){
     RemoveMetaAssociationCommand *command = new RemoveMetaAssociationCommand(associationItemViewHided, scene, model);
     MainWindow::undoStack->push(command);
 
-    //accept();
     this->loadSelfAssociations();
 
 }
@@ -285,10 +266,7 @@ void ClassEditDialog::constraintCellDoubleClicked(int row, int column){
 }
 
 void ClassEditDialog::attributeCellDoubleClicked(int row, int column){
-    //qDebug()<< "r: "<< row << " c:" << column;
     QLabel * item = dynamic_cast<QLabel*>(ui->attributeTableWidget->cellWidget(row, 0)); //get the attribute name cell
-    //qDebug() << "crea el item";
-    qDebug() << "Editar atributo: " << item->text();
     std::shared_ptr<MetaModel::MetaAttribute> metaAttribute = this->editedClass->getAttribute(item->text().toStdString());
     AttributeEditDialog *attrEditDialog = new AttributeEditDialog(metaAttribute, editedClass, model, this);
     int returnCode = attrEditDialog->exec();
@@ -417,8 +395,6 @@ void ClassEditDialog::saveChanges() {
                 MainWindow::undoStack->push(new AddMetaClassCommand(this->model, this->editedClass, classView, this->scene));
             }
         }
-
-        //qDebug() << "Nombre: " << this->metaClass->getName();
 
         this->scene->update();
 

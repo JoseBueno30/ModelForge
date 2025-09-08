@@ -25,10 +25,7 @@ AssociationEditDialog::AssociationEditDialog(
     ui->setupUi(this);
 
     if( auto aclass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(associationModel)){
-        qDebug() << "La clase asociacion tiene: " << aclass->getAssociationEndsClassesNames().size() << "aEnds.";
-        qDebug() << "Los aEnds de la clase asociación son nulos ? ";
         for(auto aEnd : aclass->MetaAssociation::getAssociationEnds()){
-            qDebug() << "\t" << !aEnd.second->getAssociationSharedPtr();
         }
     }
 
@@ -206,18 +203,12 @@ void AssociationEditDialog::saveChanges(){
                 std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd2 = std::make_shared<MetaModel::MetaAssociationEnd>(associationModel, ui->associationTypeComboBox->currentIndex());
                 associationEnd2->setMultiplicity(std::make_shared<MetaModel::MetaMultiplicity>(0,0));
 
-
-                qDebug()<< "a";
                 setAssociationEnd1(associationEnd1);
                 setAssociationEnd2(associationEnd2);
 
-                qDebug()<< "c";
                 ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(ui->typeAEnd1ComboBox->currentText().toStdString()));
                 ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(ui->typeAEnd2ComboBox->currentText().toStdString()));
 
-                qDebug()<< "d";
-
-                qDebug()<< "e";
                 if(auto associationClassModelCast = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->associationModel)){
                     associationClassModelCast->addAssociationEnd(associationEnd1);
                     associationClassModelCast->addAssociationEnd(associationEnd2);

@@ -1,6 +1,5 @@
 #include <metamodel/MetaModel.h>
 #include <modelToText/VisitorInterface.h>
-#include <iostream>
 #include<stdexcept>
 
 namespace MetaModel{
@@ -70,19 +69,12 @@ void MetaModel::addClass(std::shared_ptr<MetaClass> modelClass){
 
 void MetaModel::removeClass(const std::string& key){
     auto metaClass = this->getClass(key);
-    std::cout << "REMOVING CLASS: " << key << std::endl;
-    std::cout << "<Remove MetaClass> nAssocEnd: " << metaClass->getAssociationEnds().size() << std::endl;
     for(const auto &assocEndPair : metaClass->getAssociationEnds()){
         auto association = assocEndPair.second->getAssociationSharedPtr();
 
-        std::cout << "REMOVING ASSOCEND: " << assocEndPair.first << std::endl;
-        std::cout << "ASOCIACION NULA ? " << !association << std::endl;
-
         if(std::dynamic_pointer_cast<MetaAssociationClass>(association)){
-            std::cout << "REMOVING ASSOC CLASS FROM CLASS: " << association->getName() << std::endl;
             this->removeAssociationClass(association->getName());
         }else{
-            std::cout << "REMOVING ASSOC FROM CLASS: " << association->getName() << std::endl;
             this->removeAssociation(association->getName());
         }
     }
@@ -136,13 +128,11 @@ void MetaModel::addAssociation(std::shared_ptr<MetaAssociation> modelAssociation
 }
 
 void MetaModel::removeAssociation(const std::string& key){
-    std::cout << "REMOVING ASSOCIATION: " << key << std::endl;
     auto association = this->getAssociation(key);
     if(association){
         for(const auto &associationEndPair : association->getAssociationEnds()){
             association->removeAssociationEnd(associationEndPair.first);
         }
-        std::cout<<"SALE BUCLE" << std::endl;
         associations.erase(key);
     }
 }
@@ -170,10 +160,9 @@ void MetaModel::addAssociationClass(std::shared_ptr<MetaAssociationClass> modelA
 
     for(auto &associationEndPair : modelAssociationClass->MetaAssociation::getAssociationEnds()){
         try{
-            std::cout << "ANYADIENDO INTERMEDIA CON " << associationEndPair.second->getClassSharedPtr()->getName() << std::endl;//"DE LA ASOCIACION " << associationEndPair.second->getAssociationSharedPtr()->getName() << std::endl;
             modelAssociationClass->addIntermediateAssociationEnd(associationEndPair.second);
         }catch(std::invalid_argument e){
-            std::cerr << "FALLA ANYADIR INTERMEDIAS con "<<associationEndPair.second->getClassSharedPtr()->getName() << std::endl;
+            throw std::runtime_error("Failed to add intermediate association");
         }
     }
 
@@ -181,11 +170,9 @@ void MetaModel::addAssociationClass(std::shared_ptr<MetaAssociationClass> modelA
 }
 
 void MetaModel::removeAssociationClass(const std::string& key){
-    std::cout << "REMOVING ASSOCIATION CLASS: " << key << std::endl;
     auto associationClass = this->getAssociationClass(key);
 
     for(const auto &associationEndPair : associationClass->MetaAssociation::getAssociationEnds()){
-        std::cout << "REMOVE ASSOC END: " << associationEndPair.first << std::endl;
         associationClass->removeAssociationEnd(associationEndPair.first);
     }
 
