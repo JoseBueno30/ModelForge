@@ -46,6 +46,7 @@ public:
 
     void calculateMinimumSize();
     shared_ptr<MetaModel::MetaClass>& getClassModel();
+    void setClassModel(shared_ptr<MetaModel::MetaClass> model);
 
     ~ClassItemView();
 

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <metamodel/MetaModel.h>
 #include <modelToText/VisitorInterface.h>
 #include<stdexcept>
@@ -162,7 +163,7 @@ void MetaModel::addAssociationClass(std::shared_ptr<MetaAssociationClass> modelA
         try{
             modelAssociationClass->addIntermediateAssociationEnd(associationEndPair.second);
         }catch(std::invalid_argument e){
-            throw std::runtime_error("Failed to add intermediate association");
+            //throw std::runtime_error("Failed to add intermediate association");
         }
     }
 

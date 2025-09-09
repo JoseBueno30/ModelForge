@@ -29,7 +29,7 @@ private:
 
 class EditMetaClassCommand : public QUndoCommand{
 public:
-    EditMetaClassCommand(std::shared_ptr<MetaModel::MetaClass> modelElement, std::shared_ptr<MetaModel::MetaClass> newElement, ClassItemView* classView, ModelGraphicsScene* scene);
+    EditMetaClassCommand(std::shared_ptr<MetaModel::MetaClass> modelElement, std::shared_ptr<MetaModel::MetaClass> newElement, std::shared_ptr<MetaModel::MetaModel> model, ClassItemView* classView, ModelGraphicsScene* scene);
 
     void undo() override;
     void redo() override;
@@ -37,6 +37,7 @@ public:
 private:
     ModelGraphicsScene* scene;
     ClassItemView* classView;
+    std::shared_ptr<MetaModel::MetaModel> model;
     std::shared_ptr<MetaModel::MetaClass> modelMetaElement;
     std::shared_ptr<MetaModel::MetaClass> oldMetaElement;
     std::shared_ptr<MetaModel::MetaClass> newMetaElement;
@@ -74,20 +75,26 @@ private:
 class EditMetaAssociationCommand : public QUndoCommand{
 public:
     EditMetaAssociationCommand(std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation,
-                               AssociationItemView *associationView, ModelGraphicsScene * scene);
+                               std::vector<std::string> oldAEndClassNames, std::vector<std::string> oldRoles, std::vector<std::string> oldMultiplicities, std::shared_ptr<MetaModel::MetaModel> model, AssociationItemView *associationView, ModelGraphicsScene * scene);
 
     void undo() override;
     void redo() override;
 
 private:
-    std::shared_ptr<MetaModel::MetaAssociation> modelMetaAssociation;
     std::shared_ptr<MetaModel::MetaAssociation> oldMetaAssociation;
     std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation;
     std::shared_ptr<MetaModel::MetaModel> model;
     AssociationItemView *sceneAssociationView;
     ModelGraphicsScene * scene;
+    std::vector<std::string> oldAEndClassNames;
+    std::vector<std::string> oldMultiplicities;
+    std::vector<std::string> oldRoles;
+    std::vector<std::string> newAEndClassNames;
+    std::vector<std::string> newMultiplicities;
+    std::vector<std::string> newRoles;
 
     void updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association);
+    void removeItemView();
 };
 
 

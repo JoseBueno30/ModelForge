@@ -1,3 +1,4 @@
+#include <iostream>
 #include <metamodel/MetaClass.h>
 
 #include <stdexcept>
@@ -203,6 +204,7 @@ std::shared_ptr<MetaAssociationEnd>  MetaClass::getAssociationEnd(const std::str
     return nullptr;
 }
 void  MetaClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associationEnd){
+    std::cout << "Clase: " << this->getName() << " tiene " << this->associationEnds.size() << " aEnds" <<std::endl;
     if (!associationEnd) {
         throw std::invalid_argument("Null AssociationEnd");
     }
@@ -220,7 +222,9 @@ void  MetaClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associati
     associationEnds[associationEnd->getRole()] = associationEnd;
 }
 void  MetaClass::removeAssociationEnd(const std::string& key){
+    std::cout<<"removed " + key << std::endl;
     associationEnds.erase(key);
+    std::cout<< "n Aends: " << associationEnds.size() << std::endl;
 }
 
 

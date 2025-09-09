@@ -9,16 +9,18 @@ public class User{
 	private String mail;
 	private String name;
 	private Integer tel;
+	private List<Library> library;
 	private List<Loan> loan;
 
 	// General constraints
-	// size() <= 1
+	// self.loan.item -> size() <= 1
 
 	public User(String dni, String mail, String name, Integer tel) {
 		this.setDni(dni);
 		this.setMail(mail);
 		this.setName(name);
 		this.setTel(tel);
+		this.library = new ArrayList<Library>();
 		this.loan = new ArrayList<Loan>();
 	}
 
@@ -52,6 +54,18 @@ public class User{
 
 	public void setTel(Integer tel) {
 				this.tel = tel;
+	}
+
+	public List<Library> getLibrary() {
+		return Collections.unmodifiableList(this.library);
+	}
+
+	public void addLibrary(Library element) {
+		this.library.add(element);
+	}
+
+	public void removeLibrary(Library element) {
+		this.library.remove(element);
 	}
 
 	public List<Loan> getLoan() {

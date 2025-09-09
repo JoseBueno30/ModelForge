@@ -384,7 +384,7 @@ void ClassEditDialog::saveChanges() {
 
         //ACTUALIZAR MAPA DE MAINWINDOW EN LOS COMANDOS
         if(classView){
-            MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, classView, this->scene));
+            MainWindow::undoStack->push(new EditMetaClassCommand(this->metaClass, this->editedClass, this->model, classView, this->scene));
         }else{
             if(auto associationClassModelCast = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->metaClass)){
                 *this->metaClass = *editedClass;

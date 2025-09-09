@@ -138,6 +138,10 @@ shared_ptr<MetaModel::MetaClass>& ClassItemView::getClassModel(){
     return this->model;
 }
 
+void ClassItemView::setClassModel(shared_ptr<MetaModel::MetaClass> model){
+    this->model = model;
+}
+
 void ClassItemView::addAssociation(AssociationItemView* association){
     qDebug() << "pushing asoc";
     if (std::find(this->associations.begin(), this->associations.end(), association) == this->associations.end()) {

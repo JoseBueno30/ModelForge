@@ -42,13 +42,12 @@ public class Loan{
 
 	public void addItem(Item element) {
 		this.item.add(element);
-		element.addLoan(this);
+		element.setLoan(this);
 	}
 
 	public void removeItem(Item element) {
 		this.item.remove(element);
-		element.removeLoan(this);
-;
+		element.setLoan(null);
 	}
 
 	public List<User> getUser() {
@@ -57,13 +56,12 @@ public class Loan{
 
 	public void addUser(User element) {
 		this.user.add(element);
-		element.addLoan(this);
+		element.setLoan(this);
 	}
 
 	public void removeUser(User element) {
 		this.user.remove(element);
-		element.removeLoan(this);
-;
+		element.setLoan(null);
 	}
 
 }
