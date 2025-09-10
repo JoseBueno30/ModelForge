@@ -1,3 +1,4 @@
+#include <iostream>
 #include <metamodel/MetaAssociation.h>
 #include <stdexcept>
 #include <metamodel/MetaClass.h>
@@ -81,6 +82,7 @@ void MetaAssociation::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> asso
     associationEnds[associationEnd->getRole()] = std::move(associationEnd);
 }
 void MetaAssociation::removeAssociationEnd(const std::string& key){
+    std::cout << "borrando aEnd:" << key << std::endl;
     auto associationEnd = this->getAssociationEnd(key);
 
     associationEnds.erase(key);

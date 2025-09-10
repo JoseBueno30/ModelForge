@@ -1,4 +1,4 @@
-#include "utils/MessageBox.h"
+ #include "utils/MessageBox.h"
 #include <ui/dialogs/AssociationEditDialog.h>
 
 #include <src/ui/dialogs/ui_AssociationEditDialog.h>
@@ -225,38 +225,79 @@ void AssociationEditDialog::saveChanges(){
             }
         }
         else{ //Updating an existing association
+                // std::vector<std::string> oldAEndClassNames = associationModel->getAssociationEndsClassesNames();
+                // std::vector<std::string> oldRoles;
+                // std::vector<std::string> oldMultiplicities;
+                // for(auto [key, aEnd] : associationModel->getAssociationEnds()){
+                //     oldRoles.push_back(aEnd->getRole());
+                //     oldMultiplicities.push_back(aEnd->getMultiplicity().toString());
+                // }
 
-            // Check if fields have been changed and update existing associationEnds
-            if(true){
+                // std::shared_ptr<MetaModel::MetaAssociation> newAssociation = std::make_shared<MetaModel::MetaAssociation>(*this->associationModel);
+                std::string oldName = this->associationModel->getName();
 
-                std::vector<std::string> oldAEndClassNames = associationModel->getAssociationEndsClassesNames();
-                std::vector<std::string> oldRoles;
-                std::vector<std::string> oldMultiplicities;
-                for(auto [key, aEnd] : associationModel->getAssociationEnds()){
-                    oldRoles.push_back(aEnd->getRole());
-                    oldMultiplicities.push_back(aEnd->getMultiplicity().toString());
-                }
+                this->associationModel->setName(ui->associationNameEdit->text().toStdString());
 
-                std::shared_ptr<MetaModel::MetaAssociation> newAssociation = std::make_shared<MetaModel::MetaAssociation>(*this->associationModel);
+                this->associationModel->setType(ui->associationTypeComboBox->currentIndex());
 
-                newAssociation->setName(ui->associationNameEdit->text().toStdString());
-
-                newAssociation->setType(ui->associationTypeComboBox->currentIndex());
-
-                auto aEndsIt = newAssociation->getAssociationEnds().begin();
-                std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd1 = aEndsIt->second;
+                auto aEndsIt = this->associationModel->getAssociationEnds().begin();
+                std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd1 = std::make_shared<MetaModel::MetaAssociationEnd>(*aEndsIt->second);
                 aEndsIt++;
-                std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd2 = aEndsIt->second;
+                std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd2 = std::make_shared<MetaModel::MetaAssociationEnd>(*aEndsIt->second);
+
+                this->model->removeAssociation(oldName);
 
                 setAssociationEnd1(associationEnd1);
                 setAssociationEnd2(associationEnd2);
 
+                auto classItemView1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(associationEnd1->getClass().getName()));
+                auto classItemView2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(associationEnd2->getClass().getName()));
 
-                EditMetaAssociationCommand *editCommand = new EditMetaAssociationCommand(this->associationModel, newAssociation, oldAEndClassNames, oldRoles, oldMultiplicities, this->model, this->associationItemView, this->scene);
-                MainWindow::undoStack->push(editCommand);
+                if(auto associationClassModel = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(this->associationModel)){
+                    this->model->removeAssociationClass(oldName);
+                    this->model->addAssociationClass(associationClassModel);
+                    associationClassModel->addAssociationEnd(associationEnd1);
+                    associationClassModel->addAssociationEnd(associationEnd2);
+
+                    auto assocClassItemViewAux = dynamic_cast<AssociationClassItemView*>(this->scene->getModelItemView(associationClassModel->getName()));
+                    assocClassItemViewAux->getAssociationClassItemView()->calculateMinimumSize();
+                    auto associationItemViewAux = assocClassItemViewAux->getAssociationClassAssociationItemView();
+
+                    associationItemViewAux->getClass1()->deleteAssociationClass(assocClassItemViewAux);
+                    associationItemViewAux->getClass1()->deleteAssociation(associationItemViewAux);
+                    associationItemViewAux->getClass2()->deleteAssociationClass(assocClassItemViewAux);
+                    associationItemViewAux->getClass2()->deleteAssociation(associationItemViewAux);
+
+                    associationItemViewAux->setClass1(classItemView1);
+                    classItemView1->addAssociationClass(assocClassItemViewAux);
+                    classItemView1->addAssociation(associationItemViewAux);
+                    associationItemViewAux->setClass2(classItemView2);
+                    classItemView2->addAssociationClass(assocClassItemViewAux);
+                    classItemView2->addAssociation(associationItemViewAux);
+                }else{
+
+                    this->model->addAssociation(this->associationModel);
+                    this->associationModel->addAssociationEnd(associationEnd1);
+                    this->associationModel->addAssociationEnd(associationEnd2);
+
+                    for(auto aEnds : this->associationModel->getAssociationEnds()){
+                        qDebug() << "AENDS: " << aEnds.second->getClass().getName();
+                    }
+
+                    this->associationItemView->getClass1()->deleteAssociation(this->associationItemView);
+                    this->associationItemView->getClass2()->deleteAssociation(this->associationItemView);
+
+                    this->associationItemView->setClass1(classItemView1);
+                    classItemView1->addAssociation(this->associationItemView);
+                    this->associationItemView->setClass2(classItemView2);
+                    classItemView2->addAssociation(this->associationItemView);
+                }
+                classItemView1->updateConnectionPositions();
+                classItemView2->updateConnectionPositions();
+                this->scene->update();
+                //EditMetaAssociationCommand *editCommand = new EditMetaAssociationCommand(this->associationModel, newAssociation, oldAEndClassNames, oldRoles, oldMultiplicities, this->model, this->associationItemView, this->scene);
+                //MainWindow::undoStack->push(editCommand);
             }
-        }
-
         accept();
     }catch(std::invalid_argument exception){
         showExceptionMessageBox("Error", "There was an error saving the association. Please check the console for more information.");
@@ -296,6 +337,9 @@ MetaModel::Visibility AssociationEditDialog::getVisibilityAssociationEnd2(){
 }
 
 void AssociationEditDialog::setAssociationEnd1(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd){
+    auto newClass = this->model->getClass(ui->typeAEnd1ComboBox->currentText().toStdString());
+    associationEnd->setClass(newClass);
+
     associationEnd->setRole(ui->roleAEnd1LineEdit->text().toStdString());
 
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0,0);
@@ -304,14 +348,14 @@ void AssociationEditDialog::setAssociationEnd1(std::shared_ptr<MetaModel::MetaAs
 
     associationEnd->setVisibility(getVisibilityAssociationEnd1());
 
-    auto newClass = this->model->getClass(ui->typeAEnd1ComboBox->currentText().toStdString());
-    associationEnd->setClass(newClass);
-
     //newClass->removeAssociationEnd(associationEnd->getRole());
     //newClass->addAssociationEnd(associationEnd);
 }
 
 void AssociationEditDialog::setAssociationEnd2(std::shared_ptr<MetaModel::MetaAssociationEnd> associationEnd){
+    auto newClass = this->model->getClass(ui->typeAEnd2ComboBox->currentText().toStdString());
+    associationEnd->setClass(newClass);
+
     associationEnd->setRole(ui->roleAEnd2LineEdit->text().toStdString());
 
     auto multiplicity = std::make_shared<MetaModel::MetaMultiplicity>(0,0);
@@ -320,8 +364,7 @@ void AssociationEditDialog::setAssociationEnd2(std::shared_ptr<MetaModel::MetaAs
 
     associationEnd->setVisibility(getVisibilityAssociationEnd2());
 
-    auto newClass = this->model->getClass(ui->typeAEnd2ComboBox->currentText().toStdString());
-    associationEnd->setClass(newClass);
+
 
     //newClass->removeAssociationEnd(associationEnd->getRole());
     //newClass->addAssociationEnd(associationEnd);

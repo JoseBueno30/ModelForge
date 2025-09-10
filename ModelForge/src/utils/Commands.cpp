@@ -124,8 +124,13 @@ EditMetaAssociationCommand::EditMetaAssociationCommand(
     std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation
     , std::vector<std::string> oldAEndClassNames, std::vector<std::string> oldRoles, std::vector<std::string> oldMultiplicities,
     std::shared_ptr<MetaModel::MetaModel> model, AssociationItemView *associationView, ModelGraphicsScene * scene) :
-    newMetaAssociation(newMetaAssociation), scene(scene), oldAEndClassNames(oldAEndClassNames), oldRoles(oldRoles), oldMultiplicities(oldMultiplicities), model(model), sceneAssociationView(associationView){
-    this->oldMetaAssociation = std::make_shared<MetaModel::MetaAssociation>(*metaAssociation);
+    newMetaAssociation(newMetaAssociation), scene(scene), oldAEndClassNames(oldAEndClassNames), oldRoles(oldRoles), oldMultiplicities(oldMultiplicities), model(model), sceneAssociationView(associationView)
+{
+    if(auto aClassAux = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(metaAssociation)){
+        this->oldMetaAssociation = std::make_shared<MetaModel::MetaAssociationClass>(*aClassAux);
+    }else{
+        this->oldMetaAssociation = std::make_shared<MetaModel::MetaAssociation>(*metaAssociation);
+    }
     this->newAEndClassNames = this->newMetaAssociation->getAssociationEndsClassesNames();
     for(auto [key, aEnd] : this->newMetaAssociation->getAssociationEnds()){
         newRoles.push_back(aEnd->getRole());
@@ -134,7 +139,10 @@ EditMetaAssociationCommand::EditMetaAssociationCommand(
 }
 
 void EditMetaAssociationCommand::updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association){
+
     auto aEndsIt = association->getAssociationEnds().begin();
+    qDebug() << "Metiendo ahora en " << !aEndsIt->second->getClassSharedPtr();
+    qDebug() << "Metiendo ahora en " << aEndsIt->second->getClass().getName();
     ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(aEndsIt->second->getClass().getName()));
     qDebug() << "Metiendo ahora en " << aEndsIt->second->getClass().getName();
     aEndsIt++;
@@ -161,37 +169,60 @@ void EditMetaAssociationCommand::removeItemView(){
 
 void EditMetaAssociationCommand::undo(){
     removeItemView();
-
+    qDebug() << "AY";
     auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(oldMetaAssociation);
-
+    qDebug() << "AY";
     auto roleIterator = this->oldRoles.begin();
     auto multiplicityIterator = this->oldMultiplicities.begin();
     auto aEndIterator = this->oldMetaAssociation->getAssociationEnds().begin();
+    auto size = this->oldMetaAssociation->getAssociationEnds().size();
+    qDebug() << "SIZE: " << size;
 
     if(modelMetaAssociationClass){
+        qDebug() << "AY";
         this->model->removeAssociationClass(this->newMetaAssociation->getName());
+        qDebug() << "SIZE TRAS BORRAR: " << modelMetaAssociationClass->MetaAssociation::getAssociationEnds().size();
+        size = modelMetaAssociationClass->MetaAssociation::getAssociationEnds().size();
+        qDebug() << "AY";
         modelMetaAssociationClass->setName(oldMetaAssociation->getName());
-
+        qDebug() << "AY " << this->oldAEndClassNames.size();
         for(auto name : this->oldAEndClassNames){
-            aEndIterator->second->setClass(this->model->getClass(name));
-            aEndIterator->second->setRole(*roleIterator);
 
-            aEndIterator->second->getMultiplicitySharedPtr()->setMultiplicictyFromString(*multiplicityIterator);
+            std::shared_ptr<MetaModel::MetaAssociationEnd> aEndAux;
+            if(size > 0){
+                aEndAux = aEndIterator->second;
+            }else{
+                aEndAux = std::make_shared<MetaModel::MetaAssociationEnd>(modelMetaAssociationClass, modelMetaAssociationClass->getType());
+                aEndAux->setMultiplicity(std::make_shared<MetaModel::MetaMultiplicity>(0,0));
+            }
+            qDebug() << "JO" << (aEndIterator->second == nullptr);
+            aEndAux->setClass(this->model->getClass(name));
+            qDebug() << "JO";
+            aEndAux->setRole(*roleIterator);
+            qDebug() << "JO";
+            aEndAux->getMultiplicitySharedPtr()->setMultiplicictyFromString(*multiplicityIterator);
+            qDebug() << "JO";
+
+            modelMetaAssociationClass->addAssociationEnd(aEndAux);
 
             aEndIterator++;
             roleIterator++;
             multiplicityIterator++;
         }
-
-        for(auto aEndPair : this->oldMetaAssociation->getAssociationEnds()){
+        qDebug() << "AY " << oldMetaAssociation->getAssociationEnds().size();
+        for(auto aEndPair : oldMetaAssociation->getAssociationEnds()){
             qDebug() << "AENDS AÑADIDOS: " << aEndPair.first;
         }
-
+        qDebug() << "AY2";
         this->model->addAssociationClass(modelMetaAssociationClass);
+        qDebug() << "AY2";
         this->sceneAssociationView->setAssociationModel(modelMetaAssociationClass);
+        qDebug() << "AY2";
 
         AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
+        qDebug() << "AY2";
         auxItemView->getAssociationClassItemView()->calculateMinimumSize();
+        qDebug() << "AY2";
     }else{
         qDebug() << "borro";
         this->model->removeAssociation(this->newMetaAssociation->getName());
@@ -227,16 +258,33 @@ void EditMetaAssociationCommand::redo(){
     auto roleIterator = this->newRoles.begin();
     auto multiplicityIterator = this->newMultiplicities.begin();
     auto aEndIterator = this->newMetaAssociation->getAssociationEnds().begin();
+    auto size = this->newMetaAssociation->getAssociationEnds().size();
+    qDebug() << "SIZE: " << size;
+
     if(modelMetaAssociationClass){
         this->model->removeAssociationClass(this->oldMetaAssociation->getName());
+        qDebug() << "Se ha borrado la clase asociacion? " << (this->model->getAssociationClass(this->oldMetaAssociation->getName()) == nullptr);
+        qDebug() << "SIZE TRAS BORRAR: " << modelMetaAssociationClass->MetaAssociation::getAssociationEnds().size();
+        size = modelMetaAssociationClass->MetaAssociation::getAssociationEnds().size();
         modelMetaAssociationClass->setName(newMetaAssociation->getName());
 
         for(auto name : this->newAEndClassNames){
             qDebug() << "nuevo aEnd: " << name;
-            aEndIterator->second->setClass(this->model->getClass(name));
-            aEndIterator->second->setRole(*roleIterator);
+            std::shared_ptr<MetaModel::MetaAssociationEnd> aEndAux;
+            if(size > 0){
+                aEndAux = aEndIterator->second;
+            }else{
+                aEndAux = std::make_shared<MetaModel::MetaAssociationEnd>(modelMetaAssociationClass, modelMetaAssociationClass->getType());
+                aEndAux->setMultiplicity(std::make_shared<MetaModel::MetaMultiplicity>(0,0));
+            }
+            aEndAux->setClass(this->model->getClass(name));
+            aEndAux->setRole(*roleIterator);
+            aEndAux->getMultiplicitySharedPtr()->setMultiplicictyFromString(*multiplicityIterator);
 
-            aEndIterator->second->getMultiplicitySharedPtr()->setMultiplicictyFromString(*multiplicityIterator);
+            if(size == 0){
+                qDebug() << "añade " << name << ", " << *roleIterator << ", " << *multiplicityIterator;
+                modelMetaAssociationClass->addAssociationEnd(aEndAux);
+            }
 
             aEndIterator++;
             roleIterator++;
@@ -255,14 +303,26 @@ void EditMetaAssociationCommand::redo(){
     }else{
         qDebug() << "debug";
         this->model->removeAssociation(this->oldMetaAssociation->getName());
-        qDebug() << "debug";
+        qDebug() << "debug Asoc " << (aEndIterator->second == nullptr);
 
         for(auto name : this->newAEndClassNames){
             qDebug() << "nuevo aEnd: " << name;
-            aEndIterator->second->setClass(this->model->getClass(name));
-            aEndIterator->second->setRole(*roleIterator);
+            std::shared_ptr<MetaModel::MetaAssociationEnd> aEndAux;
+            if(size > 0){
+                aEndAux = aEndIterator->second;
+            }else{
+                qDebug() << "Crea nuevo puntero";
+                aEndAux = std::make_shared<MetaModel::MetaAssociationEnd>(newMetaAssociation, newMetaAssociation->getType());
+                aEndAux->setMultiplicity(std::make_shared<MetaModel::MetaMultiplicity>(0,0));
+            }
+            aEndAux->setClass(this->model->getClass(name));
+            aEndAux->setRole(*roleIterator);
             qDebug() << "antes stoi - " << *multiplicityIterator;
-            aEndIterator->second->getMultiplicitySharedPtr()->setMultiplicictyFromString(*multiplicityIterator);
+            aEndAux->getMultiplicitySharedPtr()->setMultiplicictyFromString(*multiplicityIterator);
+
+            if(size == 0){
+                this->newMetaAssociation->addAssociationEnd(aEndAux);
+            }
 
             aEndIterator++;
             roleIterator++;
