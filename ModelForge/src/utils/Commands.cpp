@@ -124,8 +124,7 @@ EditMetaAssociationCommand::EditMetaAssociationCommand(
     std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation
     , std::vector<std::string> oldAEndClassNames, std::vector<std::string> oldRoles, std::vector<std::string> oldMultiplicities,
     std::shared_ptr<MetaModel::MetaModel> model, AssociationItemView *associationView, ModelGraphicsScene * scene) :
-    newMetaAssociation(newMetaAssociation), scene(scene), oldAEndClassNames(oldAEndClassNames), oldRoles(oldRoles), oldMultiplicities(oldMultiplicities), model(model), sceneAssociationView(associationView){
-    this->oldMetaAssociation = std::make_shared<MetaModel::MetaAssociation>(*metaAssociation);
+    oldMetaAssociation(metaAssociation), newMetaAssociation(newMetaAssociation), scene(scene), oldAEndClassNames(oldAEndClassNames), oldRoles(oldRoles), oldMultiplicities(oldMultiplicities), model(model), sceneAssociationView(associationView){
     this->newAEndClassNames = this->newMetaAssociation->getAssociationEndsClassesNames();
     for(auto [key, aEnd] : this->newMetaAssociation->getAssociationEnds()){
         newRoles.push_back(aEnd->getRole());
@@ -229,6 +228,7 @@ void EditMetaAssociationCommand::redo(){
     auto aEndIterator = this->newMetaAssociation->getAssociationEnds().begin();
     if(modelMetaAssociationClass){
         this->model->removeAssociationClass(this->oldMetaAssociation->getName());
+        qDebug() << "Se ha borrado la clase asociacion? " << (this->model->getAssociationClass(this->oldMetaAssociation->getName()) == nullptr);
         modelMetaAssociationClass->setName(newMetaAssociation->getName());
 
         for(auto name : this->newAEndClassNames){
