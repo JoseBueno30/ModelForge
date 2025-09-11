@@ -89,8 +89,6 @@ private:
     AssociationItemView *sceneAssociationView;
     ModelGraphicsScene * scene;
 
-    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
-
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> newAssociationEnds;
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> oldAssociationEnds;
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> intermediateAssociationEnds;
@@ -139,6 +137,8 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
     AssociationClassItemView* associationClassItemView;
     ModelGraphicsScene* scene;
+
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
 };
 
 class AddMetaGeneralizationCommand : public QUndoCommand{

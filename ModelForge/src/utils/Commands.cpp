@@ -127,10 +127,6 @@ EditMetaAssociationCommand::EditMetaAssociationCommand(
         newAssociationEnds[aEndPair.first]->setAssociation(this->modelMetaAssociation);
         newAssociationEnds[aEndPair.first]->setClass(aEndPair.second->getClassSharedPtr());
     }
-
-    if(auto associationClassModel = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(metaAssociation)){
-
-    }
 }
 
 void EditMetaAssociationCommand::updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association){
@@ -294,7 +290,11 @@ void EditMetaEnumCommand::redo(){
 }
 
 AddMetaAssociationClassCommand::AddMetaAssociationClassCommand(std::shared_ptr<MetaModel::MetaAssociationClass> metaAssociationClass, std::shared_ptr<MetaModel::MetaModel> model, AssociationClassItemView* associationClassItemView, ModelGraphicsScene* scene) :
-    metaAssociationClass(metaAssociationClass), model(model), associationClassItemView(associationClassItemView), scene(scene){}
+    metaAssociationClass(metaAssociationClass), model(model), associationClassItemView(associationClassItemView), scene(scene){
+    for(auto& aEndPair : this->metaAssociationClass->MetaAssociation::getAssociationEnds()){
+        this->associationEnds[aEndPair.first] = std::make_shared<MetaModel::MetaAssociationEnd>(*aEndPair.second);
+    }
+}
 
 void AddMetaAssociationClassCommand::undo(){
     model->removeAssociationClass(this->metaAssociationClass->getName());
@@ -316,6 +316,12 @@ void AddMetaAssociationClassCommand::undo(){
 }
 
 void AddMetaAssociationClassCommand::redo(){
+    if(this->metaAssociationClass->MetaAssociation::getAssociationEnds().empty()){
+        for(auto& aEndPair : this->associationEnds){
+            this->metaAssociationClass->addAssociationEnd(aEndPair.second);
+        }
+    }
+
     this->model->addAssociationClass(this->metaAssociationClass);
     scene->addItem(associationClassItemView);
     scene->addModelItemView(this->metaAssociationClass->getName(), associationClassItemView);
