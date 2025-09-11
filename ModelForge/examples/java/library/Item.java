@@ -10,6 +10,7 @@ public class Item{
 	private Integer numPages;
 	private String title;
 	private List<Loan> loan;
+	private List<Library> owner;
 
 	public Item(String author, String genre, Integer numPages, String title) {
 		this.setAuthor(author);
@@ -17,6 +18,7 @@ public class Item{
 		this.setNumPages(numPages);
 		this.setTitle(title);
 		this.loan = new ArrayList<Loan>();
+		this.owner = new ArrayList<Library>();
 	}
 
 	public String getAuthor() {
@@ -62,6 +64,18 @@ public class Item{
 
 	public void removeLoan(Loan element) {
 		this.loan.remove(element);
+	}
+
+	public List<Library> getOwner() {
+		return Collections.unmodifiableList(this.owner);
+	}
+
+	public void addOwner(Library element) {
+		this.owner.add(element);
+	}
+
+	public void removeOwner(Library element) {
+		this.owner.remove(element);
 	}
 
 }

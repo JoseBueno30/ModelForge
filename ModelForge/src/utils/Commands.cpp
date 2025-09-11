@@ -138,18 +138,22 @@ void EditMetaAssociationCommand::undo(){
 }
 
 void EditMetaAssociationCommand::redo(){
+    qDebug() << !modelMetaAssociation;
     auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaAssociation);
     if(modelMetaAssociationClass){
+        qDebug() << "if 1";
         modelMetaAssociationClass->setName(newMetaAssociation->getName());
-
+        qDebug() << "if 2";
         //UPDATE SIZE IF NAME CHANGES
         AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
+        qDebug() << "if 3 " << !auxItemView;
         auxItemView->getAssociationClassItemView()->calculateMinimumSize();
     }
 
     *modelMetaAssociation = *newMetaAssociation;
-
+    qDebug() << "to update";
     updateItemView(newMetaAssociation);
+    qDebug() << "post update";
     scene->update();
 }
 
@@ -405,15 +409,17 @@ void RemoveMetaAssociationCommand::undo(){
         }
 
         model->addAssociationClass(associationClassItem->getAssociationClassModel());
+        scene->addModelItemView(this->associationItemView->getAssociationModel()->getName(), associationClassItem);
     }else{
         for(auto aEnd : this->associationEnds){
             associationItemView->getAssociationModel()->addAssociationEnd(aEnd.second);
         }
         model->addAssociation(this->associationItemView->getAssociationModel());
+        scene->addModelItemView(this->associationItemView->getAssociationModel()->getName(), this->associationItemView);
     }
 
     scene->addItem(this->associationItemView);
-    scene->addModelItemView(this->associationItemView->getAssociationModel()->getName(), this->associationItemView);
+
     this->associationItemView->getClass1()->addAssociation(this->associationItemView);
     this->associationItemView->getClass2()->addAssociation(this->associationItemView);
 
