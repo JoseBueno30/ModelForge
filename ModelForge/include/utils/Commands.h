@@ -69,6 +69,8 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
     AssociationItemView *associationView;
     ModelGraphicsScene * scene;
+
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
 };
 
 class EditMetaAssociationCommand : public QUndoCommand{
@@ -86,6 +88,8 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
     AssociationItemView *sceneAssociationView;
     ModelGraphicsScene * scene;
+
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> associationEnds;
 
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> newAssociationEnds;
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> oldAssociationEnds;

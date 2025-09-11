@@ -74,7 +74,14 @@ void AddMetaClassCommand::redo(){
 
 AddMetaAssociationCommand::AddMetaAssociationCommand(
     std::shared_ptr<MetaModel::MetaAssociation> metaAssociation,std::shared_ptr<MetaModel::MetaModel> model, AssociationItemView *associationView, ModelGraphicsScene * scene)
-    : metaAssociation(metaAssociation), model(model), associationView(associationView), scene(scene) {}
+    : metaAssociation(metaAssociation), model(model), associationView(associationView), scene(scene) {
+
+    for(auto &aEndPair : this->metaAssociation->getAssociationEnds()){
+        this->associationEnds[aEndPair.first] = std::make_shared<MetaModel::MetaAssociationEnd>(*aEndPair.second);
+        this->associationEnds[aEndPair.first]->setAssociation(this->metaAssociation);
+        this->associationEnds[aEndPair.first]->setClass(aEndPair.second->getClassSharedPtr());
+    }
+}
 
 void AddMetaAssociationCommand::undo(){
     this->model->removeAssociation(metaAssociation->getName());
@@ -90,6 +97,12 @@ void AddMetaAssociationCommand::undo(){
 }
 
 void AddMetaAssociationCommand::redo(){
+    if(metaAssociation->getAssociationEnds().empty()){
+        for(auto& aEndPair : this->associationEnds){
+            metaAssociation->addAssociationEnd(aEndPair.second);
+        }
+    }
+
     this->model->addAssociation(this->metaAssociation);
 
     this->associationView->getClass1()->addAssociation(this->associationView);
