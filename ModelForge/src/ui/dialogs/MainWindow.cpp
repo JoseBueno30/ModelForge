@@ -680,6 +680,9 @@ void MainWindow::enableModelActions(){
     ui->actionClose_Model->setEnabled(true);
     ui->actionSave->setEnabled(true);
     ui->actionExportJava->setEnabled(true);
+
+    ui->actionOpen_Layout->setEnabled(true);
+    ui->actionSave_layout->setEnabled(true);
 }
 
 void MainWindow::disableModelActions(){
@@ -700,6 +703,9 @@ void MainWindow::disableModelActions(){
     ui->actionClose_Model->setEnabled(false);
     ui->actionSave->setEnabled(false);
     ui->actionExportJava->setEnabled(false);
+
+    ui->actionOpen_Layout->setEnabled(false);
+    ui->actionSave_layout->setEnabled(false);
 }
 
 void MainWindow::itemMoved(QGraphicsItem * movedItem, const QPointF& oldPos)
