@@ -114,6 +114,10 @@ EditMetaAssociationCommand::EditMetaAssociationCommand(
         newAssociationEnds[aEndPair.first]->setAssociation(this->modelMetaAssociation);
         newAssociationEnds[aEndPair.first]->setClass(aEndPair.second->getClassSharedPtr());
     }
+
+    if(auto associationClassModel = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(metaAssociation)){
+
+    }
 }
 
 void EditMetaAssociationCommand::updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association){
@@ -134,14 +138,6 @@ void EditMetaAssociationCommand::updateItemView(std::shared_ptr<MetaModel::MetaA
 }
 
 void EditMetaAssociationCommand::undo(){
-    auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaAssociation);
-    if(modelMetaAssociationClass){
-        modelMetaAssociationClass->setName(oldMetaAssociation->getName());
-
-        AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
-        qDebug() << "if 3 " << !auxItemView;
-        auxItemView->getAssociationClassItemView()->calculateMinimumSize();
-    }
 
     for(auto& aEndPair : this->newAssociationEnds){
         for(auto& aEndPairAux : this->newAssociationEnds){
@@ -151,18 +147,42 @@ void EditMetaAssociationCommand::undo(){
         }
     }
 
-    auto oldAEndIterator = oldAssociationEnds.begin();
-    for(auto& aEndPair : this->oldMetaAssociation->getAssociationEnds()){
-        *aEndPair.second = *oldAEndIterator->second;
-        for(auto& aEndPairAux : this->oldAssociationEnds){
-            if(aEndPair.first != aEndPairAux.first){
-                aEndPair.second->getClassSharedPtr()->addAssociationEnd(aEndPairAux.second);
-            }
+    *modelMetaAssociation = *oldMetaAssociation;
+
+    auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaAssociation);
+    if(modelMetaAssociationClass){
+        modelMetaAssociationClass->setName(oldMetaAssociation->getName());
+
+        std::string nameLowercase = modelMetaAssociationClass->getName();
+        std::transform(nameLowercase.begin(), nameLowercase.end(), nameLowercase.begin(), ::tolower);
+        for(auto newAEndAux : this->newAssociationEnds){
+            newAEndAux.second->getClassSharedPtr()->removeAssociationEnd(nameLowercase);
         }
-        oldAEndIterator++;
+        for(auto oldAEndAux : this->oldAssociationEnds){
+            qDebug() << oldAEndAux.first;
+            try{
+                modelMetaAssociationClass->addIntermediateAssociationEnd(oldAEndAux.second);
+            }catch(std::invalid_argument e){}
+        }
+
+
+        AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
+        qDebug() << "if 3 " << !auxItemView;
+        auxItemView->getAssociationClassItemView()->calculateMinimumSize();
+    }else{
+        auto oldAEndIterator = oldAssociationEnds.begin();
+        for(auto& aEndPair : this->oldMetaAssociation->getAssociationEnds()){
+            *aEndPair.second = *oldAEndIterator->second;
+            for(auto& aEndPairAux : this->oldAssociationEnds){
+                if(aEndPair.first != aEndPairAux.first){
+                    aEndPair.second->getClassSharedPtr()->addAssociationEnd(aEndPairAux.second);
+                }
+            }
+            oldAEndIterator++;
+        }
     }
 
-    *modelMetaAssociation = *oldMetaAssociation;
+
 
     updateItemView(oldMetaAssociation);
     scene->update();
@@ -170,17 +190,6 @@ void EditMetaAssociationCommand::undo(){
 
 void EditMetaAssociationCommand::redo(){
     qDebug() << !modelMetaAssociation;
-    auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaAssociation);
-    if(modelMetaAssociationClass){
-        qDebug() << "if 1";
-        modelMetaAssociationClass->setName(newMetaAssociation->getName());
-        qDebug() << "if 2";
-
-        //UPDATE SIZE IF NAME CHANGES
-        AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
-        qDebug() << "if 3 " << !auxItemView;
-        auxItemView->getAssociationClassItemView()->calculateMinimumSize();
-    }
 
     for(auto& aEndPair : this->oldAssociationEnds){
         for(auto& aEndPairAux : this->oldAssociationEnds){
@@ -190,18 +199,41 @@ void EditMetaAssociationCommand::redo(){
         }
     }
 
-    auto newAEndIterator = newAssociationEnds.begin();
-    for(auto& aEndPair : this->newMetaAssociation->getAssociationEnds()){
-        *aEndPair.second = *newAEndIterator->second;
-        for(auto& aEndPairAux : this->newAssociationEnds){
-            if(aEndPair.first != aEndPairAux.first){
-                aEndPair.second->getClassSharedPtr()->addAssociationEnd(aEndPairAux.second);
-            }
+    *modelMetaAssociation = *newMetaAssociation;
+
+    auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaAssociation);
+    if(modelMetaAssociationClass){
+        modelMetaAssociationClass->setName(newMetaAssociation->getName());
+
+        std::string nameLowercase = modelMetaAssociationClass->getName();
+        std::transform(nameLowercase.begin(), nameLowercase.end(), nameLowercase.begin(), ::tolower);
+        for(auto oldAEndAux : this->oldAssociationEnds){
+            oldAEndAux.second->getClassSharedPtr()->removeAssociationEnd(nameLowercase);
         }
-        newAEndIterator++;
+        for(auto newAEndAux : this->newAssociationEnds){
+
+            try{
+                 modelMetaAssociationClass->addIntermediateAssociationEnd(newAEndAux.second);
+            }catch(std::invalid_argument e){}
+        }
+        //UPDATE SIZE IF NAME CHANGES
+        AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
+        qDebug() << "if 3 " << !auxItemView;
+        auxItemView->getAssociationClassItemView()->calculateMinimumSize();
+    }else{
+        auto newAEndIterator = newAssociationEnds.begin();
+        for(auto& aEndPair : this->newMetaAssociation->getAssociationEnds()){
+            *aEndPair.second = *newAEndIterator->second;
+            for(auto& aEndPairAux : this->newAssociationEnds){
+                if(aEndPair.first != aEndPairAux.first){
+                    aEndPair.second->getClassSharedPtr()->addAssociationEnd(aEndPairAux.second);
+                }
+            }
+            newAEndIterator++;
+        }
     }
 
-    *modelMetaAssociation = *newMetaAssociation;
+
     qDebug() << "to update";
     updateItemView(newMetaAssociation);
     qDebug() << "post update";

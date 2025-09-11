@@ -89,6 +89,7 @@ private:
 
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> newAssociationEnds;
     std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> oldAssociationEnds;
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> intermediateAssociationEnds;
 
     void updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association);
 };

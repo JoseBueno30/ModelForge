@@ -77,7 +77,9 @@ void MetaAssociationClass::addIntermediateAssociationEnd(std::shared_ptr<MetaAss
             otherAssociationEnd->getVisibility());
 
         if (associationEnd != otherAssociationEnd) {
-            otherAssociationEnd->getClassSharedPtr()->addAssociationEnd(intermediateAssociationEnd);
+            if(!otherAssociationEnd->getClassSharedPtr()->getAssociationEnd(intermediateRole)){
+                otherAssociationEnd->getClassSharedPtr()->addAssociationEnd(intermediateAssociationEnd);
+            }
             associationEnd->getClassSharedPtr()->addAssociationEnd(otherIntermediateAssociationEnd);
         }
     }
