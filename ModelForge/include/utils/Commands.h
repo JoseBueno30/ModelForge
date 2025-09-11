@@ -74,7 +74,7 @@ private:
 class EditMetaAssociationCommand : public QUndoCommand{
 public:
     EditMetaAssociationCommand(std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation,
-                               AssociationItemView *associationView, ModelGraphicsScene * scene);
+                               std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> oldAssociationEnds, AssociationItemView *associationView, ModelGraphicsScene * scene);
 
     void undo() override;
     void redo() override;
@@ -86,6 +86,9 @@ private:
     std::shared_ptr<MetaModel::MetaModel> model;
     AssociationItemView *sceneAssociationView;
     ModelGraphicsScene * scene;
+
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> newAssociationEnds;
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> oldAssociationEnds;
 
     void updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association);
 };

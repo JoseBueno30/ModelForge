@@ -104,16 +104,24 @@ void AddMetaAssociationCommand::redo(){
 
 
 EditMetaAssociationCommand::EditMetaAssociationCommand(
-    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation
-    , AssociationItemView *associationView, ModelGraphicsScene * scene) :
-    modelMetaAssociation(metaAssociation), newMetaAssociation(newMetaAssociation), scene(scene), sceneAssociationView(associationView){
+    std::shared_ptr<MetaModel::MetaAssociation> metaAssociation, std::shared_ptr<MetaModel::MetaAssociation> newMetaAssociation,
+    std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> oldAssociationEnds, AssociationItemView *associationView, ModelGraphicsScene * scene) :
+    modelMetaAssociation(metaAssociation), newMetaAssociation(newMetaAssociation), scene(scene), oldAssociationEnds(oldAssociationEnds), sceneAssociationView(associationView){
     this->oldMetaAssociation = std::make_shared<MetaModel::MetaAssociation>(*metaAssociation);
+
+    for(auto& aEndPair : this->newMetaAssociation->getAssociationEnds()){
+        newAssociationEnds[aEndPair.first] = std::make_shared<MetaModel::MetaAssociationEnd>(*aEndPair.second);
+        newAssociationEnds[aEndPair.first]->setAssociation(this->modelMetaAssociation);
+        newAssociationEnds[aEndPair.first]->setClass(aEndPair.second->getClassSharedPtr());
+    }
 }
 
 void EditMetaAssociationCommand::updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association){
     auto aEndsIt = association->getAssociationEnds().begin();
+    qDebug() << aEndsIt->second->getClass().getName();
     ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(aEndsIt->second->getClass().getName()));
     aEndsIt++;
+    qDebug() << aEndsIt->second->getClass().getName();
     ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(aEndsIt->second->getClass().getName()));
 
     this->sceneAssociationView->setClass1(class1);
@@ -129,6 +137,29 @@ void EditMetaAssociationCommand::undo(){
     auto modelMetaAssociationClass = std::dynamic_pointer_cast<MetaModel::MetaAssociationClass>(modelMetaAssociation);
     if(modelMetaAssociationClass){
         modelMetaAssociationClass->setName(oldMetaAssociation->getName());
+
+        AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
+        qDebug() << "if 3 " << !auxItemView;
+        auxItemView->getAssociationClassItemView()->calculateMinimumSize();
+    }
+
+    for(auto& aEndPair : this->newAssociationEnds){
+        for(auto& aEndPairAux : this->newAssociationEnds){
+            if(aEndPair.first != aEndPairAux.first){
+                aEndPairAux.second->getClassSharedPtr()->removeAssociationEnd(aEndPair.first);
+            }
+        }
+    }
+
+    auto oldAEndIterator = oldAssociationEnds.begin();
+    for(auto& aEndPair : this->oldMetaAssociation->getAssociationEnds()){
+        *aEndPair.second = *oldAEndIterator->second;
+        for(auto& aEndPairAux : this->oldAssociationEnds){
+            if(aEndPair.first != aEndPairAux.first){
+                aEndPair.second->getClassSharedPtr()->addAssociationEnd(aEndPairAux.second);
+            }
+        }
+        oldAEndIterator++;
     }
 
     *modelMetaAssociation = *oldMetaAssociation;
@@ -144,10 +175,30 @@ void EditMetaAssociationCommand::redo(){
         qDebug() << "if 1";
         modelMetaAssociationClass->setName(newMetaAssociation->getName());
         qDebug() << "if 2";
+
         //UPDATE SIZE IF NAME CHANGES
         AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
         qDebug() << "if 3 " << !auxItemView;
         auxItemView->getAssociationClassItemView()->calculateMinimumSize();
+    }
+
+    for(auto& aEndPair : this->oldAssociationEnds){
+        for(auto& aEndPairAux : this->oldAssociationEnds){
+            if(aEndPair.first != aEndPairAux.first){
+                aEndPairAux.second->getClassSharedPtr()->removeAssociationEnd(aEndPair.first);
+            }
+        }
+    }
+
+    auto newAEndIterator = newAssociationEnds.begin();
+    for(auto& aEndPair : this->newMetaAssociation->getAssociationEnds()){
+        *aEndPair.second = *newAEndIterator->second;
+        for(auto& aEndPairAux : this->newAssociationEnds){
+            if(aEndPair.first != aEndPairAux.first){
+                aEndPair.second->getClassSharedPtr()->addAssociationEnd(aEndPairAux.second);
+            }
+        }
+        newAEndIterator++;
     }
 
     *modelMetaAssociation = *newMetaAssociation;

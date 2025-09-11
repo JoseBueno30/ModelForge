@@ -228,6 +228,13 @@ void AssociationEditDialog::saveChanges(){
 
             // Check if fields have been changed and update existing associationEnds
             if(true){
+                std::map<std::string, std::shared_ptr<MetaModel::MetaAssociationEnd>> oldAEnds;
+                for(auto& aEndPair : this->associationModel->getAssociationEnds()){
+                    oldAEnds[aEndPair.first] = std::make_shared<MetaModel::MetaAssociationEnd>(*aEndPair.second);
+                    oldAEnds[aEndPair.first]->setAssociation(this->associationModel);
+                    oldAEnds[aEndPair.first]->setClass(aEndPair.second->getClassSharedPtr());
+                }
+
                 std::shared_ptr<MetaModel::MetaAssociation> newAssociation = std::make_shared<MetaModel::MetaAssociation>(*this->associationModel);
 
                 newAssociation->setName(ui->associationNameEdit->text().toStdString());
@@ -243,7 +250,7 @@ void AssociationEditDialog::saveChanges(){
                 setAssociationEnd2(associationEnd2);
 
 
-                EditMetaAssociationCommand *editCommand = new EditMetaAssociationCommand(this->associationModel, newAssociation, this->associationItemView, this->scene);
+                EditMetaAssociationCommand *editCommand = new EditMetaAssociationCommand(this->associationModel, newAssociation, oldAEnds, this->associationItemView, this->scene);
                 MainWindow::undoStack->push(editCommand);
             }
         }
