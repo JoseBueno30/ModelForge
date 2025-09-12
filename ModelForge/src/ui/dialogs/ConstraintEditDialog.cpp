@@ -13,7 +13,9 @@ ConstraintEditDialog::ConstraintEditDialog(std::shared_ptr<MetaModel::MetaConstr
     ui->setupUi(this);
 
     ui->nameLineEdit->setText(QString::fromStdString(metaConstraint->getName()));
-    ui->expressionTextEdit->setText(QString::fromStdString(metaConstraint->getExpression().getExpression()));
+    if(metaConstraint->getExpressionPtr()){
+        ui->expressionTextEdit->setText(QString::fromStdString(metaConstraint->getExpression().getExpression()));
+    }
     ui->isExistentialCheckBox->setChecked(metaConstraint->getIsExistential());
 
     connect(ui->buttonBox->button(QDialogButtonBox::Save), &QPushButton::clicked, this, &ConstraintEditDialog::saveChanges);
