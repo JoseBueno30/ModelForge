@@ -6,7 +6,7 @@ ModelForge es un proyecto de **Trabajo de Fin de Grado** de la carrera de Ingeni
 
 ## 🚀 Instalación rápida (Release)
 
-1. Descarga la última versión desde la sección [Releases](https://github.com/tu-repo/modelforge/releases).
+1. Descarga la última versión desde la sección [Releases](https://github.com/JoseBueno30/ModelForge/releases).
 2. Extrae el archivo ZIP en la carpeta deseada.
 3. Ejecuta el archivo `ModelForge.exe` (Windows).
 
