@@ -131,10 +131,8 @@ EditMetaAssociationCommand::EditMetaAssociationCommand(
 
 void EditMetaAssociationCommand::updateItemView(std::shared_ptr<MetaModel::MetaAssociation> association){
     auto aEndsIt = association->getAssociationEnds().begin();
-    qDebug() << aEndsIt->second->getClass().getName();
     ClassItemView* class1 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(aEndsIt->second->getClass().getName()));
     aEndsIt++;
-    qDebug() << aEndsIt->second->getClass().getName();
     ClassItemView* class2 = dynamic_cast<ClassItemView*>(this->scene->getModelItemView(aEndsIt->second->getClass().getName()));
 
     this->sceneAssociationView->setClass1(class1);
@@ -168,7 +166,6 @@ void EditMetaAssociationCommand::undo(){
             newAEndAux.second->getClassSharedPtr()->removeAssociationEnd(nameLowercase);
         }
         for(auto oldAEndAux : this->oldAssociationEnds){
-            qDebug() << oldAEndAux.first;
             try{
                 modelMetaAssociationClass->addIntermediateAssociationEnd(oldAEndAux.second);
             }catch(std::invalid_argument e){}
@@ -176,7 +173,6 @@ void EditMetaAssociationCommand::undo(){
 
 
         AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
-        qDebug() << "if 3 " << !auxItemView;
         auxItemView->getAssociationClassItemView()->calculateMinimumSize();
     }else{
         auto oldAEndIterator = oldAssociationEnds.begin();
@@ -198,7 +194,6 @@ void EditMetaAssociationCommand::undo(){
 }
 
 void EditMetaAssociationCommand::redo(){
-    qDebug() << !modelMetaAssociation;
 
     for(auto& aEndPair : this->oldAssociationEnds){
         for(auto& aEndPairAux : this->oldAssociationEnds){
@@ -227,7 +222,6 @@ void EditMetaAssociationCommand::redo(){
         }
         //UPDATE SIZE IF NAME CHANGES
         AssociationClassItemView* auxItemView = dynamic_cast<AssociationClassItemView*>(scene->getModelItemView(modelMetaAssociationClass->getName()));
-        qDebug() << "if 3 " << !auxItemView;
         auxItemView->getAssociationClassItemView()->calculateMinimumSize();
     }else{
         auto newAEndIterator = newAssociationEnds.begin();
@@ -242,10 +236,7 @@ void EditMetaAssociationCommand::redo(){
         }
     }
 
-
-    qDebug() << "to update";
     updateItemView(newMetaAssociation);
-    qDebug() << "post update";
     scene->update();
 }
 

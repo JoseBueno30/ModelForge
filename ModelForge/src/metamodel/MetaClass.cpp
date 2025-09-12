@@ -222,7 +222,6 @@ void  MetaClass::addAssociationEnd(std::shared_ptr<MetaAssociationEnd> associati
     associationEnds[associationEnd->getRole()] = associationEnd;
 }
 void  MetaClass::removeAssociationEnd(const std::string& key){
-    std::cout << "BORRANDO DE " << name << " " << key <<std::endl;
     associationEnds.erase(key);
 }
 
