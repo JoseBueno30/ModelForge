@@ -8,8 +8,6 @@ end
 class Account < SuperAccount
 attributes
 balance : Integer --+
-test : Integer --+
- init = 0
 type : AccountType --+
 operations
 transfer(variable : Integer) : Integer --#

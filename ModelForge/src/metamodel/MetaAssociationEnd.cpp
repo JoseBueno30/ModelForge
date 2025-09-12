@@ -140,7 +140,7 @@ void MetaMultiplicity::setMultiplicictyFromString(std::string multiplicityString
 
 
 MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaAssociation>& association, int type, Visibility visibility)
-    : association(association), type(type), role(""), isNavigable(false), isOrdered(false), isUnique(false), isUnion(false), visibility(visibility){}
+    : association(association), type(type), role(""), isNavigable(true), isOrdered(false), isUnique(false), isUnion(false), visibility(visibility){}
 
 MetaAssociationEnd::MetaAssociationEnd(const std::shared_ptr<MetaClass>& endClass, const std::shared_ptr<MetaAssociation>& association,
                                        const std::string& role, int type, bool isNavigable, bool isOrdered, bool isUnique, bool isUnion,

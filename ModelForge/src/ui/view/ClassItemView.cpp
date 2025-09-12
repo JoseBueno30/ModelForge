@@ -76,7 +76,6 @@ ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel, int x,
 
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
-    // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
 }
 
 ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel, int x, int y, int width, int height) :
@@ -86,7 +85,6 @@ ClassItemView::ClassItemView(shared_ptr<MetaModel::MetaClass> classModel, int x,
     calculateMinimumSize();
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
-    // qDebug() << "BoudningREct: " << this->boundingRect() <<"\tShape:" << this->shape();
 }
 
 QRectF ClassItemView::classNameRect() {
@@ -139,9 +137,7 @@ shared_ptr<MetaModel::MetaClass>& ClassItemView::getClassModel(){
 }
 
 void ClassItemView::addAssociation(AssociationItemView* association){
-    qDebug() << "pushing asoc";
     if (std::find(this->associations.begin(), this->associations.end(), association) == this->associations.end()) {
-        qDebug() <<"añade asoc";
         this->associations.push_back(association);
     }
 }
@@ -190,12 +186,10 @@ std::vector<AssociationItemView *> ClassItemView::associationsShared(ClassItemVi
             associationsShared.push_back(association);
         }
     }
-    //qDebug() << "nAssociations: " << associationsShared.size();
     return associationsShared;
 }
 
 void ClassItemView::updateConnectionPositions(){
-    qDebug() << "nAssociations: " << this->associations.size();
     for(auto association: this->associations){
         association->updatePosition();
     }

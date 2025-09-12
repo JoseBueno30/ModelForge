@@ -120,7 +120,7 @@ void MetaModel::addAssociation(std::shared_ptr<MetaAssociation> modelAssociation
                     otherAssociationEndPair.second->getClassSharedPtr()->addAssociationEnd(associationEndPair.second);
                     associationEndPair.second->getClassSharedPtr()->addAssociationEnd(otherAssociationEndPair.second);
                 }catch(std::invalid_argument e){
-                    std::cerr << e.what()<< std::endl;
+                    // std::cerr << e.what()<< std::endl;
                 }
             }
         }

@@ -1,7 +1,5 @@
-#include <iostream>
 #include <metamodel/MetaClass.h>
 
-#include <ostream>
 #include <stdexcept>
 
 #include <modelToText/VisitorInterface.h>

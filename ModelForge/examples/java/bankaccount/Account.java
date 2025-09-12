@@ -6,7 +6,6 @@ import java.util.List;
 public class Account extends SuperAccount{
 
 	private Integer balance;
-	private Person test;
 	private AccountType type;
 	private Bank bank;
 	private Person owner;
@@ -17,10 +16,9 @@ public class Account extends SuperAccount{
 	// true
 	// true and (true or true)
 
-	public Account(Integer balance, Person test, AccountType type, Bank bank, Person owner) {
+	public Account(Integer balance, AccountType type, Bank bank, Person owner) {
 		super();
 		this.setBalance(balance);
-		this.setTest(test);
 		this.setType(type);
 		this.setBank(bank);
 		this.setOwner(owner);
@@ -34,14 +32,6 @@ public class Account extends SuperAccount{
 	public void setBalance(Integer balance) {
 		//self.balance > 0
 		this.balance = balance;
-	}
-
-	public Person getTest() {
-		return this.test;
-	}
-
-	public void setTest(Person test) {
-				this.test = test;
 	}
 
 	public AccountType getType() {
@@ -92,7 +82,8 @@ public class Account extends SuperAccount{
 	begin
         self.balance := self.balance + 1;
     end
+
 		*/
-		// Post Condition <ResultGreaterThanStart>: self.balance.result > self.balance
+		// Post Condition <ResultGreaterThanStart>: self.balance + 1 > self.balance
 	}
 }
